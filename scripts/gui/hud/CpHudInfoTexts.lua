@@ -163,7 +163,7 @@ function CpHudInfoTexts:update()
                 elements.lastInfo = info
             end
             --- Makes sure the current entered vehicle is highlighted.
-            if info.vehicle == g_currentMission.controlledVehicle then 
+            if info.vehicle == CpUtil.getCurrentVehicle() then
                 elements.vehicleBtn:setColor(unpack(self.SELECTED_COLOR))
             else 
                 elements.vehicleBtn:setColor(unpack(self.OFF_COLOR))

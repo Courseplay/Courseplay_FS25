@@ -71,8 +71,8 @@ function CpGamePadHud.loadFromXMLFile()
 	Gui.getIsOverlayGuiVisible = Utils.overwrittenFunction(Gui.getIsOverlayGuiVisible, getIsOverlayGuiVisible)
 
 	local function isHudPopupMessageVisible(hud, superFunc, ...)
-		print(tostring(g_currentMission.controlledVehicle and g_currentMission.controlledVehicle.isCpGamePadHudActive and g_currentMission.controlledVehicle:isCpGamePadHudActive()))
-		return superFunc(hud, ...) or g_currentMission.controlledVehicle and g_currentMission.controlledVehicle.isCpGamePadHudActive and g_currentMission.controlledVehicle:isCpGamePadHudActive()
+		print(tostring(CpUtil.getCurrentVehicle() and CpUtil.getCurrentVehicle().isCpGamePadHudActive and CpUtil.getCurrentVehicle():isCpGamePadHudActive()))
+		return superFunc(hud, ...) or CpUtil.getCurrentVehicle() and CpUtil.getCurrentVehicle().isCpGamePadHudActive and CpUtil.getCurrentVehicle():isCpGamePadHudActive()
 	end
 	g_currentMission.hud.popupMessage.getIsVisible = Utils.overwrittenFunction(g_currentMission.hud.popupMessage.getIsVisible, isHudPopupMessageVisible)
 end

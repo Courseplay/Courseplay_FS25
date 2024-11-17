@@ -30,7 +30,7 @@ function CoursePlot:init()
 	self.lightColor = {CpGuiUtil.getNormalizedRgb(45, 207, 255)}
 	-- a darker shade of the same color
 	self.darkColor = {CpGuiUtil.getNormalizedRgb(19, 87, 107)}
-	self.courseOverlayId = createImageOverlay('dataS/scripts/shared/graph_pixel.dds')
+	self.courseOverlayId = createImageOverlay('dataS/menu/base/graph_pixel.dds')
 	self.startSignOverlayId = createImageOverlay(Utils.getFilename('img/signs/start_noMM.dds', Courseplay.BASE_DIRECTORY))
 	self.stopSignOverlayId = createImageOverlay(Utils.getFilename('img/signs/stop_noMM.dds', Courseplay.BASE_DIRECTORY))
 	self.arrowOverlayId = createImageOverlay(Utils.getFilename('img/iconSprite.dds', Courseplay.BASE_DIRECTORY))

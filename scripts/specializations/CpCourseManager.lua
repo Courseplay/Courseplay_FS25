@@ -125,7 +125,7 @@ function CpCourseManager:onLoad(savegame)
 	--- Register the spec: spec_cpCourseManager 
     self.spec_cpCourseManager = self["spec_" .. CpCourseManager.SPEC_NAME]
     local spec = self.spec_cpCourseManager 
-    spec.coursePlot = CoursePlot(g_currentMission.inGameMenu.ingameMap)
+    spec.coursePlot = CoursePlot(g_inGameMenu.ingameMap)
 
     spec.courses = {}
 
@@ -358,7 +358,7 @@ function CpCourseManager:onWriteStream(streamId,connection)
 end
 
 function CpCourseManager:onPreDelete()
-    g_assignedCoursesManager:unregisterVehicle(self,self.id)
+    g_assignedCoursesManager:unregisterVehicle(self, self.id)
     CpCourseManager.resetCourses(self)
     local spec = self.spec_cpCourseManager 
     spec.courseDisplay:delete()

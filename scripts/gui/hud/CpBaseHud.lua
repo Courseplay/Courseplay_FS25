@@ -62,7 +62,7 @@ CpBaseHud.uvs = {
 	30,
 	44,
 	44
-    }, AITargetHotspot.FILE_RESOLUTION),
+    }, AIPlaceableMarkerHotspot.FILE_RESOLUTION),
     
     exitSymbol = {
         {148, 184, 32, 32}, {256, 512}
@@ -108,7 +108,6 @@ CpBaseHud.uvs = {
     },
 
 }
-
 --- Vertical + horizontal overlay alignment
 CpBaseHud.alignments = {
     bottomLeft =    {Overlay.ALIGN_VERTICAL_BOTTOM, Overlay.ALIGN_HORIZONTAL_LEFT},
@@ -174,7 +173,6 @@ function CpBaseHud:init(vehicle)
     self.lines[self.numLines-1].left[2] = self.lines[self.numLines-1].left[2] - self.hMargin/2
     self.lines[self.numLines-1].right[2] = self.lines[self.numLines-1].right[2] - self.hMargin/2
     self.lines[self.numLines].right[2] = self.lines[self.numLines].right[2] - self.hMargin/4
-    
     local background = CpGuiUtil.createOverlay({self.width, self.height},
                                             {g_baseUIFilename, g_colorBgUVs}, 
                                             self.BACKGROUND_COLOR,
@@ -223,7 +221,8 @@ function CpBaseHud:init(vehicle)
     --- Cp icon 
     local cpIconWidth, height = getNormalizedScreenValues(22, 22)
     local cpIconOverlay = CpGuiUtil.createOverlay({cpIconWidth, height},
-                                                    {Utils.getFilename("img/courseplayIconHud.dds", Courseplay.BASE_DIRECTORY), GuiUtils.getUVs(unpack(self.uvs.cpIcon))}, 
+                                                    {Utils.getFilename("img/courseplayIconHud.dds", Courseplay.BASE_DIRECTORY), 
+                                                    GuiUtils.getUVs(unpack(self.uvs.cpIcon))}, 
                                                     self.BASE_COLOR,
                                                     self.alignments.bottomLeft)
     self.cpIcon = CpHudButtonElement.new(cpIconOverlay, self.baseHud)
@@ -249,7 +248,7 @@ function CpBaseHud:init(vehicle)
                             end, self.vehicle)
      
     local x, y = unpack(self.lines[6].left)
-    local spacerLineOverlay = Overlay.new("dataS/scripts/shared/graph_pixel.png", 
+    local spacerLineOverlay = Overlay.new('dataS/menu/base/graph_pixel.dds', 
         x, y, self.width - 2 * self.wMargin, self.hMargin/8)
     spacerLineOverlay:setColor(unpack(self.OFF_COLOR))
     spacerLineOverlay:setAlignment(Overlay.ALIGN_VERTICAL_MIDDLE)
@@ -258,7 +257,6 @@ function CpBaseHud:init(vehicle)
     --------------------------------------
     --- Right side
     --------------------------------------
-
     --- Exit button                                                  
     local width, height = getNormalizedScreenValues(18, 18)
     local imageFilename = Utils.getFilename('img/iconSprite.dds', g_Courseplay.BASE_DIRECTORY)
@@ -278,7 +276,7 @@ function CpBaseHud:init(vehicle)
     --- Create start/stop button
     local onOffBtnWidth, height = getNormalizedScreenValues(20, 20)
     local onOffIndicatorOverlay = CpGuiUtil.createOverlay({onOffBtnWidth, height},
-                                                        {g_baseUIFilename, GuiUtils.getUVs(MixerWagonHUDExtension.UV.RANGE_MARKER_ARROW)}, 
+                                                        {g_baseUIFilename, GuiUtils.getUVs(unpack(self.uvs.streetDriveToSymbol))}, --TODO 25
                                                         self.OFF_COLOR,
                                                         self.alignments.bottomRight)
     self.onOffButton = CpHudButtonElement.new(onOffIndicatorOverlay, self.baseHud)
@@ -287,7 +285,7 @@ function CpBaseHud:init(vehicle)
     self.onOffButton:setCallback("onClickPrimary", self.vehicle, function(vehicle)
         vehicle:cpStartStopDriver(true)
     end)
-    
+
     --- Create start/stop field boarder record button
     local recordingBtnWidth, height = getNormalizedScreenValues(18, 18)
     local imageFilename = Utils.getFilename('img/iconSprite.dds', g_Courseplay.BASE_DIRECTORY)
@@ -341,7 +339,7 @@ function CpBaseHud:init(vehicle)
     --- Goal button.
     local width, height = getNormalizedScreenValues(34, 34)    
     local goalOverlay = CpGuiUtil.createOverlay({width, height},
-                                                {AITargetHotspot.FILENAME, self.uvs.goalSymbol}, 
+                                                {AIPlaceableMarkerHotspot.FILENAME, self.uvs.goalSymbol}, 
                                                 self.OFF_COLOR,
                                                 self.alignments.bottomRight)
     

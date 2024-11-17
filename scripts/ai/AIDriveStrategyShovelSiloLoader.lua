@@ -492,7 +492,7 @@ end
 function AIDriveStrategyShovelSiloLoader:getClosestTrailerAndDistance(trailerToIgnore)
     local closestDistance = math.huge
     local closestTrailerData = nil
-    for i, vehicle in pairs(g_currentMission.vehicles) do
+    for i, vehicle in pairs(g_currentMission.vehicleSystem.vehicles) do
         local x, _, z = getWorldTranslation(vehicle.rootNode)
         if CpMathUtil.isPointInPolygon(self.trailerSearchArea, x, z) then
             local dist = calcDistanceFrom(vehicle.rootNode, self.siloFrontNode)

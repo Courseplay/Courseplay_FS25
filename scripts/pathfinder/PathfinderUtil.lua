@@ -175,7 +175,7 @@ end
 --- Is the land at this position owned by me?
 function PathfinderUtil.isWorldPositionOwned(posX, posZ)
     local farmland = g_farmlandManager:getFarmlandAtWorldPosition(posX, posZ)
-    local missionAllowed = g_missionManager:getIsMissionWorkAllowed(g_currentMission.player.farmId, posX, posZ, nil)
+    local missionAllowed = g_missionManager:getIsMissionWorkAllowed(g_currentMission.playerSystem:getLocalPlayer().farmId, posX, posZ, nil)
     return (farmland and farmland.isOwned) or missionAllowed
 end
 
@@ -343,7 +343,7 @@ function PathfinderUtil.CollisionDetector:findCollidingShapes(node, vehicleData,
     self.collidingShapes = 0
     self.collidingShapesText = 'unknown'
 
-    local collisionMask = CollisionFlag.STATIC_WORLD + CollisionFlag.TREE + CollisionFlag.DYNAMIC_OBJECT + CollisionFlag.VEHICLE + CollisionFlag.TERRAIN_DELTA
+    local collisionMask = CollisionFlag.DEFAULT + CollisionFlag.TREE + CollisionFlag.DYNAMIC_OBJECT + CollisionFlag.VEHICLE + CollisionFlag.TERRAIN_DELTA
 
     overlapBox(x, y + 0.2, z, xRot, yRot, zRot, width, 1, length, 'overlapBoxCallback', self, collisionMask, true, true, true)
 

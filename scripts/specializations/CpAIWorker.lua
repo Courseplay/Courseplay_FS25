@@ -245,7 +245,7 @@ function CpAIWorker:cpStartStopDriver(isStartedByHud)
         end
         if self:getCanStartCp() and job then
 
-            job:applyCurrentState(self, g_currentMission, g_currentMission.player.farmId, true, true)
+            job:applyCurrentState(self, g_currentMission, g_currentMission.playerSystem:getLocalPlayer().farmId, true, true)
             job:setValues()
             local success, message = job:validate(false)
             if success then
@@ -533,11 +533,11 @@ function CpAIWorker:onStartAutoDrive()
             --- Use last job parameters.
             --- Only the start point needs to be forced back!
             SpecializationUtil.raiseEvent(self, "onCpADRestarted")
-        elseif g_currentMission.controlledVehicle == self then
+        elseif CpUtil.getCurrentVehicle() == self then
             --- Apply hud variables
             SpecializationUtil.raiseEvent(self, "onCpADStartedByPlayer")
         end
-    elseif g_currentMission.controlledVehicle == self then
+    elseif CpUtil.getCurrentVehicle() == self then
         --- Apply hud variables
         SpecializationUtil.raiseEvent(self, "onCpADStartedByPlayer")
         CpJobStartAtLastWpSyncRequestEvent.sendEvent(self)
@@ -562,7 +562,7 @@ end
 --- as these might turn on implements, that otherwise aren't turned on or
 --- disables the unfolding of a given implement.
 function CpAIWorker:consoleCommandRaiseWorkStart()
-    local vehicle = g_currentMission.controlledVehicle
+    local vehicle = CpUtil.getCurrentVehicle()
     if not vehicle then
         CpUtil.info("Not entered a valid vehicle!")
         return
@@ -583,7 +583,7 @@ end
 --- Either prints all settings or a desired setting by the name or index in the setting table.
 ---@param name any
 function CpAIWorker:consoleCommandPrintCurrentSelectedJobParameters(name)
-    local vehicle = g_currentMission.controlledVehicle
+    local vehicle = CpUtil.getCurrentVehicle()
     if not vehicle or vehicle.getCpStartableJob == nil then
         CpUtil.info("Not entered a valid vehicle!")
         return

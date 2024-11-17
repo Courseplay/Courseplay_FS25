@@ -15,8 +15,8 @@ function AIParameterSettingList:init(data, vehicle, class)
 	if next(data.values) ~=nil then
 		--- The setting has values defined in the data, so we copy these here.
 		--- This saves the unmodified values in the data table.
-		self.values = table.copy(data.values)
-		self.texts = table.copy(data.texts)
+		self.values = table.clone(data.values)
+		self.texts = table.clone(data.texts)
 	elseif data.min ~= nil and data.max ~=nil then
 		--- The setting has a min and max value,
 		--- so we generate a series of float values and texts here.
@@ -25,17 +25,17 @@ function AIParameterSettingList:init(data, vehicle, class)
 		AIParameterSettingList.generateValues(self, self.data.values, self.data.texts,
 			data.min, data.max, data.incremental, data.unit, data.precision)
 		--- Same as above, make sure the values are copied.
-		self.values = table.copy(self.data.values)
+		self.values = table.clone(self.data.values)
 		if self.data.texts ~= nil then
-			self.texts = table.copy(self.data.texts)
+			self.texts = table.clone(self.data.texts)
 		end
 		data.textInputAllowed = true
 	elseif data.generateValuesFunction then
 		--- A generation function by the parent class is used
 		--- to enrich/create the setting values/texts.
 		self.data.values, self.data.texts = self:getCallback(data.generateValuesFunction)
-		self.values = table.copy(self.data.values)
-		self.texts = table.copy(self.data.texts)
+		self.values = table.clone(self.data.values)
+		self.texts = table.clone(self.data.texts)
 		self:validateTexts()
 	end
 	--- Text input is only allowed, when the settings values are numeric.
@@ -50,7 +50,7 @@ function AIParameterSettingList:init(data, vehicle, class)
 		--- Fallback text generation based on the numeric values and a optional given unit.
 		self.data.texts = {}
 		AIParameterSettingList.enrichTexts(self, self.data.texts, data.unit)
-		self.texts = table.copy(self.data.texts)
+		self.texts = table.clone(self.data.texts)
 	end
 	--- Lastly apply the default values here.
 	if data.default ~=nil then
@@ -474,8 +474,8 @@ end
 
 --- Resets the disabled values back to the orignal value table
 function AIParameterSettingList:resetValuesBackToSetupValues()
-	self.values = table.copy(self.data.values)
-	self.texts = table.copy(self.data.texts)
+	self.values = table.clone(self.data.values)
+	self.texts = table.clone(self.data.texts)
 end
 
 --- Gets a specific value.

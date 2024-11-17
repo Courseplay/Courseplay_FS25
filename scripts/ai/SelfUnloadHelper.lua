@@ -37,7 +37,7 @@ SelfUnloadHelper.maxDistanceFromField = 20
 function SelfUnloadHelper:findBestTrailer(fieldPolygon, myVehicle, implementWithPipe, pipeOffsetX)
     local bestTrailer, bestFillUnitIndex, bestFillType
     local minDistance = math.huge
-    for _, otherVehicle in pairs(g_currentMission.vehicles) do
+    for _, otherVehicle in pairs(g_currentMission.vehicleSystem.vehicles) do
         if SpecializationUtil.hasSpecialization(Trailer, otherVehicle.specializations) then
             local rootVehicle = otherVehicle:getRootVehicle()
             local attacherVehicle

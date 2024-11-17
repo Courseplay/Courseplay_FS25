@@ -360,7 +360,7 @@ function CpShovelPositions:setShovelPosition(dt, shovelLimits, armLimits, height
 
 
 	local function draw(x1, y1, z1, x2, y2, z2, r, g, b)
-		if g_currentMission.controlledVehicle == shovelVehicle.rootVehicle and 
+		if CpUtil.getCurrentVehicle() == shovelVehicle.rootVehicle and
 			CpDebug:isChannelActive(CpDebug.DBG_SILO, shovelVehicle.rootVehicle) then 
 				DebugUtil.drawDebugLine(x1, y1, z1, x2, y2, z2, r, g, b)
 		end
@@ -469,7 +469,7 @@ function CpShovelPositions:setShovelPosition(dt, shovelLimits, armLimits, height
 	end
 
 	--- Debug information
-	if g_currentMission.controlledVehicle == shovelVehicle.rootVehicle and 
+	if CpUtil.getCurrentVehicle() == shovelVehicle.rootVehicle and
 		CpDebug:isChannelActive(CpDebug.DBG_SILO, shovelVehicle.rootVehicle) then 
 		DebugUtil.drawDebugLine(wsx, wsy, wsz, wex, wey, wez)
 		DebugUtil.drawDebugLine(wsx, terrainHeight + minimalTargetHeight , wsz, 
@@ -661,7 +661,7 @@ function CpShovelPositions.initConsoleCommands()
 end
 
 local function executeConsoleCommand(func, ...)
-	local vehicle = g_currentMission.controlledVehicle
+	local vehicle = CpUtil.getCurrentVehicle()
 	if not vehicle then 
 		CpUtil.info("Not entered a valid vehicle!")
 		return false

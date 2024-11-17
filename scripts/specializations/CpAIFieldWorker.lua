@@ -196,7 +196,7 @@ function CpAIFieldWorker:startCpAtFirstWp()
     local spec = self.spec_cpAIFieldWorker
     self:updateAIFieldWorkerImplementData()
     if self:hasCpCourse() and self:getCanStartCpFieldWork() then
-        spec.cpJobStartAtFirstWp:applyCurrentState(self, g_currentMission, g_currentMission.player.farmId, true)
+        spec.cpJobStartAtFirstWp:applyCurrentState(self, g_currentMission, g_currentMission.playerSystem:getLocalPlayer().farmId, true)
         --- Applies the lane offset set in the hud, so ad can start with the correct lane offset.
         spec.cpJobStartAtFirstWp:getCpJobParameters().laneOffset:setValue(self:getCpLaneOffsetSetting():getValue())
         spec.cpJobStartAtFirstWp:setValues()
@@ -213,7 +213,7 @@ function CpAIFieldWorker:startCpAtLastWp()
     local spec = self.spec_cpAIFieldWorker
     self:updateAIFieldWorkerImplementData()
     if self:hasCpCourse() and self:getCanStartCpFieldWork() then
-        spec.cpJobStartAtLastWp:applyCurrentState(self, g_currentMission, g_currentMission.player.farmId, true)
+        spec.cpJobStartAtLastWp:applyCurrentState(self, g_currentMission, g_currentMission.playerSystem:getLocalPlayer().farmId, true)
         spec.cpJobStartAtLastWp:setValues()
         CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, self, "lane offset: %s", spec.cpJobStartAtLastWp:getCpJobParameters().laneOffset:getString())
         local success = spec.cpJobStartAtLastWp:validate(false)

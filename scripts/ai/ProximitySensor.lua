@@ -113,7 +113,7 @@ function ProximitySensor:update()
     self.hitTerrain = false
     if self.enabled then
         local raycastMask = CollisionFlag.STATIC_OBJECTS + CollisionFlag.TREE + CollisionFlag.DYNAMIC_OBJECT + CollisionFlag.VEHICLE
-        raycastClosest(x, y1 + self.height, z, nx, ny, nz, 'raycastCallback', self.range, self, raycastMask)
+        raycastClosest(x, y1 + self.height, z, nx, ny, nz, self.range, 'raycastCallback', self, raycastMask)
         if CpDebug:isChannelActive(CpDebug.DBG_TRAFFIC, self.vehicle) then
             DebugUtil.drawDebugLine(x, y1 + self.height, z, x + 5 * nx, y1 + self.height + 5 * ny, z + 5 * nz, 0, 1, 0)
         end
@@ -459,8 +459,9 @@ function VerticalProximitySensor:update()
     if self.enabled then
         local raycastMask = CollisionFlag.STATIC_OBJECTS + CollisionFlag.TREE + CollisionFlag.DYNAMIC_OBJECT + CollisionFlag.VEHICLE
         -- straight up from 10 cm above the ground to height
-        raycastClosest(x, y + self.minHeightAboveGround, z, 0, 1, 0,
-                'raycastCallback', self.height - self.minHeightAboveGround, self, raycastMask)
+        raycastClosest(x, y + self.minHeightAboveGround, z, 0, 1, 0, 
+                self.height - self.minHeightAboveGround,
+                'raycastCallback', self, raycastMask)
         if CpDebug:isChannelActive(CpDebug.DBG_TRAFFIC, self.vehicle) then
             DebugUtil.drawDebugLine(x, y + self.minHeightAboveGround, z, x, y + self.height - self.minHeightAboveGround, z, 1, 1, 0)
         end

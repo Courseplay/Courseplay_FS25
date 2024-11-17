@@ -133,7 +133,7 @@ end
 --------------------------------------------
 
 function Markers:consoleCommandReload(backDistance)
-    local vehicle = g_currentMission.controlledVehicle
+    local vehicle = CpUtil.getCurrentVehicle()
     if not vehicle then 
         CpUtil.info("No valid vehicle entered!")
         return     
@@ -146,7 +146,7 @@ function Markers:consoleCommandReload(backDistance)
 end
 
 function Markers:consoleCommandPrintDebug()
-    local vehicle = g_currentMission.controlledVehicle
+    local vehicle = CpUtil.getCurrentVehicle()
     if not vehicle then 
         CpUtil.info("No valid vehicle entered!")
         return     

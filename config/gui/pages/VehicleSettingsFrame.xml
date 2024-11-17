@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<GUI name="cpInGameMenuVehicleSettings">
+    <GuiElement profile="fs25_menuContainer">
+        <GuiElement profile="fs25_menuHeaderPanel">
+            <Bitmap profile="fs25_menuHeaderIconBg">
+                <Bitmap profile="fs25_menuHeaderIcon" id="categoryHeaderIcon" />
+            </Bitmap>
+            <Text profile="fs25_menuHeaderTitle" id="categoryHeaderText" />
+        </GuiElement>
+        <BoxLayout profile="fs25_subCategorySelectorTabbedBox" id="subCategoryBox">
+
+        </BoxLayout>
+        <ThreePartBitmap profile="fs25_lineSeparatorTopHighlighted" position="0px -57px" />
+        <MultiTextOption profile="fs25_subCategorySelectorTabbed" id="subCategoryPaging"
+            position="0px -10px" onClick="updateSubCategoryPages" />
+   
+        <!-- Prefabs -->
+
+        <Button profile="fs25_subCategorySelectorTabbedTab" id="selectorPrefab">
+            <ThreePartBitmap profile="fs25_subCategorySelectorTabbedTabBg" name="background" />
+        </Button>
+
+        <GuiElement profile="fs25_subCategorySelectorTabbedContainer" id="containerPrefab">
+            <Text profile="fs25_settingsNoPermissionText" name="noPermissionText"
+                text="$l10n_ui_settingsNoPermission" visible="false"/>
+            <ScrollingLayout profile="fs25_settingsLayout" name="layout" bottomClipperElementName="bottomClipper">
+
+            </ScrollingLayout>
+            <Bitmap profile="fs25_settingsTooltipSeparator" name="separator" />
+            <Bitmap profile="fs25_stopClipper" name="bottomClipper" />
+        </GuiElement>
+
+        <Bitmap profile="fs25_multiTextOptionContainer" id="booleanPrefab">
+            <CpBinaryyOption profile="fs25_settingsBinaryOption" name="setting" namedComponents="true" onClick="onClickCpMultiTextOption">
+                <Text profile="fs25_multiTextOptionTooltip" name="tooltip"/>
+                <Text profile="fs25_settingsMultiOptionTitle" name="label"/>
+            </CpBinaryyOption>
+        </Bitmap>
+        <Text profile="fs25_settingsSectionHeader" name="sectionHeader" id="sectionHeaderPrefab"/>
+        <Bitmap profile="fs25_multiTextOptionContainer" id="multiTextPrefab">
+            <CpOptionToggle profile="fs25_settingsMultiTextOption" name="setting" namedComponents="true" onClick="onClickCpMultiTextOption">
+                <Text profile="fs25_multiTextOptionTooltip" name="tooltip"/>
+                <Text profile="fs25_settingsMultiOptionTitle" name="label"/>
+            </CpOptionToggle>
+        </Bitmap>
+
+    </GuiElement>
+    <ThreePartBitmap profile="fs25_sliderDockedBg" id="settingsSliderBox">
+        <ThreePartBitmap profile="fs25_sliderDockedBox">
+            <Slider profile="fs25_sliderDocked" id="settingsSlider" />
+        </ThreePartBitmap>
+    </ThreePartBitmap>
+    <GUIProfiles>
+        <Profile name="fs25_settingsMultiOptionTitle" extends="fs25_settingsMultiTextOptionTitle">
+            <position value="-500px 0px" />
+        </Profile>
+        <Profile name="fs25_settingsNoPermissionText" extends="fs25_textDefault"
+            with="anchorMiddleStretchingX">
+            <size value="100% 40px" />
+            <textSize value="20px" />
+            <textAlignment value="center" />
+            <textColor value="$preset_fs25_colorMainLight" />
+        </Profile>
+        <Profile name="fs25_settingsTextInput" extends="fs25_textInput" with="anchorMiddleRight">
+            <position value="-41px 0px" />
+        </Profile>
+    </GUIProfiles>
+</GUI>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
-<modDesc descVersion="80">
+<modDesc descVersion="92">
     <version>7.5.0.1</version>
 	<author><![CDATA[Courseplay.devTeam]]></author>
 	<title>
@@ -489,14 +489,17 @@ Changelog 7.1.0.0:
 		<sourceFile filename="scripts/gui/HeapPlot.lua"/>
 		<sourceFile filename="scripts/gui/UnloadingTriggerPlot.lua"/>
 		<sourceFile filename="scripts/gui/CpStatus.lua"/>
-		<sourceFile filename="scripts/gui/CpAIHotspots.lua"/>
-		<sourceFile filename="scripts/gui/CpAIFrameExtended.lua"/>
-		<sourceFile filename="scripts/gui/CpVehicleSettingsFrame.lua"/>
-		<sourceFile filename="scripts/gui/CpGlobalSettingsFrame.lua"/>
-		<sourceFile filename="scripts/gui/CpCourseManagerFrame.lua"/>
+		<!-- <sourceFile filename="scripts/gui/CpAIHotspots.lua"/>
+		<sourceFile filename="scripts/gui/CpAIFrameExtended.lua"/> -->
 		<sourceFile filename="scripts/gui/CourseDisplay.lua"/>
-		<sourceFile filename="scripts/gui/CpGamePadHudScreen.lua"/>
-		<sourceFile filename="scripts/gui/CpOptionToggleElement.lua"/>
+		<!-- <sourceFile filename="scripts/gui/CpGamePadHudScreen.lua"/> -->
+		<sourceFile filename="scripts/gui/elements/CpBinaryOptionElement.lua"/>
+		<sourceFile filename="scripts/gui/elements/CpOptionToggleElement.lua"/>
+		<sourceFile filename="scripts/gui/pages/CpCourseManagerFrame.lua"/>
+		<sourceFile filename="scripts/gui/pages/CpCourseGeneratorFrame.lua"/>
+		<sourceFile filename="scripts/gui/pages/CpVehicleSettingsFrame.lua"/>
+		<sourceFile filename="scripts/gui/pages/CpGlobalSettingsFrame.lua"/>
+		<sourceFile filename="scripts/gui/CpInGameMenu.lua"/>
 
 		<sourceFile filename="scripts/gui/hud/HudElements.lua"/>
 		<sourceFile filename="scripts/gui/hud/CpBaseHud.lua"/>
@@ -542,7 +545,7 @@ Changelog 7.1.0.0:
 		<specialization name="cpAICombineUnloader" className="CpAICombineUnloader" filename="scripts/specializations/CpAICombineUnloader.lua"/>
 		<specialization name="cpAIBunkerSiloWorker" className="CpAIBunkerSiloWorker" filename="scripts/specializations/CpAIBunkerSiloWorker.lua"/>
 		<specialization name="cpAISiloLoaderWorker" className="CpAISiloLoaderWorker" filename="scripts/specializations/CpAISiloLoaderWorker.lua"/>
-		<specialization name="cpGamePadHud" className="CpGamePadHud" filename="scripts/specializations/CpGamePadHud.lua"/>
+		<!-- <specialization name="cpGamePadHud" className="CpGamePadHud" filename="scripts/specializations/CpGamePadHud.lua"/> -->
 		<specialization name="cpHud" className="CpHud" filename="scripts/specializations/CpHud.lua"/>
 		<specialization name="cpInfoTexts" className="CpInfoTexts" filename="scripts/specializations/CpInfoTexts.lua"/>
 		<specialization name="cpShovelPositions" className="CpShovelPositions" filename="scripts/specializations/CpShovelPositions.lua"/>

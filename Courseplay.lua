@@ -9,7 +9,8 @@ Courseplay.baseXmlKey = "Courseplay"
 Courseplay.xmlKey = Courseplay.baseXmlKey.."."
 
 function Courseplay:init()
-	g_gui:loadProfiles( Utils.getFilename("config/gui/GUIProfiles.xml", Courseplay.BASE_DIRECTORY) )
+	---TODO_25
+	-- g_gui:loadProfiles( Utils.getFilename("config/gui/GUIProfiles.xml", Courseplay.BASE_DIRECTORY) )
 
 	--- Base cp folder
 	self.baseDir = getUserProfileAppPath() .. "modSettings/" .. Courseplay.MOD_NAME ..  "/"
@@ -74,7 +75,7 @@ function Courseplay:showUserInformation(xmlFile, key)
 		self.MOD_NAME, self.currentVersion, lastLoadedVersion)
 
 	if showInfoDialog then
-		g_gui:showInfoDialog({
+		g_gui:showDialog({
 			text = string.format(g_i18n:getText("CP_infoText"), self.currentVersion)
 		})
 		if xmlFile then 
@@ -126,41 +127,24 @@ function Courseplay:deleteMap()
 end
 
 function Courseplay:setupGui()
-	local vehicleSettingsFrame = CpVehicleSettingsFrame.new()
-	local globalSettingsFrame = CpGlobalSettingsFrame.new()
-	local courseManagerFrame = CpCourseManagerFrame.new(self.courseStorage)
-	g_gui:loadGui(Utils.getFilename("config/gui/VehicleSettingsFrame.xml", Courseplay.BASE_DIRECTORY),
-				 "CpVehicleSettingsFrame", vehicleSettingsFrame, true)
-	g_gui:loadGui(Utils.getFilename("config/gui/GlobalSettingsFrame.xml", Courseplay.BASE_DIRECTORY),
-				 "CpGlobalSettingsFrame", globalSettingsFrame, true)
-	g_gui:loadGui(Utils.getFilename("config/gui/CourseManagerFrame.xml", Courseplay.BASE_DIRECTORY),
-				 "CpCourseManagerFrame", courseManagerFrame, true)
-	local function predicateFunc()
-		-- Only allow the vehicle bound pages, when a vehicle with cp functionality is chosen/entered.
-		local vehicle = CpInGameMenuAIFrameExtended.getVehicle()
-		return vehicle ~= nil and vehicle.spec_cpAIWorker ~= nil
-	end
-	
-	--- As precision farming decided to be moved in between the normal map and the ai map,
-	--- we move it down one position.
-	local pos = g_modIsLoaded["FS22_precisionFarming"] and 4 or 3
+	CpInGameMenu.setupGui(self.courseStorage)
+			  
 
-	CpGuiUtil.fixInGameMenuPage(vehicleSettingsFrame, "pageCpVehicleSettings",
-			{896, 0, 128, 128}, pos + 1, predicateFunc)
-	CpGuiUtil.fixInGameMenuPage(globalSettingsFrame, "pageCpGlobalSettings",
-			{768, 0, 128, 128}, pos + 1, function () return true end)
-	CpGuiUtil.fixInGameMenuPage(courseManagerFrame, "pageCpCourseManager",
-			{256, 0, 128, 128}, pos + 1, predicateFunc)
 	self.infoTextsHud = CpHudInfoTexts()
 
-	g_currentMission.hud.ingameMap.drawFields = Utils.appendedFunction(g_currentMission.hud.ingameMap.drawFields, Courseplay.drawHudMap)
+	-- TODO_25
+	-- g_currentMission.hud.ingameMap.drawFields = Utils.appendedFunction(g_currentMission.hud.ingameMap.drawFields, Courseplay.drawHudMap)
 
+	-- local page = g_gui.currentGui.target.pageSettings
+
+	-- local newPage = page.subCategoryPages[1].copy(page.subCategoryPages[1].parent)
+	-- self:fixGui()
 end
 
 --- Enables drawing onto the hud map.
 function Courseplay.drawHudMap(map)
 	if g_Courseplay.globalSettings.drawOntoTheHudMap:getValue() then
-		local vehicle = g_currentMission.controlledVehicle
+		local vehicle = CpUtil.getCurrentVehicle()
 		if vehicle and vehicle:getIsEntered() and not g_gui:getIsGuiVisible() and vehicle.spec_cpAIWorker and not vehicle.spec_locomotive then 
 			SpecializationUtil.raiseEvent(vehicle, "onCpDrawHudMap", map)
 		end
@@ -208,8 +192,9 @@ function Courseplay:update(dt)
             local factor = 2*mapElement.terrainSize/2048
             mapElement.zoomMax = mapElement.zoomMax * factor
         end
-        setIngameMapFix(g_currentMission.inGameMenu.pageAI.ingameMap)
-        setIngameMapFix(g_currentMission.inGameMenu.pageMapOverview.ingameMap)
+		--- TODO_25
+        -- setIngameMapFix(g_currentMission.inGameMenu.pageAI.ingameMap)
+        -- setIngameMapFix(g_currentMission.inGameMenu.pageMapOverview.ingameMap)
     end
 end
 
@@ -234,7 +219,7 @@ end
 ---@param button number
 function Courseplay:mouseEvent(posX, posY, isDown, isUp, button)
 	if not g_gui:getIsGuiVisible() then
-		local vehicle = g_currentMission.controlledVehicle
+		local vehicle = CpUtil.getCurrentVehicle()
 		local hud = vehicle and vehicle.getCpHud and vehicle:getCpHud()
 		if hud then
 			hud:mouseEvent(posX, posY, isDown, isUp, button)
@@ -276,7 +261,6 @@ function Courseplay:load()
 	CpAIMessages.register()	
 	g_vineScanner:setup()
 end
-
 ------------------------------------------------------------------------------------------------------------------------
 -- Player action events
 ------------------------------------------------------------------------------------------------------------------------
@@ -352,7 +336,7 @@ function Courseplay.register(typeManager)
 			CpAICombineUnloader.register(typeManager, typeName, typeEntry.specializations)
 			CpAISiloLoaderWorker.register(typeManager, typeName, typeEntry.specializations)
 			CpAIBunkerSiloWorker.register(typeManager, typeName, typeEntry.specializations)
-			CpGamePadHud.register(typeManager, typeName,typeEntry.specializations)
+			-- TODO 25 CpGamePadHud.register(typeManager, typeName,typeEntry.specializations)
 			CpHud.register(typeManager, typeName, typeEntry.specializations)
 			CpInfoTexts.register(typeManager, typeName, typeEntry.specializations)
 			CpShovelPositions.register(typeManager, typeName, typeEntry.specializations)

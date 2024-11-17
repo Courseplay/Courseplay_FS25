@@ -57,7 +57,7 @@ function CollisionAvoidanceController:isCollisionWarningActive()
 end
 
 function CollisionAvoidanceController:findPotentialCollisions()
-    for _, vehicle in pairs(g_currentMission.vehicles) do
+    for _, vehicle in pairs(g_currentMission.vehicleSystem.vehicles) do
         if AIDriveStrategyCombineCourse.isActiveCpCombine(vehicle) then
             local d = calcDistanceFrom(self.vehicle.rootNode, vehicle.rootNode)
             if d < self.range then

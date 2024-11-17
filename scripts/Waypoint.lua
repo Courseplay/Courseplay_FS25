@@ -39,7 +39,7 @@ function Waypoint:init(wp)
 	self.rev = self.rev or wp.gear and wp.gear == Gear.Backward
 	-- dynamically added/calculated properties
 	self.useTightTurnOffset = wp.useTightTurnOffset
-	self.turnControls = table.copy(wp.turnControls)
+	self.turnControls = table.clone(wp.turnControls)
 	self.dToNext = wp.dToNext
 	self.yRot = wp.yRot
 	--- Set, when generated for a multi tool course

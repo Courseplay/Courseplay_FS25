@@ -472,3 +472,8 @@ function CpUtil.getAllRootVegetables()
 
     return rootVegetables
 end
+
+---@return Vehicle the currently selected/controlled vehicle, formerly known as g_currentMission.controlledVehicle
+function CpUtil.getCurrentVehicle()
+	return g_currentMission.playerSystem:getLocalPlayer():getCurrentVehicle()
+end

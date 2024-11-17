@@ -239,7 +239,8 @@ end
 
 --- Is the job valid?
 function CpAIJob:validate(farmId)
-	self:setParamterValid(true)
+	--- TODO_25
+	-- self:setParamterValid(true)
 
 	local isValid, errorMessage = self.vehicleParameter:validate()
 

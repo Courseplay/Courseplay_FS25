@@ -325,7 +325,7 @@ function CpBunkerSiloLevelerController:draw()
 	if self:isDebugEnabled() then
 		self.silo:drawDebug()
 		self.silo:drawUnloaderArea()
-		if g_currentMission.controlledVehicle == self.vehicle then
+		if CpUtil.getCurrentVehicle() == self.vehicle then
 			local debugData = self.silo:getDebugData()
 			table.insert(debugData, 1, {
 				name = "is waiting", value = self:isWaitingAtParkPosition()

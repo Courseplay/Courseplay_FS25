@@ -182,7 +182,7 @@ end
 --- Debug test function
 ---@param ix number|nil optional bit mask to set.
 function CpInfoTexts.debug(ix)
-	local vehicle = g_currentMission.controlledVehicle
+	local vehicle = CpUtil.getCurrentVehicle()
 	if vehicle and vehicle.spec_cpInfoTexts then 
 		local spec = vehicle.spec_cpInfoTexts
 		CpUtil.infoVehicle(vehicle, "Current bit mask: %s", CpInfoTexts.getBitMask(vehicle))

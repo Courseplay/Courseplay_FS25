@@ -241,7 +241,7 @@ function VehicleConfigurations:consoleCommandReload()
 end
 
 function VehicleConfigurations:consoleCommandPrintConfigFileNames()
-    local vehicle = g_currentMission.controlledVehicle
+    local vehicle = CpUtil.getCurrentVehicle()
 	if not vehicle then 
 		CpUtil.info("No vehicle entered!")
 		return
@@ -253,7 +253,7 @@ function VehicleConfigurations:consoleCommandPrintConfigFileNames()
 end
 
 function VehicleConfigurations:consoleCommandPrintSingleAttributeValuesForVehicleAndImplements(attribute)
-    local vehicle = g_currentMission.controlledVehicle
+    local vehicle = CpUtil.getCurrentVehicle()
 	if not vehicle then 
 		CpUtil.info("No vehicle entered!")
 		return
@@ -277,7 +277,7 @@ function VehicleConfigurations:consoleCommandPrintSingleAttributeValuesForVehicl
 end
 
 function VehicleConfigurations:consoleCommandPrintAllAttributeValuesForVehicleAndImplements()
-    local vehicle = g_currentMission.controlledVehicle
+    local vehicle = CpUtil.getCurrentVehicle()
 	if not vehicle then 
 		CpUtil.info("No vehicle entered!")
 		return

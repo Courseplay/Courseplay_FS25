@@ -270,7 +270,7 @@ function Course:enrichWaypointData(startIx)
             directionChangeFound = true
         end
     end
-    CpUtil.debugVehicle(CpDebug.DBG_COURSES, self.vehicle or g_currentMission.controlledVehicle,
+    CpUtil.debugVehicle(CpDebug.DBG_COURSES, self.vehicle or CpUtil.getCurrentVehicle(),
             'Course with %d waypoints created/updated, %.1f meters, %d turns', #self.waypoints, self.length, self.totalTurns)
 end
 
@@ -1680,7 +1680,7 @@ end
 function Course.createFromGeneratedCourse(vehicle, generatedCourse, workWidth, numberOfHeadlands, nVehicles,
                                           headlandClockwise, islandHeadlandClockwise, straightRows)
     local waypoints = createWaypointsFromGeneratedPath(generatedCourse:getPath())
-    local course = Course(vehicle or g_currentMission.controlledVehicle, waypoints)
+    local course = Course(vehicle or CpUtil.getCurrentVehicle(), waypoints)
     course.workWidth = workWidth
     course.numberOfHeadlands = numberOfHeadlands
     course.nVehicles = nVehicles

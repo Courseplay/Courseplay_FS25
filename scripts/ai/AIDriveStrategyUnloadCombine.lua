@@ -565,7 +565,7 @@ end
 ---@param combine table
 ---@param combineDriver AIDriveStrategyCombineCourse
 function AIDriveStrategyUnloadCombine:areThereAnyCombinesOrLoaderLeftoverOnTheField(combine, combineDriver)
-    for _, vehicle in pairs(g_currentMission.vehicles) do
+    for _, vehicle in pairs(g_currentMission.vehicleSystem.vehicles) do
         if vehicle ~= combine and AIDriveStrategyCombineCourse.isActiveCpCombine(vehicle) then
             local x, _, z = getWorldTranslation(combine.rootNode)
             if self:isServingPosition(x, z, 10) then
@@ -2375,7 +2375,7 @@ function AIDriveStrategyUnloadCombine:findOtherUnloaderAroundCombine(combine, co
         return nil
     end
     if g_currentMission then
-        for _, vehicle in pairs(g_currentMission.vehicles) do
+        for _, vehicle in pairs(g_currentMission.vehicleSystem.vehicles) do
             if vehicle ~= self.vehicle and vehicle.cp.driver and vehicle.cp.driver:is_a(AIDriveStrategyUnloadCombine) then
                 local dx, _, dz = localToLocal(vehicle.rootNode, combine:getAIDirectionNode(), 0, 0, 0)
                 if math.abs(dz) < 30 and math.abs(dx) <= (combineOffset + 3) then

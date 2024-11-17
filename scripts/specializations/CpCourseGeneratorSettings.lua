@@ -92,7 +92,7 @@ function CpCourseGeneratorSettings:onLoad(savegame)
 	--- Register the spec: spec_cpCourseGeneratorSettings
     self.spec_cpCourseGeneratorSettings = self["spec_" .. CpCourseGeneratorSettings.SPEC_NAME]
     local spec = self.spec_cpCourseGeneratorSettings
-    spec.gui = g_currentMission.inGameMenu.pageAI
+
     --- Clones the generic settings to create different settings containers for each vehicle. 
     CpSettingsUtil.cloneSettingsTable(spec,CpCourseGeneratorSettings.settings,self,CpCourseGeneratorSettings)
 
@@ -193,11 +193,9 @@ function CpCourseGeneratorSettings.loadSettingsSetup()
     CpSettingsUtil.loadSettingsFromSetup(CpCourseGeneratorSettings.vineSettings,filePath)
 end
 
-function CpCourseGeneratorSettings.getSettingSetup(vehicle)
-    local title = g_i18n:getText(CpCourseGeneratorSettings.pageTitle)
+function CpCourseGeneratorSettings.getSettingSetup()
     return CpCourseGeneratorSettings.settingsBySubTitle, 
-            vehicle and string.format(title, vehicle:getName()) 
-            or title
+        CpCourseGeneratorSettings.pageTitle
 end
 
 function CpCourseGeneratorSettings.getVineSettingSetup(vehicle)
@@ -323,7 +321,7 @@ end
 --- Either prints all settings or a desired setting by the name or index in the setting table.
 ---@param name any
 function CpCourseGeneratorSettings:consoleCommandPrintSetting(name)
-    local vehicle = g_currentMission.controlledVehicle
+    local vehicle = CpUtil.getCurrentVehicle()
     if not vehicle then 
         CpUtil.info("Not entered a valid vehicle!")
         return

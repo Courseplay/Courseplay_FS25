@@ -74,7 +74,7 @@ function CpGlobalSettings:onCpUserSettingChanged()
 end
 
 function CpGlobalSettings:onHudSelectionChanged()
-    local vehicle = g_currentMission.controlledVehicle
+    local vehicle = CpUtil.getCurrentVehicle()
     if vehicle then 
         self:debug("reset action events for %s",vehicle:getName())
     --    g_inputBinding:setShowMouseCursor(false)
@@ -84,7 +84,7 @@ function CpGlobalSettings:onHudSelectionChanged()
 end
 
 function CpGlobalSettings:onActionEventTextVisibilityChanged()
-    local vehicle = g_currentMission.controlledVehicle
+    local vehicle = CpUtil.getCurrentVehicle()
     if vehicle then 
         vehicle:requestActionEventUpdate()
     end
