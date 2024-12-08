@@ -775,7 +775,7 @@ function AIDriveStrategyFieldWorkCourse:calculateTightTurnOffset()
     if self.state == self.states.WORKING or self.state == self.states.DRIVING_TO_WORK_START_WAYPOINT then
         -- when rounding small islands or to start on a course with curves
         self.tightTurnOffset = AIUtil.calculateTightTurnOffset(self.vehicle, self.turningRadius, self.course,
-                self.tightTurnOffset, true)
+                self.tightTurnOffset)
     else
         self.tightTurnOffset = 0
     end

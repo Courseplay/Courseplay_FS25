@@ -559,18 +559,6 @@ function Course:getYRotationCorrectedForDirectionChanges(ix)
     end
 end
 
--- This is the radius from the course generator. For now ony island bypass waypoints nodes have a
--- radius.
-function Course:getRadiusAtIx(ix)
-    local r = self.waypoints[ix].radius
-    if r ~= r then
-        -- radius can be nan
-        return nil
-    else
-        return r
-    end
-end
-
 -- This is the radius calculated when the course is created.
 function Course:getCalculatedRadiusAtIx(ix)
     local r = self.waypoints[ix].calculatedRadius

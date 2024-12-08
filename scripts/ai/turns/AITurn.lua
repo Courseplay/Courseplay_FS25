@@ -651,8 +651,8 @@ function CourseTurn:onWaypointChange(ix)
     if self.turnCourse then
         if self.forceTightTurnOffset or (self.enableTightTurnOffset and self.turnCourse:useTightTurnOffset(ix)) then
             -- adjust the course a bit to the outside in a curve to keep a towed implement on the course
-            self.tightTurnOffset = AIUtil.calculateTightTurnOffset(self.vehicle, self.turningRadius, self.turnCourse,
-                    self.tightTurnOffset, true)
+            self.tightTurnOffset = AIUtil.calculateTightTurnOffsetForTurnManeuver(self.vehicle, self.steeringLength,
+                    self.turnCourse, self.turnCourse:getCurrentWaypointIx(), self.tightTurnOffset)
             self.turnCourse:setOffset(self.tightTurnOffset, 0)
         else
             -- reset offset to 0 if tight turn offset is not on
@@ -728,8 +728,13 @@ function CourseTurn:generateCalculatedTurn()
             -- TODO: the generated Dubins turn may not fit on the field and we we'll move it back, forcing the
             -- vehicle to reverse at the start and at the end of the turn. This will be very slow, and if the
             -- vehicle is able to reverse, a Reeds-Shepp would be lot faster
-            turnManeuver = DubinsTurnManeuver(self.vehicle, self.turnContext, self.vehicle:getAIDirectionNode(),
-                    self.turningRadius, self.workWidth, self.steeringLength, distanceToFieldEdge)
+            if self.steeringLength > 0 then
+                turnManeuver = TowedDubinsTurnManeuver(self.vehicle, self.turnContext, self.vehicle:getAIDirectionNode(),
+                        self.turningRadius, self.workWidth, self.steeringLength, distanceToFieldEdge)
+            else
+                turnManeuver = DubinsTurnManeuver(self.vehicle, self.turnContext, self.vehicle:getAIDirectionNode(),
+                        self.turningRadius, self.workWidth, self.steeringLength, distanceToFieldEdge)
+            end
         else
             turnManeuver = ReedsSheppTurnManeuver(self.vehicle, self.turnContext, self.vehicle:getAIDirectionNode(),
                     self.turningRadius, self.workWidth, self.steeringLength, distanceToFieldEdge)

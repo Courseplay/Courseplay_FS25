@@ -230,6 +230,7 @@ end
 
 ---@return number angle (radian) between the row and the headland, 90 degrees means the headland is perpendicular to the row
 function TurnContext:getHeadlandAngle()
+    print(self.turnEndWp.angle, self.turnStartWp.angle)
     return  math.abs(CpMathUtil.getDeltaAngle(math.rad(self.turnEndWp.angle), math.rad(self.turnStartWp.angle)))
 end
 
