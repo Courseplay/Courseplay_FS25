@@ -37,9 +37,6 @@ function CpOptionToggleElement:addElement(element, ...)
 		self.textElement.target = self
 		self.textElement:setCallback("onClickCallback", "onCenterButtonClicked")
 	end
-	if element.name == "tooltip" then
-		self.toolTipElement = element
-	end
 end
 
 function CpOptionToggleElement:updateTitle()
@@ -50,8 +47,12 @@ function CpOptionToggleElement:updateTitle()
 	if self.labelElement and self.labelElement.setText then 
 		self.labelElement:setText(self.dataSource:getTitle())
 	end
-	if self.toolTipElement then
-		self.toolTipElement:setText(self.dataSource:getTooltip())
+	-- if self.toolTipElement then
+	-- 	self.toolTipElement:setText(self.dataSource:getTooltip())
+	-- end
+	self.toolTipElement = self:getDescendantByName("tooltip")
+	if self.toolTipElement then 
+		self.toolTipText = self.dataSource:getTooltip()
 	end
 end
 

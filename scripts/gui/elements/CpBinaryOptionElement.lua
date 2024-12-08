@@ -24,26 +24,13 @@ function CpBinaryOptionElement:setDataSource(dataSource)
 		self:setState(BinaryOptionElement.STATE_LEFT, true)
 	end	
 end
-
-function CpBinaryOptionElement:addElement(element, ...)
-	CpBinaryOptionElement:superClass().addElement(self, element, ...)
-	-- if self.textElement then
-	-- 	self.textElement.forceHighlight = true
-	-- 	self.textElement:setHandleFocus(false)
-	-- 	self.textElement.target = self
-	-- 	self.textElement:setCallback("onClickCallback", "onCenterButtonClicked")
-	-- end
-	if element.name == "tooltip" then
-		self.toolTipElement = element
-	end
-end
-
 function CpBinaryOptionElement:updateTitle()
 	if self.labelElement then 
 		self.labelElement:setText(self.dataSource:getTitle())
 	end
-	if self.toolTipElement then
-		self.toolTipElement:setText(self.dataSource:getTooltip())
+	self.toolTipElement = self:getDescendantByName("tooltip")
+	if self.toolTipElement then 
+		self.toolTipText = self.dataSource:getTooltip()
 	end
 end
 

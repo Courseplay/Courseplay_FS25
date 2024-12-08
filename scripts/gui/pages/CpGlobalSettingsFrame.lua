@@ -55,30 +55,30 @@ function CpGlobalSettingsFrame:initialize(menu)
 	for key = 1, CpGlobalSettingsFrame.NUM_CATEGORIES do 
 		self.subCategoryPaging:addText(tostring(key))
 		self.subCategoryPages[key] = self.containerPrefab:clone(self)
-		self.subCategoryPages[key]:getDescendantByName("layout").scrollDirection = "vertical"
+		local layout = self.subCategoryPages[key]:getDescendantByName("layout")
+		layout.scrollDirection = "vertical"
 		FocusManager:loadElementFromCustomValues(self.subCategoryPages[key])
 		self.subCategoryTabs[key] = self.selectorPrefab:clone(self.subCategoryBox)
 		FocusManager:loadElementFromCustomValues(self.subCategoryTabs[key])
-		self.subCategoryBox:invalidateLayout()
 		self.subCategoryTabs[key]:setText(g_i18n:getText(self.CATEGRORY_TEXTS[key]))
 		self.subCategoryTabs[key]:getDescendantByName("background"):setSize(
 			self.subCategoryTabs[key].size[1], self.subCategoryTabs[key].size[2])
 		self.subCategoryTabs[key].onClickCallback = function ()
 			self:updateSubCategoryPages(key)
 		end
-	end
 
+	end
+	self.subCategoryBox:invalidateLayout()
 	local settings = g_Courseplay.globalSettings:getSettings()
 	local settingsBySubTitle, pageTitle = g_Courseplay.globalSettings:getSettingSetup()
 	self.categoryHeaderText:setText(g_i18n:getText(pageTitle))
 
 	local ix = 1
 	for _, data in pairs(settingsBySubTitle) do 
-		CpSettingsUtil.generateAndBindGuiElements(data,
-			self.subCategoryPages[ix]:getDescendantByName("layout"), 
+		local layout = self.subCategoryPages[ix]:getDescendantByName("layout")
+		CpSettingsUtil.generateAndBindGuiElements(data, layout, 
 			self.multiTextPrefab, self.booleanPrefab, settings)
-		CpSettingsUtil.updateGuiElementsBoundToSettings(
-			self.subCategoryPages[ix]:getDescendantByName("layout"))
+		CpSettingsUtil.updateGuiElementsBoundToSettings(layout)
 		if ix >= 2 then 
 			break 
 		end
@@ -87,7 +87,9 @@ function CpGlobalSettingsFrame:initialize(menu)
 end
 
 function CpGlobalSettingsFrame:onFrameOpen()
+	CpGlobalSettingsFrame:superClass().onFrameOpen(self)
 	self:updateSubCategoryPages(self.CATEGRORIES.BASIC_SETTINGS)
+	FocusManager:setFocus(self.subCategoryPages[self.subCategoryPaging:getState()]:getDescendantByName("layout"))
 end
 
 function CpGlobalSettingsFrame:onClickCpMultiTextOption(_, guiElement)
@@ -102,6 +104,6 @@ function CpGlobalSettingsFrame:updateSubCategoryPages(state)
 	end
 	self.subCategoryPages[state]:setVisible(true)
 	self.subCategoryTabs[state]:setSelected(true)
-	self.settingsSlider:setDataElement(self.subCategoryPages[state]:getDescendantByName("layout"))
-	FocusManager:setFocus(self.subCategoryPages[self.CATEGRORIES.BASIC_SETTINGS]:getDescendantByName("layout"))
+	local layout = self.subCategoryPages[state]:getDescendantByName("layout")
+	self.settingsSlider:setDataElement(layout)
 end

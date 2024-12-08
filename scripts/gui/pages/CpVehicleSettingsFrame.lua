@@ -39,7 +39,7 @@ function CpVehicleSettingsFrame.createFromExistingGui(gui, guiName)
 end
 
 function CpVehicleSettingsFrame:initialize(menu)
-	
+	self.cpMenu = menu
 	self.booleanPrefab:unlinkElement()
 	FocusManager:removeElement(self.booleanPrefab)
 	self.multiTextPrefab:unlinkElement()
@@ -70,10 +70,8 @@ function CpVehicleSettingsFrame:initialize(menu)
 end
 
 function CpVehicleSettingsFrame:onFrameOpen()
-	local vehicle = CpUtil.getCurrentVehicle()
-	if not vehicle then 
-		return
-	end
+	CpVehicleSettingsFrame:superClass().onFrameOpen(self)
+	local vehicle = self.cpMenu:getCurrentVehicle()
 	local settings = vehicle:getCpSettings()
 	local settingsBySubTitle, pageTitle = CpVehicleSettings.getSettingSetup()
 	local title = string.format(g_i18n:getText(pageTitle), vehicle:getName())
@@ -93,9 +91,8 @@ function CpVehicleSettingsFrame:onFrameOpen()
 end
 
 function CpVehicleSettingsFrame:onClickCpMultiTextOption(_, guiElement)
-	local vehicle = CpUtil.getCurrentVehicle()
 	CpSettingsUtil.updateGuiElementsBoundToSettings(
-		self.subCategoryPages[self.subCategoryPaging:getState()]:getDescendantByName("layout"), vehicle)
+		self.subCategoryPages[self.subCategoryPaging:getState()]:getDescendantByName("layout"), self.cpMenu:getCurrentVehicle())
 end
 
 function CpVehicleSettingsFrame:updateSubCategoryPages(state)

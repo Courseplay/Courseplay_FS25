@@ -10,6 +10,7 @@ function CpInGameMenu.new(target, customMt, messageCenter, l10n, inputManager, c
 
 	self.defaultMenuButtonInfo = {}
 	self.backButtonInfo = {}
+	self.currentVehicle = nil
 
 	self.messageCenter:subscribe(MessageType.GUI_CP_INGAME_OPEN, function (menu)
 		g_gui:showGui("CpInGameMenu")
@@ -41,6 +42,8 @@ function CpInGameMenu.new(target, customMt, messageCenter, l10n, inputManager, c
 		local index = self.pagingElement:getPageMappingIndexByElement(self.pageCourseManager)
 		self.pageSelector:setState(index, true)
 	end, self)
+	self.messageCenter:subscribe(MessageType.GUI_CP_INGAME_CURRENT_VEHICLE_CHANGED, 
+		self.onCurrentVehicleChanged, self)
 	return self
 end
 
@@ -72,6 +75,7 @@ function CpInGameMenu.setupGui(courseStorage)
 	MessageType.GUI_CP_INGAME_OPEN_VEHICLE_SETTINGS = nextMessageTypeId()
 	MessageType.GUI_CP_INGAME_OPEN_COURSE_GENERATOR = nextMessageTypeId()
 	MessageType.GUI_CP_INGAME_OPEN_COURSE_MANAGER = nextMessageTypeId()
+	MessageType.GUI_CP_INGAME_CURRENT_VEHICLE_CHANGED = nextMessageTypeId()
 
 	CpCourseGeneratorFrame.setupGui()
 	CpGlobalSettingsFrame.setupGui()
@@ -112,14 +116,14 @@ function CpInGameMenu:setupMenuPages()
 		{
 			self.pageVehicleSettings,
 			function ()
-				return CpUtil.getCurrentVehicle() ~= nil
+				return self.currentVehicle ~= nil
 			end,
 			{896, 0, 128, 128}
 		},
 		{
 			self.pageCourseGenerator,
 			function ()
-				return CpUtil.getCurrentVehicle() ~= nil
+				return true
 			end,
 			{128, 0, 128, 128}
 		},
@@ -229,16 +233,24 @@ function CpInGameMenu:onMenuOpened()
 	-- end
 end
 
-function CpInGameMenu:onButtonBack(_, _, force)
-	if force or self.currentPage:requestClose(self.clickBackCallback) then
-		CpInGameMenu:superClass().onButtonBack(self)
+function CpInGameMenu:onButtonBack()
+	if self.currentPage.onClickBack then 
+		if not self.currentPage:onClickBack() then 
+			return
+		end
 	end
+	CpInGameMenu:superClass().onButtonBack(self)
 end
 
 -- Lines 559-578
 function CpInGameMenu:onClose(element)
 	CpInGameMenu:superClass().onClose(self)
+	self:unlockCurrentVehicle()
+end
 
+function CpInGameMenu:onOpen()
+	CpInGameMenu:superClass().onOpen(self)
+	self:lockCurrentVehicle(CpUtil.getCurrentVehicle())
 end
 
 -- Lines 650-699
@@ -269,6 +281,27 @@ function CpInGameMenu:getPageButtonInfo(page)
 	local buttonInfo = CpInGameMenu:superClass().getPageButtonInfo(self, page)
 
 	return buttonInfo
+end
+
+function CpInGameMenu:lockCurrentVehicle(vehicle)
+	if vehicle ~= self.currentVehicle then 
+		g_messageCenter:publishDelayed(MessageType.GUI_CP_INGAME_CURRENT_VEHICLE_CHANGED, vehicle)
+	end
+	self.currentVehicle = vehicle
+end
+
+function CpInGameMenu:unlockCurrentVehicle()
+	self.currentVehicle = nil
+end
+
+function CpInGameMenu:getCurrentVehicle()
+	return self.currentVehicle
+end
+
+function CpInGameMenu:onCurrentVehicleChanged()
+	if self:getIsOpen() then
+		self:updatePages()
+	end
 end
 
 

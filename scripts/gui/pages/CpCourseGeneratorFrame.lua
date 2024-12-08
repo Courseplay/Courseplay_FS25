@@ -119,6 +119,7 @@ function CpCourseGeneratorFrame:setInGameMap(ingameMap, hud)
 end
 
 function CpCourseGeneratorFrame:initialize(menu)
+	self.cpMenu = menu
 	self.onClickBackCallback = menu.clickBackCallback
 	self:initializeContextActions()
 
@@ -161,8 +162,11 @@ function CpCourseGeneratorFrame:initialize(menu)
 			self.subCategoryPages[key] = self.containerMap
 		else
 			self.subCategoryPages[key] = self.containerPrefab:clone(self)
-			self.subCategoryPages[key]:getDescendantByName("layout").scrollDirection = "vertical"
+			local layout = self.subCategoryPages[key]:getDescendantByName("layout")
+			layout.scrollDirection = "vertical"
 			FocusManager:loadElementFromCustomValues(self.subCategoryPages[key])
+			-- FocusManager:linkElements(self.subCategoryPages[key], FocusManager.BOTTOM, layout)
+			-- FocusManager:linkElements(layout, FocusManager.TOP, self.subCategoryPages[key])
 		end
 	end
 	self.mapOverviewSelector:setTexts(self.mapSelectorTexts)
@@ -180,6 +184,26 @@ function CpCourseGeneratorFrame:initialize(menu)
 
 	self.currentContextBox = self.contextBox 
 	self.currentHotspot = nil
+	g_messageCenter:subscribe(MessageType.GUI_CP_INGAME_CURRENT_VEHICLE_CHANGED, 
+		function(self, vehicle)
+			if vehicle then 
+				self.subCategoryPaging:setDisabled(false)
+				for ix=1, self.NUM_CATEGORIES do 
+					if ix ~= self.CATEGRORIES.IN_GAME_MAP then
+						self.subCategoryTabs[ix]:setDisabled(false)		
+					end
+				end
+				self:updateSettings(vehicle)
+			else
+				self:updateSubCategoryPages(self.CATEGRORIES.IN_GAME_MAP)
+				self.subCategoryPaging:setDisabled(true)
+				for ix=1, self.NUM_CATEGORIES do 
+					if ix ~= self.CATEGRORIES.IN_GAME_MAP then
+						self.subCategoryTabs[ix]:setDisabled(true)		
+					end
+				end
+			end
+		end, self)
 end
 
 function CpCourseGeneratorFrame:update(dt)
@@ -210,12 +234,7 @@ function CpCourseGeneratorFrame:update(dt)
 	CpCourseGeneratorFrame:superClass().update(self, dt)
 end
 
-function CpCourseGeneratorFrame:onFrameOpen()
-	local vehicle = CpUtil.getCurrentVehicle()
-	if not vehicle then 
-		return
-	end
-	self.ingameMap:setTerrainSize(g_currentMission.terrainSize)
+function CpCourseGeneratorFrame:updateSettings(vehicle)
 	local settings = vehicle:getCourseGeneratorSettings()
 	local settingsBySubTitle, pageTitle = CpCourseGeneratorSettings.getSettingSetup()
 	local title = string.format(g_i18n:getText(pageTitle), vehicle:getName())
@@ -229,7 +248,7 @@ function CpCourseGeneratorFrame:onFrameOpen()
 		layout, self.multiTextPrefab, self.booleanPrefab, 
 		self.sectionHeaderPrefab, settings)
 	CpSettingsUtil.updateGuiElementsBoundToSettings(layout, vehicle)
-	
+
 	settings = vehicle:getCpVineSettings()
 	settingsBySubTitle = CpCourseGeneratorSettings.getVineSettingSetup()
 	layout = self.subCategoryPages[self.CATEGRORIES.Vine_SETTINGS]:getDescendantByName("layout")
@@ -240,9 +259,12 @@ function CpCourseGeneratorFrame:onFrameOpen()
 		layout, self.multiTextPrefab, self.booleanPrefab, 
 		self.sectionHeaderPrefab, settings)
 	CpSettingsUtil.updateGuiElementsBoundToSettings(layout, vehicle)
+end
 
+function CpCourseGeneratorFrame:onFrameOpen()
+	self.ingameMap:setTerrainSize(g_currentMission.terrainSize)
 	-- g_messageCenter:subscribe(MessageType.AI_VEHICLE_STATE_CHANGE, self.onAIVehicleStateChanged, self)
-	self.activeWorkerList:reloadData()
+	
 	g_messageCenter:subscribe(MessageType.AI_JOB_STARTED, function(self)
 		self.activeWorkerList:reloadData()
 	end, self)
@@ -284,6 +306,7 @@ function CpCourseGeneratorFrame:onFrameOpen()
 	else 
 		self.buttonDeselectAllText:setText(g_i18n:getText(InGameMenuMapFrame.L10N_SYMBOL.DESELECT_ALL))
 	end
+	self.activeWorkerList:reloadData()
 	self.filterList:reloadData()
 	self.ingameMapBase:restoreDefaultFilter()
 	self:generateJobTypes()
@@ -291,7 +314,6 @@ function CpCourseGeneratorFrame:onFrameOpen()
 	self.currentJob = nil
 	self.currentJobVehicle = nil
 	self.currentHotspot = nil
-	self:setMapSelectionItem(nil)
 	self:setJobMenuVisible(false)
 	self.startJobPending = false
 	self.ingameMap:onOpen()
@@ -299,6 +321,17 @@ function CpCourseGeneratorFrame:onFrameOpen()
 	self:updateSubCategoryPages(self.CATEGRORIES.IN_GAME_MAP)
 
 	CpCourseGeneratorFrame:superClass().onFrameOpen(self)
+
+	local vehicle = self.cpMenu:getCurrentVehicle()
+	if vehicle and self.currentHotspot == nil then
+		self.subCategoryPaging:setDisabled(false)
+		self:setAIVehicle(vehicle)
+	elseif vehicle == nil then
+		self:updateSubCategoryPages(self.CATEGRORIES.IN_GAME_MAP)
+		self.subCategoryPaging:setDisabled(true)
+		self:setMapSelectionItem(nil)
+	end	
+
 end
 
 function CpCourseGeneratorFrame:saveHotspotFilter()
@@ -329,7 +362,10 @@ end
 
 function CpCourseGeneratorFrame:onFrameClose()
 	self:closeMap()
-	g_messageCenter:unsubscribeAll(self)
+	g_messageCenter:unsubscribe(MessageType.AI_JOB_STARTED, self)
+	g_messageCenter:unsubscribe(MessageType.AI_JOB_STOPPED, self)
+	g_messageCenter:unsubscribe(MessageType.AI_JOB_REMOVED, self)
+	g_messageCenter:unsubscribe(AIJobStartRequestEvent, self)
 	self.jobTypeInstances = {}
 	g_currentMission:removeMapHotspot(self.driveToAiTargetMapHotspot)
 	g_currentMission:removeMapHotspot(self.fieldSiloAiTargetMapHotspot)
@@ -342,7 +378,6 @@ function CpCourseGeneratorFrame:onFrameClose()
 	end
 	self.mode = self.AI_MODE_OVERVIEW
 	self:setJobMenuVisible(false)
-	self:setMapSelectionItem(nil)
 	self.statusMessages = {}
 	self:updateStatusMessages()
 	self.startJobPending = false
@@ -350,7 +385,10 @@ function CpCourseGeneratorFrame:onFrameClose()
 	CpCourseGeneratorFrame:superClass().onFrameClose(self)
 end
 
-function CpCourseGeneratorFrame:requestClose()
+function CpCourseGeneratorFrame:onClickBack()
+	if self.startJobPending then
+		return
+	end
 	if self.mode == self.AI_MODE_CREATE then 
 		if self:getIsPicking() then
 			self:executePickingCallback(false)
@@ -359,6 +397,7 @@ function CpCourseGeneratorFrame:requestClose()
 		end 
 		self.mode = self.AI_MODE_OVERVIEW
 		self:setJobMenuVisible(false)
+		self:setMapSelectionItem(self.currentHotspot)
 		return false
 	elseif self.currentHotspot then 
 		self:setMapSelectionItem(nil)
@@ -389,7 +428,7 @@ function CpCourseGeneratorFrame:updateSubCategoryPages(state)
 		self.ingameMap:setVisible(false)
 		layout:invalidateLayout()
 		self.settingsSlider:setDataElement(layout)
-		FocusManager:setFocus(layout)
+		FocusManager:setFocus(self.subCategoryPages[state])
 	else
 		self.settingsSliderBox:setVisible(false)
 		self.ingameMap:setVisible(true)
@@ -778,6 +817,7 @@ function CpCourseGeneratorFrame:startJob()
 			if state == AIJob.START_SUCCESS then
 				self.mode = self.AI_MODE_OVERVIEW
 				self:setJobMenuVisible(false)
+				self:setMapSelectionItem(self.currentHotspot)
 			end
 		end
 		self:tryStartJob(self.currentJob, 
@@ -1130,15 +1170,13 @@ function CpCourseGeneratorFrame:setMapSelectionItem(hotspot)
 	if self.mode == self.AI_MODE_CREATE then 
 		return
 	end
-
 	if hotspot ~= nil then
-		
 		local x, _ = hotspot:getWorldPosition()
 		if x == nil then
 			hotspot = nil
 		end
 	end
-	self.ingameMapBase:setSelectedHotspot(nil)
+	self.ingameMapBase:setSelectedHotspot(hotspot)
 	self.selectedFarmland = nil
 
 	g_currentMission:removeMapHotspot(self.driveToAiTargetMapHotspot)
@@ -1185,6 +1223,7 @@ function CpCourseGeneratorFrame:setMapSelectionItem(hotspot)
 	else
 		InGameMenuMapUtil.hideContextBox(self.contextBox)
 	end
+	self.cpMenu:lockCurrentVehicle(self.currentHotspot and self.currentHotspot:getVehicle())
 end
 
 function CpCourseGeneratorFrame:setAIVehicle(vehicle)
@@ -1192,7 +1231,6 @@ function CpCourseGeneratorFrame:setAIVehicle(vehicle)
 	self:setMapSelectionItem(hotspot)
 	self.ingameMap:panToHotspot(hotspot)
 	self:onCreateJob()
-	self.createJobEmptyText:setVisible(false)
 end
 
 function CpCourseGeneratorFrame:onCreateJob()
@@ -1207,14 +1245,16 @@ function CpCourseGeneratorFrame:onCreateJob()
 					table.insert(currentJobTypesTexts, g_currentMission.aiJobTypeManager:getJobTypeByIndex(index).title)
 				end
 			end
-			self.jobTypeElement:setTexts(currentJobTypesTexts)
-			self.jobTypeElement:setState(1)
-			self.mode = self.AI_MODE_CREATE
-			self.currentJobVehicle = vehicle
-			self.currentJob = nil
-			self:setJobMenuVisible(true)
-			FocusManager:setFocus(self.jobTypeElement)
-			self:setActiveJobTypeSelection(self.currentJobTypes[1])
+			if #self.currentJobTypes > 0 then 
+				self.jobTypeElement:setTexts(currentJobTypesTexts)
+				self.jobTypeElement:setState(1)
+				self.mode = self.AI_MODE_CREATE
+				self.currentJobVehicle = vehicle
+				self.currentJob = nil
+				self:setJobMenuVisible(true)
+				FocusManager:setFocus(self.jobTypeElement)
+				self:setActiveJobTypeSelection(self.currentJobTypes[1])
+			end
 		end
 	end
 	self:updateContextActions()
@@ -1243,7 +1283,6 @@ function CpCourseGeneratorFrame:setJobMenuVisible(isVisible)
 	if not isVisible then
 		self.currentJob = nil
 		self.currentJobVehicle = nil
-		self:setMapSelectionItem(self.currentHotspot)		
 		FocusManager:setFocus(self.mapOverviewSelector)
 		self.mapOverviewSelector:setState(self.MAP_SELECTOR_ACTIVE_JOBS, true)
 	else
