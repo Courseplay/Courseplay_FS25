@@ -91,8 +91,7 @@ function CpVehicleSettingsFrame:onFrameOpen()
 end
 
 function CpVehicleSettingsFrame:onClickCpMultiTextOption(_, guiElement)
-	CpSettingsUtil.updateGuiElementsBoundToSettings(
-		self.subCategoryPages[self.subCategoryPaging:getState()]:getDescendantByName("layout"), self.cpMenu:getCurrentVehicle())
+	CpSettingsUtil.updateGuiElementsBoundToSettings(guiElement.parent.parent, self.cpMenu:getCurrentVehicle())
 end
 
 function CpVehicleSettingsFrame:updateSubCategoryPages(state)

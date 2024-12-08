@@ -93,8 +93,7 @@ function CpGlobalSettingsFrame:onFrameOpen()
 end
 
 function CpGlobalSettingsFrame:onClickCpMultiTextOption(_, guiElement)
-	CpSettingsUtil.updateGuiElementsBoundToSettings(
-		self.subCategoryPages[self.subCategoryPaging:getState()]:getDescendantByName("layout"))
+	CpSettingsUtil.updateGuiElementsBoundToSettings(guiElement.parent.parent)
 end
 
 function CpGlobalSettingsFrame:updateSubCategoryPages(state)

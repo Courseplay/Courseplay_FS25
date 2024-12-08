@@ -407,11 +407,7 @@ function CpCourseGeneratorFrame:onClickBack()
 end
 
 function CpCourseGeneratorFrame:onClickCpMultiTextOption(_, guiElement)
-	local vehicle = CpUtil.getCurrentVehicle()
-	local layout = self.subCategoryPages[self.subCategoryPaging:getState()]:getDescendantByName("layout")
-	if layout then 
-		CpSettingsUtil.updateGuiElementsBoundToSettings(layout, vehicle)
-	end
+	CpSettingsUtil.updateGuiElementsBoundToSettings(guiElement.parent.parent, self.cpMenu:getCurrentVehicle())
 end
 
 function CpCourseGeneratorFrame:updateSubCategoryPages(state)
@@ -600,7 +596,7 @@ function CpCourseGeneratorFrame:onClickMultiTextOptionParameter(index, element)
 end
 
 function CpCourseGeneratorFrame:onClickMultiTextOptionCenterParameter()
-
+	
 end
 
 function CpCourseGeneratorFrame:executePickingCallback(...)
@@ -744,7 +740,7 @@ function CpCourseGeneratorFrame:updateParameterValueTexts()
 		if invalidElement ~= nil then
 			invalidElement:setVisible(not parameter:getIsValid() and not parameter:getIsDisabled())
 		end
-
+		element:setDisabled(not parameter:getCanBeChanged())
 		local parameterType = parameter:getType()
 		if parameterType == AIParameterType.TEXT then
 			local title = element:getDescendantByName("title")

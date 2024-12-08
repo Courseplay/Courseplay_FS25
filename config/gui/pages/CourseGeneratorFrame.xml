@@ -27,9 +27,9 @@
                 <ThreePartBitmap profile="fs25_subCategoryContainerBg" id="leftBox">
                     <Bitmap profile="fs25_subCategoryContainerArrow" />
                 </ThreePartBitmap>            
-                <Bitmap profile="fs25_subCategoryContainer" id="filterBox">
+                <Bitmap profile="fs25_subCategoryContainer" id="filterBox"  absoluteSizeOffset="0 -75px">
                     <MultiTextOption profile="fs25_subCategorySelector" id="mapOverviewSelector"
-                        onClick="onClickMapOverviewSelector" />
+                        onClick="onClickMapOverviewSelector"/>
                     <BoxLayout profile="fs25_subCategorySelectorBox" id="subCategoryDotBox">
                         <RoundCorner profile="fs25_subCategorySelectorDot" />
                         <RoundCorner profile="fs25_subCategorySelectorDot" />
@@ -82,7 +82,7 @@
                                 <Bitmap profile="fs25_aiCreateJobParameterInvalid" name="invalid" />
                             </Button>
                             <Text profile="fs25_aiCreateJobParameterTitle" id="createTitleTemplate"
-                                text="Group title" />
+                                text="Group title"  size="100% 30px"/>
                             <Button profile="fs25_aiCreateJobParameterButton" id="createPositionTemplate"
                                 text="&lt;400, 300>" onClick="onClickPositionParameter">
                                 <ThreePartBitmap profile="fs25_aiCreateJobParameterBg" />
