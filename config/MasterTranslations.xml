@@ -878,8 +878,12 @@
 			<Text language="en"><![CDATA[Basic settings]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_subTitle_vineField">
-			<Text language="de"><![CDATA[Weinfeld Einstellungen]]></Text>
-			<Text language="en"><![CDATA[Vine field settings]]></Text>
+			<Text language="de"><![CDATA[Reben Einstellungen]]></Text>
+			<Text language="en"><![CDATA[Vine settings]]></Text>
+		</Translation>
+		<Translation name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork">
+			<Text language="de"><![CDATA[Feldarbeit Einstellungen]]></Text>
+			<Text language="en"><![CDATA[Fieldwork settings]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_subTitle_headland">
 			<Text language="de"><![CDATA[Einstellungen Vorgewende]]></Text>

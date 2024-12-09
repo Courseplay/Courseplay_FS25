@@ -12,7 +12,7 @@ CpCourseGeneratorFrame = {
 	INPUT_CONTEXT_NAME = "CP_COURSE_GENERATOR_MENU",
 	CATEGRORY_TEXTS = {
 		"CP_ingameMenu_map_title",
-		"CP_vehicle_courseGeneratorSetting_subTitle_basic",
+		"CP_vehicle_courseGeneratorSetting_subTitle_fieldwork",
 		"CP_vehicle_courseGeneratorSetting_subTitle_vineField",
 	},
 	CLEAR_INPUT_ACTIONS = {
