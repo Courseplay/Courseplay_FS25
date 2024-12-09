@@ -273,6 +273,7 @@
     <text name="CP_vehicle_courseGeneratorSetting_title" text="工作路线设置 (%s)"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="基本设置"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Vine field settings"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Fieldwork settings"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="田间地头设置"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="田地中心路线设置"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="障碍绕行设置"/>

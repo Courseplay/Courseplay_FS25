@@ -272,7 +272,8 @@
     <!---->
     <text name="CP_vehicle_courseGeneratorSetting_title" text="Course generator settings of (%s)"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="Basic settings"/>
-    <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Vine field settings"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Vine settings"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Fieldwork settings"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="Settings headland"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="Settings center"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Settings island"/>

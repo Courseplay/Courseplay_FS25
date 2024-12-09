@@ -272,7 +272,8 @@
     <!---->
     <text name="CP_vehicle_courseGeneratorSetting_title" text="Kursgenerator-Einstellungen von (%s)"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="Grundeinstellungen"/>
-    <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Weinfeld Einstellungen"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Reben Einstellungen"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Feldarbeit Einstellungen"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="Einstellungen Vorgewende"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="Einstellungen Mitte"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Einstellungen Insel"/>

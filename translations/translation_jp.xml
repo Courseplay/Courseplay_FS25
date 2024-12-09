@@ -273,6 +273,7 @@
     <text name="CP_vehicle_courseGeneratorSetting_title" text="[%s]のコース生成設定"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="一般設定"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Vine field settings"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Fieldwork settings"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="まくら地設定"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="フィールド内設定"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Settings island"/>

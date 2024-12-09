@@ -273,6 +273,7 @@
     <text name="CP_vehicle_courseGeneratorSetting_title" text="Rutegenerator indstilling for (%s)"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="Rutegenerator indstilling for (%s)"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Vine field settings"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Fieldwork settings"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="Forager"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="Mitte"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Settings island"/>

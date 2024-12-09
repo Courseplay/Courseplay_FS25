@@ -273,6 +273,7 @@
     <text name="CP_vehicle_courseGeneratorSetting_title" text="工作路線設置 (%s)"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="基本設置"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Vine field settings"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Fieldwork settings"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="田間地頭設置"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="中心路線設置"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Settings island"/>

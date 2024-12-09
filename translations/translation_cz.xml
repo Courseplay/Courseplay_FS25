@@ -273,6 +273,7 @@
     <text name="CP_vehicle_courseGeneratorSetting_title" text="Nastavení generátoru tras (%s)"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="Základní"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Vine field settings"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Fieldwork settings"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="Souvrať"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="Střed"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Nastavení ostrova"/>

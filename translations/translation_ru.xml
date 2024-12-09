@@ -273,6 +273,7 @@
     <text name="CP_vehicle_courseGeneratorSetting_title" text="Настройки генератора курсов (%s)"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="основные"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Vine field settings"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Fieldwork settings"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="поворотная полоса"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="метод движения"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Настройки работ вокруг островков"/>

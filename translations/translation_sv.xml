@@ -273,6 +273,7 @@
     <text name="CP_vehicle_courseGeneratorSetting_title" text="Kursskapandeinställningar för (%s)"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="Grundläggande"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Vine field settings"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Fieldwork settings"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="Vändteg"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="Centrum"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Settings island"/>

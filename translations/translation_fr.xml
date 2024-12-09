@@ -273,6 +273,7 @@
     <text name="CP_vehicle_courseGeneratorSetting_title" text="Paramètres du générateur pour la course (%s)"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="Paramètres principaux"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Vine field settings"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Fieldwork settings"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="Paramètres des fourrières"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="Paramètres des rangs"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Paramètres îlots"/>

@@ -273,6 +273,7 @@
     <text name="CP_vehicle_courseGeneratorSetting_title" text="Ustawienia generatora kursu dla (%s)"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="Podstawowe"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Vine field settings"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Fieldwork settings"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="Uwrocia"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="Środek"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Ustawienia przeszkód"/>
