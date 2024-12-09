@@ -222,8 +222,10 @@ function CpAIJobFieldWork:onClickGenerateFieldWorkCourse()
                 vineSettings.vineCenterOffset:getValue(),
                 tx, tz
         )
-        ok, course = CourseGeneratorInterface.generateVineCourse(vertices,
+        ok, course = CourseGeneratorInterface.generateVineCourse(
+                vertices,
                 startingPoint,
+                vehicle,
                 width,
                 AIUtil.getTurningRadius(vehicle),
                 rowAngleDeg,
