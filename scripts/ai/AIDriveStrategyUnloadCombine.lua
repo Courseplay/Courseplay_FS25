@@ -2829,7 +2829,7 @@ function AIDriveStrategyUnloadCombine:onFieldUnloadPositionReached()
         self:debug("Starting pathfinding to the reverse unload turn end node with align length: %.2f and steering length: %.2f, turn radius: %.2f",
                 alignLength, steeringLength, self.turningRadius)
         local path = PathfinderUtil.findAnalyticPath(PathfinderUtil.dubinsSolver, self.fieldUnloadTurnStartNode,
-                0, self.fieldUnloadTurnEndNode, 0, 3, self.turningRadius)
+                0, 0, self.fieldUnloadTurnEndNode, 0, 3, self.turningRadius)
         if not path or #path == 0 then
             self:debug("Reverse alignment course creation failed!")
         else

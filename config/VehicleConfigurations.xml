@@ -270,6 +270,9 @@ You can define the following custom settings:
              toolOffsetX = "-1.8"
              noReverse = "true"
     />
+    <Vehicle name="prios440.xml"
+             implementWheelAlwaysOnGround = "true"
+    />
     <!--\vehicles\ropa-->
     <Vehicle name="keiler2.xml"
              toolOffsetX = "-2.0"

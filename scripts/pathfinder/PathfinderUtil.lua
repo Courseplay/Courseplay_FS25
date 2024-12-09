@@ -604,7 +604,9 @@ end
 ------------------------------------------------------------------------------------------------------------------------
 ---@param solver AnalyticSolver for instance PathfinderUtil.dubinsSolver or PathfinderUtil.reedsSheppSolver
 ---@param vehicleDirectionNode number Giants node
----@param startOffset number offset in meters relative to the vehicle position (forward positive, backward negative) where
+---@param startXOffset number offset in meters relative to the vehicle position (left positive, right negative) where
+--- we want the turn to start
+---@param startZOffset number offset in meters relative to the vehicle position (forward positive, backward negative) where
 --- we want the turn to start
 ---@param goalReferenceNode table node used to determine the goal
 ---@param xOffset number offset in meters relative to the goal node (left positive, right negative)
@@ -613,9 +615,9 @@ end
 ---@param turnRadius number vehicle turning radius
 ---@return table|nil path
 ---@return number length
-function PathfinderUtil.findAnalyticPath(solver, vehicleDirectionNode, startOffset, goalReferenceNode,
+function PathfinderUtil.findAnalyticPath(solver, vehicleDirectionNode, startXOffset, startZOffset, goalReferenceNode,
                                          xOffset, zOffset, turnRadius)
-    local x, z, yRot = PathfinderUtil.getNodePositionAndDirection(vehicleDirectionNode, 0, startOffset or 0)
+    local x, z, yRot = PathfinderUtil.getNodePositionAndDirection(vehicleDirectionNode, startXOffset, startZOffset or 0)
     local start = State3D(x, -z, CpMathUtil.angleFromGame(yRot))
     x, z, yRot = PathfinderUtil.getNodePositionAndDirection(goalReferenceNode, xOffset or 0, zOffset or 0)
     local goal = State3D(x, -z, CpMathUtil.angleFromGame(yRot))
