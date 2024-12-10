@@ -33,14 +33,14 @@
         <Bitmap profile="fs25_multiTextOptionContainer" id="booleanPrefab">
             <CpBinaryyOption profile="fs25_settingsBinaryOption" name="setting" namedComponents="true" onClick="onClickCpMultiTextOption">
                 <Text profile="fs25_multiTextOptionTooltip" name="tooltip"/>
-                <Text profile="fs25_settingsMultiOptionTitle" name="label"/>
+                <Text profile="cpSettingsMultiOptionTitle" name="label"/>
             </CpBinaryyOption>
         </Bitmap>
         <Text profile="fs25_settingsSectionHeader" name="sectionHeader" id="sectionHeaderPrefab"/>
         <Bitmap profile="fs25_multiTextOptionContainer" id="multiTextPrefab">
             <CpOptionToggle profile="fs25_settingsMultiTextOption" name="setting" namedComponents="true" onClick="onClickCpMultiTextOption">
                 <Text profile="fs25_multiTextOptionTooltip" name="tooltip"/>
-                <Text profile="fs25_settingsMultiOptionTitle" name="label"/>
+                <Text profile="cpSettingsMultiOptionTitle" name="label"/>
             </CpOptionToggle>
         </Bitmap>
 
@@ -51,18 +51,8 @@
         </ThreePartBitmap>
     </ThreePartBitmap>
     <GUIProfiles>
-        <Profile name="fs25_settingsMultiOptionTitle" extends="fs25_settingsMultiTextOptionTitle">
+        <Profile name="cpSettingsMultiOptionTitle" extends="fs25_settingsMultiTextOptionTitle">
             <position value="-500px 0px" />
-        </Profile>
-        <Profile name="fs25_settingsNoPermissionText" extends="fs25_textDefault"
-            with="anchorMiddleStretchingX">
-            <size value="100% 40px" />
-            <textSize value="20px" />
-            <textAlignment value="center" />
-            <textColor value="$preset_fs25_colorMainLight" />
-        </Profile>
-        <Profile name="fs25_settingsTextInput" extends="fs25_textInput" with="anchorMiddleRight">
-            <position value="-41px 0px" />
         </Profile>
     </GUIProfiles>
 </GUI>

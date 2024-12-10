@@ -58,6 +58,7 @@ function CpInGameMenu.createFromExistingGui(gui, guiName)
 	CpVehicleSettingsFrame.createFromExistingGui(g_gui.frames.cpInGameMenuVehicleSettings.target, "CpVehicleSettingsFrame")
 	CpCourseGeneratorFrame.createFromExistingGui(g_gui.frames.cpInGameMenuCourseGenerator.target, "CpCourseGeneratorFrame")
 	CpCourseManagerFrame.createFromExistingGui(g_gui.frames.cpInGameMenuCourseManager.target, "CpCourseManagerFrame")
+	CpHelpFrame.createFromExistingGui(g_gui.frames.cpInGameMenuHelpLine.target, "CpHelpFrame")
 
 	local messageCenter = gui.messageCenter
 	local l10n = gui.l10n
@@ -86,6 +87,7 @@ function CpInGameMenu.setupGui(courseStorage)
 	CpGlobalSettingsFrame.setupGui()
 	CpVehicleSettingsFrame.setupGui()
 	CpCourseManagerFrame.setupGui()
+	CpHelpFrame.setupGui()
 
 	g_cpInGameMenu = CpInGameMenu.new(nil, nil, g_messageCenter, g_i18n, g_inputBinding, courseStorage)
 	g_gui:loadGui(Utils.getFilename("config/gui/CpInGameMenu.xml", Courseplay.BASE_DIRECTORY),
@@ -100,6 +102,7 @@ function CpInGameMenu:initializePages()
 		g_inGameMenu.baseIngameMap, 
 		g_currentMission.hud)
 
+	self.pageHelpLine:initialize(self)
 	self.pageGlobalSettings:initialize(self)
 	self.pageVehicleSettings:initialize(self)
 	self.pageCourseGenerator:initialize(self)
@@ -138,18 +141,29 @@ function CpInGameMenu:setupMenuPages()
 				return true
 			end,
 			{256, 0, 128, 128}
+		},
+		{
+			self.pageHelpLine,
+			function ()
+				return true
+			end,
+			nil,
+			"gui.icon_options_help2"
 		}
 	}
 
 	for i, pageDef in ipairs(orderedDefaultPages) do
-		local page, predicate, iconUVs = unpack(pageDef)
+		local page, predicate, iconUVs, sliceId = unpack(pageDef)
 
 		if page ~= nil then
 			self:registerPage(page, i, predicate)
-
-			local normalizedUVs = GuiUtils.getUVs(iconUVs)
-
-			self:addPageTab(page, Utils.getFilename('img/ui_courseplay.dds', g_Courseplay.BASE_DIRECTORY), normalizedUVs)
+			local normalizedUVs = nil
+			local path = nil
+			if iconUVs then
+				normalizedUVs = GuiUtils.getUVs(iconUVs)
+				path = Utils.getFilename('img/ui_courseplay.dds', g_Courseplay.BASE_DIRECTORY)
+			end
+			self:addPageTab(page, path, normalizedUVs, sliceId)
 		end
 	end
 end

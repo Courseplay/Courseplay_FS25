@@ -499,6 +499,7 @@ Changelog 7.1.0.0:
 		<sourceFile filename="scripts/gui/pages/CpCourseGeneratorFrame.lua"/>
 		<sourceFile filename="scripts/gui/pages/CpVehicleSettingsFrame.lua"/>
 		<sourceFile filename="scripts/gui/pages/CpGlobalSettingsFrame.lua"/>
+		<sourceFile filename="scripts/gui/pages/CpHelpFrame.lua"/>
 		<sourceFile filename="scripts/gui/CpInGameMenu.lua"/>
 
 		<sourceFile filename="scripts/gui/hud/HudElements.lua"/>

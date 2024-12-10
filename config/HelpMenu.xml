@@ -26,14 +26,14 @@
 		<page title="$l10n_CP_help_page_extendedJobMenu_title">
 			<paragraph>
 				<text text="$l10n_CP_help_page_startJobMenuBase_text"/>
-				<image filename="img/helpmenu/startjobmenuhelp.dds" size="1024 1024" uvs="0px 0px 1020px 895px"/>
+				<image filename="img/helpmenu/startjobmenuhelp.dds" size="1024 1024" uvs="0px 0px 1024px 895px" aspectRatio="0.87"/>
 			</paragraph>
 			<paragraph>
 				<text text="$l10n_CP_help_page_startJobMenuFunctions_text"/>
 			</paragraph>
 			<paragraph>
 				<text text="$l10n_CP_help_page_readyJobMenuBase_text"/>
-				<image filename="img/helpmenu/readyjobmenuhelp.dds" size="1024 1024" uvs="0px 0px 765px 510px"/>
+				<image filename="img/helpmenu/readyjobmenuhelp.dds" size="1024 1024" uvs="0px 0px 765px 510px" aspectRatio="0.66"/>
 			</paragraph>
 			<paragraph>
 				<text text="$l10n_CP_help_page_readyJobMenuFunctions_text"/>
