@@ -47,6 +47,14 @@ function CpInGameMenu.new(target, customMt, messageCenter, l10n, inputManager, c
 		local index = self.pagingElement:getPageMappingIndexByElement(self.pageCourseManager)
 		self.pageSelector:setState(index, true)
 	end, self)
+	self.messageCenter:subscribe(MessageType.GUI_CP_INGAME_OPEN_HELP_MENU, function (menu)
+		g_gui:showGui("CpInGameMenu")
+		self:changeScreen(CpInGameMenu)
+		self:updatePages()
+		local index = self.pagingElement:getPageMappingIndexByElement(self.pageHelpLine)
+		self.pageSelector:setState(index, true)
+	end, self)
+
 	self.messageCenter:subscribe(MessageType.GUI_CP_INGAME_CURRENT_VEHICLE_CHANGED, 
 		self.onCurrentVehicleChanged, self)
 	return self
@@ -81,6 +89,7 @@ function CpInGameMenu.setupGui(courseStorage)
 	MessageType.GUI_CP_INGAME_OPEN_VEHICLE_SETTINGS = nextMessageTypeId()
 	MessageType.GUI_CP_INGAME_OPEN_COURSE_GENERATOR = nextMessageTypeId()
 	MessageType.GUI_CP_INGAME_OPEN_COURSE_MANAGER = nextMessageTypeId()
+	MessageType.GUI_CP_INGAME_OPEN_HELP_MENU = nextMessageTypeId()
 	MessageType.GUI_CP_INGAME_CURRENT_VEHICLE_CHANGED = nextMessageTypeId()
 
 	CpCourseGeneratorFrame.setupGui()
