@@ -98,7 +98,7 @@
                             </Button>
                         </BoxLayout>
                         <SmoothList profile="fs25_mapContextButtonList" id="createJobButtonList"
-                            onClick="onClickList" visible="true">
+                            onClick="onClickList" visible="true" position="0px -165px">
                             <ListItem profile="fs25_mapContextButtonListItem">
                                 <ThreePartBitmap profile="fs25_mapContextButtonListItemBg" />
                                 <Text profile="fs25_mapButtonText" name="text" />
