@@ -56,14 +56,7 @@ CpBaseHud.uvs = {
     },
     driveNowSymbol = {
         {0, 768, 128, 128}
-    },
-    goalSymbol = GuiUtils.getUVs({
-        788,
-	30,
-	44,
-	44
-    }, AIPlaceableMarkerHotspot.FILE_RESOLUTION),
-    
+    },    
     exitSymbol = {
         {148, 184, 32, 32}, {256, 512}
     },
@@ -352,15 +345,16 @@ function CpBaseHud:init(vehicle)
     end)
 
     --- Goal button.
-    local width, height = getNormalizedScreenValues(34, 34)    
+    local width, height = getNormalizedScreenValues(30, 30)    
     local goalOverlay = CpGuiUtil.createOverlay({width, height},
-                                                {AIPlaceableMarkerHotspot.FILENAME, self.uvs.goalSymbol}, 
+                                                {"dataS/menu/gui.png", nil}, 
                                                 self.OFF_COLOR,
-                                                self.alignments.bottomRight)
+                                                self.alignments.bottomRight,
+                                                "gui.aiParameterPosition")
     
     self.goalBtn = CpHudButtonElement.new(goalOverlay, self.baseHud)
     local x, y = unpack(self.lines[7].right)
-    self.goalBtn:setPosition(x + self.wMargin/4, y - self.hMargin/4)
+    self.goalBtn:setPosition(x + self.wMargin/4, y - self.hMargin/3)
     self.goalBtn:setCallback("onClickPrimary", vehicle, function (vehicle)
         self:openCourseGeneratorGui(vehicle)
     end)

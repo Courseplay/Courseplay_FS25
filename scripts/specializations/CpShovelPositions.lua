@@ -444,7 +444,7 @@ function CpShovelPositions:setShovelPosition(dt, shovelLimits, armLimits, height
 	end
 
 	local alpha, oldRotRelativeArmRot = 0, 0
-	if hasIntersection and i1y ~= nil then
+	if hasIntersection and i1y ~= nil and i1z ~= nil then
 		--- Controls the arm height
 		setTranslation(armProjectionNode, 0, i1y, i1z)
 		setTranslation(armToolRefNode, ax, ay, az)
