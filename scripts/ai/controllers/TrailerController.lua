@@ -50,7 +50,7 @@ function TrailerController:update(dt)
             --- Update discharge timer
             local fillLevel = self.implement:getFillUnitFillLevelPercentage(self.dischargeData.dischargeNode)    
             if fillLevel ~= self.dischargeData.lastFillLevel then 
-                self.isDischargingTimer:set(true, 500)
+                self.isDischargingTimer:set(true, 10000)
             end
             self.dischargeData.lastFillLevel = fillLevel
             if not self:isDischarging() then 
