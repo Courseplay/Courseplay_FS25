@@ -48,7 +48,11 @@ function TrailerController:update(dt)
         end
         if self.implement:getCanDischargeToGround(self.dischargeData.dischargeNode) then 
             --- Update discharge timer
-            self.isDischargingTimer:set(true, 500)
+            local fillLevel = self.implement:getFillUnitFillLevelPercentage(self.dischargeData.dischargeNode)    
+            if fillLevel ~= self.dischargeData.lastFillLevel then 
+                self.isDischargingTimer:set(true, 500)
+            end
+            self.dischargeData.lastFillLevel = fillLevel
             if not self:isDischarging() then 
                 self.implement:setDischargeState(Dischargeable.DISCHARGE_STATE_GROUND)
             end
@@ -108,6 +112,7 @@ function TrailerController:startDischargeToGround(dischargeNode)
     self.isDischargingToGround = true
     self.dischargeData = {
         dischargeNode = dischargeNode,
+        lastFillLevel = 0
     }
 	local tipSide = self.trailerSpec.dischargeNodeIndexToTipSide[dischargeNode.index]
 	if tipSide ~= nil then
