@@ -13,7 +13,7 @@
 
     <description>
 <en>
-<![CDATA[Courseplay FS22
+<![CDATA[Courseplay FS25
 Courseplay takes the AI worker to the next level. Sow, harvest and plow smarter:
 - use headlands
 - work on irregularly shaped fields, not just rectangles
@@ -31,126 +31,18 @@ Courseplay takes the AI worker to the next level. Sow, harvest and plow smarter:
 - work in bunker silo to push and compact
 
 For a link to our latest release, Help page and GitHub page where you can find more information, help, and report issues please visit <a href="https://courseplay.dev/">Courseplay Website</a>
-or go directly to our <a href="https://github.com/Courseplay/Courseplay_FS22">GitHub page</a>.
+or go directly to our <a href="https://github.com/Courseplay/Courseplay_FS25">GitHub page</a>.
 
 Many thanks to our translators and to our community for reporting bugs, giving us feedback and great ideas.
 
-Changelog 7.5.0.1 Hotfix:
-- Fixes a rare pathfinder bug.
-- Fixes a collision solving bug.
-
-Changelog 7.5.0.0:
-- New course generator 2.0 with new features and updated help menu.
-- A multitool course now contains 2-5 single course for each lane depending on the amount of vehicles you selected.
-- Added food mixer wagon, fertilizer/lime/manure sprayer and Göweil LT Master as valid target for shovel mode. 
-- Added chopper unloader support known from FS19 back in. (Second unloader not supported.)
-- Added line preview when drawing a custom field on the map and can hold left shift to draw straight lines.
-- HUD reworked for a future project.
-- Waypoints no more cast a shadow, this might increase performance a bit, when waypoints are active.
-- Shovel position is slightly tilted down and finer hight adjustment (0.05 steps). This should help with some silage silos are not getting empty.
-- The course on the AI Menu Map will now have arrows that show the direction of the lines.
-- Multitool courses generated with previous releases won't work, you must regenerate them with this release.
-- Although non-multitool courses saved with previous releases will work, we recommend to regenerate them for best result.
-- Added option for waiting on the field for manuel refilling tools and refill fuel.
-- More bugfixes.
-- Increased desc Version to 80 (Game Version 1.14.0.0)
-
-WARNING: while this version is backwards compatible with older savegames, it'll write the courses to the savegame in a new format.
-Older versions WILL NOT BE ABLE TO READ the games saved with this version! If you install this version, and decide to revert to an old one, YOU MUST BACK UP YOUR OLD SAVEGAME before!
-
-For a complete changelog please visit our <a href="https://github.com/Courseplay/Courseplay_FS22/releases">Release page</a> on GitHub.
-
-Changelog 7.4.0.0:
-- Enable forestry mulchers and lawnmowers for fieldwork
-- Added option to show the info panel only, when at least one message is active.
-- Plow handling improvement in turns, now less headlands are needed.
-- Improvement for reverse driving with offset tools.
-- Added shovel mode driver, please read ingame help menu for how it works.
-- Changed description for combine unload on first headland to be more clear.
-- Added leveler height offset to the ground setting.
-- Added fruit type check for mission and season.
-- Combine unloading improvements.
-- Can now use a truck and a trailer to unload a combine.
-- More bugfixes.
-- Added Info texts for vegetable harvester with pallets.
-- Increased desc Version to 79 (Patch 1.13.1.0)
-
-Changelog 7.3.0.0:
-- Bale collector/wrapper now works the same way as the combine unloader in terms of markers:
-The field position is now saved into the vehicle and will not be reset to the vehicle position, when started by the hud!
-The position has to be set everytime in the AI menu!
-This fixes problems with AD restarting and also has the advantage that you don't need another AD Target on the field to start the driver.
-
-- Added Loader Driver for vehicles like Ropa Maus to pick up heaps of for example sugarbeet and to empty bunker silos:
-The loader can always work together with a combine unloader (switch the "Combine" on the HUD to "Loader", the rest is the same) when picking up heaps on a field.
-Using an unloader when emptying a bunker silo, can be tricky due the silo walls, try at your own risk :)
-The Loader will unfold in a default position when it reaches the heap.
-If the default position is not working for you, unfold it and move the conveyor to a left or right position and a height you want before you start, it will maintain that position.
-
-- Added unload on field option for combine unloader. Use the target icon to get into the AI Menu:
-At the bottom there is a new option "Unload on Field" that have to be activated and a target set on or within 20m of the field where you unload on.
-The direction is in which direction the heap will grow.
-
-- Added new feature, where the combine automatically can pickup the header from an attached trailer:
-A new setting must be activated in the vehicle settings page under combine settings for this to work
-and the combine must be towing a header (either with its own wheels or on a trailer).
-The combine will then automatically pick up the header when the player starts the harvester near a field or sends the harvester to a field with Giants or Autodrive helper.
-Remember, the combine needs enough space to park the trailer, pick the header up, reverse and then drive to the fieldwork course.
-
-- Added a proper offset setting to the HUD for bale collect/wrap mode.
-- Added global setting for fruit destruction of helpers. (off, Courseplay only, all helpers).
-- Added a countdown for bales to collect/wrap. Note that new bales produced on the same field will not update the counter immediately for performance reasons.
-- Added pause button for recording field boundary.
-- Help menu updated.
-- Removed most default debugs (kept some info prints for now)
-- Increased modDesc Version to 76 (Game Version 1.11.0.0 or higher)
-- New website with an exact copy of the in-game help <a href="https://courseplay.dev/">Courseplay Website</a>
-
-Changelog 7.2.0.5:
-- Goeweil pack bug fix for the stationary baler with the Courseplay hud.
-- Gui fix for non valid Courseplay vehicles and disables the hud, while sitting in an attached vehicle (e.g. mobile Wood Crane).
-- Disables a few hotspots, while drawing a field border.
-- Disables shield raising while driving into the silo for now.
-- Add option for Fieldwork to send the driver back to the first waypoint after the work is finished.
-- Bug fix for mods with invalid capacities.
-- Added a global setting to enable/disable harvesting while it's raining.
-- Bug fixes and improvements for plows and balers.
-- Some more small fixes and improvements.
-
-Changelog 7.2.0.0:
-- added bunker silo mode and combine unloader mode.
-- the remaining time for fieldwork is now displayed on the HUD.
-- support for <a href="https://farming-simulator.com/mod.php?lang=en&country=us&mod_id=237080&title=fs2022">Universal Autoload</a>.
-- option to show the current course on the mini map.
-- user setting to change between feet and meters.
-- simple collision avoidance for unloaders to not crash into the combine.
-- option (keybinding) for course editor to delete all waypoints until the end.
-- new course visibility option (blue eye icon) to show everything
-between the leading 20 and last 5 passed waypoints.
-- help menu sections for unloading combines and compacting/pushing in a bunker silo.
-- countless fixes and improvements.
-
-Changelog 7.1.0.3:
-- Updated mod description
-- Added missing translation files, so every language supported by the game can be edited now.
-- Added new course editor for fieldwork courses and custom field borders (more information in the help menu).
-- Improved the interface for the auto load mod: FS22_aPalletAutoLoader.
-- Arcusin Multipack F14 now unloads the compacted bales on the field.
-- Some more fixes and enhancements.
-- Vermeer DLC compatibility.
-
-Changelog 7.1.0.0:
-- initial ModHub Release 7.1.0.0
-- Added vine fieldwork
-- The hud is easier to use and a separate gamepad hud was added.
-- Ingame help menu extended with Courseplay topics
-- Complete new course manager integrated into the ingame menu.
-- Works now great with AutoDrive, let Courseplay take care of the field work and use AutoDrive to transport your harvest.
+Changelog 8.0.0.0:
+- Initial FS25 convert.
 
 ]]>
+
 </en>
 <de>
-<![CDATA[Courseplay FS22
+<![CDATA[Courseplay FS25
 Courseplay hebt den Helfer auf ein ganz neues Level. Säen, ernten und pflügen Sie intelligenter:
 - Nutze Vorgewende
 - Arbeite auf nicht rechteckigen Feldern
@@ -172,120 +64,12 @@ AutoDrive erledigt das Abtanken eines Ladewagens oder Auffüllen einer Sämaschi
 Für mehr Informationen, Hilfe oder Fehlermeldungen schaue hier vorbei: <a href="https://github.com/Courseplay/Courseplay_FS22">GitHub</a>.
 
 Ein Link zu der neuesten Version, der Hilfe Seite und Github, wo du mehr Informationen und Hilfe findest, sowie Probleme und Bugs melden kannst, findest du auf unserer <a href="https://courseplay.dev/">Courseplay Webseite</a>
-oder du gehst direkt auf unsere <a href="https://github.com/Courseplay/Courseplay_FS22">GitHub Webseite</a>.
+oder du gehst direkt auf unsere <a href="https://github.com/Courseplay/Courseplay_FS25">GitHub Webseite</a>.
 
 Vielen Dank an unsere Community für die zahlreichen Übersetzungen, Bug Reports, Feedback und Vorschläge zur Verbesserung.
 
-Changelog 7.5.0.1 Hotfix:
-- Bugfix für einen selten auftretenden Pathfinder Bug.
-- Bugfix für einen Bug bei der Kollisionslösung.
-
-Changelog 7.5.0.0:
-- Neuer Kurs Generator 2.0 mit neuen Features und aktualisiertem Hilfemenü.
-- Multitool Kurse beinhalten jetzt 2-5 einzelne Kurse für jede Bahn, abhänging von der Anzahl Fahrzeuge die gewählt wurden.
-- Futtermischer, Dünger-, Kalk-, und Miststreuer, sowie Göweil LT Master als Ziel für den Schaufelmodus hinzugefügt.
-- Häcksler können wieder abgetankt werden, wie man es aus FS19 kennt. (Das vorzeitige Rufen von einem 2ten Abfahrer ist nicht verfügbar).
-- Linienvorschau beim Zeichnen eines eigenen Feldes und mit gedrückter linker Shift-Taste lassen sich gerade Linien ziehen.
-- HUD umgebaut für ein zukünftiges Projekt.
-- Wegpunkte erzeugen keine Schatten mehr, was die performance etwas verbessern sollte, wenn alle Wegpunkte angezeigt werden.
-- Schaufelposition ist jetzt leicht nach unten gekippt und kann feiner eingestellt werden. (0.05er Schritte). Sollte dabei helfen, einige Silagesilos besser zu entleeren.
-- Kurse auf der KI Karte haben jetzt kleine Pfeile, um die Richtung der Bahnen anzuzeigen.
-- Multitool Kurse, welche mit der vorherigen Version generiert wurden, werden nicht mehr funktionieren. Sie müssen neu generiert werden.
-- Auch wenn nicht-multitool Kurse mit dieser Version geladen werden können, empfehlen wir die Kurse neu zu generieren.
-- Option zum Warten auf dem Feld für das Nachfüllen von Geräten und Treibstoff hinzugefügt.
-- Mehrere bugfixes.
-- Desc Version auf 80 erhöht (Spiel Version 1.14.0.0)
-
-WARNUNG: Auch wenn diese Version abwärtskompatibel mit älteren Speilständen ist, wird diese Version die Kurse in einem neuen Format in das savegame schreiben.
-Ältere Courseplay Versionen werden NICHT IN DER LAGE SEIN, Spielstände von der aktuellen Version zu laden! Wenn du diese Version installierst und dich dazu entscheidest auf eine ältere Version zu wechseln, SICHERE VORHER DEINEN SPIELTAND!
-
-Für eine komplette Changelog, schaut bitte auf unsere <a href="https://github.com/Courseplay/Courseplay_FS22/releases">Release Seite</a> auf GitHub vorbei.
-
-Changelog 7.4.0.0:
-- Forstmulcher und Handmäher können jetzt für die Feldarbeit verwendet werden.
-- Option hinzugefügt, welches das Info Panel nur einblendet, wenn eine Nachricht vorhanden ist.
-- Verbesserung für Pflüge beim Wenden, es werden jetzt weniger Vorgewende benötigt.
-- Verbesserung für das Rückwärtsfahren mit Tools, die einen Versatz haben.
-- Schaufel Modus hinzugefügt. Bitte lest die Ingame Hilfe durch, wie dieser Modus funktioniert.
-- Beschreibung für Drescher im ersten Vorgewende abtanken geändert, um die Funktion besser zu beschreiben.
-- Schildhöhe beim Siloschieben ist im HUD jetzt einstellbar.
-- Beim Ansäen wird jetzt die Fruchtsorte überprüft, ob die Frucht in der aktuellen Jahreszeit angesät werden kann und ob sie dem Auftrag entspricht.
-- Verbesserungen beim Drescher abtanken Modus.
-- Es kann jetzt ein LKW und ein Trailer in Kombination verwendet werden, um Drescher ab zu tanken.
-- Mehrere bugfixes.
-- Infotext für Gemüseernter mit Paletten hinzugefügt.
-- Desc Version auf 79 erhöht (Patch 1.13.1.0)
-
-Changelog 7.3.0.0:
-- Die Feldauswahl im Ballen sammeln und wickeln Modus funktioniert jetzt genauso wie beim Drescher abtanken.
-Für jedes neue Feld muss diese Position im Menu jetzt neu gesetzt werden und wird somit nicht mehr durch das Öffnen über das Hud automatisch neu gesetzt!
-Das erleichtert die Nutzung mit Autodrive, da somit der Autodrive Fahrer nicht mehr zwingend auf dem Feld halten muss.
-- Das Abtanken von Drescher wurde erweitert, um einen Modus zum Abtanken von einem Lader, wie z.B. die Ropa Maus 5.
-Durch eine zusätzliche Einstellung im Hud kann zwischen Drescher abtanken und Lader, also z.B. den Ropa, unterschieden werden.
-- Zusätzlich wurde dem Drescher abtanken Modus eine Option hinzugefügt zum direktem Abladen auf einem Feld.
-Dafür muss diese Funktion ausgewählt werden und auf der Karte ein neuer Marker gesetzt werden.
-Der Marker muss innerhalb des ausgewählten Feldes sein oder im Umkreis von maximal 20m um das Feld.
-- Zum Laden des Haufens wurde ein neuer Modus hinzugefügt.
-Dieser ermöglicht z.B. das Aufladen eines Zuckerüben Haufens mit einem Ropa Maus 5.
-Dieser kann wie oben erwähnt mit einem Abfahrer abgetankt werden und dann über den Giants Abfahrer oder mit Autodrive zum entladen geschickt werden.
-Ebenfalls funktioniert das Laden eines Bunker Silos mit dem z.B. dem Ropa NawaRo.
-Hier ist jedoch das automatische Abladen etwas schwierig und ist nicht immer möglich.
-Als Tipp falls das Rohr um positioniert werden muss, kann dieses nach manuellem Aufklappen vor dem Starten des Helfer gemacht werden.
-- Als weitere Neuerung wurde das automatische Aufnehmen eines Scheidwerks von einem Schneidwerkswagen hinzugefügt.
-Dafür muss der Wagen mit dem Schneidwerk oder ein Schneidwerk mit Rädern, welches keinen extra Wagen benötigt, am Drescher hinten angekuppelt sein.
-Nachdem Starten wird der Anhänger abgekuppelt und der Drescher versucht das Schneidwerk anzukuppeln und anschließend ganz normal seine Arbeit zu verrichten.
-Wichtig ist hier, dass der Drescher natürlich etwas Platz zum Rangieren benötigt.
-Diese Option kann in den Fahrzeug Einstellungen aktiviert werden.
-Wenn der Drescher mit Anhänger und Schneidwerk von Giants oder Autodrive zum Feld geschickt wird, dann wird die Funktion natürlich auch benutzt, solange die Einstellung aktiviert ist.
-
-- Fehler bei der Einstellung des Versatzes im Ballen sammeln/wickeln Modus behoben.
-- Eine globale Einstellung für die Fruchtzerstörung von Helfern hinzugefügt. (aus, nur Courseplay Helfer, alle Helfer)
-- Einen Zähler für den Ballen sammeln/wickeln Modus hinzugefügt. 
-  Aus Performancegründen wird der Zähler nicht immer sofort aktualisiert.
-- Eine Pausefunktion für das Aufzeichnen von Feldrändern hinzugefügt.
-- Hilfe Menü Einträge wurden aktualisiert.
-- Die meisten debugs wurden standartmäßig deaktiviert (einige Infos werden vorerst aktiv gelassen)
-- ModDesc Version auf 76 (Spielversion 1.11.0.0 oder höher)
-- Neue Webseite mit einer exakten Kopie der Hilfe aus dem Spiel: <a href="https://courseplay.dev/">Courseplay Webseite</a>
-
-Changelog 7.2.0.5:
-- Göweil Pack Fehler gefixt, wenn das Courseplay HUD im Fahrzeug aktiv ist.
-- Fehler im Gui gefixt für Fahrzeuge und Geräte, die nicht mit Courseplay gesteuert werden können (z.B. mobiler Holzkran)
-- Hotspots auf der Karte werden ausgeblendet, wenn man einen Feldrandkurs zeichnet.
-- Das anheben des Schildes im Bunker Modus vorerst deaktiviert.
-- Option hinzugefügt, der Feldhelfer zurück zum Startpunkt fahren lässt.
-- Kleine Verbesserung für Modfahrzeuge, die eine eingebaute Kapazität besitzen.
-- Globale Option hinzugefügt, ob Drescher bei Regen anhalten sollen oder weiter arbeiten sollen.
-- Fehler gefixt und Verbesserungen für Pflüge und Ballenpressen.
-- Weitere kleine Bug Fixes und Verbesserungen.
-
-Changelog 7.2.0.0:
-- Bunker Silo Modus und Drescher Abfahrer Modus hinzugefügt
-- Verbleibende Zeit für Feldarbeit wird jetzt im Hud angezeigt
-- Unterstützung für <a href="https://farming-simulator.com/mod.php?lang=en&country=us&mod_id=237080&title=fs2022">Universal Autoload</a> hinzugefügt.
-- Option um den Kurs auf der minimap an zu zeigen hinzugefügt.
-- Benutzer Einstellung um zwischen Meter und Fuss zu wechseln hinzugefügt.
-- Einfache Kolisions Vermeidung für Abfahrer hinzugefügt um nicht im den Drescher zu fahren.
-- Option (Tastenbelegung) für den Kurseditor um alle Wegpunkte bis zum Ende zu entfernen.
-- Neue Kursanzeige (Augen im HUD blau) um die letzten 5 und die nächsten 20 Wegpunkte an zu zeigen.
-- Hilfemenü um Drescher Abfahrer und Silo Bunker Fahrer erweitert.
-- Weitere diverse Fehler behoben und Verbesserungen hinzugefügt.
-
-Changelog 7.1.0.3:
-- Fehlende Übersetzungen hinzugefügt, jetzt können alle Übersetzungen, die vom Spiel unterstützt werden angepasst werden.
-- Neuen Kurseditor für Feldarbeitskurse und eigene Feldrandkurse hinzugefügt (mehr Informationen dazu im Ingame Hilfe Menü)
-- Interface zum Mod FS22_aPalletAutoLoader verbessert.
-- Arcusin Multipack F14 entlädt die gepackten Ballen jetzt auf dem Feld.
-- Weitere bug fixes und Verbesserungen.
-- Vermeer DLC Kompatibilität.
-
-Changelog 7.1.0.0:
-- Initiale ModHub Version 7.1.0.0
-- Reben Helfer hinzugefügt
-- Das HUD ist einfacher zu benutzen und ein separates Gamepad HUD wurde hinzugefügt.
-- Ingame Hilfemenü wurde durch Courseplay Einträge erweitert.
-- Komplett neuer Kurse Manager in das Ingame Menu integriert.
-- Funktioniert jetzt gut mit AutoDrive zusammen, Courseplay übernimmt die Arbeit auf dem Feld und AutoDrive transportiert deine Ernte.
+Changelog 8.0.0.0:
+- Initiale FS25 Konvertierung.
 
 ]]>
 </de>
