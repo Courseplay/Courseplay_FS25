@@ -1,5 +1,5 @@
 --[[
-This file is part of Courseplay (https://github.com/Courseplay/Courseplay_FS22)
+This file is part of Courseplay (https://github.com/Courseplay/Courseplay_FS25)
 Copyright (C) 2023 Courseplay Dev Team
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

@@ -106,7 +106,7 @@ You can define the following custom settings:
 	
 - modName: Name of the .zip file (without '.zip')
     In case a Mod has the same .xml filename for the vehicle/implement, as a default giants vehicle/implement,
-    add the name of the .zip file to prevent conflicts. For example: "FS22_exampleMod".
+    add the name of the .zip file to prevent conflicts. For example: "FS25_exampleMod".
     Note: Only 2 of the same .xml files can be added.
 
 - ignoreBaleCollisionForward: boolean

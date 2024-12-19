@@ -36,8 +36,8 @@
 			<Text language="en"><![CDATA[Copy course:]]></Text>
 		</Translation>
 		<Translation name="CP_infoText">
-			<Text language="de"><![CDATA[Courseplay(%s): Für Hilfe, Fehler oder Patch Notes, bitte hier vorbei schauen: https://github.com/Courseplay/Courseplay_FS22.]]></Text>
-			<Text language="en"><![CDATA[Courseplay(%s): For help, bug reports or patch notes, please visit: https://github.com/Courseplay/Courseplay_FS22.]]></Text>
+			<Text language="de"><![CDATA[Courseplay(%s): Für Hilfe, Fehler oder Patch Notes, bitte hier vorbei schauen: https://github.com/Courseplay/Courseplay_FS25.]]></Text>
+			<Text language="en"><![CDATA[Courseplay(%s): For help, bug reports or patch notes, please visit: https://github.com/Courseplay/Courseplay_FS25.]]></Text>
 		</Translation>
 		<Translation name="CP_error_no_course">
 			<Text language="de"><![CDATA[Erstelle einen Kurs vor dem Starten des Jobs.]]></Text>
@@ -870,8 +870,8 @@
 	</Category>
 	<Category name="Course generator settings">	
 		<Translation name="CP_vehicle_courseGeneratorSetting_title">
-			<Text language="de"><![CDATA[Kursgenerator-Einstellungen von (%s)]]></Text>
-			<Text language="en"><![CDATA[Course generator settings of (%s)]]></Text>
+			<Text language="de"><![CDATA[Helfer Einstellungen von (%s)]]></Text>
+			<Text language="en"><![CDATA[Helper settings of (%s)]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_subTitle_basic">
 			<Text language="de"><![CDATA[Grundeinstellungen]]></Text>
@@ -1866,16 +1866,17 @@ The course is saved automatically on closing of the editor and overrides the sel
 			<Text language="de"><![CDATA[
 
 Mit Courseplay ist es möglich, Feldkurse mit zusätzlichen Funktionen zu generieren, beispielsweise Vorgewende.
-Ebenso ermöglicht es die Nutzung von Ballenpressen und Sammelwagen mit dem Helfer auf demselben Kurs, welcher zuvor von einem Mähwerk oder Drescher bearbeitet wurde.
+Ebenso ermöglicht es die Nutzung von Ballenpressen und Sammelwagen mit dem Helfer auf dem selben Kurs, welcher zuvor von einem Mähwerk oder Drescher bearbeitet wurde.
 Eine weitere Funktion ist das Ballenwickeln oder -sammeln auf einem Feld.
-Ganz neu in Courseplay ist die Bearbeitung von Reben.
+Courseplay ist auch in der Lage, auf Reisfeldern oder Reben zu arbeiten.
 Feldkurse können auch als Multitoolkurs gebaut werden, dadurch ist es möglich bis zu 5 Arbeitsgeräte im Fahrzeugverband auf dem gleichen Feld arbeiten zu lassen.
 Für Drescher gibt es die Möglichkeit des automatischen Abtankens in einen Anhänger nahe des Feldes.
 Eigene Feldränder können mit einem Fahrzeug aufgezeichnet oder auf der Menükarte gezeichnet werden und anschließend für die Generierung eines Feldkurses benutzt werden.
 Außerdem hat CP ein Interface für AutoDrive, dadurch ist es möglich Sämaschinen auffüllen zu lassen, Ladewagen zu entleeren und vieles mehr.
-Ab Version 7.2.1.0 ist es auch möglich, mit dem Drescher-Abfahrer die geladene Frucht als Haufen am Feldrand abzulegen.
+Drescher-Abfahrer sind in der Lage, die geladene Frucht als Haufen am Feldrand abzulegen.
+Im Farming Simulator 25 besitzt Courseplay sein eigenes Menü, welches ihr über verschiedene Buttons im HUD erreicht.
 
-Für weitere Informationen, schaut bitte auf GitHub vorbei unter:  https://github.com/Courseplay/Courseplay_FS22 .
+Für weitere Informationen, schaut bitte auf GitHub vorbei unter:  https://github.com/Courseplay/Courseplay_FS25 .
 Dort könnt ihr Fragen stellen, Fehlerberichte einreichen oder Verbesserungen vorschlagen.
 Ein ganz großes Danke geht an unsere Übersetzer und an die Community für die zahlreichen Fehlermeldungen, Feedbacks und Ideen.
 
@@ -1888,15 +1889,16 @@ Mit dieser Funktion versuchen wir neuen Courseplay-Nutzern den Einstieg zu erlei
 Courseplay allows you to generate field courses with additional features, for example: headlands.
 It also enables the usage of balers and forage wagons, that can be send on the same course, as a mower or harvester from before.
 Another big feature is the collecting or wrapping of bales on the field.
-New with this iteration of CP is the vine fieldwork.
+Courseplay is also able to work on rice fields and vines.
 Fieldwork courses can be setup in multitool mode, which allows the use of up to 5 driver working in a convoy on the same field.
 It's also possible to have the combine unload in a trailer on/near the field automatically.
-Custom field borders can be assigned for courseplay to use, for example: in case of a meadow, which isn't recognised as a normal field.
+Custom field borders can be assigned for Courseplay to use, for example: in case of a meadow, which isn't recognised as a normal field.
 Lastly cp has a interface for AutoDrive, which allows for refilling of a seeder at a nearby silo or unloading a forage wagon and so on.
-With Version 7.2.1.0 or higher it is also possible to use the combine unloader to create a heap near the field.
+Combine unloader are able to create a heap near the field with their loaded fruit.
+In Farming Simulator 25, Courseplay got its own menu wich you can access over different buttons on the HUD.
 
-For more information please visit our github: https://github.com/Courseplay/Courseplay_FS22 .
-There you can get help or report any issue you've experienced.
+For more information please visit our GitHub: https://github.com/Courseplay/Courseplay_FS25 .
+There you can get help or report any issues you've experienced.
 Finally, we thank every translator and our community for reporting bugs, giving use feedback and new ideas.
 
 What is the expert Mode:
@@ -1911,43 +1913,46 @@ That way, we try to help Users to get easier into Courseplay without being overw
 		</Translation>
 		<Translation name="CP_help_page_startJobMenuBase_text">
 			<Text language="de"><![CDATA[
-Durch Auswählen eines Fahrzeugs im Helfermenü werden die Fahrzeugeinstellungen und der Kursmanager im Menü eingeblendet.
-Der aktuell geladene Kurs wird auf der Karte angezeigt.
-Die globalen Einstellungen sind dauerhaft sichtbar.
+Die Einstellungen für jeden Helfer finden jetzt im Menü "Helfer Einstellungen" statt.
+Das Menü funktioniert grundlegend wie das alte Helfer Menü.
+Wird ein Fahrzeug auf der Map ausgewählt, könnt ihr einen Job erstellen, in Abhängigkeit der angeschlossenen Geräte und des Fahrzeugstyps.
+Neben der Karte und den Job Einstellungen findet ihr oben im Menü noch die Einstellungen für den Feldkurs Generator und den Reben Generator. Diese sind nur verfügbar, wenn ihr ein gültiges Fahrzeug ausgewählt habt und einen Job erstellt habt.
 Um einen Feldkurs generieren zu können, muss ein gültiges Fahrzeug für Feldarbeit auf der Helferkarte ausgewählt sein.
-Um einen Kurs zu generieren, musst du einen Job erstellen und dort "CP: Feldarbeit", "CP: Ballen sammeln/wickeln", "CP: Lader" oder "CP: Bunkersilo" auswählen, ähnlich wie beim Giants-Helfer.
+Tip: Um etwas schneller zu sein, könnt ihr das Menü über den Text im HUD "Kein Kurs" öffnen. Ihr seid dann direkt im Modus Job erstellen des Fahrzeugs in dem ihr drin sitzt.
 ]]></Text>
 			<Text language="en"><![CDATA[
-First you need to select a vehicle in the AI menu for generating a fieldwork course or gaining access to the vehicle settings and the course manager.
-The currently loaded course will be displayed on the map.
-The global settings are always visible.
-For generating a course and starting the courseplay jobs, you will need to create the job CP: Fieldwork, CP: wrap/collect bales, CP: Loader or CP: Bunker silo similar to the Giants helper.
+Helper settings are now under our own new "Helper settings" menu.
+It works much like the old AI Menu.
+Select a vehicle in the AI menu for creating a job, based on the attached tools or selected vehicle.
+Beside the map and the job settings, you will find the settings for the course generator and vine course generator at the top. Those are only accessible with a valid tool when you are creating a job.
+For generating a course and starting the Courseplay jobs, you will need to create the job CP: Fieldwork with a valid tool or vehicle.
+Tip: To gain quicker access, you can click on "no course" on the HUD. This will bring you to the menu with a job already created for the vehicle.
 ]]></Text>
 		</Translation>
 		<Translation name="CP_help_page_startJobMenuFunctions_text">
 			<Text language="de"><![CDATA[
 Um deinen ersten Job zu starten, musst du ein Fahrzeug mit einem für die Arbeit gültigen Arbeitsgerät auswählen.
-Klicke dann auf "Job erstellen" und wähle "CP: Feldarbeit" für Feldarbeitsgeräte,
-oder "CP: Ballen sammeln/wickeln" für Ballenwickler oder -sammler aus.
+Klicke dann auf "Job erstellen" und wähle dann einen der verfügbaren CP Job für dein gewähltes Fahrzeug oder Gerät aus.
 ]]></Text>
 			<Text language="en"><![CDATA[
 To start off with your first CP job, you would have to select a vehicle and a possible valid implement which is supported for the job.
-Then, by clicking on create job, you can select CP: Fieldwork for fieldwork tools or CP: wrap/collect
-with a bale wrapper or bale collector attached.
+Then, by clicking on create job, you can select a CP job for your selected tool or vehicle.
 ]]></Text>
 		</Translation>
 		<Translation name="CP_help_page_readyJobMenuBase_text">
 			<Text language="de"><![CDATA[
-Hast du einen CP-Job ausgewählt, musst du mit der Feldposition dein Feld auswählen, auf dem du einen Kurs generieren, oder Ballen wickeln oder sammeln willst.
+Hast du einen CP-Job ausgewählt, musst du mit der Feldposition dein Feld auswählen, auf dem du einen Kurs generieren, oder Ballen wickeln oder sammeln möchtest.
 Die Position bestimmt ungefähr die Startposition deines Kurses.
 Wenn du möchtest, dass der Giants-Helfer dein Fahrzeug zum Feld bringt, dann muss zusätzlich noch die Zielposition nahe des Startpunktes gesetzt werden.
-Die Einstellung für die Bahn wird nur benutzt, wenn du mehrere Fahrzeuge auf einem Kurs fahren lassen willst. Mehr dazu unter Multitool.
+Die Einstellung für die Bahn wird nur benutzt, wenn du mehrere Fahrzeuge auf einem Kurs fahren lassen möchtest. Mehr dazu unter Multitool.
+Tip: Stehst du bereits auf einem Feld, wenn du über "kein Kurs" in dieses Menü gelangst, sind die Marker bereits auf dem Feld platziert.
 ]]></Text>
 			<Text language="en"><![CDATA[
 With a CP job selected, you would need to place the field position on a field for generating the course or using the bale finder on it.
 The position also roughly controls the starting point of your course.
 If you want to use the Giants helper to drive to the field, then you also need to set the target position close to the starting point of the course.
-The lane offset setting is only used if you want to have multiple helpers working on the same field. For this please checkout the separate help menu page below.
+The lane offset setting is only used if you want to have multiple helpers working on the same field. For this please check out the separate help menu page below.
+Tip: If you stand already on the field when you click on "no course" to enter the menu, the markers are already placed.
 ]]></Text>
 		</Translation>
 		<Translation name="CP_help_page_readyJobMenuFunctions_text">
@@ -2206,7 +2211,7 @@ Der Kursmanager erlaubt es dir, Kurse zu speichern und später wieder zu laden.
 Das ist z.B. wichtig, wenn mehrere Fahrzeuge auf einem Kurs arbeiten sollten (Multitool).
 Außerdem kannst du so z.B. die Kurse von einem Drescher später für eine Ballenpresse oder einen Sammelwagen zum Stroh aufsammeln verwenden.
 
-Der Speicherort für die Kurse ist: ..\My Games\FarmingSimulator2022\modSettings\FS22_Courseplay\Courses\Mapname.SampleModMap (oder für Vanilla z.B. MapUS).
+Der Speicherort für die Kurse ist: ..\My Games\FarmingSimulator2025\modSettings\FS25_Courseplay\Courses\Mapname.SampleModMap (oder für Vanilla z.B. MapUS).
 Der Kursmanager funktioniert anders als du es im LS19 gewohnt bist.
 Kurse werden immer in Ordnern gespeichert, welche auf der linken Seite angezeigt werden. Das bedeutet, du brauchst mindestens einen Ordner, um dort Kurse abspeichern zu können.
 Ordner können ganz leicht durch den Button unten am Bildschirmrand erstellt werden.
@@ -2214,9 +2219,9 @@ Ordner können ganz leicht durch den Button unten am Bildschirmrand erstellt wer
 			<Text language="en"><![CDATA[
 The course manager allows you to save courses and enables you to load the saved course later again.
 This is really important, when you want to have multiple workers driving the same course for convoy (multi tools).
-This feature also allows you to pickup the swath left behind by a combine or a windrower with a forage wagon or a baler.
+This feature also allows you to pick up the swath left behind by a combine or a windrower with a forage wagon or a baler.
 
-The save location for the course files is: ..\My Games\FarmingSimulator2022\modSettings\FS22_Courseplay\Courses\Mapname.SampleModMap (or for vanilla e.g. MapUS).
+The save location for the course files is: ..\My Games\FarmingSimulator2025\modSettings\FS25_Courseplay\Courses\Mapname.SampleModMap (or for vanilla e.g. MapUS).
 The course manager works differently from what you are used to in FS19.
 Courses are saved into folders, which will be displayed on the left. This means you would need at least one folder to start saving courses into. 
 Folders can simply be created by the button at the bottom of the screen and entering a name.
