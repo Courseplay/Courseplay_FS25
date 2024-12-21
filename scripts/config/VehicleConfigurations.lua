@@ -213,25 +213,25 @@ end
 -----------------------------------------------
 
 function VehicleConfigurations:registerConsoleCommands()
-    g_devHelper.consoleCommands:registerConsoleCommand("cpVehicleConfigurationsReload", 
+    g_consoleCommands:registerConsoleCommand("cpVehicleConfigurationsReload",
         "Read custom vehicle configurations", 
         "consoleCommandReload", self)
-    g_devHelper.consoleCommands:registerConsoleCommand("cpVehicleConfigurationsPrintConfigFileNames", 
+    g_consoleCommands:registerConsoleCommand("cpVehicleConfigurationsPrintConfigFileNames",
         "Prints the config filename of the entered vehicle and implements", 
         "consoleCommandPrintConfigFileNames", self)
-    g_devHelper.consoleCommands:registerConsoleCommand("cpVehicleConfigurationsQuerySingleAttribute", 
+    g_consoleCommands:registerConsoleCommand("cpVehicleConfigurationsQuerySingleAttribute",
         "Prints the given attribute value for current vehicle and implements", 
         "consoleCommandPrintSingleAttributeValuesForVehicleAndImplements", self)
-    g_devHelper.consoleCommands:registerConsoleCommand("cpVehicleConfigurationsQueryForAllAttributes", 
+    g_consoleCommands:registerConsoleCommand("cpVehicleConfigurationsQueryForAllAttributes",
         "Prints all attribute values found for vehicle and it's implements", 
         "consoleCommandPrintAllAttributeValuesForVehicleAndImplements", self)
-    g_devHelper.consoleCommands:registerConsoleCommand("cpVehicleConfigurationsListAttributes", 
+    g_consoleCommands:registerConsoleCommand("cpVehicleConfigurationsListAttributes",
         "Prints all valid attribute names", 
         "consoleCommandPrintAttributeNames", self)
-    g_devHelper.consoleCommands:registerConsoleCommand("cpVehicleConfigurationsPrintAttributes", 
+    g_consoleCommands:registerConsoleCommand("cpVehicleConfigurationsPrintAttributes",
         "Prints all normal attributes", 
         "consoleCommandPrintAllNormalVehicleConfigurations", self)
-    g_devHelper.consoleCommands:registerConsoleCommand("cpVehicleConfigurationsPrintModAttributes", 
+    g_consoleCommands:registerConsoleCommand("cpVehicleConfigurationsPrintModAttributes",
         "Prints all mod name attributes", 
         "consoleCommandPrintAllModNameVehicleConfigurations", self)
 end
@@ -241,7 +241,7 @@ function VehicleConfigurations:consoleCommandReload()
 end
 
 function VehicleConfigurations:consoleCommandPrintConfigFileNames()
-    local vehicle = g_currentMission.controlledVehicle
+    local vehicle = CpUtil.getCurrentVehicle()
 	if not vehicle then 
 		CpUtil.info("No vehicle entered!")
 		return
@@ -253,7 +253,7 @@ function VehicleConfigurations:consoleCommandPrintConfigFileNames()
 end
 
 function VehicleConfigurations:consoleCommandPrintSingleAttributeValuesForVehicleAndImplements(attribute)
-    local vehicle = g_currentMission.controlledVehicle
+    local vehicle = CpUtil.getCurrentVehicle()
 	if not vehicle then 
 		CpUtil.info("No vehicle entered!")
 		return
@@ -277,7 +277,7 @@ function VehicleConfigurations:consoleCommandPrintSingleAttributeValuesForVehicl
 end
 
 function VehicleConfigurations:consoleCommandPrintAllAttributeValuesForVehicleAndImplements()
-    local vehicle = g_currentMission.controlledVehicle
+    local vehicle = CpUtil.getCurrentVehicle()
 	if not vehicle then 
 		CpUtil.info("No vehicle entered!")
 		return

@@ -20,10 +20,10 @@ CpAIJobSiloLoader.MAX_UNLOAD_TARGET_DISTANCE_FROM_SILO = 180
 function CpAIJobSiloLoader.new(isServer, customMt)
 	local self = CpAIJob.new(isServer, customMt or AIJobCombineUnloaderCp_mt)
 
-	self.heapPlot = HeapPlot(g_currentMission.inGameMenu.ingameMap)
-    self.heapPlot:setVisible(false)
+	self.heapPlot = HeapPlot()
+	self.heapPlot:setVisible(false)
 
-	self.trailerAreaPlot = HeapPlot(g_currentMission.inGameMenu.ingameMap)
+	self.trailerAreaPlot = HeapPlot()
 
 
 	self.heapNode = CpUtil.createNode("siloNode", 0, 0, 0, nil)
@@ -51,8 +51,8 @@ function CpAIJobSiloLoader:setupJobParameters()
 	self.cpJobParameters.unloadPosition:setSnappingAngle(math.pi/8) -- AI menu snapping angle of 22.5 degree.
 end
 
-function CpAIJobSiloLoader:getIsAvailableForVehicle(vehicle)
-	return vehicle.getCanStartCpSiloLoaderWorker and vehicle:getCanStartCpSiloLoaderWorker()
+function CpAIJobSiloLoader:getIsAvailableForVehicle(vehicle, cpJobsAllowed)
+	return CpAIJob.getIsAvailableForVehicle(self, vehicle, cpJobsAllowed) and vehicle.getCanStartCpSiloLoaderWorker and vehicle:getCanStartCpSiloLoaderWorker() -- TODO_25
 end
 
 function CpAIJobSiloLoader:getCanStartJob()
@@ -175,7 +175,7 @@ function CpAIJobSiloLoader:validate(farmId)
 		else 
 			local found, area, validDistanceToSilo = CpAIJobSiloLoader.getTrailerUnloadArea(
 				self.cpJobParameters.unloadPosition, self.bunkerSilo or self.heap)
-			if found then 
+			if found then
 				self.trailerAreaPlot:setVisible(true)
 				self.trailerAreaPlot:setArea(area)
 			end

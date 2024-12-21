@@ -332,18 +332,18 @@ end
 --- or the driver stops directly.
 function AIDriveStrategyFindBales:setFinished()
     if not self:isReadyToFoldImplements() then
-        -- Watiting until the folding has finished..
+        -- Waiting until the folding has finished..
         self:debugSparse("Waiting until an animation has finish, so the driver can be released ..")
         return
     end 
     self.vehicle:prepareForAIDriving()
     if not self.vehicle:getIsAIReadyToDrive() then 
-        -- Watiting until the folding has finished..
+        -- Waiting until the folding has finished..
         self:debugSparse("Waiting until an animation has finish, so the driver can be released ..")
         return
     end
     if self.invertedStartPositionMarkerNode then 
-        self:debug("A valid start position is found, so the driver tries to finish at the invered goal node")
+        self:debug("A valid start position is found, so the driver tries to finish at the inverted goal node")
         self:startPathfindingToStartMarker()
     else
         self:finishJob()

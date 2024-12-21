@@ -117,9 +117,9 @@ function Vertex:calculateProperties(entry, exit)
         self.dA = CpMathUtil.getDeltaAngle(self.entryHeading, self.exitHeading)
         -- This is the radius of a circle written between
         -- entryEdge and exitEdge, which are tangents of the circle, touching them 1 unit away from the vertex
-        self.unitRadius = 1 / (math.tan(self.dA / 2))
-        self.curvature = 1 / self.unitRadius
-        self.xte = math.abs(1 / math.cos(self.dA / 2)) - 1
+        self.unitRadius = CpMathUtil.divide(1, (math.tan(self.dA / 2)))
+        self.curvature = CpMathUtil.divide(1, self.unitRadius)
+        self.xte = math.abs(CpMathUtil.divide(1, math.cos(self.dA / 2))) - 1
     end
 end
 

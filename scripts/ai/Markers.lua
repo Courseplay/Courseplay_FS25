@@ -16,9 +16,9 @@
 Markers = {}
 
 function Markers.registerConsoleCommands()
-    g_devHelper.consoleCommands:registerConsoleCommand("cpFrontAndBackerMarkerCalculate", 
+    g_consoleCommands:registerConsoleCommand("cpFrontAndBackerMarkerCalculate",
         "Calculates the front and back markers", "consoleCommandReload", Markers)
-    g_devHelper.consoleCommands:registerConsoleCommand("cpFrontAndBackerMarkerPrintDebug", 
+    g_consoleCommands:registerConsoleCommand("cpFrontAndBackerMarkerPrintDebug",
         "Print Marker data", "consoleCommandPrintDebug", Markers)
 end
 Markers.registerConsoleCommands()
@@ -133,7 +133,7 @@ end
 --------------------------------------------
 
 function Markers:consoleCommandReload(backDistance)
-    local vehicle = g_currentMission.controlledVehicle
+    local vehicle = CpUtil.getCurrentVehicle()
     if not vehicle then 
         CpUtil.info("No valid vehicle entered!")
         return     
@@ -146,7 +146,7 @@ function Markers:consoleCommandReload(backDistance)
 end
 
 function Markers:consoleCommandPrintDebug()
-    local vehicle = g_currentMission.controlledVehicle
+    local vehicle = CpUtil.getCurrentVehicle()
     if not vehicle then 
         CpUtil.info("No valid vehicle entered!")
         return     

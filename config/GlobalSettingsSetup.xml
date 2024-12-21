@@ -50,7 +50,7 @@
 	<SettingSubTitle prefix="true" title="userSettings">
 		<!-- When enabled, then a few settings are invisible and return their default values. -->
 		<Setting classType="AIParameterBooleanSetting" name="expertModeActive" isUserSetting="true" defaultBool="false"/>
-		<Setting classType="AIParameterBooleanSetting" name="controllerHudSelected" isUserSetting="true" defaultBool="false" onChangeCallback="onHudSelectionChanged"/>
+		<!-- <Setting classType="AIParameterBooleanSetting" name="controllerHudSelected" isUserSetting="true" defaultBool="false" onChangeCallback="onHudSelectionChanged"/> -->
 		<Setting classType="AIParameterBooleanSetting" name="showsAllActiveCourses" isUserSetting="true" defaultBool="false" isExpertModeOnly="true"/>
 		<Setting classType="AIParameterBooleanSetting" name="drawOntoTheHudMap" isUserSetting="true" defaultBool="true"/>
 		<Setting classType="AIParameterBooleanSetting" name="showActionEventHelp" isUserSetting="true" defaultBool="false" onChangeCallback="onActionEventTextVisibilityChanged"/>

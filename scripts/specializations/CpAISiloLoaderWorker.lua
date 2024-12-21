@@ -131,7 +131,7 @@ function CpAISiloLoaderWorker:startCpAtFirstWp(superFunc, ...)
     if not superFunc(self, ...) then 
         if self:getCanStartCpSiloLoaderWorker() then 
             local spec = self.spec_cpAISiloLoaderWorker
-            spec.cpJob:applyCurrentState(self, g_currentMission, g_currentMission.player.farmId, true)
+            spec.cpJob:applyCurrentState(self, g_currentMission, g_currentMission.playerSystem:getLocalPlayer().farmId, true)
             spec.cpJob:setValues()
             local success = spec.cpJob:validate(false)
             if success then
@@ -149,7 +149,7 @@ function CpAISiloLoaderWorker:startCpAtLastWp(superFunc, ...)
     if not superFunc(self, ...) then 
         if self:getCanStartCpSiloLoaderWorker() then 
             local spec = self.spec_cpAISiloLoaderWorker
-            spec.cpJob:applyCurrentState(self, g_currentMission, g_currentMission.player.farmId, true)
+            spec.cpJob:applyCurrentState(self, g_currentMission, g_currentMission.playerSystem:getLocalPlayer().farmId, true)
             spec.cpJob:setValues()
             local success = spec.cpJob:validate(false)
             if success then

@@ -27,7 +27,8 @@
 		</Setting>
 	</SettingSubTitle>
 	<SettingSubTitle title="laneOffset">
-		<Setting classType="AIParameterSettingList" name="laneOffset" default="0" isDisabled ="noMultiToolsCourseSelected" onChangeCallback="onLaneOffsetChanged">
+		<Setting classType="AIParameterSettingList" name="laneOffset" default="0" isDisabled ="isLaneOffsetDisabled" 
+			isVisible="isLaneOffsetVisible" onChangeCallback="onLaneOffsetChanged">
 			<Values>
 				<Value name="LANE_LEFT_2" isDisabled ="lessThanThreeMultiTools">-2</Value>
 				<Value name="LANE_LEFT"	isDisabled = "noMultiToolsCourseSelected">-1</Value>

@@ -156,6 +156,7 @@
     <!--Vehicle settings-->
     <!---->
     <text name="CP_vehicle_setting_title" text="Configuración del vehículo (%s)"/>
+    <text name="CP_vehicle_setting_subTitle_vehicle" text="Vehicle settings"/>
     <text name="CP_vehicle_setting_subTitle_basic" text="Configuración Básica"/>
     <text name="CP_vehicle_setting_subTitle_implement" text="Configuración de Herramientas"/>
     <text name="CP_vehicle_setting_subTitle_combine" text="Configuración de Cosechadoras"/>
@@ -271,6 +272,8 @@
     <!---->
     <text name="CP_vehicle_courseGeneratorSetting_title" text="Configuración del generador de rutas de (%s)"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="Básicos"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Vine field settings"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Fieldwork settings"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="Cabeceras"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="Centro"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Islas"/>
@@ -501,6 +504,7 @@ El curso se guarda automáticamente al cerrar el editor y anula el curso selecci
     <!---->
     <!--Custom field manager-->
     <!---->
+    <text name="CP_customFieldManager_hotspotName" text="Custom field"/>
     <text name="CP_customFieldManager_confirm_save" text="¿Quieres guardar la ruta como campo personalizado %s?"/>
     <text name="CP_customFieldManager_confirm_delete" text="¿Quieres eliminar el campo personalizado %s?"/>
     <text name="CP_customFieldManager_delete" text="Borrar Campo Personalizado"/>
@@ -515,6 +519,10 @@ El curso se guarda automáticamente al cerrar el editor y anula el curso selecci
     <text name="CP_controllerGui_stopRecording" text="Parar grabación del campo personalizado."/>
     <text name="CP_controllerGui_pauseRecording" text="Pausar grabación del campo."/>
     <text name="CP_controllerGui_unpauseRecording" text="Continuar grbación del campo."/>
+    <!---->
+    <!--CP ingame menu-->
+    <!---->
+    <text name="CP_ingameMenu_map_title" text="Map"/>
     <!---->
     <!--Help menu-->
     <!---->
@@ -1015,6 +1023,7 @@ Ahora su selección debería verse similar a la imagen.
     <text name="input_CP_DBG_CHANNEL_MENU_VISIBILITY" text="CP: Muestra el menú del canal de depuración Sí/No."/>
     <text name="input_CP_OPEN_CLOSE_VEHICLE_SETTING_DISPLAY" text="CP: Abrir/Cerrar GUI del vehículo."/>
     <text name="input_CP_START_STOP" text="CP: Iniciar/Detener conductor."/>
+    <text name="input_CP_GENERATE_COURSE" text="CP: Change current selected job"/>
     <text name="input_CP_CHANGE_SELECTED_JOB" text="CP: Change current selected job"/>
     <text name="input_CP_CHANGE_STARTING_POINT" text="CP: Cambia el punto de inicio."/>
     <text name="input_CP_CLEAR_COURSE" text="CP: Borra el curso cargado actualmente"/>

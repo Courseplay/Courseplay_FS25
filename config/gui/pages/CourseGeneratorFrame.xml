@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<GUI name="cpInGameMenuCourseGenerator">
+    <InGameMap id="ingameMap" profile="ingameMapOverview" cursorId="mapCursor"
+        onClickMap="onClickMap" onDrawPostIngameMap="onDrawPostIngameMap"
+        onDrawPostIngameMapHotspots="onDrawPostIngameMapHotspots" onClickHotspot="onClickHotspot" />
+    <Bitmap profile="ingameMapCursor" id="mapCursor" visible="false"/>
+    <ThreePartBitmap profile="cpLeftSideBackground" id="leftBackground"/>
+    <ThreePartBitmap profile="cpRightSideBackground" id="rightBackground"/>
+    <ThreePartBitmap profile="cpTopSideBackground" id="topBackground"/>
+    <ThreePartBitmap profile="cpBottomSideBackground" id="bottomBackground"/>
+    <GuiElement profile="fs25_menuContainer">
+        <GuiElement profile="fs25_menuHeaderPanel">
+            <Bitmap profile="fs25_menuHeaderIconBg">
+                <Bitmap profile="fs25_menuHeaderIcon" id="categoryHeaderIcon" />
+            </Bitmap>
+            <Text profile="fs25_menuHeaderTitle" id="categoryHeaderText" />
+        </GuiElement>
+        <BoxLayout profile="fs25_subCategorySelectorTabbedBox" id="subCategoryBox">
+
+        </BoxLayout>
+        <ThreePartBitmap profile="fs25_lineSeparatorTopHighlighted" position="0px -57px" />
+        <MultiTextOption profile="fs25_subCategorySelectorTabbed" id="subCategoryPaging"
+            position="0px -10px" onClick="updateSubCategoryPages" />
+   
+        <GuiElement profile="fs25_subCategorySelectorTabbedContainer" id="containerMap" visible="false">
+            <GuiElement absoluteSizeOffset="0 -21px">
+                <ThreePartBitmap profile="fs25_subCategoryContainerBg" id="leftBox">
+                    <Bitmap profile="fs25_subCategoryContainerArrow" />
+                </ThreePartBitmap>            
+                <Bitmap profile="fs25_subCategoryContainer" id="filterBox"  absoluteSizeOffset="0 -75px">
+                    <MultiTextOption profile="fs25_subCategorySelector" id="mapOverviewSelector"
+                        onClick="onClickMapOverviewSelector"/>
+                    <BoxLayout profile="fs25_subCategorySelectorBox" id="subCategoryDotBox">
+                        <RoundCorner profile="fs25_subCategorySelectorDot" />
+                        <RoundCorner profile="fs25_subCategorySelectorDot" />
+                        <RoundCorner profile="fs25_subCategorySelectorDot" />
+                    </BoxLayout>
+                    <GuiElement profile="fs25_subCategoryListContainer" id="filterListContainer">
+                        <SmoothList profile="fs25_mapList" id="filterList" focusInit="onOpen"
+                            listSectionHeader="section" startClipperElementName="startClipper"
+                            endClipperElementName="endClipper" onClick="onClickList">
+                            <ListItem profile="fs25_mapListItem">
+                                <Bitmap profile="fs25_mapListItemIconBg" name="iconBg" />
+                                <Bitmap profile="fs25_mapListColorTemplate" name="colorTemplate" />
+                                <Bitmap profile="fs25_mapListItemIcon" name="icon" />
+                                <Text profile="fs25_mapListItemName" name="name" />
+                            </ListItem>
+                            <ListItem profile="fs25_subCategoryListSectionHeader" name="section">
+                                <Text profile="fs25_subCategoryListSectionHeaderTitle" name="title" />
+                            </ListItem>
+                        </SmoothList>
+                        <Bitmap profile="fs25_subCategoryStartClipper" name="startClipper" />
+                        <Bitmap profile="fs25_subCategoryStopClipper" position="0px 60px" name="endClipper" />
+                        <ThreePartBitmap profile="fs25_subCategoryListSliderBox" absoluteSizeOffset="0px 60px">
+                            <Slider profile="fs25_listSlider" dataElementId="filterList" />
+                        </ThreePartBitmap>
+                        <GuiElement profile="fs25_mapButtonContainer" id="buttonDeselectAllContainer"
+                            width="340px" position="-10px 0px">
+                            <ThreePartBitmap profile="fs25_mapButtonBgLight" />
+                            <Text profile="fs25_mapButtonText" id="buttonDeselectAllText"
+                                text="$l10n_button_deselectAll" textOffset="15px 0px" />
+                            <Button profile="fs25_mapButtonAction1" id="buttonDeselectAll"
+                                onClick="onClickDeselectAll" />
+                        </GuiElement>
+                    </GuiElement>
+                    <GuiElement profile="fs25_subCategoryListContainer" id="createJobContainer" visible="false">
+                        <MultiTextOption profile="fs25_aiJobTypeMultiTextOption" id="jobTypeElement"
+                            onClick="onJobTypeChanged" />
+                        <BoxLayout profile="fs25_aiCreateJobLayout" id="jobMenuLayout">
+                            <OptionToggle profile="fs25_aiCreateJobMultiTextOption"
+                                id="createMultiOptionTemplate" onClick="onClickMultiTextOptionParameter" onClickCenter="onClickMultiTextOptionCenterParameter">
+                                <Bitmap profile="fs25_aiCreateJobParameterInvalid" name="invalid" />
+                            </OptionToggle>
+                            <ThreePartBitmap profile="fs25_aiCreateJobParameterBg" id="createTextTemplate">
+                                <Bitmap profile="fs25_aiCreateJobParameterVehicleIcon" />
+                                <Text profile="fs25_multiTextOptionText" name="title" />
+                                <Bitmap profile="fs25_aiCreateJobParameterInvalid" name="invalid" />
+                            </ThreePartBitmap>
+                            <Button profile="fs25_aiCreateJobParameterBg" id="createButtonTemplate" onClick="onClickMultiTextOptionCenterParameter">
+                                <Bitmap profile="fs25_aiCreateJobParameterVehicleIcon" />
+                                <Text profile="fs25_multiTextOptionText" name="title" />
+                                <Bitmap profile="fs25_aiCreateJobParameterInvalid" name="invalid" />
+                            </Button>
+                            <Text profile="fs25_aiCreateJobParameterTitle" id="createTitleTemplate"
+                                text="Group title"  size="100% 30px"/>
+                            <Button profile="fs25_aiCreateJobParameterButton" id="createPositionTemplate"
+                                text="&lt;400, 300>" onClick="onClickPositionParameter">
+                                <ThreePartBitmap profile="fs25_aiCreateJobParameterBg" />
+                                <Bitmap profile="fs25_aiCreateJobParameterIcon" />
+                                <Bitmap profile="fs25_aiCreateJobParameterInvalid" name="invalid" />
+                            </Button>
+                            <Button profile="fs25_aiCreateJobParameterButton"
+                                id="createPositionRotationTemplate"
+                                onClick="onClickPositionRotationParameter">
+                                <ThreePartBitmap profile="fs25_aiCreateJobParameterBg" />
+                                <Bitmap profile="fs25_aiCreateJobParameterIcon" />
+                                <Bitmap profile="fs25_aiCreateJobParameterInvalid" name="invalid" />
+                            </Button>
+                        </BoxLayout>
+                        <SmoothList profile="fs25_mapContextButtonList" id="createJobButtonList"
+                            onClick="onClickList" visible="true" position="0px -165px" handleFocus="false">
+                            <ListItem profile="fs25_mapContextButtonListItem">
+                                <ThreePartBitmap profile="fs25_mapContextButtonListItemBg" />
+                                <Text profile="fs25_mapButtonText" name="text" />
+                                <Button profile="cpCreateJobContextButtonListItemButton" name="button"/>
+                            </ListItem>
+                        </SmoothList>
+                        <!-- <GuiElement profile="fs25_mapButtonContainer" id="buttonStartJobContainer" width="340px"
+                            position="-10px 0px">
+                            <ThreePartBitmap profile="fs25_mapButtonBgLight" />
+                            <Text profile="fs25_mapButtonText" id="buttonStartJobText"
+                                text="$l10n_button_startJob" textOffset="15px 0px" />
+                            <Button profile="fs25_mapButtonAction1" id="buttonStartJob"
+                                onClick="onStartCancelJob" />
+                        </GuiElement> -->
+                        <Text profile="fs25_aiContainerEmptyText" id="createJobEmptyText"
+                            text="$l10n_ui_createJobEmpty"/>
+                    </GuiElement>
+                    <GuiElement profile="fs25_subCategoryListContainer" id="workerListContainer">
+                        <SmoothList profile="fs25_subCategoryList" id="activeWorkerList"
+                            startClipperElementName="startClipper" endClipperElementName="endClipper"
+                            onClick="onClickList" emptyIndicatorId="activeWorkerListEmpty"
+                            selectedWithoutFocus="true">
+                            <ListItem profile="fs25_subCategoryListItem">
+                                <Bitmap profile="fs25_workerListItemIcon" />
+                                <Text profile="fs25_workerListItemHelper" name="helper" />
+                                <Text profile="fs25_subCategoryListItemName" name="title" />
+                                <Text profile="fs25_workerListItemDescription" name="text" />
+                            </ListItem>
+                        </SmoothList>
+                        <Text profile="fs25_aiContainerEmptyText" id="activeWorkerListEmpty" position="0px 37px"
+                            text="$l10n_ui_inGameMenuNoActiveWorkers" />
+                        <Text profile="ingameMenuAILimitReached" id="limitReachedWarning"
+                            text="$l10n_ai_warningLimitReached" visible="false"/>
+                        <Bitmap profile="fs25_subCategoryStartClipper" name="startClipper" />
+                        <Bitmap profile="fs25_subCategoryStopClipper" position="0px 60px" name="endClipper" />
+                        <ThreePartBitmap profile="fs25_subCategoryListSliderBox">
+                            <Slider profile="fs25_listSlider" dataElementId="activeWorkerList" />
+                        </ThreePartBitmap>
+                    </GuiElement>
+                </Bitmap>
+            </GuiElement>
+            <GuiElement profile="cpMenuContainer">
+                <GuiElement id="infoTextHud">
+                    <GuiElement profile="cpInfoTextHeaderPanel">
+                        <Bitmap profile="cpInfoTextHeaderBg"/>
+                        <Text profile="cpInfoTextHeaderTitle" text="$l10n_CP_help_title"/>
+                    </GuiElement>
+                    <SmoothList profile="cpInfoTextList" id="infoTextList" onClick="onClickList">
+                        <ListItem profile="cpInfoTextListElement">
+                            <Bitmap profile="cpInfoTextListElementBg" />
+                            <Text profile="cpInfoTextListElementText" name="text" />
+                            <Button profile="cpInfoTextListElementIcon" name="icon"/>
+                        </ListItem>
+                    </SmoothList>
+                </GuiElement>
+                <!-- <RoundCorner profile="fs25_mapMoneyBoxBg" id="shopMoneyBoxBg" />
+                <BoxLayout profile="fs25_shopMoneyBox" id="shopMoneyBox">
+                    <Text profile="fs25_shopBalance" text="$l10n_ui_balance:" />
+                    <Text profile="fs25_shopMoney" id="currentBalanceText" />
+                </BoxLayout> -->
+                <Text profile="cpAIStatusText" id="statusMessage" />
+            </GuiElement>
+            <GuiElement profile="fs25_mapContextBoxContainer" newLayer="true">
+                <GuiElement profile="fs25_mapContextBox" id="contextBox">
+                    <ThreePartBitmap profile="fs25_mapContextBoxBg" />
+                    <Bitmap profile="fs25_mapContextImage" name="image" />
+                    <Bitmap profile="fs25_mapContextImageVehicle" name="imageVehicle" />
+                    <Bitmap profile="fs25_mapContextSeparator" />
+                    <Text profile="fs25_mapContextTextTop" name="text" position="0px -5px"/>
+                    <Text profile="fs25_mapContextFarmTop" name="farm" position="0px -50px"/>
+                    <Text profile="fs25_mapContextText" name="statusText"/>
+                    <SmoothList profile="fs25_mapContextButtonList" id="contextButtonList" name="buttonBox"
+                        onClick="onClickList">
+                        <ListItem profile="fs25_mapContextButtonListItem">
+                            <ThreePartBitmap profile="fs25_mapContextButtonListItemBg" />
+                            <Text profile="fs25_mapButtonText" name="text" />
+                            <Button profile="fs25_mapContextButtonListItemButton" />
+                        </ListItem>
+                    </SmoothList>
+                </GuiElement>
+                <GuiElement profile="fs25_mapContextBox" id="contextBoxFarmland" height="150px">
+                    <Bitmap profile="fs25_mapContextBoxBgFarmland" />
+                    <Bitmap profile="fs25_mapContextImage" name="image" />
+                    <Bitmap profile="fs25_mapContextImageVehicle" name="imageVehicle" />
+                    <Bitmap profile="fs25_mapContextSeparator" />
+                    <Text profile="fs25_mapContextTextTop" name="text" position="0px -5px" />
+                    <Text profile="fs25_mapContextFarmTop" name="farm" position="0px -50px" />
+                    <Text profile="fs25_mapContextFarmlandTitle" text="$l10n_contract_details_fieldSize:"
+                        position="0px -80px" />
+                    <Text profile="fs25_mapContextFarmlandTitle" text="$l10n_ui_sellValue:"
+                        position="0px -110px" />
+                    <Text profile="fs25_mapContextFarmlandValue" name="farmlandSize" position="0px -80px" />
+                    <Text profile="fs25_mapContextFarmlandValue" name="farmlandValue" position="0px -110px" />
+                    <SmoothList profile="fs25_mapContextButtonList" id="contextButtonListFarmland"
+                        name="buttonBox" onClick="onClickList">
+                        <ListItem profile="fs25_mapContextButtonListItem">
+                            <ThreePartBitmap profile="fs25_mapContextButtonListItemBg" />
+                            <Text profile="fs25_mapButtonText" name="text" />
+                            <Button profile="fs25_mapContextButtonListItemButton" />
+                        </ListItem>
+                    </SmoothList>
+                </GuiElement>
+                <GuiElement profile="fs25_mapContextBox" id="contextBoxPlayer" height="80px">
+                    <Bitmap profile="fs25_mapContextBoxBgFarmland" />
+                    <Text profile="fs25_mapContextTextTop" name="player" position="0px -5px" />
+                    <Text profile="fs25_mapContextFarmTop" name="farm" position="0px -50px" />
+                </GuiElement>
+            </GuiElement>
+            <Text profile="ingameMenuAIActionText" id="actionMessage" visible = "false" />
+            <GuiElement profile="fs25_inGameMapLoadingBg" visible = "false">
+                <Text profile="ingameMenuAIErrorText" id="errorMessage" />
+            </GuiElement>
+        </GuiElement>
+
+        <!-- Prefabs -->
+        <Button profile="fs25_subCategorySelectorTabbedTab" id="selectorPrefab">
+            <ThreePartBitmap profile="fs25_subCategorySelectorTabbedTabBg" name="background" />
+        </Button>
+
+        <GuiElement profile="fs25_subCategorySelectorTabbedContainer" id="containerPrefab">
+            <Text profile="fs25_settingsNoPermissionText" name="noPermissionText"
+                text="$l10n_ui_settingsNoPermission" visible="false"/>
+            <ScrollingLayout profile="fs25_settingsLayout" name="layout" bottomClipperElementName="bottomClipper">
+
+            </ScrollingLayout>
+            <Bitmap profile="fs25_settingsTooltipSeparator" name="separator" />
+            <Bitmap profile="fs25_stopClipper" name="bottomClipper" />
+        </GuiElement>
+
+        <Bitmap profile="fs25_multiTextOptionContainer" id="booleanPrefab">
+            <CpBinaryyOption profile="fs25_settingsBinaryOption" name="setting" namedComponents="true" onClick="onClickCpMultiTextOption">
+                <Text profile="fs25_multiTextOptionTooltip" name="tooltip"/>
+                <Text profile="cpSettingsMultiOptionTitle" name="label"/>
+            </CpBinaryyOption>
+        </Bitmap>
+        <Text profile="fs25_settingsSectionHeader" name="sectionHeader" id="sectionHeaderPrefab"/>
+        <Bitmap profile="fs25_multiTextOptionContainer" id="multiTextPrefab">
+            <CpOptionToggle profile="fs25_settingsMultiTextOption" name="setting" namedComponents="true" onClick="onClickCpMultiTextOption" hideButtonOnLimitReached="False">
+                <Text profile="fs25_multiTextOptionTooltip" name="tooltip"/>
+                <Text profile="cpSettingsMultiOptionTitle" name="label"/>
+            </CpOptionToggle>
+        </Bitmap>
+    </GuiElement>
+    <ThreePartBitmap profile="fs25_sliderDockedBg" id="settingsSliderBox">
+        <ThreePartBitmap profile="fs25_sliderDockedBox">
+            <Slider profile="fs25_sliderDocked" id="settingsSlider" />
+        </ThreePartBitmap>
+    </ThreePartBitmap>
+    <GUIProfiles>
+        <Profile name="cpSettingsMultiOptionTitle" extends="fs25_settingsMultiTextOptionTitle">
+            <position value="-500px 0px" />
+        </Profile>
+        <Profile name="cpLeftSideBackground" extends="fs25_fullScreenBackground" with="pivotMiddleLeft">
+            <height value="100%"/>
+            <width value="250px" />
+        </Profile>
+        <Profile name="cpRightSideBackground" extends="fs25_fullScreenBackground" with="pivotMiddleRight">
+            <height value="100%"/>
+            <width value="200px" />
+        </Profile>
+        <Profile name="cpTopSideBackground" extends="fs25_fullScreenBackground" with="pivotTopCenter">
+            <width value="100%"/>
+            <height value="230px" />
+        </Profile>
+        <Profile name="cpBottomSideBackground" extends="fs25_fullScreenBackground" with="pivotBottomCenter">
+            <width value="100%"/>
+            <height value="80px" />
+        </Profile>
+        <Profile name="cpMenuContainer" extends="fs25_menuContainer" with="anchorTopRight">
+            <position value="20px 0px"/>
+            <!-- <position value="0px 92px" /> -->
+        </Profile>
+        <Profile name="cpInfoTextHeaderPanel" extends="emptyPanel" with="anchorTopRight">
+
+        </Profile>
+        <Profile name="cpInfoTextHeaderBg" extends="baseReference" with="anchorTopRight">
+            <size value="250px 20px"/>
+            <imageSliceId value="gui.button_middle" />
+            <imageColor value="$preset_fs25_colorMainHighlight"/>
+        </Profile>
+        <Profile name="cpInfoTextHeaderTitle" extends="fs25_textDefault" with="anchorTopRight">
+            <textOffset value="10px 0px" />
+        </Profile>
+        <Profile name="cpInfoTextList" extends="emptyPanel" with="anchorTopRight">
+            <size value="250px 300px"/>
+            <position value="0 -20px" />
+            <listItemSpacing value="3px" />
+            <!-- <position value="0px -200px" /> -->
+        </Profile>
+        <Profile name="cpInfoTextListElement" extends="emptyPanel" with="anchorTopStretchingX">
+            <height value="26px" />
+        </Profile>
+        <Profile name="cpInfoTextListElementText" extends="fs25_textDefault" with="anchorTopStretchingX">
+            <width value="100%" />
+            <textSize value="12px" />
+            <textOffset value="30px -2px" />
+            <textSelectedColor value="$preset_fs25_colorMainHighlight" />
+            <textFocusedColor value="$preset_fs25_colorMainHighlight" />
+            <textHighlightedColor value="$preset_fs25_colorMainHighlight" />
+        </Profile>
+        <Profile name="cpInfoTextListElementIcon" extends="emptyPanel" with="anchorTopLeft">
+            <size value="26px 26px"/>
+            <absoluteSizeOffset value="3px 3px"/>
+            <iconSliceId value="cpIconSprite.white_vehicle" />
+            <iconSize value="20px 20px" />
+            <iconColor value="$preset_fs25_colorGrey" />
+            <iconSelectedColor value="$preset_fs25_colorMainHighlight" />
+        </Profile>
+        <Profile name="cpInfoTextListElementBg" extends="baseReference" with="anchorTopStretchingX">
+            <imageSliceId value="gui.animalScreen_left" />
+            <!-- <imageSelectedColor value="$preset_colorBlack80" /> -->
+        </Profile>
+        <Profile name="cpCreateJobContextButtonListItemButton" extends="fs25_mapContextButtonListItemButton">
+            <iconColor value="$preset_fs25_colorMainDark" />
+            <iconHighlightedColor value="$preset_fs25_colorMainDark" />
+            <iconBgColor value="$preset_fs25_colorMainHighlight" />
+            <iconBgHighlightedColor value="$preset_fs25_colorMainHighlight" />
+        </Profile>
+        <Profile name="cpAIStatusText" extends="fs25_ingameMenuAIStatusText" with="anchorTopRight">
+            <position value="-300px 0px" />
+        </Profile>
+    </GUIProfiles>
+</GUI>

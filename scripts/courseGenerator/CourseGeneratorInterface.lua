@@ -111,11 +111,14 @@ function CourseGeneratorInterface.generate(fieldPolygon,
             settings.workWidth:getValue(), numberOfHeadlands, settings.multiTools:getValue(),
             settings.headlandClockwise:getValue(), settings.islandHeadlandClockwise:getValue(), not settings.useBaseLineEdge:getValue())
     course:setFieldPolygon(fieldPolygon)
+    CourseGeneratorInterface.setCourse(vehicle, course)
     return true, course
 end
 
 --- Generates a vine course, where the fieldPolygon are the start/end of the vine node.
 ---@param fieldPolygon table
+---@param startPosition table {x, z}
+---@param vehicle table
 ---@param workWidth number
 ---@param turningRadius number
 ---@param manualRowAngleDeg number
@@ -124,6 +127,7 @@ end
 function CourseGeneratorInterface.generateVineCourse(
         fieldPolygon,
         startPosition,
+        vehicle,
         workWidth,
         turningRadius,
         manualRowAngleDeg,
@@ -166,8 +170,47 @@ function CourseGeneratorInterface.generateVineCourse(
     CourseGeneratorInterface.logger:debug('Generated vine course: %d center waypoints',
             #CourseGeneratorInterface.generatedCourse:getCenterPath())
 
-    local course = Course.createFromGeneratedCourse(nil, CourseGeneratorInterface.generatedCourse,
+    local course = Course.createFromGeneratedCourse(vehicle, CourseGeneratorInterface.generatedCourse,
             workWidth, 0, multiTools, true, true, true)
     course:setFieldPolygon(fieldPolygon)
+    CourseGeneratorInterface.setCourse(vehicle, course)
     return true, course
+end
+
+--- Load the course into the vehicle
+function CourseGeneratorInterface.setCourse(vehicle, course)
+    if course and course:getMultiTools() > 1 then
+        course:setPosition(vehicle:getCpLaneOffsetSetting():getValue())
+    end
+    vehicle:setFieldWorkCourse(course)
+end
+
+---------------------------------------------
+--- Console Commands
+---------------------------------------------
+
+--- Generate a course with the current course generator settings
+---@param nHeadlands number|nil override number of headlands
+function CourseGeneratorInterface.generateDefaultCourse(nHeadlands)
+    local vehicle = CpUtil.getCurrentVehicle()
+    local x, _, z = getWorldTranslation(vehicle.rootNode)
+    local points = CpFieldUtil.detectFieldBoundary(x, z, true)
+    if points == nil then
+        CpUtil.infoVehicle(vehicle, "Not on a field, can't generate")
+        return
+    end
+    local settings = CpUtil.getCurrentVehicle():getCourseGeneratorSettings()
+    local width, offset, _, _ = WorkWidthUtil.getAutomaticWorkWidthAndOffset(vehicle)
+    settings.workWidth:refresh()
+    settings.workWidth:setFloatValue(width)
+    vehicle:getCpSettings().toolOffsetX:setFloatValue(offset)
+    if nHeadlands then
+        settings.numberOfHeadlands:setFloatValue(nHeadlands)
+    end
+    settings.sharpenCorners:setValue(true)
+    CpUtil.infoVehicle(vehicle, "Generating default course with %d headlands", settings.numberOfHeadlands:getValue())
+    local ok, course = CourseGeneratorInterface.generate(points, {x = x, z = z}, vehicle, settings)
+    if ok then
+        CourseGeneratorInterface.setCourse(vehicle, course)
+    end
 end

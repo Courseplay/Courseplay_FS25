@@ -175,7 +175,7 @@ function CpBunkerSiloVehicleController:getFirstLineApproach(numLines, width)
 	elseif dhx > 0 then
 		line = MathUtil.round(dhx / width)
 	end
-	return MathUtil.clamp(line, 1, numLines)
+	return CpMathUtil.clamp(line, 1, numLines)
 end
 
 
@@ -224,7 +224,7 @@ function CpBunkerSiloVehicleController:isEndReached(node, margin)
 		local x, _, z = localToWorld(node, 0, 0, margin)
 		local dx, dz = unpack(self.drivingTarget[2])
 		local dist = MathUtil.vector2Length(x - dx, z - dz)
-		return not self.silo:isPointInSilo(x, z) and dist < 5, MathUtil.clamp(2 * dist, 5, math.huge)
+		return not self.silo:isPointInSilo(x, z) and dist < 5, CpMathUtil.clamp(2 * dist, 5, math.huge)
 	end
 	return false, math.huge
 end
@@ -325,7 +325,7 @@ function CpBunkerSiloLevelerController:draw()
 	if self:isDebugEnabled() then
 		self.silo:drawDebug()
 		self.silo:drawUnloaderArea()
-		if g_currentMission.controlledVehicle == self.vehicle then
+		if CpUtil.getCurrentVehicle() == self.vehicle then
 			local debugData = self.silo:getDebugData()
 			table.insert(debugData, 1, {
 				name = "is waiting", value = self:isWaitingAtParkPosition()
@@ -435,7 +435,7 @@ function CpBunkerSiloLoaderController:isEndReached(node, margin)
 		local _, _, zOffset = localToLocal(node, AIUtil.getDirectionNode(self.vehicle), 0, 0, 0)
 		local _, _, z = worldToLocal(AIUtil.getDirectionNode(self.vehicle), dx, 0, dz)
 		self:debug("Silo/heap end offset %.1f", z-zOffset)
-		return z - zOffset < margin, MathUtil.clamp(z * 2, 5, math.huge)
+		return z - zOffset < margin, CpMathUtil.clamp(z * 2, 5, math.huge)
 	end
 	return false, math.huge
 end

@@ -206,8 +206,8 @@ function CpAIJob:applyCurrentState(vehicle, mission, farmId, isDirectStart)
 end
 
 --- Can the vehicle be used for this job?
-function CpAIJob:getIsAvailableForVehicle(vehicle)
-	return true
+function CpAIJob:getIsAvailableForVehicle(vehicle, cpJobsAllowed)
+	return cpJobsAllowed
 end
 
 function CpAIJob:getTitle()
@@ -239,7 +239,8 @@ end
 
 --- Is the job valid?
 function CpAIJob:validate(farmId)
-	self:setParamterValid(true)
+	--- TODO_25
+	-- self:setParamterValid(true)
 
 	local isValid, errorMessage = self.vehicleParameter:validate()
 

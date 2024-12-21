@@ -1,21 +1,42 @@
 --- Custom field hotspot that can be clicked for deleting of the field course.
 CustomFieldHotspot = {}
 CustomFieldHotspot.CATEGORY = 200
-local CustomFieldHotspot_mt = Class(CustomFieldHotspot, FieldHotspot)
+CustomFieldHotspot.SLICE_ID = "gui.ingameMap_other"
+CustomFieldHotspot.NAME = "CP_customFieldManager_hotspotName"
+CustomFieldHotspot.COLOR = {0.61049, 0.56471, 0.00303, 1}
+local CustomFieldHotspot_mt = Class(CustomFieldHotspot, FarmlandHotspot)
 
 function CustomFieldHotspot.new(customMt)
-	local self = FieldHotspot.new(customMt or CustomFieldHotspot_mt)
-	
+	local self = FarmlandHotspot.new(customMt or CustomFieldHotspot_mt)
+	self.lastName = ""
 	return self
+end
+
+function CustomFieldHotspot:render(x, y, rotation, small)
+	local name = self:getName()
+	if name ~= self.lastName then
+		setTextBold(true)
+		local width = getTextWidth(self.textSize * 1/(self.scale * 0.75), self.field:getName())
+		setTextBold(false)
+		self.icon:setDimension(width + self.width)
+	end
+	self.lastName = name
+	CustomFieldHotspot:superClass().render(self, x, y, rotation, small)
+end
+
+function CustomFieldHotspot:setScale(scale)
+	self.scale = scale
 end
 
 function CustomFieldHotspot:getCategory()
 	return CustomFieldHotspot.CATEGORY 
 end
 
+---@param field CustomField
 function CustomFieldHotspot:setField(field)
-	CustomFieldHotspot:superClass().setField(self, field)
-
+	self.field = field
+	local worldX, worldZ = field:getCenter()
+	self:setWorldPosition(worldX, worldZ)
 	self.clickArea = MapHotspot.getClickArea(
 		{
 			0,
@@ -28,6 +49,10 @@ function CustomFieldHotspot:setField(field)
 		},
 		0
 	)	
+end
+
+function CustomFieldHotspot:getName()
+	return self.field:getName()
 end
 
 function CustomFieldHotspot:onClickDelete()
@@ -50,21 +75,3 @@ function CustomFieldHotspot:getAreaText()
     return g_i18n:formatArea(self.field:getAreaInSqMeters()/10000 , 2)
 end
 
---- Enables field hotspot area content box.
-FieldHotspot.clickArea = MapHotspot.getClickArea(
-	{
-		0,
-		0,
-		1,
-		1
-	},
-	{
-		1,1,
-	},
-	0
-)	
-
-FieldHotspot.getAreaText = function (self)
-	--- Is already in ha.
-	return g_i18n:formatArea(self.field.fieldArea , 2)
-end

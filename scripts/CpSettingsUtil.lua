@@ -278,36 +278,58 @@ function CpSettingsUtil.copySettingsValues(settingsTable, settingsTableToCopy)
     end
 end
 
-function CpSettingsUtil.generateAndBindGuiElementsToSettings(settingsBySubTitle, parentGuiElement, 
-		genericSettingElement, genericSubTitleElement, settings)
-	for _, data in ipairs(settingsBySubTitle) do 
-		local clonedSubTitleElement = genericSubTitleElement:clone(parentGuiElement)
-		clonedSubTitleElement:setText(g_i18n:getText(data.title))
-		clonedSubTitleElement.subTitleConfigData = data
-		clonedSubTitleElement:applyScreenAlignment()
-		FocusManager:loadElementFromCustomValues(clonedSubTitleElement)
-		for _, raw_setting in ipairs(data.elements) do 
-			local clonedSettingElement = genericSettingElement:clone(parentGuiElement)
-			local setting = settings[raw_setting:getName()]
-			if setting then
-				clonedSettingElement:setDataSource(setting)
-				clonedSettingElement.aiParameter = setting
-				clonedSettingElement:applyScreenAlignment()
-				FocusManager:loadElementFromCustomValues(clonedSettingElement)
-			end
+function CpSettingsUtil.generateAndBindGuiElements(settingsData, parentGuiElement, 
+	genericMultiSettingElement, genericBooleanSettingElement, settings)
+	local alternate = false
+	for _, raw_setting in ipairs(settingsData.elements) do 
+		local clonedSettingElement
+		if raw_setting:is_a(AIParameterBooleanSetting) then
+			clonedSettingElement = genericBooleanSettingElement:clone(parentGuiElement)
+		else
+			clonedSettingElement = genericMultiSettingElement:clone(parentGuiElement)
+		end
+		if alternate then 
+			clonedSettingElement:setImageColor(1, unpack(GuiUtils.getColorArray(g_gui.presets["fs25_colorGreyDark"])))
+		else
+			clonedSettingElement:setImageColor(1, unpack(GuiUtils.getColorArray(g_gui.presets["fs25_colorGreyDark_50"])))
+		end
+		alternate = not alternate
+		local setting = settings[raw_setting:getName()]
+		if setting then
+			--- TODO_25
+			clonedSettingElement:getDescendantByName("setting"):setDataSource(setting)
+			clonedSettingElement.aiParameter = setting
+			-- clonedSettingElement:applyScreenAlignment()
+			FocusManager:loadElementFromCustomValues(clonedSettingElement)
 		end
 	end
 	parentGuiElement:invalidateLayout()
 end
 
+function CpSettingsUtil.generateAndBindGuiElementsToSettings(settingsBySubTitle, parentGuiElement, 
+	genericMultiSettingElement, genericBooleanSettingElement, genericSubTitleElement, settings)
+	for _, data in ipairs(settingsBySubTitle) do 
+		local clonedSubTitleElement = genericSubTitleElement:clone(parentGuiElement)
+		clonedSubTitleElement:setText(g_i18n:getText(data.title))
+		clonedSubTitleElement.subTitleConfigData = data
+		-- clonedSubTitleElement:applyScreenAlignment()
+		FocusManager:loadElementFromCustomValues(clonedSubTitleElement)
+
+		CpSettingsUtil.generateAndBindGuiElements(data,
+			parentGuiElement, genericMultiSettingElement, 
+			genericBooleanSettingElement, settings)
+	end
+end
+
 function CpSettingsUtil.updateGuiElementsBoundToSettings(layout, vehicle)
 	local subTitleVisible = true
 	for i, element in pairs(layout.elements) do 
+		---@type AIParameterSetting
 		local setting = element.aiParameter
 		if setting then 
-			element:setDisabled(setting:getIsDisabled())
+			element:getDescendantByName("setting"):setDisabled(setting:getIsDisabled())
 			element:setVisible(subTitleVisible and setting:getIsVisible())
-			element:updateTitle()
+			element:getDescendantByName("setting"):updateTitle()
 		else
 			if element.subTitleConfigData then
 				local isVisible = true
@@ -324,14 +346,14 @@ function CpSettingsUtil.updateGuiElementsBoundToSettings(layout, vehicle)
 						isVisible = class[isVisibleFunc](vehicle)
 					end
 					if class[isDisabledFunc] then 
-						element:setDisabled(class[isDisabledFunc](vehicle))
+						element:getDescendantByName("setting"):setDisabled(class[isDisabledFunc](vehicle))
 					end
 				else 
 					if class[isVisibleFunc] then 
 						isVisible = class[isVisibleFunc](class)
 					end
 					if class[isDisabledFunc] then 
-						element:setDisabled(class[isDisabledFunc](vehicle))
+						element:getDescendantByName("setting"):setDisabled(class[isDisabledFunc](vehicle))
 					end
 				end
 				subTitleVisible = isVisible

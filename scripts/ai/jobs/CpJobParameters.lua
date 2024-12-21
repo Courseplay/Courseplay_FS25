@@ -189,6 +189,15 @@ function CpFieldWorkJobParameters:onLaneOffsetChanged(setting)
     end
 end
 
+function CpFieldWorkJobParameters:isLaneOffsetVisible()
+    return not self:noMultiToolsCourseSelected()
+end
+
+function CpFieldWorkJobParameters:isLaneOffsetDisabled()
+    local vehicle = self.job:getVehicle()
+    return self:noMultiToolsCourseSelected() or vehicle and vehicle:getIsCpActive()
+end
+
 --- Are the setting values roughly equal.
 ---@param otherParameters CpJobParameters
 ---@return boolean

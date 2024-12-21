@@ -1,5 +1,5 @@
 --[[
-This file is part of Courseplay (https://github.com/Courseplay/Courseplay_FS22)
+This file is part of Courseplay (https://github.com/Courseplay/Courseplay_FS25)
 Copyright (C) 2023 Courseplay Dev Team
 
 This program is free software: you can redistribute it and/or modify
@@ -165,7 +165,7 @@ function AIDriveStrategyAttachHeader:getDriveData(dt, vX, vY, vZ)
         --- Slowdown near the header, to allow smooth attach timing.
         local _, _, z = localToLocal(self.attacherJointController:getCutterJointPositionNode(),
                 self.cutterNode, 0, 0, 0)
-        local speed = MathUtil.clamp(-2 * z, 1, self.settings.reverseSpeed:getValue())
+        local speed = CpMathUtil.clamp(-2 * z, 1, self.settings.reverseSpeed:getValue())
         self:setMaxSpeed(speed)
         if self.attacherJointController:canAttachCutter() then
             Timer.createOneshot(120, function()

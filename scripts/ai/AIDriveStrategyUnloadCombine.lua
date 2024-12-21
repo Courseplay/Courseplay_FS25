@@ -1,5 +1,5 @@
 --[[
-This file is part of Courseplay (https://github.com/Courseplay/Courseplay_FS22)
+This file is part of Courseplay (https://github.com/Courseplay/Courseplay_FS25)
 Copyright (C) 2022 Peter Vaiko
 
 This program is free software: you can redistribute it and/or modify
@@ -565,7 +565,7 @@ end
 ---@param combine table
 ---@param combineDriver AIDriveStrategyCombineCourse
 function AIDriveStrategyUnloadCombine:areThereAnyCombinesOrLoaderLeftoverOnTheField(combine, combineDriver)
-    for _, vehicle in pairs(g_currentMission.vehicles) do
+    for _, vehicle in pairs(g_currentMission.vehicleSystem.vehicles) do
         if vehicle ~= combine and AIDriveStrategyCombineCourse.isActiveCpCombine(vehicle) then
             local x, _, z = getWorldTranslation(combine.rootNode)
             if self:isServingPosition(x, z, 10) then
@@ -649,7 +649,7 @@ function AIDriveStrategyUnloadCombine:driveBesideCombine()
     -- use a factor to make sure we reach the pipe fast, but be more gentle while discharging
     local factor = strategy:isDischarging() and 0.75 or 2
     local combineSpeed = self.combineToUnload.lastSpeedReal * 3600
-    local speed = combineSpeed + MathUtil.clamp(dz * factor, -10, 15)
+    local speed = combineSpeed + CpMathUtil.clamp(dz * factor, -10, 15)
     if dz > 0 and speed < 2 then
         -- Giants does not like speeds under 2, it just stops. So if we calculated a small speed
         -- like when the combine is stopped, but not there yet, make sure we set a speed which
@@ -749,12 +749,12 @@ function AIDriveStrategyUnloadCombine:followChopper()
             -- the back of the harvester
             dz = dz + self:getCombinesMeasuredBackDistance()
         end
-        speed = self.combineToUnload.lastSpeedReal * 3600 + MathUtil.clamp(
+        speed = self.combineToUnload.lastSpeedReal * 3600 + CpMathUtil.clamp(
                 math.min(-dz, dFollowProxy - self.targetDistanceBehindChopper, dProxy - self.targetDistanceBehindChopper) * 2,
                 -10, 15)
     else
         -- not aligned with the chopper, drive forward to get closer, regardless of dz
-        speed = MathUtil.clamp(
+        speed = CpMathUtil.clamp(
                 math.min(dFollowProxy - self.targetDistanceBehindChopper, dProxy - self.targetDistanceBehindChopper) * 2,
                 0, self.settings.turnSpeed:getValue())
     end
@@ -892,11 +892,11 @@ function AIDriveStrategyUnloadCombine:handleChopperTurn(harvester)
         if sameDirection then
             -- reverse speed is controlled around combine's speed
             dReference = harvester:getCpDriveStrategy():isDischarging() and dz or dz - 3
-            speed = combineSpeed + MathUtil.clamp(self.targetDistanceBehindChopper - dReference, -combineSpeed,
+            speed = combineSpeed + CpMathUtil.clamp(self.targetDistanceBehindChopper - dReference, -combineSpeed,
                     self.settings.reverseSpeed:getValue() * 1.5)
         else
             -- reverse speed only depends on distance from the combine, stop when at working width
-            speed = MathUtil.clamp(harvester:getCpDriveStrategy():getWorkWidth() - d, 0,
+            speed = CpMathUtil.clamp(harvester:getCpDriveStrategy():getWorkWidth() - d, 0,
                     self.settings.reverseSpeed:getValue() * 1.5)
         end
     else
@@ -909,7 +909,7 @@ function AIDriveStrategyUnloadCombine:handleChopperTurn(harvester)
         -- get closer to the chopper when beside it
         dReference = (math.abs(dx) > 3) and dz or d
         speed = combineSpeed +
-                (MathUtil.clamp(dReference - self.targetDistanceBehindChopper, -turnSpeed, turnSpeed))
+                (CpMathUtil.clamp(dReference - self.targetDistanceBehindChopper, -turnSpeed, turnSpeed))
     end
 
     self:renderDebugTableFromLists(
@@ -1791,7 +1791,7 @@ function AIDriveStrategyUnloadCombine:updateCombineStatus()
         -- direction changed
         self.combineToUnloadReversing = -1
     else
-        self.combineToUnloadReversing = MathUtil.clamp(combineToUnloadReversing, -1, 1)
+        self.combineToUnloadReversing = CpMathUtil.clamp(combineToUnloadReversing, -1, 1)
     end
 end
 
@@ -2315,7 +2315,7 @@ function AIDriveStrategyUnloadCombine:backUpForReversingCombine()
     local d = self:getDistanceFromCombine(blockedVehicle)
     local dProximity, vehicleInFront = self.proximityController:checkBlockingVehicleFront()
     local combineSpeed = (blockedVehicle.lastSpeedReal * 3600)
-    local speed = combineSpeed + MathUtil.clamp(self.minDistanceWhenMovingOutOfWay - math.min(d, dProximity),
+    local speed = combineSpeed + CpMathUtil.clamp(self.minDistanceWhenMovingOutOfWay - math.min(d, dProximity),
             -combineSpeed, self.settings.reverseSpeed:getValue() * 1.2)
 
     self:setMaxSpeed(speed)
@@ -2375,7 +2375,7 @@ function AIDriveStrategyUnloadCombine:findOtherUnloaderAroundCombine(combine, co
         return nil
     end
     if g_currentMission then
-        for _, vehicle in pairs(g_currentMission.vehicles) do
+        for _, vehicle in pairs(g_currentMission.vehicleSystem.vehicles) do
             if vehicle ~= self.vehicle and vehicle.cp.driver and vehicle.cp.driver:is_a(AIDriveStrategyUnloadCombine) then
                 local dx, _, dz = localToLocal(vehicle.rootNode, combine:getAIDirectionNode(), 0, 0, 0)
                 if math.abs(dz) < 30 and math.abs(dx) <= (combineOffset + 3) then
@@ -2717,7 +2717,7 @@ function AIDriveStrategyUnloadCombine:startUnloadingOnField(controller, allowRev
         else
             --- Makes sure the x offset for unloading to the side is big enough
             --- to make sure the unloader doesn't touch the heap.
-            self.fieldUnloadData.xOffset = MathUtil.sign(self.fieldUnloadData.xOffset) *
+            self.fieldUnloadData.xOffset = math.sign(self.fieldUnloadData.xOffset) *
                     math.max(math.abs(self.fieldUnloadData.xOffset), siloWidth / 2 + 2 * vehicleWidth / 3)
         end
 
@@ -2829,7 +2829,7 @@ function AIDriveStrategyUnloadCombine:onFieldUnloadPositionReached()
         self:debug("Starting pathfinding to the reverse unload turn end node with align length: %.2f and steering length: %.2f, turn radius: %.2f",
                 alignLength, steeringLength, self.turningRadius)
         local path = PathfinderUtil.findAnalyticPath(PathfinderUtil.dubinsSolver, self.fieldUnloadTurnStartNode,
-                0, self.fieldUnloadTurnEndNode, 0, 3, self.turningRadius)
+                0, 0, self.fieldUnloadTurnEndNode, 0, 3, self.turningRadius)
         if not path or #path == 0 then
             self:debug("Reverse alignment course creation failed!")
         else
@@ -2929,7 +2929,7 @@ function AIDriveStrategyUnloadCombine:onFieldUnloadingFinished()
                 --- First time park position for reverse unload offset always on the left of the heap.
                 self.fieldUnloadData.xOffset = siloWidth / 2 + 2 * vehicleWidth / 3
             else
-                self.fieldUnloadData.xOffset = MathUtil.sign(self.fieldUnloadData.xOffset) *
+                self.fieldUnloadData.xOffset = math.sign(self.fieldUnloadData.xOffset) *
                         math.max(math.abs(self.fieldUnloadData.xOffset), siloWidth / 2 + 2 * vehicleWidth / 3)
             end
             self:debug("Found a heap for field unloading park position xOffset: %.2f", self.fieldUnloadData.xOffset)

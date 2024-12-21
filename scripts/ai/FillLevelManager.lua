@@ -106,7 +106,7 @@ end
 ---@param object table
 function FillLevelManager.getTotalFillLevelPercentage(object)
     local fillLevel,capacity = FillLevelManager.getTotalFillLevelAndCapacity(object)
-    return 100 * fillLevel / capacity
+    return 100 * CpMathUtil.divide(fillLevel, capacity)
 end
 
 function FillLevelManager.getTotalFillLevelAndCapacityForObject(object)
@@ -199,7 +199,7 @@ end
 ---@return boolean
 function FillLevelManager.areAllTrailersFull(vehicle, fullThresholdPercentage)
     local totalFillLevel, totalCapacity, totalFreeCapacity =  FillLevelManager.getAllTrailerFillLevels(vehicle)
-    local fillLevelPercentage = 100 * totalFillLevel / totalCapacity
+    local fillLevelPercentage = 100 * CpMathUtil.divide(totalFillLevel, totalCapacity)
     return totalFreeCapacity <= 0 or fillLevelPercentage >= (fullThresholdPercentage or 100)
 end
 
@@ -209,7 +209,7 @@ end
 ---@return number total fill level percentage in % relative to max mass adjusted capacity.
 function FillLevelManager.getTotalTrailerFillLevelPercentage(vehicle)
     local totalFillLevel, totalCapacity, totalCapacityMassAdjusted =  FillLevelManager.getAllTrailerFillLevels(vehicle)
-    return 100 * totalFillLevel / totalCapacity, 100 * totalFillLevel / totalCapacityMassAdjusted
+    return 100 * CpMathUtil.divide(totalFillLevel, totalCapacity), 100 * CpMathUtil.divide(totalFillLevel, totalCapacityMassAdjusted)
 end
 
 --- Gets the total fill level, capacity and mass adjusted capacity of all trailers.

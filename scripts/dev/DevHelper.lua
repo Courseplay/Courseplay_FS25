@@ -28,11 +28,6 @@ DevHelper = CpObject()
 function DevHelper:init()
     self.data = {}
     self.isEnabled = false
-    self.consoleCommands = CpConsoleCommands(self)
-end
-
-function DevHelper:delete()
-    self.consoleCommands:delete()
 end
 
 function DevHelper:debug(...)
@@ -50,21 +45,21 @@ function DevHelper:update()
     local lx, lz, hasCollision, vehicle
 
     -- make sure not calling this for something which does not have courseplay installed (only ones with spec_aiVehicle)
-    if g_currentMission.controlledVehicle and g_currentMission.controlledVehicle.spec_cpAIWorker then
-        if self.vehicle ~= g_currentMission.controlledVehicle then
+    if CpUtil.getCurrentVehicle() and CpUtil.getCurrentVehicle().spec_cpAIWorker then
+        if self.vehicle ~= CpUtil.getCurrentVehicle() then
             if self.vehicle then
                 self.vehicle:removeDeleteListener(self, "removedSelectedVehicle")
             end
-            --self.vehicleData = PathfinderUtil.VehicleData(g_currentMission.controlledVehicle, true)
+            --self.vehicleData = PathfinderUtil.VehicleData(CpUtil.getCurrentVehicle(), true)
         end
-        self.vehicle = g_currentMission.controlledVehicle
+        self.vehicle = CpUtil.getCurrentVehicle()
         self.vehicle:addDeleteListener(self, "removedSelectedVehicle")
-        self.node = g_currentMission.controlledVehicle:getAIDirectionNode()
+        self.node = CpUtil.getCurrentVehicle():getAIDirectionNode()
         lx, _, lz = localDirectionToWorld(self.node, 0, 0, 1)
 
     else
         -- camera node looks backwards so need to flip everything by 180 degrees
-        self.node = g_currentMission.player.cameraNode
+        self.node = g_currentMission.playerSystem:getLocalPlayer():getCurrentCameraNode()
         lx, _, lz = localDirectionToWorld(self.node, 0, 0, -1)
     end
 
@@ -79,18 +74,16 @@ function DevHelper:update()
 
     self.data.hasFruit, self.data.fruitValue, self.data.fruit = PathfinderUtil.hasFruit(self.data.x, self.data.z, 1, 1)
 
-    self.data.landId =  CpFieldUtil.getFieldIdAtWorldPosition(self.data.x, self.data.z)
+    self.data.fieldId =  CpFieldUtil.getFieldIdAtWorldPosition(self.data.x, self.data.z)
     --self.data.owned =  PathfinderUtil.isWorldPositionOwned(self.data.x, self.data.z)
 	self.data.farmlandId = g_farmlandManager:getFarmlandIdAtWorldPosition(self.data.x, self.data.z)
-	self.data.farmland = g_farmlandManager:getFarmlandAtWorldPosition(self.data.x, self.data.z)
---    self.data.fieldAreaPercent = 100 * self.fieldArea / self.totalFieldArea
 
 	local y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, self.data.x, self.data.y, self.data.z)
     self.data.isOnField, self.data.densityBits = FSDensityMapUtil.getFieldDataAtWorldPosition(self.data.x, y, self.data.z)
     self.data.isOnFieldArea, self.data.onFieldArea, self.data.totalOnFieldArea = CpFieldUtil.isOnFieldArea(self.data.x, self.data.z)
     self.data.nx, self.data.ny, self.data.nz = getTerrainNormalAtWorldPos(g_currentMission.terrainRootNode, self.data.x, y, self.data.z)
 
-    local collisionMask = CollisionFlag.STATIC_WORLD + CollisionFlag.TREE + CollisionFlag.DYNAMIC_OBJECT + CollisionFlag.VEHICLE + CollisionFlag.TERRAIN_DELTA
+    local collisionMask = CpUtil.getDefaultCollisionFlags() + CollisionFlag.TERRAIN_DELTA
     self.data.collidingShapes = ''
     overlapBox(self.data.x, self.data.y + 0.2, self.data.z, 0, self.yRot, 0, 1.6, 1, 8, "overlapBoxCallback", self, collisionMask, true, true, true)
 
@@ -155,20 +148,25 @@ function DevHelper:keyEvent(unicode, sym, modifier, isDown)
         self:debug('Set field %d for pathfinding', self.fieldNumForPathfinding)
     elseif bitAND(modifier, Input.MOD_LALT) ~= 0 and isDown and sym == Input.KEY_space then
         -- save vehicle position
-        g_currentMission.controlledVehicle.vehiclePositionData = {}
-        DevHelper.saveVehiclePosition(g_currentMission.controlledVehicle, g_currentMission.controlledVehicle.vehiclePositionData)
+        CpUtil.getCurrentVehicle().vehiclePositionData = {}
+        DevHelper.saveVehiclePosition(CpUtil.getCurrentVehicle(), CpUtil.getCurrentVehicle().vehiclePositionData)
     elseif bitAND(modifier, Input.MOD_LCTRL) ~= 0 and isDown and sym == Input.KEY_space then
         -- restore vehicle position
-        DevHelper.restoreVehiclePosition(g_currentMission.controlledVehicle)
-    elseif bitAND(modifier, Input.MOD_LALT) ~= 0 and isDown and sym == Input.KEY_c then
-        self:debug('Finding contour of current field')
-        local valid, points = g_fieldScanner:findContour(self.data.x, self.data.z)
+        DevHelper.restoreVehiclePosition(CpUtil.getCurrentVehicle())
     elseif bitAND(modifier, Input.MOD_LALT) ~= 0 and isDown and sym == Input.KEY_g then
-        local valid, points = g_fieldScanner:findContour(self.data.x, self.data.z)
+        local points = CpFieldUtil.detectFieldBoundary(self.data.x, self.data.z, true)
         self:debug('Generate course')
+
+        local vehicle = CpUtil.getCurrentVehicle()
+        local settings = CpUtil.getCurrentVehicle():getCourseGeneratorSettings()
+        local width, offset, _, _ = WorkWidthUtil.getAutomaticWorkWidthAndOffset(vehicle)
+        settings.workWidth:refresh()
+        settings.workWidth:setFloatValue(width)
+        vehicle:getCpSettings().toolOffsetX:setFloatValue(offset)
+
         local status, ok, course = CourseGeneratorInterface.generate(points,
                 {x = self.data.x, z = self.data.z},
-                0, 6, 6, 1, true)
+                vehicle, settings)
         if ok then
             self.course = course
         end
@@ -215,7 +213,7 @@ function DevHelper:draw()
 end
 
 function DevHelper:showFillNodes()
-    for _, vehicle in pairs(g_currentMission.vehicles) do
+    for _, vehicle in pairs(g_currentMission.vehicleSystem.vehicles) do
         if SpecializationUtil.hasSpecialization(Trailer, vehicle.specializations) then
             DebugUtil.drawDebugNode(vehicle.rootNode, 'Root node')
             local fillUnits = vehicle:getFillUnits()
@@ -312,9 +310,5 @@ function DevHelper:showDriveData()
 end
 
 -- make sure to recreate the global dev helper whenever this script is (re)loaded
-if g_devHelper then
-    g_devHelper:delete()
-end
-
 g_devHelper = DevHelper()
 

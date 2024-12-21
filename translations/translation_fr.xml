@@ -156,6 +156,7 @@
     <!--Vehicle settings-->
     <!---->
     <text name="CP_vehicle_setting_title" text="Paramètres du véhicule pour (%s)"/>
+    <text name="CP_vehicle_setting_subTitle_vehicle" text="Vehicle settings"/>
     <text name="CP_vehicle_setting_subTitle_basic" text="Paramètres de base"/>
     <text name="CP_vehicle_setting_subTitle_implement" text="Paramètres outil"/>
     <text name="CP_vehicle_setting_subTitle_combine" text="Paramètres moissonneuse-batteuse"/>
@@ -271,6 +272,8 @@
     <!---->
     <text name="CP_vehicle_courseGeneratorSetting_title" text="Paramètres du générateur pour la course (%s)"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="Paramètres principaux"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Vine field settings"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Fieldwork settings"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="Paramètres des fourrières"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="Paramètres des rangs"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Paramètres îlots"/>
@@ -501,6 +504,7 @@ La course est automatiquement sauvegardée à la fermeture de l'éditeur et remp
     <!---->
     <!--Custom field manager-->
     <!---->
+    <text name="CP_customFieldManager_hotspotName" text="Custom field"/>
     <text name="CP_customFieldManager_confirm_save" text="Souhaitez-vous sauvegarder la course enregistrée comme contour de champ personnalisé %s?"/>
     <text name="CP_customFieldManager_confirm_delete" text="Souhaitez-vous supprimer le champ personnalisé %s?"/>
     <text name="CP_customFieldManager_delete" text="Supprimer le champ personnalisé"/>
@@ -515,6 +519,10 @@ La course est automatiquement sauvegardée à la fermeture de l'éditeur et remp
     <text name="CP_controllerGui_stopRecording" text="Arrêter l'enregistrement du champ personnalisé"/>
     <text name="CP_controllerGui_pauseRecording" text="Suspendre l'enregistrement du champ personnalisé"/>
     <text name="CP_controllerGui_unpauseRecording" text="Reprendre l'enregistrement du champ personnalisé"/>
+    <!---->
+    <!--CP ingame menu-->
+    <!---->
+    <text name="CP_ingameMenu_map_title" text="Map"/>
     <!---->
     <!--Help menu-->
     <!---->
@@ -999,6 +1007,7 @@ Votre sélection devrait ressembler à l'illustration ci-contre.
     <text name="input_CP_DBG_CHANNEL_MENU_VISIBILITY" text="CP: Affiche/masque les canaux de debogage."/>
     <text name="input_CP_OPEN_CLOSE_VEHICLE_SETTING_DISPLAY" text="CP: Affiche mini ATH"/>
     <text name="input_CP_START_STOP" text="CP: Ouvrier Courseplay"/>
+    <text name="input_CP_GENERATE_COURSE" text="CP: Change current selected job"/>
     <text name="input_CP_CHANGE_SELECTED_JOB" text="CP: Change current selected job"/>
     <text name="input_CP_CHANGE_STARTING_POINT" text="CP: Change le point de départ"/>
     <text name="input_CP_CLEAR_COURSE" text="CP: Efface la course actuellement sélectionnée"/>

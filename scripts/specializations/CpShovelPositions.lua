@@ -277,7 +277,7 @@ function CpShovelPositions:controlShovelPosition(dt, targetAngle)
 	local curRot = {}
 	curRot[1], curRot[2], curRot[3] = getRotation(spec.shovelTool.node)
 	local oldShovelRot = curRot[spec.shovelTool.rotationAxis]
-	local goalAngle = MathUtil.clamp(oldShovelRot + targetAngle, spec.shovelTool.rotMin, spec.shovelTool.rotMax)
+	local goalAngle = CpMathUtil.clamp(oldShovelRot + targetAngle, spec.shovelTool.rotMin, spec.shovelTool.rotMax)
 	return ImplementUtil.moveMovingToolToRotation(spec.shovelVehicle, 
 		spec.shovelTool, dt, goalAngle,
 		CpShovelPositions.getMovingToolMinDiffNeeded(self)) or isDirty
@@ -358,9 +358,8 @@ function CpShovelPositions:setShovelPosition(dt, shovelLimits, armLimits, height
 	local ax, ay, az = localToLocal(armTool.node, armVehicle.rootNode, 0, 0, 0)
 	local wx, _, wz = getWorldTranslation(armVehicle.rootNode)
 
-
 	local function draw(x1, y1, z1, x2, y2, z2, r, g, b)
-		if g_currentMission.controlledVehicle == shovelVehicle.rootVehicle and 
+		if CpUtil.getCurrentVehicle() == shovelVehicle.rootVehicle and
 			CpDebug:isChannelActive(CpDebug.DBG_SILO, shovelVehicle.rootVehicle) then 
 				DebugUtil.drawDebugLine(x1, y1, z1, x2, y2, z2, r, g, b)
 		end
@@ -445,7 +444,7 @@ function CpShovelPositions:setShovelPosition(dt, shovelLimits, armLimits, height
 	end
 
 	local alpha, oldRotRelativeArmRot = 0, 0
-	if hasIntersection then
+	if hasIntersection and i1y ~= nil and i1z ~= nil then
 		--- Controls the arm height
 		setTranslation(armProjectionNode, 0, i1y, i1z)
 		setTranslation(armToolRefNode, ax, ay, az)
@@ -455,7 +454,7 @@ function CpShovelPositions:setShovelPosition(dt, shovelLimits, armLimits, height
 
 		alpha = math.atan2(i1y - ay, i1z - az)
 		local beta = -math.atan2(i2y - ay, i2z - az)
-		local a = MathUtil.clamp(oldArmRot - MathUtil.getAngleDifference(
+		local a = CpMathUtil.clamp(oldArmRot - MathUtil.getAngleDifference(
 			alpha, oldRotRelativeArmRot), armTool.rotMin, armTool.rotMax)
 		if not skipArm then
 			isDirty = ImplementUtil.moveMovingToolToRotation(
@@ -469,7 +468,7 @@ function CpShovelPositions:setShovelPosition(dt, shovelLimits, armLimits, height
 	end
 
 	--- Debug information
-	if g_currentMission.controlledVehicle == shovelVehicle.rootVehicle and 
+	if CpUtil.getCurrentVehicle() == shovelVehicle.rootVehicle and
 		CpDebug:isChannelActive(CpDebug.DBG_SILO, shovelVehicle.rootVehicle) then 
 		DebugUtil.drawDebugLine(wsx, wsy, wsz, wex, wey, wez)
 		DebugUtil.drawDebugLine(wsx, terrainHeight + minimalTargetHeight , wsz, 
@@ -643,25 +642,25 @@ end
 --------------------------------------------
 
 function CpShovelPositions.initConsoleCommands()
-	g_devHelper.consoleCommands:registerConsoleCommand("cpShovelPositionsPrintShovelDebug", 
+	g_consoleCommands:registerConsoleCommand("cpShovelPositionsPrintShovelDebug",
         "Prints debug information for the shovel", 
         "consoleCommandPrintShovelDebug", CpShovelPositions)
-	g_devHelper.consoleCommands:registerConsoleCommand("cpShovelPositionsSetState", 
+	g_consoleCommands:registerConsoleCommand("cpShovelPositionsSetState",
         "Set's the current shovel state", 
         "consoleCommandSetShovelState", CpShovelPositions)
-	g_devHelper.consoleCommands:registerConsoleCommand("cpShovelPositionsSetArmLimit", 
+	g_consoleCommands:registerConsoleCommand("cpShovelPositionsSetArmLimit",
         "Set's the arm max limit", 
         "consoleCommandSetPreUnloadArmLimit", CpShovelPositions)
-	g_devHelper.consoleCommands:registerConsoleCommand('cpShovelPositionsSetMinimalUnloadHeight', 
+	g_consoleCommands:registerConsoleCommand('cpShovelPositionsSetMinimalUnloadHeight',
 		'Sets the minimal unload height to a fixed value',
 		'consoleCommandSetMinimalUnloadHeight', CpShovelPositions)
-	g_devHelper.consoleCommands:registerConsoleCommand('cpShovelPositionsMeasureAndSetMinUnloadHeight', 
+	g_consoleCommands:registerConsoleCommand('cpShovelPositionsMeasureAndSetMinUnloadHeight',
 		'Measures and sets the minimal unload height',
 		'consoleCommandMeasureAndSetMinimalUnloadHeight', CpShovelPositions)
 end
 
 local function executeConsoleCommand(func, ...)
-	local vehicle = g_currentMission.controlledVehicle
+	local vehicle = CpUtil.getCurrentVehicle()
 	if not vehicle then 
 		CpUtil.info("Not entered a valid vehicle!")
 		return false

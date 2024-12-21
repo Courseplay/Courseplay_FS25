@@ -4,14 +4,14 @@ CpGuiUtil = {}
 
 --- Adds a new page to the in game menu.
 function CpGuiUtil.fixInGameMenuPage(frame, pageName, uvs, position, predicateFunc)
-	local inGameMenu = g_gui.screenControllers[InGameMenu]
+	local inGameMenu = g_inGameMenu -- g_gui.screenControllers[InGameMenu]
 
 	-- remove all to avoid warnings
 	for k, v in pairs({pageName}) do
 		inGameMenu.controlIDs[v] = nil
 	end
 
-	inGameMenu:registerControls({pageName})
+	inGameMenu:exposeControlsAsFields({pageName})
 	inGameMenu[pageName] = frame
 	inGameMenu.pagingElement:addElement(inGameMenu[pageName])
 
@@ -41,7 +41,7 @@ function CpGuiUtil.fixInGameMenuPage(frame, pageName, uvs, position, predicateFu
 	inGameMenu:registerPage(inGameMenu[pageName], position, predicateFunc)
 	local iconFileName = Utils.getFilename('img/ui_courseplay.dds', g_Courseplay.BASE_DIRECTORY)
 	inGameMenu:addPageTab(inGameMenu[pageName], iconFileName, GuiUtils.getUVs(uvs))
-	inGameMenu[pageName]:applyScreenAlignment()
+	-- inGameMenu[pageName]:applyScreenAlignment()
 	inGameMenu[pageName]:updateAbsolutePosition()
 
 	for i = 1, #inGameMenu.pageFrames do
@@ -300,14 +300,29 @@ end
 ---@param iconData table filename, uvs
 ---@param color table r, g, b, alpha
 ---@param alignment table vertical, horizontal alignments
+---@return table
 function CpGuiUtil.createOverlay(size, iconData, color, alignment)
 	local filename, uvs = unpack(iconData)
 	local overlay = Overlay.new(filename, 0, 0, unpack(size))
-    overlay:setUVs(uvs)
+	overlay:setUVs(uvs)
     overlay:setColor(unpack(color))
     overlay:setAlignment(unpack(alignment))
 	return overlay
 end
+
+--- Creates a new overlay with the overlay manager
+---@param sliceId string slice id
+---@param size table x, y
+---@param color table r, g, b, alpha
+---@param alignment table vertical, horizontal alignments
+---@return table
+function CpGuiUtil.createOverlayFromSlice(sliceId, size, color, alignment)
+	local overlay = g_overlayManager:createOverlay(sliceId, 0, 0, unpack(size))
+    overlay:setColor(unpack(color))
+    overlay:setAlignment(unpack(alignment))
+	return overlay
+end
+
 
 --- Enable/disable camera rotation when a vehicle is selected. We want to disable camera rotation per mouse
 --- when we enable the mouse cursor so it can be used click controls on a GUI
@@ -344,26 +359,26 @@ end
 ---@param hMargin number
 ---@param line number
 function CpGuiUtil.addCopyAndPasteButtons(layout, baseHud, vehicle, lines, wMargin, hMargin, line)
-	local imageFilename = Utils.getFilename('img/ui_courseplay.dds', g_Courseplay.BASE_DIRECTORY)
-    local imageFilename2 = Utils.getFilename('img/iconSprite.dds', g_Courseplay.BASE_DIRECTORY)
-                                      
 	local leftX, leftY = unpack(lines[line].left)
     local rightX, rightY = unpack(lines[line].right)
     local btnYOffset = hMargin/3
 	local width, height = getNormalizedScreenValues(22, 22)
 
-	local copyOverlay = CpGuiUtil.createOverlay({width, height},
-	{imageFilename, GuiUtils.getUVs(unpack(CpBaseHud.uvs.copySymbol))}, 
-	CpBaseHud.OFF_COLOR,
-	CpBaseHud.alignments.bottomRight)
-
-	local pasteOverlay = CpGuiUtil.createOverlay({width, height},
-		{imageFilename, GuiUtils.getUVs(unpack(CpBaseHud.uvs.pasteSymbol))}, 
+	local copyOverlay = CpGuiUtil.createOverlayFromSlice(
+		"cpUi.copy", 
+		{width, height},
 		CpBaseHud.OFF_COLOR,
 		CpBaseHud.alignments.bottomRight)
-
-	local clearCourseOverlay = CpGuiUtil.createOverlay({width, height},
-		{imageFilename2, GuiUtils.getUVs(unpack(CpBaseHud.uvs.clearCourseSymbol))}, 
+	
+	local pasteOverlay = CpGuiUtil.createOverlayFromSlice(
+		"cpUi.paste", 
+		{width, height},
+		CpBaseHud.OFF_COLOR,
+		CpBaseHud.alignments.bottomRight)
+	
+	local clearCourseOverlay = CpGuiUtil.createOverlayFromSlice(
+		"cpIconSprite.clear", 
+		{width, height},
 		CpBaseHud.OFF_COLOR,
 		CpBaseHud.alignments.bottomRight)
 
@@ -448,79 +463,24 @@ function CpGuiUtil.movesMapCenterTo(map, worldX, worldZ)
     map:moveCenter(-dx, -dy)
 end
 
-function CpGuiUtil.preOpeningInGameMenu(vehicle)
-    local inGameMenu =  g_currentMission.inGameMenu
-    inGameMenu.pageAI.hudVehicle = vehicle
-    if g_gui.currentGuiName ~= "InGameMenu" then
-		g_gui:showGui("InGameMenu")
-	end
-    return inGameMenu
-end
-
 function CpGuiUtil.openCourseManagerGui(vehicle)
-    local inGameMenu = CpGuiUtil.preOpeningInGameMenu(vehicle)
-	inGameMenu:goToPage(inGameMenu.pageCpCourseManager)
+	g_messageCenter:publishDelayed(MessageType.GUI_CP_INGAME_OPEN_COURSE_MANAGER)
 end
 
 function CpGuiUtil.openCourseGeneratorGui(vehicle)
-    local inGameMenu = CpGuiUtil.preOpeningInGameMenu(vehicle)
-    local pageAI = inGameMenu.pageAI
-    --- Opens the ai inGame menu
-    inGameMenu:goToPage(pageAI)
-    local hotspot = vehicle:getMapHotspot()
-    pageAI:setMapSelectionItem(hotspot)
-    CpUtil.debugVehicle(CpDebug.DBG_HUD, vehicle, "opened ai inGame menu.")
-    if vehicle:getIsCpActive() or not g_currentMission:getHasPlayerPermission("hireAssistant") then 
-        pageAI:updateParameterValueTexts()
-		return
-    end
-	CpUtil.debugVehicle(CpDebug.DBG_HUD, vehicle, "opened ai inGame job creation.")
-    vehicle:updateAIFieldWorkerImplementData()
-    pageAI.currentJobTypes = {}
-	local currentJobTypesTexts = {}
-	local currentJobTypeIndex, currentIndex = nil, nil
-	for index, jobType in ipairs(g_currentMission.aiJobTypeManager.jobTypes) do
-		if pageAI.jobTypeInstances[index]:getIsAvailableForVehicle(vehicle) then
-			table.insert(pageAI.currentJobTypes, index)
-			table.insert(currentJobTypesTexts, jobType.title)
-			if pageAI.jobTypeInstances[index]:isa(CpAIJob) then 
-				currentJobTypeIndex = currentJobTypeIndex or index
-				currentIndex = currentIndex or #pageAI.currentJobTypes
-			end
-		end
-	end
-	if #pageAI.currentJobTypes == 0 then
-		return
-	end
-
-	pageAI.jobTypeElement:setTexts(currentJobTypesTexts)
-	pageAI.jobTypeElement:setState(currentIndex or 1)
-
-	pageAI.mode = InGameMenuAIFrame.MODE_CREATE
-	pageAI.currentJobVehicle = vehicle
-	pageAI.currentJob = nil
-
-	pageAI:setJobMenuVisible(true)
-	pageAI:setActiveJobTypeSelection(currentJobTypeIndex or 1)
-	if not vehicle:hasCpCourse() then 
-		if pageAI.currentJob:getCanGenerateFieldWorkCourse() then 
-			CpUtil.debugVehicle(CpDebug.DBG_HUD, vehicle, "opened ai inGame menu course generator.")
-			pageAI:onClickOpenCloseCourseGenerator()
-		end
-	end
-    --- Moves the map, so the selected vehicle is directly visible.
-    local worldX, _, worldZ = getWorldTranslation(vehicle.rootNode)
-    CpGuiUtil.movesMapCenterTo(pageAI.ingameMap, worldX, worldZ)
+	g_messageCenter:publishDelayed(MessageType.GUI_CP_INGAME_OPEN_COURSE_GENERATOR)
 end
 
 function CpGuiUtil.openVehicleSettingsGui(vehicle)
-    local inGameMenu = CpGuiUtil.preOpeningInGameMenu(vehicle)
-    inGameMenu:goToPage(inGameMenu.pageCpVehicleSettings)
+	g_messageCenter:publishDelayed(MessageType.GUI_CP_INGAME_OPEN_VEHICLE_SETTINGS)
 end
 
 function CpGuiUtil.openGlobalSettingsGui(vehicle)
-    local inGameMenu = CpGuiUtil.preOpeningInGameMenu(vehicle)
-    inGameMenu:goToPage(inGameMenu.pageCpGlobalSettings)
+	g_messageCenter:publishDelayed(MessageType.GUI_CP_INGAME_OPEN_GLOBAL_SETTINGS)
+end
+
+function CpGuiUtil.openHelpMenuGui()
+	g_messageCenter:publishDelayed(MessageType.GUI_CP_INGAME_OPEN_HELP_MENU)
 end
 
 CpGuiUtil.UNIT_EXTENSIONS = {

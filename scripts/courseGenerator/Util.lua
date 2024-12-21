@@ -5,7 +5,3 @@ function CourseGenerator.reverseArray(a)
         a[i], a[#a - i + 1] = a[#a - i + 1], a[i]
     end
 end
-
-function CourseGenerator.clamp(val, min, max)
-    return math.min(math.max(val, min), max)
-end

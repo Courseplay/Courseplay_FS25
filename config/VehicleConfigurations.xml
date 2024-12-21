@@ -106,7 +106,7 @@ You can define the following custom settings:
 	
 - modName: Name of the .zip file (without '.zip')
     In case a Mod has the same .xml filename for the vehicle/implement, as a default giants vehicle/implement,
-    add the name of the .zip file to prevent conflicts. For example: "FS22_exampleMod".
+    add the name of the .zip file to prevent conflicts. For example: "FS25_exampleMod".
     Note: Only 2 of the same .xml files can be added.
 
 - ignoreBaleCollisionForward: boolean
@@ -246,6 +246,10 @@ You can define the following custom settings:
              raiseLate = "true"
              lowerEarly = "true"
     />
+    <Vehicle name="grizzlyX4.xml"
+             turnRadius = "8"
+    />
+
     <!--\vehicles\andersonGroup-->
     <Vehicle name="rbm2000.xml"
              toolOffsetX = "-2.7"
@@ -269,6 +273,9 @@ You can define the following custom settings:
     <Vehicle name="SE260.xml"
              toolOffsetX = "-1.8"
              noReverse = "true"
+    />
+    <Vehicle name="prios440.xml"
+             implementWheelAlwaysOnGround = "true"
     />
     <!--\vehicles\ropa-->
     <Vehicle name="keiler2.xml"
@@ -502,11 +509,10 @@ You can define the following custom settings:
              baleCollectorOffset = "1.6"
     />
     <Vehicle name="pw10012.xml"
-             noReverse = "true"
              implementWheelAlwaysOnGround = "true"
              tightTurnOffsetDistanceInTurns = "1"
              workingWidth = "5.8"
-             turnRadius = "7.8"
+             turnRadius = "9"
              raiseLate = "true"
              lowerEarly = "true"
     />

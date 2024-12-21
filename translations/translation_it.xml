@@ -156,6 +156,7 @@
     <!--Vehicle settings-->
     <!---->
     <text name="CP_vehicle_setting_title" text="Impostazioni del veicolo (%s)"/>
+    <text name="CP_vehicle_setting_subTitle_vehicle" text="Vehicle settings"/>
     <text name="CP_vehicle_setting_subTitle_basic" text="Generali"/>
     <text name="CP_vehicle_setting_subTitle_implement" text="Attrezzi"/>
     <text name="CP_vehicle_setting_subTitle_combine" text="Mietitrebbia"/>
@@ -271,6 +272,8 @@
     <!---->
     <text name="CP_vehicle_courseGeneratorSetting_title" text="Impostazioni percorso veicolo (%s)"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="Base"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Vine field settings"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Fieldwork settings"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="testa campo"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="centro"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Settings island"/>
@@ -501,6 +504,7 @@ Il percorso viene salvato automaticamente alla chiusura dell'editor e sovrascriv
     <!---->
     <!--Custom field manager-->
     <!---->
+    <text name="CP_customFieldManager_hotspotName" text="Custom field"/>
     <text name="CP_customFieldManager_confirm_save" text="Vuoi salvare il percorso registrato come campo personalizzato %s?"/>
     <text name="CP_customFieldManager_confirm_delete" text="Vuoi eliminare il campo personalizzato %s?"/>
     <text name="CP_customFieldManager_delete" text="Cancella campo personalizzato"/>
@@ -515,6 +519,10 @@ Il percorso viene salvato automaticamente alla chiusura dell'editor e sovrascriv
     <text name="CP_controllerGui_stopRecording" text="Ferma registrazione campo personalizzato."/>
     <text name="CP_controllerGui_pauseRecording" text="Sospendi la registrazione del campo personalizzato."/>
     <text name="CP_controllerGui_unpauseRecording" text="Riattiva la registrazione del campo personalizzato."/>
+    <!---->
+    <!--CP ingame menu-->
+    <!---->
+    <text name="CP_ingameMenu_map_title" text="Map"/>
     <!---->
     <!--Help menu-->
     <!---->
@@ -1019,6 +1027,7 @@ Ora la tua selezione dovrebbe essere simile all'immagine.
     <text name="input_CP_DBG_CHANNEL_MENU_VISIBILITY" text="CP: Mostra il menù del canale di debug si/no"/>
     <text name="input_CP_OPEN_CLOSE_VEHICLE_SETTING_DISPLAY" text="CP: Apri mini GUI"/>
     <text name="input_CP_START_STOP" text="CP: Avvia/Ferma autista"/>
+    <text name="input_CP_GENERATE_COURSE" text="CP: Change current selected job"/>
     <text name="input_CP_CHANGE_SELECTED_JOB" text="CP: Change current selected job"/>
     <text name="input_CP_CHANGE_STARTING_POINT" text="CP: Cambia punto di partenza"/>
     <text name="input_CP_CLEAR_COURSE" text="CP: Cancella il percorso attualmente caricato"/>

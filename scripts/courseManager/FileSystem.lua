@@ -123,13 +123,14 @@ end
 function File:load(xmlSchema, xmlBaseKey, lambda, class,...)
 	local xmlFile = XMLFile.load("tempXmlFile", self.fullPath, xmlSchema)
 	if xmlFile ~= nil then
+		local retValue = false
 		if class then
-			lambda(class, xmlFile, xmlBaseKey, ..., self.name)
+			retValue = lambda(class, xmlFile, xmlBaseKey, ..., self.name)
 		else 
-			lambda(xmlFile, xmlBaseKey, ..., self.name)
+			retValue = lambda(xmlFile, xmlBaseKey, ..., self.name)
 		end
 		xmlFile:delete()
-		return true
+		return retValue
 	end
 	CpUtil.debugFormat(CpDebug.DBG_COURSES, "couldn't load xml file: %s", self.fullPath)
 	return false
@@ -633,6 +634,10 @@ function DirectoryView:getEntryByName(name)
 			return entry
 		end
 	end
+end
+
+function DirectoryView:hasEntryWithName(name)
+	return self:getEntryByName(name) ~= nil
 end
 
 --- File system to handle multiple files/directions.

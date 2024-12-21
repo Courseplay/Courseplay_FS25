@@ -415,7 +415,7 @@ function AIDriveStrategyBunkerSilo:startTransitionToNextLane()
     end
 
     local path = PathfinderUtil.findAnalyticPath(ReedsSheppSolver(), self.vehicle:getAIDirectionNode(), 
-        0, self.turnNode, 0, 0, self.turningRadius)
+        0, 0, self.turnNode, 0, 0, self.turningRadius)
     if not path or #path == 0 then
         self:debug("No valid turn was found!")
         self.vehicle:stopCurrentAIJob(AIMessageCpErrorNoPathFound.new())

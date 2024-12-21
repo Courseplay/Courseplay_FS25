@@ -105,9 +105,9 @@ function CpHud:onRegisterActionEvents(isActiveForInput, isActiveForInputIgnoreSe
         local spec = self.spec_cpHud
         self:clearActionEventsTable(spec.actionEvents)
 
-        if g_Courseplay.globalSettings.controllerHudSelected:getValue() then 
-            return 
-        end
+        -- if g_Courseplay.globalSettings.controllerHudSelected:getValue() then 
+        --     return 
+        -- end
 
         if self.isActiveForInputIgnoreSelectionIgnoreAI then
             --- Toggle mouse cursor action event
@@ -116,18 +116,27 @@ function CpHud:onRegisterActionEvents(isActiveForInput, isActiveForInputIgnoreSe
             ---  callback, triggerUp, triggerDown, triggerAlways, startActive,
             ---  callbackState, customIconName, ignoreCollisions, reportAnyDeviceCollision)
             if self:getCpSettings().openHudWithMouse:getValue() then
-                local _, actionEventId = self:addActionEvent(spec.actionEvents, InputAction.CP_TOGGLE_MOUSE, self,
-                        CpHud.actionEventMouse, false, true, false, true,nil,nil,true)
+                local _, actionEventId = self:addActionEvent(spec.actionEvents, 
+                    InputAction.CP_TOGGLE_MOUSE, self,
+                    CpHud.actionEventMouse, false, true, false, true, nil, nil, true)
                 g_inputBinding:setActionEventTextPriority(actionEventId, GS_PRIO_NORMAL)
                 g_inputBinding:setActionEventText(actionEventId, spec.openCloseText)
-                g_inputBinding:setActionEventTextVisibility(actionEventId, g_Courseplay.globalSettings.showActionEventHelp:getValue())
+                g_inputBinding:setActionEventTextVisibility(actionEventId, 
+                    g_Courseplay.globalSettings.showActionEventHelp:getValue())
             end
+            local _, actionEventId = self:addActionEvent(spec.actionEvents, 
+                InputAction.CP_OPEN_CLOSE_VEHICLE_SETTING_DISPLAY, self, 
+                CpHud.actionEventMouse, false, true, false, true, nil)
+            g_inputBinding:setActionEventTextPriority(actionEventId, GS_PRIO_HIGH)
+            g_inputBinding:setActionEventText(actionEventId, spec.openCloseText)
+            g_inputBinding:setActionEventTextVisibility(actionEventId, 
+                g_Courseplay.globalSettings.showActionEventHelp:getValue())
         end
     end
 end
 
 function CpHud:actionEventMouse(isMouseEvent)
-    if self ~= g_currentMission.controlledVehicle then 
+    if self ~= CpUtil.getCurrentVehicle() then
         ---Player has entered a child vehicle, so don't open the hud.
         return
     end
@@ -293,7 +302,7 @@ end
 
 function CpHud:onEnterVehicle(isControlling)
     -- if the mouse cursor is shown when we enter the vehicle, disable camera rotations
-    if isControlling and self == g_currentMission.controlledVehicle then
+    if isControlling and self == CpUtil.getCurrentVehicle() then
         CpGuiUtil.setCameraRotation(self, not g_inputBinding:getShowMouseCursor(),
                 self.spec_cpHud.savedCameraRotatableInfo)
         local spec = self.spec_cpHud
@@ -310,14 +319,14 @@ end
 
 function CpHud:onStateChange(state, data)
     local spec = self.spec_cpHud
-    if state == Vehicle.STATE_CHANGE_ATTACH or state == Vehicle.STATE_CHANGE_DETACH then
+    if state == VehicleStateChange.ATTACH or state == VehicleStateChange.DETACH then
         if self.isServer then
             for _, setting in ipairs(spec.hudSettings.settings) do
                 setting:refresh()
             end
             self:raiseDirtyFlags(spec.availableClientJobModesDirtyFlag)
         end
-    elseif state == Vehicle.STATE_CHANGE_ENTER_VEHICLE then
+    elseif state == VehicleStateChange.ENTER_VEHICLE then
         self:raiseDirtyFlags(spec.availableClientJobModesDirtyFlag)
     end
 end
@@ -342,9 +351,10 @@ function CpHud:onDraw()
         return
     end
     local spec = self.spec_cpHud
+
     spec.hud:draw(spec.status)
-	if spec.hud:getIsOpen() then 
-		if spec.lastShownWorkWidthTimeStamp + CpHud.workWidthDisplayDelayMs > g_time then 
+    if spec.hud:getIsOpen() then 
+        if spec.lastShownWorkWidthTimeStamp + CpHud.workWidthDisplayDelayMs > g_time then 
             if spec.hud:isBunkerSiloLayoutActive() or spec.hud:isSiloLoaderLayoutActive() then 
                 CpHud.showCpBunkerSiloWorkWidth(self)
             elseif spec.hud:isCombineUnloaderLayoutActive() then
@@ -352,11 +362,11 @@ function CpHud:onDraw()
             else
                 CpHud.showCpCourseWorkWidth(self)
             end
-		end
+        end
         if spec.lastShownBaleCollectorOffsetTimeStamp + CpHud.workWidthDisplayDelayMs > g_time then 
             ImplementUtil.showBaleCollectorOffset(self, self:getCpSettings().baleCollectorOffset:getValue())
         end
-	end
+    end
 end
 
 function CpHud:showCpBunkerSiloWorkWidth()

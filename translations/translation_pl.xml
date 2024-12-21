@@ -156,6 +156,7 @@
     <!--Vehicle settings-->
     <!---->
     <text name="CP_vehicle_setting_title" text="Ustawienia pojazdu dla (%s)"/>
+    <text name="CP_vehicle_setting_subTitle_vehicle" text="Vehicle settings"/>
     <text name="CP_vehicle_setting_subTitle_basic" text="Ustawienia podstawowe"/>
     <text name="CP_vehicle_setting_subTitle_implement" text="Ustawienia narzędzi"/>
     <text name="CP_vehicle_setting_subTitle_combine" text="Ustawienia kombajnu"/>
@@ -271,6 +272,8 @@
     <!---->
     <text name="CP_vehicle_courseGeneratorSetting_title" text="Ustawienia generatora kursu dla (%s)"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="Podstawowe"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Vine field settings"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Fieldwork settings"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="Uwrocia"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="Środek"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Ustawienia przeszkód"/>
@@ -501,6 +504,7 @@ Kurs jest automatycznie zapisywany po zamknięciu edytora i nadpisuje wybrany ku
     <!---->
     <!--Custom field manager-->
     <!---->
+    <text name="CP_customFieldManager_hotspotName" text="Custom field"/>
     <text name="CP_customFieldManager_confirm_save" text="Czy chcesz zapisać nagrany kurs jako nowe pole %s?"/>
     <text name="CP_customFieldManager_confirm_delete" text="Czy chcesz usunąć nowe pole %s?"/>
     <text name="CP_customFieldManager_delete" text="Usuń nowe pole"/>
@@ -515,6 +519,10 @@ Kurs jest automatycznie zapisywany po zamknięciu edytora i nadpisuje wybrany ku
     <text name="CP_controllerGui_stopRecording" text="Zakończ nagrywanie nowego pola."/>
     <text name="CP_controllerGui_pauseRecording" text="Wstrzymaj nagrywanie nowego pola."/>
     <text name="CP_controllerGui_unpauseRecording" text="Wznów nagrywanie nowego pola."/>
+    <!---->
+    <!--CP ingame menu-->
+    <!---->
+    <text name="CP_ingameMenu_map_title" text="Map"/>
     <!---->
     <!--Help menu-->
     <!---->
@@ -983,7 +991,8 @@ Twój wybór powinien wyglądać podobnie do tego zdjęcia.
     <text name="input_CP_DBG_CHANNEL_MENU_VISIBILITY" text="CP: Menu kanałów debugowania"/>
     <text name="input_CP_OPEN_CLOSE_VEHICLE_SETTING_DISPLAY" text="CP: Otwórz mini GUI"/>
     <text name="input_CP_START_STOP" text="CP: Uruchom/Zatrzymaj kierowcę"/>
-    <text name="input_CP_CHANGE_SELECTED_JOB" text="CP: Zmień obecnie wybraną pracę"/>
+    <text name="input_CP_GENERATE_COURSE" text="CP: Change current selected job"/>
+    <text name="input_CP_CHANGE_SELECTED_JOB" text="CP: Change current selected job"/>
     <text name="input_CP_CHANGE_STARTING_POINT" text="CP: Zmień punkt startowy"/>
     <text name="input_CP_CLEAR_COURSE" text="CP: Wyczyść aktualnie załadowany kurs"/>
     <text name="input_CP_CHANGE_COURSE_VISIBILITY" text="Pokaż aktualny kurs pojazdu"/>

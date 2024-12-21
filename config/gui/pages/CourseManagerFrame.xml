@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<GUI name="cpInGameMenuCourseManager">
+    <GuiElement profile="fs25_menuContainer">
+        <GuiElement profile="fs25_menuHeaderPanel">
+            <Bitmap profile="fs25_menuHeaderIconBg">
+                <Bitmap profile="fs25_menuHeaderIcon" id="categoryHeaderIcon" />
+            </Bitmap>
+            <Text profile="fs25_menuHeaderTitle" id="categoryHeaderText" />
+        </GuiElement>
+        <!-- <BoxLayout profile="fs25_subCategorySelectorTabbedBox" id="subCategoryBox"> -->
+            <!-- <Button profile="fs25_subCategorySelectorTabbedTab" id="subCategoryTabs[1]"
+                text="TODO">
+                <ThreePartBitmap profile="fs25_subCategorySelectorTabbedTabBg" name="background" />
+            </Button>
+            <Button profile="fs25_subCategorySelectorTabbedTab" id="subCategoryTabs[2]"
+                text="TODO">
+                <ThreePartBitmap profile="fs25_subCategorySelectorTabbedTabBg" name="background" />
+            </Button> -->
+        <!-- </BoxLayout> -->
+        <ThreePartBitmap profile="fs25_lineSeparatorTopHighlighted" position="0px -57px" />
+        <MultiTextOption profile="fs25_subCategorySelectorTabbed" id="subCategoryPaging"
+            position="0px -10px" />
+        <GuiElement profile="fs25_subCategorySelectorTabbedContainer" id="subCategoryPages[1]">
+            <GuiElement profile="fs25_statisticsHeaderBox">
+                <Text profile="fs25_statisticsHeaderText" id="leftColumnHeader"/>
+                <Text profile="fs25_statisticsHeaderText"
+                    position="116px 0px" textAlignment="right" visible="false"/>
+                <Text profile="fs25_statisticsHeaderText"
+                    position="456px 0px" visible="false"/>
+                <Text profile="fs25_statisticsHeaderText"
+                    position="877px 0px" visible="false"/>
+                <Bitmap profile="fs25_statisticsHeaderIcon" position="1144px 0px" visible="false"/>
+                <Text profile="fs25_statisticsHeaderText" position="1134px 0px" visible="false"/>
+                <Bitmap profile="fs25_statisticsHeaderIcon" position="1390px 0px"
+                    imageSliceId="gui.prices_selling" visible="false"/>
+                <Text profile="fs25_statisticsHeaderText" 
+                    position="1376px 0px" id="rightColumnHeader" visible="false"/>
+                <ThreePartBitmap profile="fs25_lineSeparatorBottom" position="0px -2dp" />
+            </GuiElement>
+            <GuiElement id="leftColumn">
+                <!-- <BoxLayout profile="fs25_statisticsHeaderBox" id="tableHeaderBox" size="680px 104px">
+                    <Text profile="fs25_statisticsHeaderText" size="340px 104px" id="leftColumnHeader"  />
+                </BoxLayout> -->
+
+                <SmoothList profile="cpLeftList" id="leftList" focusChangeTop="nil" focusChangeBottom="nil" selectedWithoutFocus="true">
+                    <ListItem profile="fs25_pricesProductListItem">
+                        <Bitmap name="icon" profile="fs25_pricesProductListItemIcon" />
+                        <Text name="title" profile="fs25_pricesProductListItemName" />
+                    </ListItem>
+                </SmoothList>
+
+                <ThreePartBitmap profile="cpLeftListSliderBox">
+                    <Slider profile="fs25_listSlider" dataElementId="leftList" id="leftListSlider" />
+                </ThreePartBitmap>
+            </GuiElement>
+
+            <GuiElement id="rightColumn">
+                <!-- <BoxLayout profile="fs25_statisticsHeaderBox" id="tableHeaderBox" size="680px 104px">
+                    <Text profile="fs25_statisticsHeaderText" size="330px 104px" id="rightColumnHeader"  />
+                </BoxLayout> -->
+
+                <SmoothList profile="cpRightList" id="rightList" focusChangeTop="nil" focusChangeBottom="nil">
+                    <ListItem profile="fs25_pricesPriceListItem">
+                        <Bitmap name="icon" profile="fs25_pricesPriceListItemHotspot" />
+                        <Text name="title" profile="fs25_pricesPriceListItemName" />
+                    </ListItem>
+                </SmoothList>
+
+                <ThreePartBitmap profile="cpRightListSliderBox">
+                    <Slider profile="fs25_listSlider" dataElementId="rightList" id="rightListSlider" />
+                </ThreePartBitmap>
+            </GuiElement>
+        </GuiElement>
+	</GuiElement>
+    <GUIProfiles>
+        <Profile name="cpLeftList" extends="emptyPanel"
+            with="anchorStretchingYLeft pivotTopLeft">
+            <width value="695px" />
+            <absoluteSizeOffset value="0px 56px" />
+            <position value="25px -56px" />
+        </Profile>
+        <Profile name="cpLeftListSliderBox" extends="fs25_listSliderBox"
+            with="anchorTopLeft">
+            <absoluteSizeOffset value="0px 56px" />
+            <position value="733px -56px" />
+        </Profile>
+        <Profile name="cpRightList" extends="emptyPanel" with="anchorStretchingYLeft pivotTopRight">
+            <width value="695px" />
+            <absoluteSizeOffset value="0px 56px" />
+            <position value="-63px -56px" />
+            <selectedWithoutFocus value="false" />
+        </Profile>
+        <Profile name="cpRightListSliderBox" extends="fs25_listSliderBox" with="anchorTopRight">
+            <absoluteSizeOffset value="0px 56px" />
+            <position value="-41px -56px" />
+        </Profile>
+    </GUIProfiles>
+</GUI>

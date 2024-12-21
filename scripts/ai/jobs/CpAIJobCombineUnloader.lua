@@ -19,8 +19,8 @@ function CpAIJobCombineUnloader.new(isServer, customMt)
     self.selectedFieldPlot:setVisible(false)
 	self.selectedFieldPlot:setBrightColor(true)
 
-	self.heapPlot = HeapPlot(g_currentMission.inGameMenu.ingameMap)
-    self.heapPlot:setVisible(false)
+	self.heapPlot = HeapPlot()
+	self.heapPlot:setVisible(false)
 	self.heapNode = CpUtil.createNode("siloNode", 0, 0, 0, nil)
 
 	--- Giants unload
@@ -58,8 +58,8 @@ function CpAIJobCombineUnloader:setupJobParameters()
 	self.waitForFillingTask = self.combineUnloaderTask
 end
 
-function CpAIJobCombineUnloader:getIsAvailableForVehicle(vehicle)
-	return vehicle.getCanStartCpCombineUnloader and vehicle:getCanStartCpCombineUnloader()
+function CpAIJobCombineUnloader:getIsAvailableForVehicle(vehicle, cpJobsAllowed)
+	return CpAIJob.getIsAvailableForVehicle(self, vehicle, cpJobsAllowed) and vehicle.getCanStartCpCombineUnloader and vehicle:getCanStartCpCombineUnloader() -- TODO_25
 end
 
 function CpAIJobCombineUnloader:getCanStartJob()
@@ -220,7 +220,7 @@ function CpAIJobCombineUnloader:validate(farmId)
 		setTranslation(self.heapNode, x, 0, z)
 		setRotation(self.heapNode, 0, angle, 0)
 		local found, heapSilo = BunkerSiloManagerUtil.createHeapBunkerSilo(vehicle, self.heapNode, 0, self.maxHeapLength, -10)
-		if found then	
+		if found then
 			self.heapPlot:setArea(heapSilo:getArea())
 			self.heapPlot:setVisible(true)
 		end

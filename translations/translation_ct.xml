@@ -156,6 +156,7 @@
     <!--Vehicle settings-->
     <!---->
     <text name="CP_vehicle_setting_title" text="車輛設置(%s)"/>
+    <text name="CP_vehicle_setting_subTitle_vehicle" text="Vehicle settings"/>
     <text name="CP_vehicle_setting_subTitle_basic" text="基本設置"/>
     <text name="CP_vehicle_setting_subTitle_implement" text="工具設置"/>
     <text name="CP_vehicle_setting_subTitle_combine" text="收割機設置"/>
@@ -271,6 +272,8 @@
     <!---->
     <text name="CP_vehicle_courseGeneratorSetting_title" text="工作路線設置 (%s)"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="基本設置"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Vine field settings"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Fieldwork settings"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="田間地頭設置"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="中心路線設置"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Settings island"/>
@@ -501,6 +504,7 @@
     <!---->
     <!--Custom field manager-->
     <!---->
+    <text name="CP_customFieldManager_hotspotName" text="Custom field"/>
     <text name="CP_customFieldManager_confirm_save" text="是否要將錄製的任務儲存為自訂田地 %s?"/>
     <text name="CP_customFieldManager_confirm_delete" text="要刪除自訂田地嗎 %s?"/>
     <text name="CP_customFieldManager_delete" text="刪除自訂田地"/>
@@ -515,6 +519,10 @@
     <text name="CP_controllerGui_stopRecording" text="停止自訂田地記錄。"/>
     <text name="CP_controllerGui_pauseRecording" text="暫停自訂田地記錄。"/>
     <text name="CP_controllerGui_unpauseRecording" text="取消暫停自訂田地記錄。"/>
+    <!---->
+    <!--CP ingame menu-->
+    <!---->
+    <text name="CP_ingameMenu_map_title" text="Map"/>
     <!---->
     <!--Help menu-->
     <!---->
@@ -1006,6 +1014,7 @@ Now your selection should look similar to the image.
     <text name="input_CP_DBG_CHANNEL_MENU_VISIBILITY" text="CP: 顯示除錯通道菜單 是/否。"/>
     <text name="input_CP_OPEN_CLOSE_VEHICLE_SETTING_DISPLAY" text="CP: 打開迷你HUB"/>
     <text name="input_CP_START_STOP" text="CP: 啟動/停止司機"/>
+    <text name="input_CP_GENERATE_COURSE" text="CP: Change current selected job"/>
     <text name="input_CP_CHANGE_SELECTED_JOB" text="CP: Change current selected job"/>
     <text name="input_CP_CHANGE_STARTING_POINT" text="CP: 改變起始點"/>
     <text name="input_CP_CLEAR_COURSE" text="CP: 清除目前載入的任務"/>

@@ -61,26 +61,16 @@ function CpBrush:update(dt)
 end
 
 function CpBrush:openTextInput(callback, title, args)
-	g_gui:showTextInputDialog({
-			disableFilter = true,
-			callback = callback,
-			target = self,
-			defaultText = "",
-			dialogPrompt = title,
-			imePrompt = title,
-			maxCharacters = 50,
-			confirmText = g_i18n:getText("button_ok"),
-			args = args
-		})
+	TextInputDialog.show(
+		callback, self, "",
+		title, title, 50,
+		g_i18n:getText("button_ok"), args)
 end
 
 function CpBrush:showYesNoDialog(callback, title, args)
-	g_gui:showYesNoDialog({
-			text = title,
-			callback = callback,
-			target = self,
-			args = args
-		})
+	YesNoDialog.show(
+		callback, self, title,
+		nil, nil, nil, nil, nil, nil, args)
 end
 
 --- Gets the translation with the translation prefix.

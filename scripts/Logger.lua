@@ -67,7 +67,7 @@ end
 --  or use the CP debug channel when running in the game.
 function Logger:log(...)
     if CourseGenerator.isRunningInGame() then
-        CpUtil.debugVehicle(CpDebug.DBG_COURSES, g_currentMission.controlledVehicle, ...)
+        CpUtil.debugVehicle(CpDebug.DBG_COURSES, CpUtil.getCurrentVehicle(), ...)
     else
         local message = self:_getCurrentTimeStr() .. ' ' .. string.format(...)
         print(message)

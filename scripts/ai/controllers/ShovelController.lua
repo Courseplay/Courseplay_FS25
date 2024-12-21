@@ -10,8 +10,9 @@ ShovelController.POSITIONS = {
 }
 ShovelController.MAX_TRIGGER_HEIGHT = 8
 ShovelController.MIN_TRIGGER_HEIGHT = 1
-ShovelController.TRIGGER_HEIGHT_RAYCAST_COLLISION_MASK = CollisionFlag.STATIC_WORLD + CollisionFlag.STATIC_OBJECTS + 
-                                                         CollisionFlag.STATIC_OBJECT + CollisionFlag.VEHICLE
+ShovelController.TRIGGER_HEIGHT_RAYCAST_COLLISION_MASK =
+    CollisionFlag.DEFAULT + CollisionFlag.STATIC_OBJECT + CollisionFlag.VEHICLE +
+    CollisionFlag.BUILDING + CollisionFlag.PLACEMENT_BLOCKING
 
 function ShovelController:init(vehicle, implement, isConsoleCommand)
     ImplementController.init(self, vehicle, implement)
@@ -188,9 +189,8 @@ function ShovelController:calculateMinimalUnloadingHeight(triggerNode)
     local maxHeightObjectHit = 0
     for i=self.MIN_TRIGGER_HEIGHT, self.MAX_TRIGGER_HEIGHT, 0.1 do 
         self.objectWasHit = false
-        raycastAll(sx, terrainHeight + i, sz,  dx, 0, dz, 
-            "calculateMinimalUnloadingHeightRaycastCallback", 
-            length, self, 
+        raycastAll(sx, terrainHeight + i, sz,  dx, 0, dz, length
+            "calculateMinimalUnloadingHeightRaycastCallback", self, 
             self.TRIGGER_HEIGHT_RAYCAST_COLLISION_MASK)
         if self.objectWasHit then 
             maxHeightObjectHit = i

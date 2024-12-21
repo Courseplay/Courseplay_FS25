@@ -3,7 +3,7 @@
 UnloadingTriggerPlot = CpObject()
 
 function UnloadingTriggerPlot:init(node)
-	self.courseOverlayId = createImageOverlay('dataS/scripts/shared/graph_pixel.dds')
+	self.courseOverlayId = createImageOverlay('dataS/menu/base/graph_pixel.dds')
 	self.isVisible = false
 	-- the normal FS22 blue -- 0.9900 0.4640 0.0010 1
 	--self.color = {CpGuiUtil.getNormalizedRgb(42, 193, 237)}

@@ -19,7 +19,7 @@ function TrailerController:getDriveData()
             maxSpeed = 0
             self:debugSparse("Waiting for unloading!")
         end
-        if self.trailerSpec.tipState == Trailer.TIPSTATE_OPENING then 
+        if self.implement:getDischargeNodeEmptyFactor(self.dischargeData.dischargeNode) < 0.1 then 
             --- Trailer not yet ready to unload.
             maxSpeed = 0
             self:debugSparse("Waiting for trailer animation opening!")
@@ -39,18 +39,22 @@ function TrailerController:update(dt)
     if self.isDischargingToGround then
         if self:isEmpty() then 
             if self:isDischarging() then
-                self.implement:setDischargeState(Dischargeable.DISCHARGE_STATE_OFF)
+                self.implement:setManualDischargeState(Dischargeable.DISCHARGE_STATE_OFF)
             end
             if self.implement:getAIHasFinishedDischarge(self.dischargeData.dischargeNode) then 
                 self:finishedDischarge()
             end
             return
         end
+        local fillLevel = self.implement:getFillUnitFillLevelPercentage(self.dischargeData.dischargeNode.fillUnitIndex)    
+        if fillLevel ~= self.dischargeData.lastFillLevel then 
+            self:debugSparse("Resetting the discharge timer")
+            self.isDischargingTimer:set(true, 250)
+        end
+        self.dischargeData.lastFillLevel = fillLevel
         if self.implement:getCanDischargeToGround(self.dischargeData.dischargeNode) then 
-            --- Update discharge timer
-            self.isDischargingTimer:set(true, 500)
             if not self:isDischarging() then 
-                self.implement:setDischargeState(Dischargeable.DISCHARGE_STATE_GROUND)
+                self.implement:setManualDischargeState(Dischargeable.DISCHARGE_STATE_GROUND)
             end
         end
     end
@@ -108,6 +112,7 @@ function TrailerController:startDischargeToGround(dischargeNode)
     self.isDischargingToGround = true
     self.dischargeData = {
         dischargeNode = dischargeNode,
+        lastFillLevel = 0
     }
 	local tipSide = self.trailerSpec.dischargeNodeIndexToTipSide[dischargeNode.index]
 	if tipSide ~= nil then
@@ -136,7 +141,7 @@ function TrailerController:prepareForUnload()
 end
 
 function TrailerController:onFinished()
-    self.implement:setDischargeState(Dischargeable.DISCHARGE_STATE_OFF)
+    self.implement:setManualDischargeState(Dischargeable.DISCHARGE_STATE_OFF)
 end
 
 function TrailerController:isDischarging()

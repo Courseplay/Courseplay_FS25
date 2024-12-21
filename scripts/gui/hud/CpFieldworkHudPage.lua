@@ -17,28 +17,27 @@ function CpFieldWorkHudPageElement:setupElements(baseHud, vehicle, lines, wMargi
     self.timeRemainingText = CpTextHudElement.new(self, x - 2 * baseHud.wMargin, y, 
         CpBaseHud.defaultFontSize, RenderText.ALIGN_RIGHT)
     
-    
     --- Toggle waypoint visibility.
     local width, height = getNormalizedScreenValues(20, 20)
-    local imageFilename = Utils.getFilename('img/iconSprite.dds', g_Courseplay.BASE_DIRECTORY)
-    local courseVisibilityOverlay = CpGuiUtil.createOverlay({width, height},
-                                                        {imageFilename, GuiUtils.getUVs(unpack(CpBaseHud.uvs.eye))}, 
-                                                        CpBaseHud.OFF_COLOR,
-                                                        CpBaseHud.alignments.bottomRight)
+    local courseVisibilityOverlay = CpGuiUtil.createOverlayFromSlice(
+        "cpIconSprite.eye", 
+        {width, height},
+        CpBaseHud.OFF_COLOR,
+        CpBaseHud.alignments.bottomRight)
     self.courseVisibilityBtn = CpHudButtonElement.new(courseVisibilityOverlay, self)
     local x, y = unpack(lines[8].right)
-    y = y - hMargin/16
+    y = y - hMargin/8
     local courseVisibilityBtnX = x - width - wMargin/4
     self.courseVisibilityBtn:setPosition(courseVisibilityBtnX, y)
     self.courseVisibilityBtn:setCallback("onClickPrimary", vehicle, function (vehicle)
         vehicle:getCpSettings().showCourse:setNextItem()
     end)
     local width, height = getNormalizedScreenValues(18, 18)
-    local imageFilename = Utils.getFilename('img/iconSprite.dds', g_Courseplay.BASE_DIRECTORY)
-    local reverseCourseOverlay = CpGuiUtil.createOverlay({width, height},
-                                                        {imageFilename, GuiUtils.getUVs(unpack(CpBaseHud.uvs.refresh))}, 
-                                                        CpBaseHud.OFF_COLOR,
-                                                        CpBaseHud.alignments.bottomRight)
+    local reverseCourseOverlay = CpGuiUtil.createOverlayFromSlice(
+        "cpIconSprite.refresh", 
+        {width, height},
+        CpBaseHud.OFF_COLOR,
+        CpBaseHud.alignments.bottomRight)
     self.reverseCourseBtn = CpHudButtonElement.new(reverseCourseOverlay, self)
     local reverseCourseBtnX = courseVisibilityBtnX - 2*width - wMargin/2 - wMargin/8
     self.reverseCourseBtn:setPosition(reverseCourseBtnX, y + hMargin/32)
@@ -99,7 +98,8 @@ function CpFieldWorkHudPageElement:updateContent(vehicle, status)
     self.startingPointBtn:setTextDetails(startingPoint:getString())
     
 	local laneOffset = vehicle:getCpLaneOffsetSetting()
-    self.laneOffsetBtn:setVisible(laneOffset:getCanBeChanged())
+    self.laneOffsetBtn:setVisible(laneOffset:getIsVisible())
+    self.laneOffsetBtn:setDisabled(laneOffset:getIsDisabled())
     self.laneOffsetBtn:setTextDetails(laneOffset:getString())
 
     local workWidth = vehicle:getCourseGeneratorSettings().workWidth

@@ -156,6 +156,7 @@
     <!--Vehicle settings-->
     <!---->
     <text name="CP_vehicle_setting_title" text="Fordons inställningar för (%s)"/>
+    <text name="CP_vehicle_setting_subTitle_vehicle" text="Vehicle settings"/>
     <text name="CP_vehicle_setting_subTitle_basic" text="Grundläggande inställningar"/>
     <text name="CP_vehicle_setting_subTitle_implement" text="Redskaps inställningar"/>
     <text name="CP_vehicle_setting_subTitle_combine" text="Tröskans inställningar"/>
@@ -271,6 +272,8 @@
     <!---->
     <text name="CP_vehicle_courseGeneratorSetting_title" text="Kursskapandeinställningar för (%s)"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="Grundläggande"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Vine field settings"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Fieldwork settings"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="Vändteg"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="Centrum"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Settings island"/>
@@ -501,6 +504,7 @@ Banan sparas automatiskt vid stängning av editorn och åsidosätter den valda b
     <!---->
     <!--Custom field manager-->
     <!---->
+    <text name="CP_customFieldManager_hotspotName" text="Custom field"/>
     <text name="CP_customFieldManager_confirm_save" text="Vill du spara den inspelade kursen som anpassat fält %s?"/>
     <text name="CP_customFieldManager_confirm_delete" text="Vill du radera det anpassade fältet %s?"/>
     <text name="CP_customFieldManager_delete" text="Ta bort anpassat fält"/>
@@ -515,6 +519,10 @@ Banan sparas automatiskt vid stängning av editorn och åsidosätter den valda b
     <text name="CP_controllerGui_stopRecording" text="Stoppa anpassad fältinspelning."/>
     <text name="CP_controllerGui_pauseRecording" text="Pausa anpassad fältinspelning."/>
     <text name="CP_controllerGui_unpauseRecording" text="Återuppta anpassad fältinspelning."/>
+    <!---->
+    <!--CP ingame menu-->
+    <!---->
+    <text name="CP_ingameMenu_map_title" text="Map"/>
     <!---->
     <!--Help menu-->
     <!---->
@@ -1011,6 +1019,7 @@ Now your selection should look similar to the image.
     <text name="input_CP_DBG_CHANNEL_MENU_VISIBILITY" text="CP: Visa felsökningskanalsmeny Ja/Nej."/>
     <text name="input_CP_OPEN_CLOSE_VEHICLE_SETTING_DISPLAY" text="CP: Öppna mini GUI"/>
     <text name="input_CP_START_STOP" text="CP: Starta/Stoppa förare"/>
+    <text name="input_CP_GENERATE_COURSE" text="CP: Change current selected job"/>
     <text name="input_CP_CHANGE_SELECTED_JOB" text="CP: Change current selected job"/>
     <text name="input_CP_CHANGE_STARTING_POINT" text="CP: Ändrar startpunkt"/>
     <text name="input_CP_CLEAR_COURSE" text="CP: Tabort den aktuella inlästa kursen"/>

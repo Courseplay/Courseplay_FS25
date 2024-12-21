@@ -25,7 +25,7 @@ assert(file.fullPath == coursesDir .. "/" .. "testFile")
 
 file:save("xmlRootName",{},"xmlBaseKey",function () end,{},...)
 
-file:load({},"xmlBaseKey",function () end,{},...)
+file:load({},"xmlBaseKey",function () return true end,{},...)
 
 file:delete()
 assert(not fileExists(file:getFullPath()))

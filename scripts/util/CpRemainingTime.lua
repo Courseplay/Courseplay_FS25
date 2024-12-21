@@ -51,7 +51,7 @@ function CpRemainingTime:start()
 end
 
 function CpRemainingTime:update(dt)
-	if g_currentMission.controlledVehicle == self.vehicle and self.DEBUG_ACTIVE and CpDebug:isChannelActive(self.debugChannel, self.vehicle) then
+	if CpUtil.getCurrentVehicle() == self.vehicle and self.DEBUG_ACTIVE and CpDebug:isChannelActive(self.debugChannel, self.vehicle) then
 		DebugUtil.renderTable(0.2, 0.2, 0.018, {
 			{name = "time", value = CpGuiUtil.getFormatTimeText(self.time)},
 			{name = "optimal speed", value = MathUtil.mpsToKmh(self:getOptimalSpeed())},
@@ -83,7 +83,7 @@ function CpRemainingTime:getOptimalSpeed() -- in m/s
 	if speedLimit == math.huge then -- Giants ..., happens when for example the work tool is raised ..
 		return 0
 	end
-	return MathUtil.kmhToMps(MathUtil.clamp(speedLimit, 0, fieldSettingSpeed))
+	return MathUtil.kmhToMps(CpMathUtil.clamp(speedLimit, 0, fieldSettingSpeed))
 end 
 
 --- Estimate of the course time left with penalties increased.

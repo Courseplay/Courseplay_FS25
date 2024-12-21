@@ -156,6 +156,7 @@
     <!--Vehicle settings-->
     <!---->
     <text name="CP_vehicle_setting_title" text="Nastavení pro vozidlo (%s)"/>
+    <text name="CP_vehicle_setting_subTitle_vehicle" text="Vehicle settings"/>
     <text name="CP_vehicle_setting_subTitle_basic" text="Základní nastavení"/>
     <text name="CP_vehicle_setting_subTitle_implement" text="Nastavení nástroje"/>
     <text name="CP_vehicle_setting_subTitle_combine" text="Nastavení kombajnu"/>
@@ -271,6 +272,8 @@
     <!---->
     <text name="CP_vehicle_courseGeneratorSetting_title" text="Nastavení generátoru tras (%s)"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="Základní"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Vine field settings"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Fieldwork settings"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="Souvrať"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="Střed"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Nastavení ostrova"/>
@@ -501,6 +504,7 @@ Trasa se automaticky uloží při zavření editoru a přepíše vybranou trasu.
     <!---->
     <!--Custom field manager-->
     <!---->
+    <text name="CP_customFieldManager_hotspotName" text="Custom field"/>
     <text name="CP_customFieldManager_confirm_save" text="Chcete uložit zaznamenanou trasu jako vlastní pole %s?"/>
     <text name="CP_customFieldManager_confirm_delete" text="Chcete odstranit vlastní pole %s?"/>
     <text name="CP_customFieldManager_delete" text="Vymazat vlastní pole"/>
@@ -515,6 +519,10 @@ Trasa se automaticky uloží při zavření editoru a přepíše vybranou trasu.
     <text name="CP_controllerGui_stopRecording" text="Ukončit nahrávání vlastního pole"/>
     <text name="CP_controllerGui_pauseRecording" text="Pozastavit nahrávání vlastního pole."/>
     <text name="CP_controllerGui_unpauseRecording" text="Znovu spustit nahrávání vlastního pole."/>
+    <!---->
+    <!--CP ingame menu-->
+    <!---->
+    <text name="CP_ingameMenu_map_title" text="Map"/>
     <!---->
     <!--Help menu-->
     <!---->
@@ -1004,7 +1012,8 @@ Nyní by váš výběr měl vypadat podobně jako na obrázku.
     <text name="input_CP_DBG_CHANNEL_MENU_VISIBILITY" text="CP: Zobrazit nabídku kanálu ladění ano/ne"/>
     <text name="input_CP_OPEN_CLOSE_VEHICLE_SETTING_DISPLAY" text="CP: Otevřt/zavřít nastavení vozidla"/>
     <text name="input_CP_START_STOP" text="CP: Spustit mini GUI"/>
-    <text name="input_CP_CHANGE_SELECTED_JOB" text="CP: Změnit aktuální úlohu"/>
+    <text name="input_CP_GENERATE_COURSE" text="CP: Change current selected job"/>
+    <text name="input_CP_CHANGE_SELECTED_JOB" text="CP: Change current selected job"/>
     <text name="input_CP_CHANGE_STARTING_POINT" text="CP: Změnit startovní bod"/>
     <text name="input_CP_CLEAR_COURSE" text="CP: Vymazat aktuálně nahranou trasu"/>
     <text name="input_CP_CHANGE_COURSE_VISIBILITY" text="Zobrazit aktuální trasu vozidla"/>

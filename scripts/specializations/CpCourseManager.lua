@@ -24,14 +24,11 @@ function CpCourseManager.registerXmlSchemaValues(schema,baseKey)
 	schema:register(XMLValueType.STRING, baseKey .. "#name", "Course name")
 	schema:register(XMLValueType.FLOAT, baseKey  .. "#workWidth", "Course work width")
 	schema:register(XMLValueType.INT, baseKey .. "#numHeadlands", "Course number of headlands")
-    -- TODO: remove once backwards compatibility is not needed
-	schema:register(XMLValueType.INT, baseKey .. "#multiTools", "Course multi tools")
 	schema:register(XMLValueType.INT, baseKey .. "#nVehicles", "Number of vehicles for a multi-vehicle course")
     schema:register(XMLValueType.BOOL, baseKey .. "#headlandClockwise", "Headlands are clockwise.")
     schema:register(XMLValueType.BOOL, baseKey .. "#islandHeadlandClockwise", "Headlands around islands are clockwise.")
     schema:register(XMLValueType.BOOL, baseKey .. "#wasEdited", "Was the course edited by the course editor.")
     schema:register(XMLValueType.BOOL, baseKey .. "#compacted", "Rows are compacted, only start and end is saved.")
-    schema:register(XMLValueType.STRING, baseKey .. ".waypoints", "Course serialized waypoints") -- old save format
     Waypoint.registerXmlSchema(schema, baseKey)
     Course.MultiVehicleData.registerXmlSchema(schema, baseKey)
 end
@@ -91,7 +88,7 @@ function CpCourseManager.registerFunctions(vehicleType)
     SpecializationUtil.registerFunction(vehicleType, 'hasCpCourse', CpCourseManager.hasCourse)
     SpecializationUtil.registerFunction(vehicleType, 'cpCopyCourse', CpCourseManager.cpCopyCourse)
     
-    SpecializationUtil.registerFunction(vehicleType, 'appendLoadedCpCourse', CpCourseManager.appendLoadedCourse)
+    SpecializationUtil.registerFunction(vehicleType, 'appendLoadedCpCourse', CpCourseManager.appendLoadedCpCourse)
     SpecializationUtil.registerFunction(vehicleType, 'saveCpCourses', CpCourseManager.saveCourses)
     SpecializationUtil.registerFunction(vehicleType, 'resetCpCourses', CpCourseManager.resetCourses)
     SpecializationUtil.registerFunction(vehicleType, 'resetCpCoursesFromGui', CpCourseManager.resetCpCoursesFromGui)
@@ -125,7 +122,7 @@ function CpCourseManager:onLoad(savegame)
 	--- Register the spec: spec_cpCourseManager 
     self.spec_cpCourseManager = self["spec_" .. CpCourseManager.SPEC_NAME]
     local spec = self.spec_cpCourseManager 
-    spec.coursePlot = CoursePlot(g_currentMission.inGameMenu.ingameMap)
+    spec.coursePlot = CoursePlot(g_inGameMenu.ingameMap)
 
     spec.courses = {}
 
@@ -151,7 +148,7 @@ function CpCourseManager:loadAssignedCourses(xmlFile, baseKey, noEventSend, name
         CpUtil.debugVehicle(CpDebug.DBG_COURSES,self,"Loading assigned course: %s",key)
         local course = Course.createFromXml(self,xmlFile,key)
         course:setVehicle(self)
-        table.insert(courses,course)
+        table.insert(courses, course)
     end)    
     if courses ~= nil and next(courses) then
         spec.courses = courses
@@ -220,8 +217,6 @@ end
 
 function CpCourseManager:addCourse(course,noEventSend)
     local spec = self.spec_cpCourseManager
-    -- reset temporary offset field course, this will be regenerated based on the current settings when the job starts
-    spec.offsetFieldWorkCourse = nil
     course:setVehicle(self)
     table.insert(spec.courses,course)
     SpecializationUtil.raiseEvent(self,"onCpCourseChange",course,noEventSend)
@@ -229,10 +224,11 @@ end
 
 function CpCourseManager:resetCourses()
     local spec = self.spec_cpCourseManager
-    spec.offsetFieldWorkCourse = nil
-    spec.courses = {}
-    spec.assignedCoursesID = nil
-    SpecializationUtil.raiseEvent(self,"onCpCourseChange")
+    if spec.courses then
+        spec.courses = {}
+        spec.assignedCoursesID = nil
+        SpecializationUtil.raiseEvent(self,"onCpCourseChange")
+    end
 end
 
 function CpCourseManager:resetCpCoursesFromGui()
@@ -358,7 +354,7 @@ function CpCourseManager:onWriteStream(streamId,connection)
 end
 
 function CpCourseManager:onPreDelete()
-    g_assignedCoursesManager:unregisterVehicle(self,self.id)
+    g_assignedCoursesManager:unregisterVehicle(self, self.id)
     CpCourseManager.resetCourses(self)
     local spec = self.spec_cpCourseManager 
     spec.courseDisplay:delete()
@@ -389,11 +385,14 @@ function CpCourseManager.getCourseName(course)
     return name
 end
 
-function CpCourseManager:appendLoadedCourse(file)
+--- Trys to load a course from the file system
+---@param file File
+---@return boolean success
+function CpCourseManager:appendLoadedCpCourse(file)
     --- For now clear the previous courses.
     CpCourseManager.resetCourses(self)
-    file:load(CpCourseManager.xmlSchema, CpCourseManager.xmlKeyFileManager, 
-    CpCourseManager.loadAssignedCourses, self, false)
+    return file:load(CpCourseManager.xmlSchema, CpCourseManager.xmlKeyFileManager, 
+        CpCourseManager.loadAssignedCourses, self, false)
 end
 
 function CpCourseManager:saveCourses(file,text)
@@ -432,10 +431,6 @@ function CpCourseManager:cpReverseCurrentCourse(noEventSend)
             self:updateCpCourseDisplayVisibility()
         end
     end
-end
-
-function CpCourseManager:appendCourse(course)
-
 end
 
 function CpCourseManager:rememberCpLastWaypointIx(ix)

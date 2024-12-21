@@ -8,7 +8,7 @@ CpConsoleCommands.commands = {
 	{ 'cpReturnToSaveGameSelect', 'Returns to the menu', 'returnToSaveGameSelect' },
 	{ 'print', 'Print a variable', 'printVariable' },
 	{ 'printGlobalCpVariable', 'Print a global cp variable', 'printGlobalCpVariable' },
-	{ 'printVehicleVariable', 'Print g_currentMission.controlledVehicle.variable', 'printVehicleVariable' },
+	{ 'printVehicleVariable', 'Print CpUtil.getCurrentVehicle().variable', 'printVehicleVariable' },
 	{ 'printImplementVariable', 'printImplementVariable <implement index> <variable>', 'printImplementVariable' },
 	{ 'printStrategyVariable', 'Print a CP drive strategy variable', 'printStrategyVariable' },
 	{ 'printAiPageVariable', 'Print a in game menu ai page variable.', 'printAiPageVariable' },
@@ -21,10 +21,12 @@ CpConsoleCommands.commands = {
 	{ 'cpFreeze', 'Freeze the CP driver', 'cpFreeze' },
 	{ 'cpUnfreeze', 'Unfreeze the CP driver', 'cpUnfreeze' },
 	{ 'cpStopAll', 'Stops all cp drivers', 'cpStopAll' },
+	{ 'cpGenerateDefaultCourse', '[number of headlands ] Generate a default course', 'cpGenerateDefaultCourse' },
+	{ 'cpRaiseAIEvent', 'vehicle/fieldworkerEvent AIImplementEvent', 'cpRaiseAIEvent'},
+	{ 'cpRaiseStateChange', 'VehicleStateChange.*', 'cpRaiseStateChange'}
 }
 
-function CpConsoleCommands:init(devHelper)
-    self.devHelper = devHelper
+function CpConsoleCommands:init()
     self:registerConsoleCommands()
 	self.additionalCommands = {}
 end
@@ -87,7 +89,7 @@ end
 
 ---@param amount number
 function CpConsoleCommands:addMoney(amount)
-	g_currentMission:addMoney(amount ~= nil and tonumber(amount) or 0, g_currentMission.player.farmId, MoneyType.OTHER)	
+	g_currentMission:addMoney(amount ~= nil and tonumber(amount) or 0, g_currentMission.playerSystem:getLocalPlayer().farmId, MoneyType.OTHER)	
 end
 
 ---Prints a variable to the console or a xmlFile.
@@ -125,15 +127,16 @@ end
 --- Print the variable in the selected vehicle's namespace
 -- You can omit the dot for data members but if you want to call a function, you must start the variable name with a colon
 function CpConsoleCommands:printVehicleVariable(variableName, maxDepth, printToXML, printToSeparateXmlFiles)
-	local prefix = variableName and 'g_currentMission.controlledVehicle' or 'g_currentMission'
-	variableName = variableName or 'controlledVehicle'
+	local prefix = variableName and 'CpUtil.getCurrentVehicle()' or 'CpUtil'
+	-- if no variable name given, print the whole vehicle
+	variableName = variableName or '.getCurrentVehicle()'
 	self:printVariableInternal( prefix, variableName, maxDepth, printToXML, printToSeparateXmlFiles)
 end
 
 --- Print an implement variable. If implement.object.variable exists, print that, otherwise implement.variable
 ---@param implementIndex number index in getAttachedImplements()
 function CpConsoleCommands:printImplementVariable(implementIndex, variableName, maxDepth, printToXML, printToSeparateXmlFiles)
-	local prefix = string.format('g_currentMission.controlledVehicle:getAttachedImplements()[%d]', implementIndex)
+	local prefix = string.format('CpUtil.getCurrentVehicle():getAttachedImplements()[%d]', implementIndex)
 	local objectVariableName = string.format('%s.object%s', prefix, self:ensureVariableNameSyntax(variableName))
 	local var = CpUtil.getVariable(objectVariableName)
 	if var then
@@ -145,7 +148,7 @@ function CpConsoleCommands:printImplementVariable(implementIndex, variableName, 
 end
 
 function CpConsoleCommands:printStrategyVariable(variableName, maxDepth, printToXML, printToSeparateXmlFiles)
-	local prefix = 'g_currentMission.controlledVehicle:getCpDriveStrategy()'
+	local prefix = 'CpUtil.getCurrentVehicle():getCpDriveStrategy()'
 	self:printVariableInternal( prefix, variableName, maxDepth, printToXML, printToSeparateXmlFiles)
 end
 
@@ -210,7 +213,7 @@ function CpConsoleCommands.restoreVehiclePosition(vehicle)
 end
 
 function CpConsoleCommands:cpToggleDevHelper()
-    self.devHelper:toggle()
+    g_devHelper:toggle()
 end
 
 function CpConsoleCommands:cpSaveAllFields()
@@ -218,7 +221,7 @@ function CpConsoleCommands:cpSaveAllFields()
 end
 
 function CpConsoleCommands:cpSaveAllVehiclePositions()
-    for _, vehicle in pairs(g_currentMission.vehicles) do
+    for _, vehicle in pairs(g_currentMission.vehicleSystem.vehicles) do
 		if SpecializationUtil.hasSpecialization(CpAIWorker, vehicle.specializations) then
 			vehicle.vehiclePositionData = {}
 			CpConsoleCommands.saveVehiclePosition(vehicle, vehicle.vehiclePositionData)
@@ -227,7 +230,7 @@ function CpConsoleCommands:cpSaveAllVehiclePositions()
 end
 
 function CpConsoleCommands:cpRestoreAllVehiclePositions()
-    for _, vehicle in pairs(g_currentMission.vehicles) do
+    for _, vehicle in pairs(g_currentMission.vehicleSystem.vehicles) do
         if vehicle.vehiclePositionData then
             CpConsoleCommands.restoreVehiclePosition(vehicle)
         end
@@ -239,17 +242,43 @@ function CpConsoleCommands:cpSetPathfinderDebug(d)
 end
 
 function CpConsoleCommands:cpFreeze()
-	g_currentMission.controlledVehicle:freezeCp()
+	CpUtil.getCurrentVehicle():freezeCp()
 end
 
 function CpConsoleCommands:cpUnfreeze()
-	g_currentMission.controlledVehicle:unfreezeCp()
+	CpUtil.getCurrentVehicle():unfreezeCp()
+end
+
+function CpConsoleCommands:cpGenerateDefaultCourse(nHeadlands)
+	CpUtil.info('Generating default course with %s headlands', nHeadlands)
+	CourseGeneratorInterface.generateDefaultCourse(nHeadlands)
 end
 
 function CpConsoleCommands:cpStopAll()
-	for _, vehicle in pairs(g_currentMission.vehicles) do
+	for _, vehicle in pairs(g_currentMission.vehicleSystem.vehicles) do
 		if vehicle.getIsAIActive and vehicle:getIsAIActive() then 
 			vehicle:stopCurrentAIJob(AIMessageErrorUnknown.new())
 		end
 	end
 end
+
+function CpConsoleCommands:cpRaiseAIEvent(vehicleEvent, implementEvent)
+	local vehicle = CpUtil.getCurrentVehicle()
+	if vehicle then
+		vehicle:raiseAIEvent(vehicleEvent, implementEvent)
+	end
+end
+
+function CpConsoleCommands:cpRaiseStateChange(state)
+	local vehicle = CpUtil.getCurrentVehicle()
+	if vehicle then
+		vehicle:raiseStateChange(VehicleStateChange[state])
+	end
+end
+
+-- when reloading, clean up before re-instantiation
+if g_consoleCommands then
+	g_consoleCommands:delete()
+end
+
+g_consoleCommands = CpConsoleCommands()

@@ -30,7 +30,7 @@ function CoursePlot:init()
 	self.lightColor = {CpGuiUtil.getNormalizedRgb(45, 207, 255)}
 	-- a darker shade of the same color
 	self.darkColor = {CpGuiUtil.getNormalizedRgb(19, 87, 107)}
-	self.courseOverlayId = createImageOverlay('dataS/scripts/shared/graph_pixel.dds')
+	self.courseOverlayId = createImageOverlay('dataS/menu/base/graph_pixel.dds')
 	self.startSignOverlayId = createImageOverlay(Utils.getFilename('img/signs/start_noMM.dds', Courseplay.BASE_DIRECTORY))
 	self.stopSignOverlayId = createImageOverlay(Utils.getFilename('img/signs/stop_noMM.dds', Courseplay.BASE_DIRECTORY))
 	self.arrowOverlayId = createImageOverlay(Utils.getFilename('img/iconSprite.dds', Courseplay.BASE_DIRECTORY))
@@ -113,8 +113,12 @@ function CoursePlot:drawLineBetween(map, x, z, nx, nz, isHudMap, lineThickness, 
 	local startX, startY, _, sv = CpGuiUtil.worldToScreen(map, x, z, isHudMap)
 	local endX, endY, _, ev = CpGuiUtil.worldToScreen(map, nx, nz, isHudMap)
 	local dx, dz = nx - x, nz - z
-	local dirX, dirZ = MathUtil.vector2Normalize(dx, dz)
 	local length = MathUtil.vector2Length(dx, dz)
+	local dirX, dirZ = 0, 1
+	if length <= 0 then
+		return
+	end
+	dirX, dirZ = MathUtil.vector2Normalize(dx, dz)
 	if startX and startY and endX and endY then
 		local dx2D = endX - startX
 		local dy2D = ( endY - startY ) / g_screenAspectRatio

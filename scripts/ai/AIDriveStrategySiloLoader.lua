@@ -413,7 +413,7 @@ end
 function AIDriveStrategySiloLoader:findUnloader()
     local bestScore = -math.huge
     local bestUnloader, bestEte
-    for _, vehicle in pairs(g_currentMission.vehicles) do
+    for _, vehicle in pairs(g_currentMission.vehicleSystem.vehicles) do
         if AIDriveStrategyUnloadCombine.isActiveCpSiloLoader(vehicle) then
             local x, _, z = getWorldTranslation(self.vehicle.rootNode)
             ---@type AIDriveStrategyUnloadCombine

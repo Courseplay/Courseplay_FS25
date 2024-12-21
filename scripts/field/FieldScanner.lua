@@ -20,7 +20,7 @@ function FieldScanner:init(resolution)
 end
 
 function FieldScanner:debug(...)
-    CpUtil.debugVehicle(CpDebug.DBG_COURSES, g_currentMission.controlledVehicle, 'FieldScanner: ' .. string.format(...))
+    CpUtil.debugVehicle(CpDebug.DBG_COURSES, CpUtil.getCurrentVehicle(), 'FieldScanner: ' .. string.format(...))
 end
 
 function FieldScanner:info(...)
@@ -158,7 +158,7 @@ function FieldScanner:findContour(x, z)
     -- don't start exactly at yRot 0 as folks tend to put the starting point (and so the probe)
     -- near the edge of the field. On rectangular fields, this may lead to finding the edge very
     -- close to the corner which then again, screws up our corner detection.
-    -- This pi / 7 reduces the likelyhood of ending up in a corner.
+    -- This pi / 7 reduces the likelihood of ending up in a corner.
     local probe = CpUtil.createNode('FieldScannerProbe', x, z, math.pi / 7)
     if not CpFieldUtil.isNodeOnField(probe) then
         self:debug('%.1f/%.1f is not on a field, can\'t start scanning here', x, z)

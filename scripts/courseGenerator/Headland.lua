@@ -21,11 +21,16 @@ function Headland:init(basePolygon, clockwise, passNumber, width, outward, mustN
     self.logger = Logger('Headland ' .. passNumber or '')
     self.clockwise = clockwise
     self.passNumber = passNumber
-    self.logger:debug('start generating, base clockwise %s, desired clockwise %s, width %.1f, outward: %s',
-            basePolygon:isClockwise(), self.clockwise, width, outward)
     self.offsetVector = CourseGenerator.FieldworkCourseHelper.getOffsetVectorForHeadland(clockwise, outward)
-    ---@type Polygon
-    self.polygon = CourseGenerator.Offset.generate(basePolygon, self.offsetVector, width)
+    if width == 0 then
+        self.logger:debug('cloning base polygon as width 0, base clockwise %s, desired clockwise %s',
+                basePolygon:isClockwise(), self.clockwise)
+        self.polygon = basePolygon:clone()
+    else
+        self.logger:debug('start generating, base clockwise %s, desired clockwise %s, width %.1f, outward: %s',
+                basePolygon:isClockwise(), self.clockwise, width, outward)
+        self.polygon = CourseGenerator.Offset.generate(basePolygon:clone(), self.offsetVector, width)
+    end
     if self.polygon then
         self.polygon:calculateProperties()
         self.polygon:ensureMaximumEdgeLength(CourseGenerator.cMaxEdgeLength)

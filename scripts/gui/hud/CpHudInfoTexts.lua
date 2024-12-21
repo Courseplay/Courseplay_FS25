@@ -20,7 +20,7 @@ CpHudInfoTexts.colorDefault = {
 }
 
 CpHudInfoTexts.colorHeader = {
-    0, 0.4, 0.6, 1
+    0.22323, 0.40724, 0.00368, 1
 }
 
 CpHudInfoTexts.uvs = {
@@ -34,22 +34,15 @@ CpHudInfoTexts.OFF_COLOR = {0.2, 0.2, 0.2, 0.9}
 CpHudInfoTexts.SELECTED_COLOR = {0, 0.6, 0, 0.9}
 
 CpHudInfoTexts.xmlKey = "HudInfoTexts"
-function CpHudInfoTexts.registerXmlSchema(xmlSchema,baseKey)
-    xmlSchema:register(XMLValueType.FLOAT,baseKey..CpHudInfoTexts.xmlKey.."#posX","Hud position x.")
-    xmlSchema:register(XMLValueType.FLOAT,baseKey..CpHudInfoTexts.xmlKey.."#posY","Hud position y.")
+function CpHudInfoTexts.registerXmlSchema(xmlSchema, baseKey)
+    xmlSchema:register(XMLValueType.FLOAT, baseKey .. CpHudInfoTexts.xmlKey .. "#posX", "Hud position x")
+    xmlSchema:register(XMLValueType.FLOAT, baseKey .. CpHudInfoTexts.xmlKey .. "#posY", "Hud position y")
 end
 
 function CpHudInfoTexts:init()
 	self.uiScale = g_gameSettings:getValue("uiScale")
-
-
-    if CpHudInfoTexts.savedPositions then 
-        CpHudInfoTexts.x, CpHudInfoTexts.y = unpack(CpHudInfoTexts.savedPositions)
-        CpHudInfoTexts.savedPositions = nil
-    end
-    if CpHudInfoTexts.x == nil or CpHudInfoTexts.y == nil then
-        CpHudInfoTexts.x, CpHudInfoTexts.y = getNormalizedScreenValues(self.basePosition.x, self.basePosition.y)
-    end
+   
+    self.x, self.y = getNormalizedScreenValues(self.basePosition.x, self.basePosition.y)
 
     self.width, self.height = getNormalizedScreenValues(self.baseSize.x, self.baseSize.y)
 
@@ -63,9 +56,12 @@ function CpHudInfoTexts:init()
     background:setAlignment(Overlay.ALIGN_VERTICAL_TOP, Overlay.ALIGN_HORIZONTAL_LEFT)
     --- Base hud element.
     self.baseHud = CpHudMoveableElement.new(background)
-    self.baseHud:setPosition(CpHudInfoTexts.x, CpHudInfoTexts.y)
+    self.baseHud:setPosition(self.x, self.y)
     self.baseHud:setDimension(self.width, self.height)
-    self.baseHud:setCallback("onMove", self, self.moveToPosition)
+    self.baseHud:setCallback("onMove", self, function(self, _, x, y)
+        self.x = x
+        self.y = y
+    end)
 
     local headerHeight = self.hMargin/2
     local headerBackground = Overlay.new(g_baseUIFilename, 0, 0, self.width, headerHeight)
@@ -74,29 +70,29 @@ function CpHudInfoTexts:init()
     headerBackground:setAlignment(Overlay.ALIGN_VERTICAL_TOP, Overlay.ALIGN_HORIZONTAL_LEFT)
 
     local topElement = CpHudElement.new(headerBackground, self.baseHud)
-    topElement:setPosition(CpHudInfoTexts.x, CpHudInfoTexts.y)
+    topElement:setPosition(self.x, self.y)
     topElement:setDimension(self.width, headerHeight)
 
-    local leftTopText = CpTextHudElement.new(self.baseHud, CpHudInfoTexts.x + self.wMargin, CpHudInfoTexts.y - headerHeight + self.hMargin/16, self.titleFontSize)
+    local leftTopText = CpTextHudElement.new(self.baseHud, self.x + self.wMargin, self.y - headerHeight + self.hMargin/16, self.titleFontSize)
     leftTopText:setTextDetails("Courseplay")
-    local rightTopText = CpTextHudElement.new(self.baseHud, CpHudInfoTexts.x + self.width - self.wMargin, CpHudInfoTexts.y - headerHeight + self.hMargin/16, self.titleFontSize, RenderText.ALIGN_RIGHT)
+    local rightTopText = CpTextHudElement.new(self.baseHud, self.x + self.width - self.wMargin, self.y - headerHeight + self.hMargin/16, self.titleFontSize, RenderText.ALIGN_RIGHT)
     rightTopText:setTextDetails(g_Courseplay.currentVersion)
-    local imageFilename = Utils.getFilename('img/iconSprite.dds', g_Courseplay.BASE_DIRECTORY)
 
     local width, height = getNormalizedScreenValues(20, 20)
 
-    local x = CpHudInfoTexts.x + self.wMargin
+    local x = self.x + self.wMargin
     local dx = x + self.wMargin + width
-    local y =  CpHudInfoTexts.y - self.hMargin - headerHeight + self.lineHeight
+    local y =  self.y - self.hMargin - headerHeight + self.lineHeight
     self.infoTextsElements = {}
     for i=1, self.maxLines do 
         y = y - self.lineHeight
     
-        local vehicleOverlay =  Overlay.new(imageFilename, 0, 0, width, height)
-        vehicleOverlay:setAlignment(Overlay.ALIGN_VERTICAL_BOTTOM, Overlay.ALIGN_HORIZONTAL_LEFT)
-        vehicleOverlay:setUVs(GuiUtils.getUVs(unpack(self.uvs.vehicleIcon),{256,512}))
-        vehicleOverlay:setColor(unpack(self.OFF_COLOR))
-
+        local vehicleOverlay = CpGuiUtil.createOverlayFromSlice(
+            "cpIconSprite.white_vehicle", 
+            {width, height},
+            CpBaseHud.OFF_COLOR,
+            CpBaseHud.alignments.bottomLeft)
+     
         local vehicleBtn = CpHudButtonElement.new(vehicleOverlay, self.baseHud)
         vehicleBtn:setPosition(x, y)
     
@@ -118,9 +114,8 @@ function CpHudInfoTexts:mouseEvent(posX, posY, isDown, isUp, button)
     end
 end
 
-function CpHudInfoTexts:moveToPosition(element, x, y)
-    CpHudInfoTexts.x = x 
-    CpHudInfoTexts.y = y
+function CpHudInfoTexts:moveToPosition(x, y)
+    self.baseHud:moveTo(x, y)
 end
 
 function CpHudInfoTexts:draw()
@@ -163,7 +158,7 @@ function CpHudInfoTexts:update()
                 elements.lastInfo = info
             end
             --- Makes sure the current entered vehicle is highlighted.
-            if info.vehicle == g_currentMission.controlledVehicle then 
+            if info.vehicle == CpUtil.getCurrentVehicle() then
                 elements.vehicleBtn:setColor(unpack(self.SELECTED_COLOR))
             else 
                 elements.vehicleBtn:setColor(unpack(self.OFF_COLOR))
@@ -191,7 +186,7 @@ function CpHudInfoTexts:update()
 end
 
 function CpHudInfoTexts:enterVehicle(vehicle)
-    g_currentMission:requestToEnterVehicle(vehicle)
+    g_localPlayer:requestToEnterVehicle(vehicle)
 end
 
 function CpHudInfoTexts:isVisible()
@@ -210,25 +205,23 @@ function CpHudInfoTexts:delete()
 end
 
 function CpHudInfoTexts:debug(str,...)
-    CpUtil.debugFormat(CpDebug.DBG_HUD,"Info text hud "..str,...)   
+    CpUtil.debugFormat(CpDebug.DBG_HUD, "Info text hud " .. str, ...)   
 end
 
 --- Saves hud position.
-function CpHudInfoTexts.saveToXmlFile(xmlFile,baseKey)
-    if CpHudInfoTexts.x ~= nil and CpHudInfoTexts.y ~= nil then
-        xmlFile:setValue(baseKey..CpHudInfoTexts.xmlKey.."#posX",CpHudInfoTexts.x)
-        xmlFile:setValue(baseKey..CpHudInfoTexts.xmlKey.."#posY",CpHudInfoTexts.y)
+function CpHudInfoTexts:saveToXmlFile(xmlFile, baseKey)
+    if self.x ~= nil and self.y ~= nil then
+        xmlFile:setValue(baseKey .. self.xmlKey .. "#posX", self.x)
+        xmlFile:setValue(baseKey .. self.xmlKey .. "#posY", self.y)
     end
 end
 
 --- Loads hud position.
-function CpHudInfoTexts.loadFromXmlFile(xmlFile,baseKey)
-    local posX = xmlFile:getValue(baseKey..CpHudInfoTexts.xmlKey.."#posX")
-    local posY = xmlFile:getValue(baseKey..CpHudInfoTexts.xmlKey.."#posY")
+function CpHudInfoTexts:loadFromXmlFile(xmlFile, baseKey)
+    local posX = xmlFile:getValue(baseKey .. self.xmlKey .. "#posX")
+    local posY = xmlFile:getValue(baseKey .. self.xmlKey .. "#posY")
     if posX ~= nil and posY ~= nil then 
-        CpHudInfoTexts.savedPositions = {
-           posX, posY
-        }
+        self:moveToPosition(posX, posY)
     end
 end
 

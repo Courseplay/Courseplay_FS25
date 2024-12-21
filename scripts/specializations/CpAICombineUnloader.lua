@@ -17,22 +17,22 @@ function CpAICombineUnloader.initSpecialization()
     CpJobParameters.registerXmlSchema(schema, key..".cpJob")
 
     --- Registers pipe controller measurement test and debug functions
-    g_devHelper.consoleCommands:registerConsoleCommand("cpPipeControllerMeasurePipe", 
+    g_consoleCommands:registerConsoleCommand("cpPipeControllerMeasurePipe",
         "Measures the pipe properties while unfolded.", "consoleCommandMeasurePipeProperties", CpAICombineUnloader)
-    g_devHelper.consoleCommands:registerConsoleCommand("cpPipeControllerInstantUnfoldPipe", 
+    g_consoleCommands:registerConsoleCommand("cpPipeControllerInstantUnfoldPipe",
         "Instant unfold of the pipe", "consoleCommandInstantUnfoldPipe", CpAICombineUnloader)
-    g_devHelper.consoleCommands:registerConsoleCommand("cpPipeControllerInstantFoldPipeAndImplement", 
+    g_consoleCommands:registerConsoleCommand("cpPipeControllerInstantFoldPipeAndImplement",
         "Instant fold of the pipe + implement", "consoleCommandInstantFoldPipeAndImplement", CpAICombineUnloader)
-    g_devHelper.consoleCommands:registerConsoleCommand("cpPipeControllerDebugFoldablePipe", 
+    g_consoleCommands:registerConsoleCommand("cpPipeControllerDebugFoldablePipe",
         "Debug for foldable pipes", "consoleCommandDebugFoldablePipe", CpAICombineUnloader)
-    g_devHelper.consoleCommands:registerConsoleCommand("cpPipeControllerSetFoldTime", 
+    g_consoleCommands:registerConsoleCommand("cpPipeControllerSetFoldTime",
         "Debug for setting foldable pipe time", "consoleCommandSetFoldTime", CpAICombineUnloader)
-    g_devHelper.consoleCommands:registerConsoleCommand("cpPipeControllerToggleMoveablePipe", 
+    g_consoleCommands:registerConsoleCommand("cpPipeControllerToggleMoveablePipe",
         "Enables the moveable pipe feature", "consoleCommandToggleMoveablePipe", CpAICombineUnloader)
 end
 
 local function executePipeControllerCommand(lambdaFunc, ...)
-    local vehicle = g_currentMission.controlledVehicle
+    local vehicle = CpUtil.getCurrentVehicle()
     if not vehicle then 
         CpUtil.info("Could not measure pipe properties without entering a vehicle!")
         return
@@ -46,7 +46,7 @@ local function executePipeControllerCommand(lambdaFunc, ...)
     if vehicle.spec_cpAICombineUnloader and vehicle.spec_cpAICombineUnloader.pipeController then 
         controller = vehicle.spec_cpAICombineUnloader.pipeController
     else 
-        controller = PipeController(vehicle, pipeObject, true)
+        controller = PipeController(vehicle, pipeObject, false)
     end
     if not lambdaFunc(controller, vehicle, ...) then
         vehicle.spec_cpAICombineUnloader.pipeController = nil
@@ -255,7 +255,7 @@ function CpAICombineUnloader:startCpAtFirstWp(superFunc)
     if not superFunc(self) then 
         if self:getCanStartCpCombineUnloader() then
             local spec = self.spec_cpAICombineUnloader
-            spec.cpJob:applyCurrentState(self, g_currentMission, g_currentMission.player.farmId, true)
+            spec.cpJob:applyCurrentState(self, g_currentMission, g_currentMission.playerSystem:getLocalPlayer().farmId, true)
             spec.cpJob:setValues()
             local success = spec.cpJob:validate(false)
             if success then
@@ -273,7 +273,7 @@ function CpAICombineUnloader:startCpAtLastWp(superFunc)
     if not superFunc(self) then 
         if self:getCanStartCpCombineUnloader() then
             local spec = self.spec_cpAICombineUnloader
-            spec.cpJob:applyCurrentState(self, g_currentMission, g_currentMission.player.farmId, true)
+            spec.cpJob:applyCurrentState(self, g_currentMission, g_currentMission.playerSystem:getLocalPlayer().farmId, true)
             spec.cpJob:setValues()
             local success = spec.cpJob:validate(false)
             if success then

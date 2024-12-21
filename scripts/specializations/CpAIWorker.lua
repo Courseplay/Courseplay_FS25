@@ -128,6 +128,7 @@ function CpAIWorker:onRegisterActionEvents(isActiveForInput, isActiveForInputIgn
             end
 
             addActionEvent(self, InputAction.CP_START_STOP, CpAIWorker.startStopCpActionEvent)
+            addActionEvent(self, InputAction.CP_GENERATE_COURSE, CpAIWorker.generateCourse)
             addActionEvent(self, InputAction.CP_CHANGE_SELECTED_JOB, CpAIWorker.changeCurrentSelectedJob)
             addActionEvent(self, InputAction.CP_CHANGE_STARTING_POINT, CpAIWorker.changeStartingPoint)
             addActionEvent(self, InputAction.CP_CLEAR_COURSE, CpAIWorker.clearCourse,
@@ -245,7 +246,7 @@ function CpAIWorker:cpStartStopDriver(isStartedByHud)
         end
         if self:getCanStartCp() and job then
 
-            job:applyCurrentState(self, g_currentMission, g_currentMission.player.farmId, true, true)
+            job:applyCurrentState(self, g_currentMission, g_currentMission.playerSystem:getLocalPlayer().farmId, true, true)
             job:setValues()
             local success, message = job:validate(false)
             if success then
@@ -318,6 +319,7 @@ function CpAIWorker:stopCurrentAIJob(superFunc, message, ...)
         return superFunc(self, message, ...)
     end
     
+    local job = self:getJob()
     local wasCpActive = self:getIsCpActive()
     if wasCpActive then
         local driveStrategy = self:getCpDriveStrategy()
@@ -339,12 +341,11 @@ function CpAIWorker:stopCurrentAIJob(superFunc, message, ...)
                 end
             end
         end
-        local job = self:getJob()
-        if not job:isFinishingAllowed(message) then 
+        if not job:isFinishingAllowed(message) then
             return
         end
     end
-    CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, self, "stop message: %s", message:getMessage())
+    CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, self, "stop message: %s", message:getMessage(job))
     superFunc(self, message,...)
 end
 
@@ -533,15 +534,22 @@ function CpAIWorker:onStartAutoDrive()
             --- Use last job parameters.
             --- Only the start point needs to be forced back!
             SpecializationUtil.raiseEvent(self, "onCpADRestarted")
-        elseif g_currentMission.controlledVehicle == self then
+        elseif CpUtil.getCurrentVehicle() == self then
             --- Apply hud variables
             SpecializationUtil.raiseEvent(self, "onCpADStartedByPlayer")
         end
-    elseif g_currentMission.controlledVehicle == self then
+    elseif CpUtil.getCurrentVehicle() == self then
         --- Apply hud variables
         SpecializationUtil.raiseEvent(self, "onCpADStartedByPlayer")
         CpJobStartAtLastWpSyncRequestEvent.sendEvent(self)
     end
+end
+
+-----------------------------------------------
+--- Generate course
+---------------------------------------------
+function CpAIWorker:generateCourse()
+    CourseGeneratorInterface.generateDefaultCourse()
 end
 
 ---------------------------------------------
@@ -549,10 +557,10 @@ end
 ---------------------------------------------
 
 function CpAIWorker.registerConsoleCommands()
-    g_devHelper.consoleCommands:registerConsoleCommand("cpVehicleOnWorkStartTest",
+    g_consoleCommands:registerConsoleCommand("cpVehicleOnWorkStartTest",
             "Raise the field work start event.",
             "consoleCommandRaiseWorkStart", CpAIWorker)
-    g_devHelper.consoleCommands:registerConsoleCommand("cpSettingsPrintJob",
+    g_consoleCommands:registerConsoleCommand("cpSettingsPrintJob",
             "Prints the current job parameters",
             "consoleCommandPrintCurrentSelectedJobParameters", CpAIWorker)
     --- TODO: Adding functions to execute the lowering, raising and fieldwork end events.
@@ -562,7 +570,7 @@ end
 --- as these might turn on implements, that otherwise aren't turned on or
 --- disables the unfolding of a given implement.
 function CpAIWorker:consoleCommandRaiseWorkStart()
-    local vehicle = g_currentMission.controlledVehicle
+    local vehicle = CpUtil.getCurrentVehicle()
     if not vehicle then
         CpUtil.info("Not entered a valid vehicle!")
         return
@@ -583,7 +591,7 @@ end
 --- Either prints all settings or a desired setting by the name or index in the setting table.
 ---@param name any
 function CpAIWorker:consoleCommandPrintCurrentSelectedJobParameters(name)
-    local vehicle = g_currentMission.controlledVehicle
+    local vehicle = CpUtil.getCurrentVehicle()
     if not vehicle or vehicle.getCpStartableJob == nil then
         CpUtil.info("Not entered a valid vehicle!")
         return

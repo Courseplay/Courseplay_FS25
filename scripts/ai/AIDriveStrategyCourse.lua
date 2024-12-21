@@ -1,5 +1,5 @@
 --[[
-This file is part of Courseplay (https://github.com/Courseplay/Courseplay_FS22)
+This file is part of Courseplay (https://github.com/Courseplay/Courseplay_FS25)
 Copyright (C) 2021 Peter Vaiko
 
 This program is free software: you can redistribute it and/or modify
@@ -114,6 +114,7 @@ end
 
 function AIDriveStrategyCourse:setAIVehicle(vehicle, jobParameters)
     self.vehicle = vehicle
+    --self:fixTurnOnEvent()
     self.jobParameters = jobParameters
     self:initializeImplementControllers(vehicle)
     self.ppc = PurePursuitController(vehicle)
@@ -149,6 +150,16 @@ function AIDriveStrategyCourse:setAIVehicle(vehicle, jobParameters)
         self:startWithoutCourse(jobParameters)
     end
     self:raiseControllerEvent(self.onStartEvent)
+end
+
+function AIDriveStrategyCourse:fixTurnOnEvent()
+    for _, action in ipairs(self.vehicle.actionController.actions) do
+        for _, listener in ipairs(action.aiEventListener) do
+            if listener.eventName == 'onAIImplementStart' then
+                listener.direction = 1
+            end
+        end
+    end
 end
 
 --- Does the strategy need the current assigned course?
@@ -307,17 +318,19 @@ function AIDriveStrategyCourse:raiseImplements()
     for _, implement in pairs(self.vehicle:getAttachedAIImplements()) do
         implement.object:aiImplementEndLine()
     end
-    self.vehicle:raiseStateChange(Vehicle.STATE_CHANGE_AI_END_LINE)
+    self.vehicle:raiseStateChange(VehicleStateChange.AI_END_LINE)
     --- Raises implements, that are not covered by giants.
     self:raiseControllerEvent(self.onRaisingEvent)
 end
 
 function AIDriveStrategyCourse:lowerImplements()
+    self:debug('Lowering all implements')
     --- Lowers all implements, that are available for the giants field worker.
     for _, implement in pairs(self.vehicle:getAttachedAIImplements()) do
+        CpUtil.debugImplement(CpDebug.DBG_IMPLEMENTS, implement.object,'Lowering implement')
         implement.object:aiImplementStartLine()
     end
-    self.vehicle:raiseStateChange(Vehicle.STATE_CHANGE_AI_START_LINE)
+    self.vehicle:raiseStateChange(VehicleStateChange.AI_START_LINE)
     --- Lowers implements, that are not covered by giants.
     self:raiseControllerEvent(self.onLoweringEvent)
 end

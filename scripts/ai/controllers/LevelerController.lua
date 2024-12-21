@@ -128,13 +128,13 @@ function LevelerController:setCylinderedLevelerRotation(dt, offsetDeg)
 --				angle, targetRot, math.rad(offsetDeg), self.levelerTool.rotMin, self.levelerTool.rotMax)
 
 	return ImplementUtil.moveMovingToolToRotation(self.levelerToolVehicle, self.levelerTool, dt,
-										 MathUtil.clamp(angle - targetRot, self.levelerTool.rotMin, self.levelerTool.rotMax))
+										 CpMathUtil.clamp(angle - targetRot, self.levelerTool.rotMin, self.levelerTool.rotMax))
 
 end
 
 --- Moves the arm position to achieve a given height from the ground.
 function LevelerController:setCylinderedArmHeight(currentHeight, terrainHeight, min, max)
-	local dir = -MathUtil.sign(currentHeight-terrainHeight - min)
+	local dir = -math.sign(currentHeight-terrainHeight - min)
 	local diff = math.abs(currentHeight-terrainHeight - min)
 	local isDirty = false
 	if max and currentHeight-terrainHeight > max then 
@@ -176,7 +176,7 @@ function LevelerController:updateHeight(dt)
 		local lowerDistanceToGround = hy + delta
 
 		--calculate the target alpha
-		local alpha = MathUtil.clamp((lowerDistanceToGround - jointDesc.upperDistanceToGround) / (jointDesc.lowerDistanceToGround - jointDesc.upperDistanceToGround), 0, 1)
+		local alpha = CpMathUtil.clamp((lowerDistanceToGround - jointDesc.upperDistanceToGround) / (jointDesc.lowerDistanceToGround - jointDesc.upperDistanceToGround), 0, 1)
 		self:debug("lastCurAlpha: %.2f, nextAlpha: %.2f, heightDiff: %.2f", spec.lastHeightAlpha, alpha, heightDiff)
 		self:debug("terrainHeight: %.2f, shieldHeight: %.2f, shieldHeightOffset: %.2f, targetHeight: %.2f", terrainHeight, y, self.shieldHeightOffset, targetHeight)
 
@@ -232,7 +232,7 @@ end
 function LevelerController:updateShieldHeightOffset()
 	--- A small reduction to the offset, as the shield should be lifted after a only a bit silage.
 	local smallOffsetReduction = 0.3
-	--self.shieldHeightOffset = MathUtil.clamp(-self.levelerSpec.lastForce/self.levelerSpec.maxForce - smallOffsetReduction, 0, 1)
+	--self.shieldHeightOffset = CpMathUtil.clamp(-self.levelerSpec.lastForce/self.levelerSpec.maxForce - smallOffsetReduction, 0, 1)
 end
 
 --- Is the shield full ?

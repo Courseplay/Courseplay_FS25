@@ -122,6 +122,10 @@
 				<Text>onlyCenter</Text>
 			</Texts>
 		</Setting>
+		<Setting classType="AIParameterSettingList" name="pipeOffsetX" min="-100" max="100" incremental="0.1" default="0" unit="2" precision="3"
+				 isVisible="isPipeOffsetSettingsVisible" title="CP_deactivated"/>
+		<Setting classType="AIParameterSettingList" name="pipeOffsetZ" min="-100" max="100" incremental="0.1" default="0" unit="2" precision="3"
+				 isVisible="isPipeOffsetSettingsVisible" title="CP_deactivated"/>
 	</SettingSubTitle>
 
 	<SettingSubTitle title="seeder" isVisible="areSowingMachineSettingsVisible">

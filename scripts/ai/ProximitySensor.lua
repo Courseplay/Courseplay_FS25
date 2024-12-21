@@ -1,5 +1,5 @@
 --[[
-This file is part of Courseplay (https://github.com/Courseplay/Courseplay_FS22)
+This file is part of Courseplay (https://github.com/Courseplay/Courseplay_FS25)
 Copyright (C) 2020-2022 Peter Vaiko
 
 This program is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@ function ProximitySensor:init(node, yRotationDeg, range, height, xOffset, vehicl
     self.node = node
     self.xOffset = xOffset
     self.rotationEnabled = rotationEnabled
-    local _, _, dz = localToLocal(node,  AIUtil.getDirectionNode(vehicle), 0, 0, 0)
+    local _, _, dz = localToLocal(node, AIUtil.getDirectionNode(vehicle), 0, 0, 0)
     self.angleToDirectionNode = math.abs(math.atan2(xOffset, dz))
     CpUtil.debugVehicle(CpDebug.DBG_TRAFFIC, vehicle, 'Proximity sensor dx %.1f, angle %.1f, angle to root %.1f',
             xOffset, yRotationDeg, math.deg(self.angleToDirectionNode))
@@ -74,7 +74,9 @@ end
 
 function ProximitySensor:update()
     -- already updated in this loop, no need to raycast again
-    if g_updateLoopIndex == self.lastUpdateLoopIndex then return end
+    if g_updateLoopIndex == self.lastUpdateLoopIndex then
+        return
+    end
     self.lastUpdateLoopIndex = g_updateLoopIndex
 
     -- rotate with the steering angle
@@ -88,10 +90,10 @@ function ProximitySensor:update()
         -- direction (cab is rotated, driver facing to the back of the tractor), so we need getSteeringDirection()
         -- to compensate for that
         local correction = self.vehicle:getSteeringDirection() *
-                ((self.vehicle.rotatedTime / self.xOffset) >= 0
-                and self.angleToDirectionNode or
-                -self.angleToDirectionNode)
-        self:setRotation(MathUtil.clamp(
+                ((CpMathUtil.divide(self.vehicle.rotatedTime, self.xOffset)) >= 0
+                        and self.angleToDirectionNode or
+                        -self.angleToDirectionNode)
+        self:setRotation(CpMathUtil.clamp(
                 self.vehicle.rotatedTime * (2 * self.maxRotation + correction) * self.vehicle:getSteeringDirection(),
                 -2 * self.maxRotation,
                 2 * self.maxRotation))
@@ -112,8 +114,8 @@ function ProximitySensor:update()
     self.objectId = nil
     self.hitTerrain = false
     if self.enabled then
-        local raycastMask = CollisionFlag.STATIC_OBJECTS + CollisionFlag.TREE + CollisionFlag.DYNAMIC_OBJECT + CollisionFlag.VEHICLE
-        raycastClosest(x, y1 + self.height, z, nx, ny, nz, 'raycastCallback', self.range, self, raycastMask)
+        local raycastMask = CpUtil.getDefaultCollisionFlags()
+        raycastClosest(x, y1 + self.height, z, nx, ny, nz, self.range, 'raycastCallback', self, raycastMask)
         if CpDebug:isChannelActive(CpDebug.DBG_TRAFFIC, self.vehicle) then
             DebugUtil.drawDebugLine(x, y1 + self.height, z, x + 5 * nx, y1 + self.height + 5 * ny, z + 5 * nz, 0, 1, 0)
         end
@@ -160,7 +162,9 @@ function ProximitySensor:getClosestRootVehicle()
 end
 
 function ProximitySensor:showDebugInfo()
-    if not CpDebug:isChannelActive(CpDebug.DBG_TRAFFIC, self.vehicle) then return end
+    if not CpDebug:isChannelActive(CpDebug.DBG_TRAFFIC, self.vehicle) then
+        return
+    end
     local text = string.format('%.1f ', self.distanceOfClosestObject)
     if self.objectId then
         local object = g_currentMission:getNodeObject(self.objectId)
@@ -178,7 +182,7 @@ function ProximitySensor:showDebugInfo()
             end
         end
     end
-    renderText(0.6, 0.4 + self.yRotation / 10, 0.018, text .. string.format(' %d', math.deg(self.yRotation)))
+    renderText(0.6, 0.4 + self.yRotation / 5, 0.012, text .. string.format(' %d', math.deg(self.yRotation)))
 end
 
 ---@class ProximitySensorPack
@@ -227,7 +231,7 @@ function ProximitySensorPack:getXOffsets(width, nSensors)
     local xOffsets = {}
     -- spread them out evenly across the width
     local dx = width / nSensors
-    for xOffset = width / 2 - dx / 2, - width / 2 + dx / 2 - 0.1, - dx do
+    for xOffset = width / 2 - dx / 2, -width / 2 + dx / 2 - 0.1, -dx do
         table.insert(xOffsets, xOffset)
     end
     return xOffsets
@@ -237,7 +241,7 @@ function ProximitySensorPack:adjustForwardPosition()
     -- are we looking forward
     local forward = 1
     -- if a sensor about in the middle is pointing back, we are looking back
-    if math.abs(self.directionsDeg[math.max(math.floor(#self.directionsDeg / 2),1)]) > 90 then
+    if math.abs(self.directionsDeg[math.max(math.floor(#self.directionsDeg / 2), 1)]) > 90 then
         forward = -1
     end
     local x, y, z = getTranslation(self.node)
@@ -287,7 +291,7 @@ end
 ---@return table|nil closest object
 ---@return boolean terrain was hit
 ---@return number average direction of the obstacle in degrees, > 0 right, < 0 left
----@return number 
+---@return number
 function ProximitySensorPack:getClosestObjectDistanceAndRootVehicle()
     -- make sure we have the latest info, the sensors will make sure they only raycast once per loop
     self:update()
@@ -315,7 +319,8 @@ function ProximitySensorPack:getClosestObjectDistanceAndRootVehicle()
     if closestRootVehicle == self.vehicle then
         self:adjustForwardPosition()
     end
-    return closestDistance, closestRootVehicle, closestObject, hitTerrain, totalDegs / totalWeight, totalDistance / totalWeight
+    return closestDistance, closestRootVehicle, closestObject, hitTerrain,
+        CpMathUtil.divide(totalDegs, totalWeight), CpMathUtil.divide(totalDistance, totalWeight)
 end
 
 function ProximitySensorPack:disableRightSide()
@@ -333,7 +338,6 @@ function ProximitySensorPack:enableRightSide()
         end
     end
 end
-
 
 function ProximitySensorPack:disableLeftSide()
     for _, sensor in ipairs(self.sensors) do
@@ -357,8 +361,8 @@ ForwardLookingProximitySensorPack = CpObject(ProximitySensorPack)
 --- Pack looking forward, all sensors are in the middle of the vehicle
 function ForwardLookingProximitySensorPack:init(vehicle, node, range, height)
     ProximitySensorPack.init(self, 'forward', vehicle, node, range, height,
-            {0, 15, 30, 60, 80, -15, -30, -60, -80},
-            {0,  0,  0,  0,  0,   0,   0,   0,  0})
+            { 0, 15, 30, 60, 80, -15, -30, -60, -80 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0 })
 end
 
 ---@class WideForwardLookingProximitySensorPack : ProximitySensorPack
@@ -367,7 +371,7 @@ WideForwardLookingProximitySensorPack = CpObject(ProximitySensorPack)
 --- Pack looking forward, but sensors distributed evenly through the width of the vehicle
 function WideForwardLookingProximitySensorPack:init(vehicle, node, range, height, width, directionsDeg)
     CpUtil.debugVehicle(CpDebug.DBG_TRAFFIC, vehicle, 'Creating wide forward proximity sensor %.1fm', width)
-    directionsDeg = directionsDeg or {10, 8, 5, 3, 0, -3, -5, -8, -10}
+    directionsDeg = directionsDeg or { 10, 8, 5, 3, 0, -3, -5, -8, -10 }
     local xOffsets = self:getXOffsets(width, #directionsDeg)
     ProximitySensorPack.init(self, 'wideForward', vehicle, node, range, height,
             directionsDeg, xOffsets, true)
@@ -379,13 +383,11 @@ WideBackwardLookingProximitySensorPack = CpObject(ProximitySensorPack)
 --- Pack looking backward, but sensors distributed evenly through the width of the vehicle
 function WideBackwardLookingProximitySensorPack:init(vehicle, node, range, height, width, rotationEnabled)
     CpUtil.debugVehicle(CpDebug.DBG_TRAFFIC, vehicle, 'Creating wide backward proximity sensor %.1fm', width)
-    local directionsDeg = {-190, -188, -185, -183, 180, 183, 185, 188, 190}
+    local directionsDeg = { -190, -188, -185, -183, 180, 183, 185, 188, 190 }
     local xOffsets = self:getXOffsets(width, #directionsDeg)
     ProximitySensorPack.init(self, 'wideBackward', vehicle, node, range, height,
             directionsDeg, xOffsets, rotationEnabled)
 end
-
-
 
 ---@class BackwardLookingProximitySensorPack : ProximitySensorPack
 BackwardLookingProximitySensorPack = CpObject(ProximitySensorPack)
@@ -393,8 +395,8 @@ BackwardLookingProximitySensorPack = CpObject(ProximitySensorPack)
 function BackwardLookingProximitySensorPack:init(vehicle, node, range, height)
     CpUtil.debugVehicle(CpDebug.DBG_TRAFFIC, vehicle, 'Creating backward proximity sensor')
     ProximitySensorPack.init(self, 'backward', vehicle, node, range, height,
-            {120, 150, 180, -150, -120},
-            {0,     0,   0,    0,    0})
+            { 120, 150, 180, -150, -120 },
+            { 0, 0, 0, 0, 0 })
 end
 
 ---@class SingleForwardLookingProximitySensorPack : ProximitySensorPack
@@ -403,9 +405,8 @@ SingleForwardLookingProximitySensorPack = CpObject(ProximitySensorPack)
 function SingleForwardLookingProximitySensorPack:init(vehicle, node, range, height)
     CpUtil.debugVehicle(CpDebug.DBG_TRAFFIC, vehicle, 'Creating single forward proximity sensor')
     ProximitySensorPack.init(self, 'singleForward', vehicle, node, range, height,
-            {0}, {0}, false)
+            { 0 }, { 0 }, false)
 end
-
 
 ---@class SingleBackwardLookingProximitySensorPack : ProximitySensorPack
 SingleBackwardLookingProximitySensorPack = CpObject(ProximitySensorPack)
@@ -413,7 +414,7 @@ SingleBackwardLookingProximitySensorPack = CpObject(ProximitySensorPack)
 function SingleBackwardLookingProximitySensorPack:init(vehicle, node, range, height)
     CpUtil.debugVehicle(CpDebug.DBG_TRAFFIC, vehicle, 'Creating single backward proximity sensor')
     ProximitySensorPack.init(self, 'singleBackward', vehicle, node, range, height,
-            {180}, {0}, false)
+            { 180 }, { 0 }, false)
 end
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -448,7 +449,9 @@ end
 
 function VerticalProximitySensor:update()
     -- already updated in this loop, no need to raycast again
-    if g_updateLoopIndex == self.lastUpdateLoopIndex then return end
+    if g_updateLoopIndex == self.lastUpdateLoopIndex then
+        return
+    end
     self.lastUpdateLoopIndex = g_updateLoopIndex
 
     local x, _, z = localToWorld(self.node, self.xOffset, 0, self.zOffset)
@@ -457,10 +460,11 @@ function VerticalProximitySensor:update()
     self.objectId = nil
     self.hitTerrain = false
     if self.enabled then
-        local raycastMask = CollisionFlag.STATIC_OBJECTS + CollisionFlag.TREE + CollisionFlag.DYNAMIC_OBJECT + CollisionFlag.VEHICLE
+        local raycastMask = CpUtil.getDefaultCollisionFlags()
         -- straight up from 10 cm above the ground to height
         raycastClosest(x, y + self.minHeightAboveGround, z, 0, 1, 0,
-                'raycastCallback', self.height - self.minHeightAboveGround, self, raycastMask)
+                self.height - self.minHeightAboveGround,
+                'raycastCallback', self, raycastMask)
         if CpDebug:isChannelActive(CpDebug.DBG_TRAFFIC, self.vehicle) then
             DebugUtil.drawDebugLine(x, y + self.minHeightAboveGround, z, x, y + self.height - self.minHeightAboveGround, z, 1, 1, 0)
         end

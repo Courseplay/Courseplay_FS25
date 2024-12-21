@@ -156,6 +156,7 @@
     <!--Vehicle settings-->
     <!---->
     <text name="CP_vehicle_setting_title" text="Настройки техники CoursePlay"/>
+    <text name="CP_vehicle_setting_subTitle_vehicle" text="Vehicle settings"/>
     <text name="CP_vehicle_setting_subTitle_basic" text="Основные настройки"/>
     <text name="CP_vehicle_setting_subTitle_implement" text="Настройки инструментов"/>
     <text name="CP_vehicle_setting_subTitle_combine" text="Настройки комбайна"/>
@@ -271,6 +272,8 @@
     <!---->
     <text name="CP_vehicle_courseGeneratorSetting_title" text="Настройки генератора курсов (%s)"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="основные"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Vine field settings"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Fieldwork settings"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="поворотная полоса"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="метод движения"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Настройки работ вокруг островков"/>
@@ -501,6 +504,7 @@
     <!---->
     <!--Custom field manager-->
     <!---->
+    <text name="CP_customFieldManager_hotspotName" text="Custom field"/>
     <text name="CP_customFieldManager_confirm_save" text="Вы хотите сохранить записанный курс как пользовательское поле %s?"/>
     <text name="CP_customFieldManager_confirm_delete" text="Вы хотите удалить пользовательское поле %s?"/>
     <text name="CP_customFieldManager_delete" text="Удалить пользовательское поле"/>
@@ -515,6 +519,10 @@
     <text name="CP_controllerGui_stopRecording" text="Завершить запись пользовательского поля."/>
     <text name="CP_controllerGui_pauseRecording" text="Приостановить запись пользовательского поля."/>
     <text name="CP_controllerGui_unpauseRecording" text="Продолжить запись пользовательского поля."/>
+    <!---->
+    <!--CP ingame menu-->
+    <!---->
+    <text name="CP_ingameMenu_map_title" text="Map"/>
     <!---->
     <!--Help menu-->
     <!---->
@@ -1023,7 +1031,8 @@ HUD также показывает оставшийся уровень запо
     <text name="input_CP_DBG_CHANNEL_MENU_VISIBILITY" text="CP: Показать/Скрыть каналы отладки"/>
     <text name="input_CP_OPEN_CLOSE_VEHICLE_SETTING_DISPLAY" text="CP: Открыть mini GUI"/>
     <text name="input_CP_START_STOP" text="CP: Отправить/Остановить водителя"/>
-    <text name="input_CP_CHANGE_SELECTED_JOB" text="CP: Изменить текущую выбранную работу"/>
+    <text name="input_CP_GENERATE_COURSE" text="CP: Change current selected job"/>
+    <text name="input_CP_CHANGE_SELECTED_JOB" text="CP: Change current selected job"/>
     <text name="input_CP_CHANGE_STARTING_POINT" text="CP: Изменить точку отправки"/>
     <text name="input_CP_CLEAR_COURSE" text="CP: Очистить текущий загруженный курс"/>
     <text name="input_CP_CHANGE_COURSE_VISIBILITY" text="CP: Показать текущий курс на технике"/>

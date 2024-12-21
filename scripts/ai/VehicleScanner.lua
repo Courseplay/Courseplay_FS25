@@ -21,7 +21,7 @@ function VehicleScanner:measureWidth()
     for d = 0.5, self.vehicle.size.width / 2 + 0.5, 0.1 do
         self.hit = false
         local x, y, z = localToWorld(self.vehicle.rootNode, d, 1, -self.vehicle.size.length / 2 + self.vehicle.size.lengthOffset)
-        raycastAll(x, y, z, nx, ny, nz, 'raycastBackCallback', self.vehicle.size.length, self)
+        raycastAll(x, y, z, nx, ny, nz, self.vehicle.size.length, 'raycastBackCallback', self)
         if not self.hit then
             self.width = 2 * d
             self:debug('Found vehicle width %.1f', self.width)

@@ -134,7 +134,7 @@ function CpAIBunkerSiloWorker:startCpAtFirstWp(superFunc, ...)
     if not superFunc(self, ...) then 
         if self:getCanStartCpBunkerSiloWorker() then 
             local spec = self.spec_cpAIBunkerSiloWorker
-            spec.cpJob:applyCurrentState(self, g_currentMission, g_currentMission.player.farmId, true)
+            spec.cpJob:applyCurrentState(self, g_currentMission, g_currentMission.playerSystem:getLocalPlayer().farmId, true)
             spec.cpJob:setValues()
             local success = spec.cpJob:validate(false)
             if success then
@@ -152,7 +152,7 @@ function CpAIBunkerSiloWorker:startCpAtLastWp(superFunc, ...)
     if not superFunc(self, ...) then 
         if self:getCanStartCpBunkerSiloWorker() then 
             local spec = self.spec_cpAIBunkerSiloWorker
-            spec.cpJob:applyCurrentState(self, g_currentMission, g_currentMission.player.farmId, true)
+            spec.cpJob:applyCurrentState(self, g_currentMission, g_currentMission.playerSystem:getLocalPlayer().farmId, true)
             spec.cpJob:setValues()
             local success = spec.cpJob:validate(false)
             if success then

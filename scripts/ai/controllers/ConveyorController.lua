@@ -184,7 +184,7 @@ function ConveyorController:updateMoveablePipe(dt)
 		end
 		self:debug("Arm: yRot: %.2f, dyRot: %.2f, oldRot: %.2f, dx: %.2f", math.deg(yRot), math.deg(dyRot), math.deg(oldRot), dx)
 		ImplementUtil.moveMovingToolToRotation(self.implement, self.armRotationTool, dt, 
-			MathUtil.clamp(oldRot + dyRot, self.armRotationTool.rotMin, self.armRotationTool.rotMax))  
+			CpMathUtil.clamp(oldRot + dyRot, self.armRotationTool.rotMin, self.armRotationTool.rotMax))
 		local _, _, dz = localToLocal(self.pipeRotationTool.node, self.implement.rootNode, 0, 0, 0)
 		local px, py, pz
 		if self.pipeSide == self.LEFT_SIDE then 
@@ -222,7 +222,7 @@ function ConveyorController:updateMoveablePipe(dt)
 		local bx, _, bz = getWorldTranslation(dischargeNode.node)
 		if MathUtil.vector2Length(px - bx, pz - bz) > 1 then 
 			ImplementUtil.moveMovingToolToRotation(self.implement, self.pipeRotationTool, dt, 
-				MathUtil.clamp(MathUtil.normalizeRotationForShortestPath(dyRot, oldRot), self.pipeRotationTool.rotMin, self.pipeRotationTool.rotMax))
+				CpMathUtil.clamp(MathUtil.normalizeRotationForShortestPath(dyRot, oldRot), self.pipeRotationTool.rotMin, self.pipeRotationTool.rotMax))
 			self:debug("Pipe: yRot: %.2f, dyRot: %.2f, oldRot: %.2f, dx: %.2f, dz: %.2f, dz2: %.2f",
 				math.deg(yRot), math.deg(dyRot), math.deg(oldRot), dx, dz, dz2)
 		end

@@ -1,0 +1,79 @@
+﻿<texture>
+    <meta>
+        <filename>iconSprite.dds</filename>
+        <size width="256" height="512" />
+    </meta>
+    <slices>
+        <slice id="white_harvesterExclamationmark" uvs="4px 4px 32px 32px"/>
+        <slice id="white_playStopPauseRecord" uvs="40px 4px 32px 32px"/>
+        <slice id="white_globe" uvs="76px 4px 32px 32px"/>
+        <slice id="white_sliders" uvs="112px 4px 32px 32px"/>
+        <slice id="white_harvesterMagnifyingGlass" uvs="148px 4px 32px 32px"/>
+        <slice id="white_cruiseControl" uvs="184px 4px 32px 32px"/>
+        <slice id="white_cogwheel" uvs="220px 4px 32px 32px"/>
+        <slice id="white_vehicle" uvs="4px 40px 32px 32px"/>
+        <slice id="white_fieldCourse" uvs="40px 40px 32px 32px"/>
+        <slice id="white_shovel" uvs="76px 40px 32px 32px"/>
+        <slice id="white_refillCourse" uvs="112px 40px 32px 32px"/>
+        <slice id="white_refillCourseCombine" uvs="148px 40px 32px 32px"/>
+        <slice id="white_refillCourseCombinePlate" uvs="184px 40px 32px 32px"/>
+        <slice id="white_refillCourseSpreader" uvs="220px 40px 32px 32px"/>
+        <slice id="white_driveToCourse" uvs="4px 76px 32px 32px"/>
+        <slice id="white_fieldworkCourse" uvs="40px 76px 32px 32px"/>
+        <slice id="white_bale" uvs="76px 76px 32px 32px"/>
+        <slice id="white_refillCourseTank" uvs="112px 76px 32px 32px"/>
+        <slice id="refillCourse" uvs="184px 76px 32px 32px"/>
+        <slice id="refillCourseCombine" uvs="220px 76px 32px 32px"/>
+        <slice id="refillCourseCombinePlate" uvs="4px 112px 32px 32px"/>
+        <slice id="refillCourseSpreader" uvs="40px 112px 32px 32px"/>
+        <slice id="driveToCourse" uvs="76px 112px 32px 32px"/>
+        <slice id="fieldworkCourse" uvs="112px 112px 32px 32px"/>
+        <slice id="bale" uvs="148px 112px 32px 32px"/>
+        <slice id="refillCourseTank" uvs="184px 112px 32px 32px"/>
+        <slice id="shovel" uvs="220px 112px 32px 32px"/>
+        <slice id="waypoint" uvs="4px 148px 32px 32px"/>
+        <slice id="parking" uvs="40px 148px 32px 32px"/>
+        <slice id="triangleCross" uvs="76px 148px 32px 32px"/>
+        <slice id="infoCircle" uvs="112px 148px 32px 32px"/>
+        <slice id="eye" uvs="148px 148px 32px 32px"/>
+        <slice id="copy" uvs="184px 148px 32px 32px"/>
+        <slice id="save" uvs="220px 148px 32px 32px"/>
+        <slice id="leftArrow" uvs="4px 184px 32px 32px"/>
+        <slice id="rightArrow" uvs="40px 184px 32px 32px"/>
+        <slice id="upArrow" uvs="76px 184px 32px 32px"/>
+        <slice id="downArrow" uvs="112px 184px 32px 32px"/>
+        <slice id="crossCircle" uvs="148px 184px 32px 32px"/>
+        <slice id="trashcan" uvs="184px 184px 32px 32px"/>
+        <slice id="favoriteFolder" uvs="220px 184px 32px 32px"/>
+        <slice id="folder" uvs="4px 220px 32px 32px"/>
+        <slice id="plusFolder" uvs="40px 220px 32px 32px"/>
+        <slice id="upFolder" uvs="76px 220px 32px 32px"/>
+        <slice id="downFolder" uvs="112px 220px 32px 32px"/>
+        <slice id="plusCircle" uvs="148px 220px 32px 32px"/>
+        <slice id="minusCircle" uvs="184px 220px 32px 32px"/>
+        <slice id="refresh" uvs="220px 220px 32px 32px"/>
+        <slice id="magnifyingGlass" uvs="4px 256px 32px 32px"/>
+        <slice id="clear" uvs="40px 256px 32px 32px"/>
+        <slice id="calculator" uvs="76px 256px 32px 32px"/>
+        <slice id="rightArrowCourse" uvs="112px 256px 64px 32px"/>
+        <slice id="leftArrowCourse" uvs="184px 256px 64px 32px"/>
+        <slice id="rightTurn" uvs="4px 292px 32px 32px"/>
+        <slice id="leftTurn" uvs="40px 292px 32px 32px"/>
+        <slice id="loadingShovel" uvs="76px 292px 32px 32px"/>
+        <slice id="unloadingShovel" uvs="112px 292px 32px 32px"/>
+        <slice id="preUnloadShovel" uvs="148px 292px 32px 32px"/>
+        <slice id="transportShovel" uvs="184px 292px 32px 32px"/>
+        <slice id="play" uvs="220px 292px 32px 32px"/>
+        <slice id="uturn" uvs="4px 328px 32px 32px"/>
+        <slice id="pause" uvs="40px 328px 32px 32px"/>
+        <slice id="stop" uvs="76px 328px 32px 32px"/>
+        <slice id="reverse" uvs="112px 328px 32px 32px"/>
+        <slice id="trashcanDownArrow" uvs="148px 328px 32px 32px"/>
+        <slice id="exit" uvs="184px 328px 32px 32px"/>
+        <slice id="waypointBroken" uvs="220px 328px 32px 32px"/>
+        <slice id="circle" uvs="4px 367px 26px 26px"/>
+        <slice id="silo" uvs="220px 364px 26px 26px"/>
+        <slice id="unload" uvs="4px 400px 26px 26px"/>
+        <slice id="white_silo" uvs="220px 400px 26px 26px"/>
+    </slices>
+</texture>

@@ -1,0 +1,57 @@
+﻿<texture>
+    <meta>
+        <filename>ui_courseplay.dds</filename>
+        <size width="1024" height="1024" />
+    </meta>
+    <slices>
+        <slice id="harvesterExclamationmark" uvs="0px 0px 128px 128px"/>
+        <slice id="navigation" uvs="128px 0px 128px 128px"/>
+        <slice id="navigationPath" uvs="256px 0px 128px 128px"/>
+        <slice id="slider" uvs="384px 0px 128px 128px"/>
+        <slice id="harvesterSearch" uvs="512px 0px 128px 128px"/>
+        <slice id="cruiseControl" uvs="640px 0px 128px 128px"/>
+        <slice id="cogwheel" uvs="768px 0px 128px 128px"/>
+        <slice id="vehicleCogwheel" uvs="896px 0px 128px 128px"/>
+        <!-- <slice id="todo" uvs="0px 128px 128px 128px"/> -->
+        <!-- <slice id="todo" uvs="128px 128px 128px 128px"/> -->
+        <!-- <slice id="todo" uvs="256px 128px 128px 128px"/> -->
+        <!-- <slice id="todo" uvs="384px 128px 128px 128px"/> -->
+        <!-- <slice id="todo" uvs="512px 128px 128px 128px"/> -->
+        <!-- <slice id="todo" uvs="640px 128px 128px 128px"/> -->
+        <!-- <slice id="todo" uvs="768px 128px 128px 128px"/> -->
+        <!-- <slice id="todo" uvs="896px 128px 128px 128px"/> -->
+        <!-- <slice id="todo" uvs="0px 256px 128px 128px"/> -->
+        <!-- <slice id="todo" uvs="128px 256px 128px 128px"/> -->
+        <!-- <slice id="todo" uvs="256px 256px 128px 128px"/> -->
+        <!-- <slice id="todo" uvs="384px 256px 128px 128px"/> -->
+        <!-- <slice id="todo" uvs="512px 256px 128px 128px"/> -->
+        <!-- <slice id="todo" uvs="640px 256px 128px 128px"/> -->
+        <!-- <slice id="todo" uvs="768px 256px 128px 128px"/> -->
+        <!-- <slice id="todo" uvs="896px 256px 128px 128px"/> -->
+        <!-- <slice id="todo" uvs="0px 384px 128px 128px"/> -->
+        <!-- <slice id="todo" uvs="128px 384px 128px 128px"/> -->
+        <!-- <slice id="todo" uvs="256px 384px 128px 128px"/> -->
+        <!-- <slice id="todo" uvs="384px 384px 128px 128px"/> -->
+        <!-- <slice id="todo" uvs="512px 384px 128px 128px"/> -->
+        <!-- <slice id="todo" uvs="640px 384px 128px 128px"/> -->
+        <!-- <slice id="todo" uvs="768px 384px 128px 128px"/> -->
+        <!-- <slice id="todo" uvs="896px 384px 128px 128px"/> -->
+        <slice id="plus" uvs="0px 512px 128px 128px"/>
+        <slice id="minus" uvs="128px 512px 128px 128px"/>
+        <slice id="exit" uvs="256px 512px 128px 128px"/>
+        <slice id="leftArrow" uvs="384px 512px 128px 128px"/>
+        <slice id="rightArrow" uvs="512px 512px 128px 128px"/>
+        <slice id="upArrow" uvs="640px 512px 128px 128px"/>
+        <slice id="downArrow" uvs="768px 512px 128px 128px"/>
+        <slice id="trashcan" uvs="896px 512px 128px 128px"/>
+        <slice id="trailer" uvs="0px 640px 128px 128px"/>
+        <slice id="copy" uvs="128px 640px 128px 128px"/>
+        <slice id="paste" uvs="256px 640px 128px 128px"/>
+        <!-- <slice id="todo" uvs="384px 256px 128px 128px"/> -->
+        <!-- <slice id="todo" uvs="512px 256px 128px 128px"/> -->
+        <!-- <slice id="todo" uvs="640px 256px 128px 128px"/> -->
+        <!-- <slice id="todo" uvs="768px 256px 128px 128px"/> -->
+        <!-- <slice id="todo" uvs="896px 256px 128px 128px"/> -->
+        <slice id="skip" uvs="0px 768px 128px 128px"/>
+    </slices>
+</texture>

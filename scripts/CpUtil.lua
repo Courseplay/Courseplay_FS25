@@ -472,3 +472,17 @@ function CpUtil.getAllRootVegetables()
 
     return rootVegetables
 end
+
+---@return table|nil the currently selected/controlled vehicle, formerly known as g_currentMission.controlledVehicle
+function CpUtil.getCurrentVehicle()
+	if g_localPlayer == nil then 
+		CpUtil.error("Failed to get current vehicle, as the local player is nil!")
+		return nil
+	end
+	return g_localPlayer:getCurrentVehicle()
+end
+
+function CpUtil.getDefaultCollisionFlags()
+	return CollisionFlag.DEFAULT + CollisionFlag.TREE + CollisionFlag.DYNAMIC_OBJECT + 
+		CollisionFlag.VEHICLE + CollisionFlag.BUILDING + CollisionFlag.PLACEMENT_BLOCKING
+end

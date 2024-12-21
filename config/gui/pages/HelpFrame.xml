@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<GUI name="cpInGameMenuHelpLine">
+    <ThreePartBitmap profile="fs25_subCategoryContainerBg">
+        <Bitmap profile="fs25_subCategoryContainerArrow" />
+        <GuiElement profile="fs25_subCategoryContainer">
+            <MultiTextOption profile="fs25_subCategorySelector" id="helpLineSelector" onClick="onClickMultiTextOption"/>
+            <BoxLayout profile="fs25_subCategorySelectorBox" id="helpLineDotBox" />
+            <RoundCorner profile="fs25_subCategorySelectorDot" id="helpLineDotTemplate" />
+            <GuiElement profile="fs25_subCategoryListContainer">
+                <Bitmap profile="fs25_subCategoryStartClipper" name="startClipper" />
+                <Bitmap profile="fs25_subCategoryStopClipper" name="endClipper" />
+                <SmoothList profile="fs25_subCategoryList" id="helpLineList" wrapAround="true"
+                    focusInit="onOpen" startClipperElementName="startClipper"
+                    endClipperElementName="endClipper" listSectionHeader="section">
+                    <ListItem profile="fs25_subCategoryListItem">
+                        <Bitmap profile="fs25_subCategoryListItemIconFull" name="icon" />
+                        <Text profile="fs25_helpListItemName" name="title" />
+                    </ListItem>
+                    <ListItem profile="fs25_subCategoryListSectionHeader" name="section">
+                        <Text profile="fs25_subCategoryListSectionHeaderTitle" name="title" />
+                    </ListItem>
+                </SmoothList>
+                <ThreePartBitmap profile="fs25_subCategoryListSliderBox">
+                    <Slider profile="fs25_listSlider" dataElementId="helpLineList"
+                        focusChangeTop="nil" />
+                </ThreePartBitmap>
+            </GuiElement>
+        </GuiElement>
+    </ThreePartBitmap>
+    <GuiElement profile="fs25_menuContentContainer">
+        <GuiElement profile="fs25_menuHeaderPanel" position="0px 74px">
+            <Bitmap profile="fs25_menuHeaderIconBg">
+                <Bitmap profile="fs25_menuHeaderIcon" imageSliceId="gui.icon_options_help2" />
+            </Bitmap>
+            <Text profile="fs25_menuHeaderTitle" id="helpLineTitleElement" />
+        </GuiElement>
+        <GuiElement profile="fs25_helpLinelayoutBox">
+            <Bitmap profile="fs25_helpLineStartClipper" name="topClipper" />
+            <Bitmap profile="fs25_helpLineStopClipper" name="bottomClipper" />
+            <ScrollingLayout profile="fs25_helpLinelayout" id="helpLineContentBox"
+                topClipperElementName="topClipper" bottomClipperElementName="bottomClipper">
+                <Text profile="fs25_helpLineItemTitle" id="helpLineContentItemTitle" />
+                <BoxLayout profile="fs25_helpLineContentItem" id="helpLineContentItem">
+                    <Bitmap profile="fs25_helpLineImage" name="image" />
+                    <Text profile="fs25_helpLineText" name="text" />
+                    <Text profile="fs25_helpLineTextFullWith" name="textFullWidth" />
+                </BoxLayout>
+            </ScrollingLayout>
+        </GuiElement>
+    </GuiElement>
+    <ThreePartBitmap profile="fs25_sliderDockedBg">
+        <ThreePartBitmap profile="fs25_sliderDockedBox">
+            <Slider profile="fs25_helpLineSlider" id="statisticsSlider"
+                dataElementId="helpLineContentBox" />
+        </ThreePartBitmap>
+    </ThreePartBitmap>
+    <GUIProfiles>
+        
+    </GUIProfiles>
+</GUI>

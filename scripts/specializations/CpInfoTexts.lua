@@ -100,6 +100,7 @@ function CpInfoTexts:raiseDirtyFlag()
 	if self.isServer then
 		local spec = self.spec_cpInfoTexts
 		self:raiseDirtyFlags(spec.dirtyFlag)
+		g_messageCenter:publishDelayed(MessageType.CP_INFO_TEXT_CHANGED)
 	end
 end
 
@@ -182,7 +183,7 @@ end
 --- Debug test function
 ---@param ix number|nil optional bit mask to set.
 function CpInfoTexts.debug(ix)
-	local vehicle = g_currentMission.controlledVehicle
+	local vehicle = CpUtil.getCurrentVehicle()
 	if vehicle and vehicle.spec_cpInfoTexts then 
 		local spec = vehicle.spec_cpInfoTexts
 		CpUtil.infoVehicle(vehicle, "Current bit mask: %s", CpInfoTexts.getBitMask(vehicle))

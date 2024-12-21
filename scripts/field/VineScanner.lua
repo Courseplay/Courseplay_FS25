@@ -419,7 +419,7 @@ function VineScanner:getVineSegmentIxForNode(node, vineSegments)
 end
 
 function VineScanner:debug(...)
-	CpUtil.debugVehicle(CpDebug.DBG_COURSES, g_currentMission.controlledVehicle, 'VineScanner: ' .. string.format(...))
+	CpUtil.debugVehicle(CpDebug.DBG_COURSES, CpUtil.getCurrentVehicle(), 'VineScanner: ' .. string.format(...))
 end
 
 function VineScanner:debugSparse(...)
@@ -429,7 +429,7 @@ function VineScanner:debugSparse(...)
 end
 
 function VineScanner:draw()
-	if g_currentMission.controlledVehicle and CpDebug:isChannelActive(CpDebug.DBG_COURSES, g_currentMission.controlledVehicle) and self:foundVines() then 
+	if CpUtil.getCurrentVehicle() and CpDebug:isChannelActive(CpDebug.DBG_COURSES, CpUtil.getCurrentVehicle()) and self:foundVines() then
 		self:drawSegments(self.lines)
 		self:drawFieldBorder()
 	end

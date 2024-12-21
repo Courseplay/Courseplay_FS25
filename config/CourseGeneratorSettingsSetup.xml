@@ -9,7 +9,7 @@
 <Settings prefixText="CP_vehicle_courseGeneratorSetting_">
 	<!--Basic settings-->
 	<SettingSubTitle title="basic">
-		<Setting classType="AIParameterSettingList" name="workWidth" min="0.5" max="50" incremental="0.1" unit="2" setDefault="setAutomaticWorkWidthAndOffset" onChangeCallback="cpShowWorkWidth" isVisible="isWorkWidthSettingVisible"/>
+		<Setting classType="AIParameterSettingList" name="workWidth" min="0.5" max="55" incremental="0.1" unit="2" setDefault="setAutomaticWorkWidthAndOffset" onChangeCallback="cpShowWorkWidth" isVisible="isWorkWidthSettingVisible"/>
 		<Setting classType="AIParameterSettingList" name="multiTools" min="1" max="5" default="1" isExpertModeOnly="true"/>
 		<Setting classType="AIParameterBooleanSetting" name="useSameTurnWidth" isVisible="hasMoreThenOneVehicle" isExpertModeOnly="true"/>
 		<Setting classType="AIParameterSettingList" name="numberOfHeadlands" min="0" max="40"/>
@@ -24,7 +24,7 @@
 	<!-- Only active with one or more headlands -->
 	<!--Headland settings-->
 	<SettingSubTitle title="headland" isVisible="hasHeadlandsSelected">	
-		<Setting classType="AIParameterBooleanSetting" name="sharpenCorners" defaultBool="false"/>
+		<Setting classType="AIParameterBooleanSetting" name="sharpenCorners" defaultBool="true"/>
 		<Setting classType="AIParameterSettingList" name="headlandsWithRoundCorners" min="0" max="50" default="1"/>
 		<Setting classType="AIParameterSettingList" name="turningRadius" min="5" max="12" setDefault="setDefaultTurningRadius"/>
 		<Setting classType="AIParameterBooleanSetting" name="headlandClockwise" defaultBool="true">

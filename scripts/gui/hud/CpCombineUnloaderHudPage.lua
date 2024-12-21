@@ -36,9 +36,9 @@ function CpCombineUnloaderHudPageElement:setupElements(baseHud, vehicle, lines, 
     --- Drive now button
     local width, height = getNormalizedScreenValues(22, 22)
     local driveNowBtnWidth, height = getNormalizedScreenValues(26, 30)
-    local imageFilename = Utils.getFilename('img/ui_courseplay.dds', g_Courseplay.BASE_DIRECTORY)
-    local driveNowOverlay = CpGuiUtil.createOverlay({driveNowBtnWidth, height},
-        {imageFilename, GuiUtils.getUVs(unpack(CpBaseHud.uvs.driveNowSymbol))}, 
+    local driveNowOverlay = CpGuiUtil.createOverlayFromSlice(
+        "cpUi.skip", 
+        {driveNowBtnWidth, height},
         CpBaseHud.OFF_COLOR,
         CpBaseHud.alignments.bottomRight)
 

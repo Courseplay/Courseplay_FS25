@@ -156,6 +156,7 @@
     <!--Vehicle settings-->
     <!---->
     <text name="CP_vehicle_setting_title" text="Araç ayarları (%s)"/>
+    <text name="CP_vehicle_setting_subTitle_vehicle" text="Vehicle settings"/>
     <text name="CP_vehicle_setting_subTitle_basic" text="Temel ayarlar"/>
     <text name="CP_vehicle_setting_subTitle_implement" text="Araçlar ayarları"/>
     <text name="CP_vehicle_setting_subTitle_combine" text="Ayarları birleştir"/>
@@ -271,6 +272,8 @@
     <!---->
     <text name="CP_vehicle_courseGeneratorSetting_title" text="Kurs oluşturucu ayarları (%s)"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="Temel"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Vine field settings"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Fieldwork settings"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="Sürülmemiş toprak"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="merkez"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Settings island"/>
@@ -501,6 +504,7 @@ Editör kapatıldığında kurs otomatik olarak kaydedilir ve seçilen kursu ge�
     <!---->
     <!--Custom field manager-->
     <!---->
+    <text name="CP_customFieldManager_hotspotName" text="Custom field"/>
     <text name="CP_customFieldManager_confirm_save" text="Kaydedilen kursu %s özel alanı olarak kaydetmek ister misiniz?"/>
     <text name="CP_customFieldManager_confirm_delete" text="%S özel alanını silmek istiyor musunuz?"/>
     <text name="CP_customFieldManager_delete" text="Özel alanı sil"/>
@@ -515,6 +519,10 @@ Editör kapatıldığında kurs otomatik olarak kaydedilir ve seçilen kursu ge�
     <text name="CP_controllerGui_stopRecording" text="Özel alan kaydını durdurun."/>
     <text name="CP_controllerGui_pauseRecording" text="Pause custom field recording."/>
     <text name="CP_controllerGui_unpauseRecording" text="Unpause custom field recording."/>
+    <!---->
+    <!--CP ingame menu-->
+    <!---->
+    <text name="CP_ingameMenu_map_title" text="Map"/>
     <!---->
     <!--Help menu-->
     <!---->
@@ -1011,6 +1019,7 @@ Now your selection should look similar to the image.
     <text name="input_CP_DBG_CHANNEL_MENU_VISIBILITY" text="CP: Shows debug channel menu yes/no."/>
     <text name="input_CP_OPEN_CLOSE_VEHICLE_SETTING_DISPLAY" text="CP: Open mini GUI"/>
     <text name="input_CP_START_STOP" text="CP: Start/stop driver"/>
+    <text name="input_CP_GENERATE_COURSE" text="CP: Change current selected job"/>
     <text name="input_CP_CHANGE_SELECTED_JOB" text="CP: Change current selected job"/>
     <text name="input_CP_CHANGE_STARTING_POINT" text="CP: Changes starting point"/>
     <text name="input_CP_CLEAR_COURSE" text="CP: Clears currently loaded course"/>

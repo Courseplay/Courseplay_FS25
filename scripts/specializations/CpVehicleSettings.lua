@@ -112,6 +112,8 @@ function CpVehicleSettings:onUpdate()
         spec.lowerImplementEarly:resetToLoadedValue()
         spec.bunkerSiloWorkWidth:resetToLoadedValue()
         spec.loadingShovelHeightOffset:resetToLoadedValue()
+        -- for vehicles with a non-attached pipe
+        CpVehicleSettings.setPipeOffset(self)
     end
     spec.finishedFirstUpdate = true
     if spec.needsRefresh then 
@@ -124,7 +126,7 @@ end
 --- For example Lime and Fertilizer might have a different work width.
 function CpVehicleSettings:onStateChange(state, data)
     local spec = self.spec_cpVehicleSettings
-    if state == Vehicle.STATE_CHANGE_FILLTYPE_CHANGE and self:getIsSynchronized() then
+    if state == VehicleStateChange.FILLTYPE_CHANGE and self:getIsSynchronized() then
         local _, hasSprayer = AIUtil.getAllChildVehiclesWithSpecialization(self, Sprayer, nil)
         if hasSprayer then 
             local width, offset = WorkWidthUtil.getAutomaticWorkWidthAndOffset(self, nil, nil)
@@ -134,7 +136,7 @@ function CpVehicleSettings:onStateChange(state, data)
                 self:getCourseGeneratorSettings().workWidth:setFloatValue(width)
             end
         end
-    elseif state == Vehicle.STATE_CHANGE_ATTACH then 
+    elseif state == VehicleStateChange.ATTACH then
         CpVehicleSettings.setAutomaticWorkWidthAndOffset(self)
         CpVehicleSettings.setAutomaticBunkerSiloWorkWidth(self)
         CpVehicleSettings.setAutomaticBaleCollectorOffset(self)
@@ -146,8 +148,9 @@ function CpVehicleSettings:onStateChange(state, data)
             spec.bunkerSiloWorkWidth, 'workingWidth')
         CpVehicleSettings.setFromVehicleConfiguration(self, data.attachedVehicle, 
             spec.loadingShovelHeightOffset, 'loadingShovelOffset')
+        CpVehicleSettings.setPipeOffset(self)
         spec.needsRefresh = true
-    elseif state == Vehicle.STATE_CHANGE_DETACH then
+    elseif state == VehicleStateChange.DETACH then
         CpVehicleSettings.setAutomaticWorkWidthAndOffset(self, data.attachedVehicle)
         CpVehicleSettings.setAutomaticBunkerSiloWorkWidth(self, data.attachedVehicle)
         
@@ -419,6 +422,26 @@ function CpVehicleSettings:setAutomaticBaleCollectorOffset()
     spec.baleCollectorOffset:setFloatValue(offset)
 end
 
+--- If the vehicle has a pipe, instantiate a pipe controller to measure the pipe offsets. This is better
+--- done here and not when the vehicle starts as measuring is a hack and may mess up the vehicle states.
+function CpVehicleSettings:setPipeOffset()
+    local pipeObject = AIUtil.getImplementOrVehicleWithSpecialization(self, Pipe)
+    if pipeObject then
+        local spec = self.spec_cpVehicleSettings
+        -- ask the pipe controller to get the offsets
+        local pipeController = PipeController(self, pipeObject, true)
+        spec.pipeOffsetX:setFloatValue(pipeController:getPipeOffsetX())
+        spec.pipeOffsetZ:setFloatValue(pipeController:getPipeOffsetZ())
+        CpUtil.debugVehicle(CpDebug.DBG_IMPLEMENTS, self, 'Pipe offsetX: %.1f, offsetZ: %.1f',
+                pipeController:getPipeOffsetX(), pipeController:getPipeOffsetZ())
+    end
+end
+
+--- For now, we don't want these to show up on the settings page.
+function CpVehicleSettings:isPipeOffsetSettingsVisible()
+    return false
+end
+
 function CpVehicleSettings:isLoadingShovelOffsetSettingVisible()
     return not AIUtil.hasChildVehicleWithSpecialization(self, ConveyorBelt) 
 end
@@ -478,7 +501,7 @@ end
 ---------------------------------------------
 
 function CpVehicleSettings.registerConsoleCommands()
-    g_devHelper.consoleCommands:registerConsoleCommand("cpSettingsPrintVehicle", 
+    g_consoleCommands:registerConsoleCommand("cpSettingsPrintVehicle",
         "Prints the vehicle settings or a given setting", 
         "consoleCommandPrintSetting", CpVehicleSettings)
 end
@@ -486,7 +509,7 @@ end
 --- Either prints all settings or a desired setting by the name or index in the setting table.
 ---@param name any
 function CpVehicleSettings:consoleCommandPrintSetting(name)
-    local vehicle = g_currentMission.controlledVehicle
+    local vehicle = CpUtil.getCurrentVehicle()
     if not vehicle then 
         CpUtil.info("Not entered a valid vehicle!")
         return

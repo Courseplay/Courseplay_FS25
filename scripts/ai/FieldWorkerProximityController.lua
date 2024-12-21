@@ -133,7 +133,7 @@ function FieldWorkerProximityController:getMaxSpeed(distanceLimit, currentMaxSpe
     -- our trail should be long enough for everyone on the field, that is, at least as long as their
     -- convoy distance setting.
     local maxConvoyDistance = distanceLimit
-    for _, otherVehicle in pairs(g_currentMission.vehicles) do
+    for _, otherVehicle in pairs(g_currentMission.vehicleSystem.vehicles) do
         if otherVehicle ~= self.vehicle and self:hasSameCourse(otherVehicle) and
                 otherVehicle.getIsCpFieldWorkActive and otherVehicle:getIsCpFieldWorkActive() then
             local otherStrategy = otherVehicle:getCpDriveStrategy()

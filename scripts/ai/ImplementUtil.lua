@@ -379,8 +379,8 @@ function ImplementUtil.moveMovingToolToRotation(implement, tool, dt, rotTarget, 
 	tool.curRot[1], tool.curRot[2], tool.curRot[3] = getRotation(tool.node)
 	local oldRot = tool.curRot[tool.rotationAxis]
 	local diff = rotTarget - oldRot
-    local dir = MathUtil.sign(diff)
-	local rotSpeed = MathUtil.clamp( math.abs(diff) * math.abs(tool.rotSpeed), math.abs(tool.rotSpeed)/3, 0.5 )
+    local dir = math.sign(diff)
+	local rotSpeed = CpMathUtil.clamp( math.abs(diff) * math.abs(tool.rotSpeed), math.abs(tool.rotSpeed)/3, 0.5 )
     rotSpeed = dir * rotSpeed
 	if math.abs(diff) < minDiffNeeded or rotSpeed == 0 then
 		ImplementUtil.stopMovingTool(implement, tool)

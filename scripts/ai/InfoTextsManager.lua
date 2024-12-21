@@ -38,6 +38,7 @@ function CpInfoTextElement:init(name, text, id, hasFinished, event, aiMessageCla
 	if aiMessageClass then 
 		self.aiMessageClass = CpUtil.getClassObject(aiMessageClass)
 	end
+	MessageType.CP_INFO_TEXT_CHANGED = nextMessageTypeId()
 end
 
 function CpInfoTextElement:__tostring()
@@ -204,6 +205,7 @@ function InfoTextManager:changeNumActiveTexts()
 	if InfoTextManager.numActiveTexts > 10 then 
 		InfoTextManager.numActiveTexts = -1
 	end
+	g_messageCenter:publishDelayed(MessageType.CP_INFO_TEXT_CHANGED)
 end
 
 g_infoTextManager = InfoTextManager()

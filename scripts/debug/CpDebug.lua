@@ -169,9 +169,9 @@ end
 function CpDebug:drawVehicleDebugTable(vehicle, info, height, size)
 	
 	local d = DebugInfoTable.new()
-
-	d:createWithNodeToCamera(vehicle.rootNode, height or 4, info, size or 0.05)
-	g_debugManager:addFrameElement(d)
+	-- TODO 25
+	--d:createWithNodeToCamera(vehicle.rootNode, height or 4, info, size or 0.05)
+	--g_debugManager:addFrameElement(d)
 
 end
 

@@ -15,7 +15,7 @@ CpBaseHud.BACKGROUND_COLOR = {0, 0, 0, 0.7}
 CpBaseHud.DARK_BACKGROUND_COLOR = {0, 0, 0, 0.8}
 
 CpBaseHud.HEADER_COLOR = {
-    0, 0.4, 0.6, 1
+    0.22323, 0.40724, 0.00368, 1
 }
 CpBaseHud.BASE_COLOR = {1, 1, 1, 1}
 
@@ -34,80 +34,6 @@ CpBaseHud.titleFontSize = 20
 CpBaseHud.defaultFontSize = 16
 
 CpBaseHud.numLines = 8
-
-CpBaseHud.uvs = {
-    plusSymbol = {
-        {0, 512, 128, 128}
-    },
-    minusSymbol = {
-        {128, 512, 128, 128}
-    },
-    leftArrowSymbol = {
-        {384, 512, 128, 128}
-    },
-    rightArrowSymbol = {
-        {512, 512, 128, 128}
-    },
-    pasteSymbol = {
-        {255, 639, 128, 128}
-    },
-    copySymbol = {
-        {127, 637, 128, 128}
-    },
-    driveNowSymbol = {
-        {0, 768, 128, 128}
-    },
-    goalSymbol = GuiUtils.getUVs({
-        788,
-	30,
-	44,
-	44
-    }, AITargetHotspot.FILE_RESOLUTION),
-    
-    exitSymbol = {
-        {148, 184, 32, 32}, {256, 512}
-    },
-    circleSymbol = {
-        {0, 366, 28, 28}, {256, 512}
-    },
-    pauseSymbol = {
-        {40, 328, 32, 32}, {256, 512}
-    },
-    clearCourseSymbol = {
-        {40, 256, 32, 32}, {256, 512}
-    },
-    eye = { 
-        {148, 148, 32, 32}, {256, 512}
-    },
-    refresh = { 
-        {220, 220, 32, 32}, {256, 512}
-    },
-    cpIcon = {
-        {80, 26, 144, 144}, {256, 256}
-    },
-    shovelSymbol = {
-        {128, 128, 128, 128}
-    },
-    bunkerSymbol = {
-        {256, 128, 128, 128}
-    },
-    fieldWorkSymbol = {
-        {7*128, 128, 128, 128}
-    },
-    streetLoadAndUnloadSymbol = {
-        {0, 3*128, 128, 128}
-    },
-    unloaderSymbol = {
-        {128, 3*128, 128, 128}
-    },
-    streetDriveToSymbol = {
-        {5*128, 3*128, 128, 128}
-    },
-    baleFinderSymbol = {
-        {7*128, 3*128, 128, 128}
-    },
-
-}
 
 --- Vertical + horizontal overlay alignment
 CpBaseHud.alignments = {
@@ -174,7 +100,6 @@ function CpBaseHud:init(vehicle)
     self.lines[self.numLines-1].left[2] = self.lines[self.numLines-1].left[2] - self.hMargin/2
     self.lines[self.numLines-1].right[2] = self.lines[self.numLines-1].right[2] - self.hMargin/2
     self.lines[self.numLines].right[2] = self.lines[self.numLines].right[2] - self.hMargin/4
-    
     local background = CpGuiUtil.createOverlay({self.width, self.height},
                                             {g_baseUIFilename, g_colorBgUVs}, 
                                             self.BACKGROUND_COLOR,
@@ -184,7 +109,10 @@ function CpBaseHud:init(vehicle)
     self.baseHud = CpHudMoveableElement.new(background)
     self.baseHud:setPosition(CpBaseHud.x, CpBaseHud.y)
     self.baseHud:setDimension(self.width, self.height)
-    self.baseHud:setCallback("onMove", self, self.moveToPosition)
+    self.baseHud:setCallback("onMove", self, function (self, _, x, y)
+        CpBaseHud.x = x
+        CpBaseHud.y = y
+    end)
 
     self.fieldworkLayout = self:addHudPage(CpFieldWorkHudPageElement, vehicle)
 
@@ -213,8 +141,6 @@ function CpBaseHud:init(vehicle)
 
     local leftTopText = CpTextHudElement.new(self.baseHud, CpBaseHud.x + self.wMargin, CpBaseHud.y + self.hMargin/4 + self.height - headerHeight, self.headerFontSize)
     leftTopText:setTextDetails("Courseplay")
-    local rightTopText = CpTextHudElement.new(self.baseHud, CpBaseHud.x + self.width - 3*self.wMargin/2, CpBaseHud.y + self.hMargin/4 + self.height - headerHeight, self.headerFontSize, RenderText.ALIGN_RIGHT)
-    rightTopText:setTextDetails(g_Courseplay.currentVersion)
 
     --------------------------------------
     --- Left side
@@ -223,7 +149,8 @@ function CpBaseHud:init(vehicle)
     --- Cp icon 
     local cpIconWidth, height = getNormalizedScreenValues(22, 22)
     local cpIconOverlay = CpGuiUtil.createOverlay({cpIconWidth, height},
-                                                    {Utils.getFilename("img/courseplayIconHud.dds", Courseplay.BASE_DIRECTORY), GuiUtils.getUVs(unpack(self.uvs.cpIcon))}, 
+                                                    {Utils.getFilename("img/courseplayIconHud.dds", Courseplay.BASE_DIRECTORY), 
+                                                    GuiUtils.getUVs({80, 26, 144, 144}, {256, 256})}, 
                                                     self.BASE_COLOR,
                                                     self.alignments.bottomLeft)
     self.cpIcon = CpHudButtonElement.new(cpIconOverlay, self.baseHud)
@@ -249,7 +176,7 @@ function CpBaseHud:init(vehicle)
                             end, self.vehicle)
      
     local x, y = unpack(self.lines[6].left)
-    local spacerLineOverlay = Overlay.new("dataS/scripts/shared/graph_pixel.png", 
+    local spacerLineOverlay = Overlay.new('dataS/menu/base/graph_pixel.dds', 
         x, y, self.width - 2 * self.wMargin, self.hMargin/8)
     spacerLineOverlay:setColor(unpack(self.OFF_COLOR))
     spacerLineOverlay:setAlignment(Overlay.ALIGN_VERTICAL_MIDDLE)
@@ -258,47 +185,62 @@ function CpBaseHud:init(vehicle)
     --------------------------------------
     --- Right side
     --------------------------------------
-
     --- Exit button                                                  
-    local width, height = getNormalizedScreenValues(18, 18)
-    local imageFilename = Utils.getFilename('img/iconSprite.dds', g_Courseplay.BASE_DIRECTORY)
-    local exitBtnOverlay = CpGuiUtil.createOverlay({width, height},
-                                                    {imageFilename, GuiUtils.getUVs(unpack(self.uvs.exitSymbol))}, 
-                                                    self.WHITE_COLOR,
-                                                    self.alignments.bottomRight)
-
+    local exitWidth, height = getNormalizedScreenValues(18, 18)
+    local exitBtnOverlay = CpGuiUtil.createOverlayFromSlice(
+        "cpIconSprite.crossCircle", 
+        {exitWidth, height},
+        self.WHITE_COLOR,
+        self.alignments.bottomRight)
+    
     self.exitBtn = CpHudButtonElement.new(exitBtnOverlay, self.baseHud)
-    local x, y = CpBaseHud.x + self.width -width/3 , CpBaseHud.y + self.height - headerHeight + self.hMargin/12
+    local x, y = CpBaseHud.x + self.width -exitWidth/3 , CpBaseHud.y + self.height - headerHeight + self.hMargin/12
     self.exitBtn:setPosition(x, y) 
     self.exitBtn:setCallback("onClickPrimary", self.vehicle, function (vehicle)
         vehicle:closeCpHud()
     end)
+    local width, height = getNormalizedScreenValues(20, 20)
+    local helpMenuOverlay = CpGuiUtil.createOverlayFromSlice(
+        "gui.icon_options_help2", 
+        {width, height},
+        self.WHITE_COLOR,
+        self.alignments.bottomRight)
 
+    self.helpMenuBtn = CpHudButtonElement.new(helpMenuOverlay, self.baseHud)
+    local x, y = CpBaseHud.x + self.width -width/3 - exitWidth - self.wMargin/2, CpBaseHud.y + self.height - headerHeight + self.hMargin/12
+    self.helpMenuBtn:setPosition(x, y) 
+    self.helpMenuBtn:setCallback("onClickPrimary", self.vehicle, function (vehicle)
+        CpGuiUtil.openHelpMenuGui()
+    end)
+    local rightTopText = CpTextHudElement.new(self.baseHud, x - 3*self.wMargin/2, CpBaseHud.y + self.hMargin/4 + self.height - headerHeight, self.headerFontSize, RenderText.ALIGN_RIGHT)
+    rightTopText:setTextDetails(g_Courseplay.currentVersion)
 
     --- Create start/stop button
     local onOffBtnWidth, height = getNormalizedScreenValues(20, 20)
-    local onOffIndicatorOverlay = CpGuiUtil.createOverlay({onOffBtnWidth, height},
-                                                        {g_baseUIFilename, GuiUtils.getUVs(MixerWagonHUDExtension.UV.RANGE_MARKER_ARROW)}, 
-                                                        self.OFF_COLOR,
-                                                        self.alignments.bottomRight)
+    local onOffIndicatorOverlay = CpGuiUtil.createOverlayFromSlice(
+        "cpIconSprite.play", 
+        {onOffBtnWidth, height},
+        self.OFF_COLOR,
+        self.alignments.bottomRight)
+
     self.onOffButton = CpHudButtonElement.new(onOffIndicatorOverlay, self.baseHud)
     local x, y = unpack(self.lines[8].right)
-    self.onOffButton:setPosition(x, y)
+    self.onOffButton:setPosition(x, y - self.hMargin/8)
     self.onOffButton:setCallback("onClickPrimary", self.vehicle, function(vehicle)
         vehicle:cpStartStopDriver(true)
     end)
-    
+
     --- Create start/stop field boarder record button
     local recordingBtnWidth, height = getNormalizedScreenValues(18, 18)
-    local imageFilename = Utils.getFilename('img/iconSprite.dds', g_Courseplay.BASE_DIRECTORY)
-    local circleOverlay = CpGuiUtil.createOverlay({recordingBtnWidth, height},
-                                                {imageFilename, GuiUtils.getUVs(unpack(self.uvs.circleSymbol))}, 
-                                                self.OFF_COLOR,
-                                                self.alignments.bottomRight)
+    local circleOverlay = CpGuiUtil.createOverlayFromSlice(
+        "cpIconSprite.circle", 
+        {recordingBtnWidth, height},
+        self.OFF_COLOR,
+        self.alignments.bottomRight)
     self.startStopRecordingBtn = CpHudButtonElement.new(circleOverlay, self.baseHud)
     local x, y = unpack(self.lines[8].right)
     x = x - onOffBtnWidth - self.wMargin/2
-    self.startStopRecordingBtn:setPosition(x, y)
+    self.startStopRecordingBtn:setPosition(x, y - self.hMargin/16)
     self.startStopRecordingBtn:setCallback("onClickPrimary", self.vehicle, function (vehicle)
         if vehicle:getIsCpCourseRecorderActive() then 
             vehicle:cpStopCourseRecorder()
@@ -308,11 +250,12 @@ function CpBaseHud:init(vehicle)
     end)
     
     --- Create start/stop field boarder record button
-    local circleOverlay = CpGuiUtil.createOverlay({recordingBtnWidth, height},
-                                                {imageFilename, GuiUtils.getUVs(unpack(self.uvs.pauseSymbol))}, 
-                                                self.OFF_COLOR,
-                                                self.alignments.bottomRight)
-    self.pauseRecordingBtn = CpHudButtonElement.new(circleOverlay, self.baseHud)
+    local pauseOverlay = CpGuiUtil.createOverlayFromSlice(
+        "cpIconSprite.pause", 
+        {recordingBtnWidth, height},
+        self.OFF_COLOR,
+        self.alignments.bottomRight)
+    self.pauseRecordingBtn = CpHudButtonElement.new(pauseOverlay, self.baseHud)
     local x, y = unpack(self.lines[8].right)
     self.pauseRecordingBtn:setPosition(x, y)
     self.pauseRecordingBtn:setCallback("onClickPrimary", self.vehicle, function (vehicle)
@@ -323,11 +266,11 @@ function CpBaseHud:init(vehicle)
 
     --- Clear course button.
     local width, height = getNormalizedScreenValues(18, 18)
-    local imageFilename = Utils.getFilename('img/iconSprite.dds', g_Courseplay.BASE_DIRECTORY)
-    local clearCourseOverlay = CpGuiUtil.createOverlay({width, height},
-                                                {imageFilename, GuiUtils.getUVs(unpack(self.uvs.clearCourseSymbol))}, 
-                                                self.OFF_COLOR,
-                                                self.alignments.bottomRight)
+    local clearCourseOverlay = CpGuiUtil.createOverlayFromSlice(
+        "cpIconSprite.clear", 
+        {width, height},
+        self.OFF_COLOR,
+        self.alignments.bottomRight)
     self.clearCourseBtn = CpHudButtonElement.new(clearCourseOverlay, self.baseHud)
     local x, y = unpack(self.lines[8].right)
     x = x - 2*width - self.wMargin/2 - self.wMargin/4
@@ -339,15 +282,16 @@ function CpBaseHud:init(vehicle)
     end)
 
     --- Goal button.
-    local width, height = getNormalizedScreenValues(34, 34)    
-    local goalOverlay = CpGuiUtil.createOverlay({width, height},
-                                                {AITargetHotspot.FILENAME, self.uvs.goalSymbol}, 
-                                                self.OFF_COLOR,
-                                                self.alignments.bottomRight)
+    local width, height = getNormalizedScreenValues(28, 28)    
+    local goalOverlay = CpGuiUtil.createOverlayFromSlice(
+        "gui.aiParameterPosition", 
+        {width, height},
+        self.OFF_COLOR,
+        self.alignments.bottomRight)
     
     self.goalBtn = CpHudButtonElement.new(goalOverlay, self.baseHud)
     local x, y = unpack(self.lines[7].right)
-    self.goalBtn:setPosition(x + self.wMargin/4, y - self.hMargin/4)
+    self.goalBtn:setPosition(x + self.wMargin/4, y - self.hMargin/3)
     self.goalBtn:setCallback("onClickPrimary", vehicle, function (vehicle)
         self:openCourseGeneratorGui(vehicle)
     end)
@@ -384,14 +328,15 @@ function CpBaseHud:addLeftLineTextButton(parent, line, textSize, callbackFunc, c
     return element
 end
 
-function CpBaseHud:addLeftLineTextButtonWithIcon(parent, line, textSize, callbackFunc, callbackClass, iconWidth, iconHeight, iconFilePath)
+function CpBaseHud:addLeftLineTextButtonWithIcon(parent, line, textSize, callbackFunc, callbackClass, iconWidth, iconHeight, iconSliceId)
     local x, y = unpack(self.lines[line].left)
     local width, height = getNormalizedScreenValues(iconWidth, iconHeight)
 
     local element = CpTextHudElement.new(parent, x + width + self.wMargin/4, y, textSize)
     element:setCallback("onClickPrimary", callbackClass, callbackFunc)
-    local overlay = CpGuiUtil.createOverlay({width, height},
-        {Utils.getFilename(iconFilePath, Courseplay.BASE_DIRECTORY), GuiUtils.getUVs({0,0,0,0})}, 
+    local overlay = CpGuiUtil.createOverlayFromSlice(
+        iconSliceId,
+        {width, height},
         self.OFF_COLOR,
         self.alignments.bottomLeft)
 
@@ -441,18 +386,18 @@ function CpBaseHud:addLineTextButton(parent, line, textSize, setting)
 end
 
 function CpBaseHud:addLineTextButtonWithIncrementalButtons(parent, line, textSize, setting)
-    local imageFilename = Utils.getFilename('img/ui_courseplay.dds', g_Courseplay.BASE_DIRECTORY)
-
     local width, height = getNormalizedScreenValues(16, 16)
-    local incrementalOverlay = CpGuiUtil.createOverlay({width, height},
-                                                            {imageFilename, GuiUtils.getUVs(unpack(self.uvs.plusSymbol))}, 
-                                                            self.OFF_COLOR,
-                                                            self.alignments.bottomRight)
+    local incrementalOverlay = CpGuiUtil.createOverlayFromSlice(
+        "cpUi.plus", 
+        {width, height},
+        CpBaseHud.OFF_COLOR,
+        CpBaseHud.alignments.bottomRight)
 
-    local decrementalOverlay = CpGuiUtil.createOverlay({width, height},
-                                                        {imageFilename, GuiUtils.getUVs(unpack(self.uvs.minusSymbol))}, 
-                                                        self.OFF_COLOR,
-                                                        self.alignments.bottomLeft)
+    local decrementalOverlay = CpGuiUtil.createOverlayFromSlice(
+        "cpUi.minus", 
+        {width, height},
+        CpBaseHud.OFF_COLOR,
+        CpBaseHud.alignments.bottomLeft)
 
     local x, y = unpack(self.lines[line].left)
     local dx, dy = unpack(self.lines[line].right)
@@ -496,9 +441,8 @@ function CpBaseHud:addLineTextButtonWithIncrementalButtons(parent, line, textSiz
 end
 
 
-function CpBaseHud:moveToPosition(element, x, y)
-    CpBaseHud.x = x 
-    CpBaseHud.y = y
+function CpBaseHud:moveToPosition(x, y)
+    self.baseHud:moveTo(x, y)
 end
 
 function CpBaseHud:openClose(open)

@@ -794,9 +794,9 @@ function AIDriveStrategyCombineCourse:estimateDistanceUntilFull(ix)
         self.fillLevelAtLastWaypoint = fillLevel
     end
     local litersUntilFull = capacity - fillLevel
-    local dUntilFull = litersUntilFull / self.litersPerMeter
+    local dUntilFull = CpMathUtil.divide(litersUntilFull, self.litersPerMeter)
     local litersUntilCallUnloader = capacity * self.settings.callUnloaderPercent:getValue() / 100 - fillLevel
-    local dUntilCallUnloader = litersUntilCallUnloader / self.litersPerMeter
+    local dUntilCallUnloader = CpMathUtil.divide(litersUntilCallUnloader, self.litersPerMeter)
     self.waypointIxWhenFull = self.course:getNextWaypointIxWithinDistance(ix, dUntilFull) or self.course:getNumberOfWaypoints()
     local wpDistance
     self.waypointIxWhenCallUnloader, wpDistance = self.course:getNextWaypointIxWithinDistance(ix, dUntilCallUnloader)
@@ -967,7 +967,7 @@ end
 function AIDriveStrategyCombineCourse:findUnloader(combine, waypoint)
     local bestScore = -math.huge
     local bestUnloader, bestEte
-    for _, vehicle in pairs(g_currentMission.vehicles) do
+    for _, vehicle in pairs(g_currentMission.vehicleSystem.vehicles) do
         if AIDriveStrategyUnloadCombine.isActiveCpCombineUnloader(vehicle) then
             local x, _, z = getWorldTranslation(self.vehicle.rootNode)
             ---@type AIDriveStrategyUnloadCombine
@@ -1306,7 +1306,7 @@ function AIDriveStrategyCombineCourse:shouldHoldInTurnManeuver()
     local discharging = self:isDischarging() and not self:alwaysNeedsUnloader()
     local stillProcessingFruit = self:alwaysNeedsUnloader() and self:isProcessingFruit()
     local isFinishingRow = self.aiTurn and self.aiTurn:isFinishingRow()
-    local waitForStraw = self.combineController:isDroppingStrawSwath() and not isFinishingRow
+    local waitForStraw = self.combineController:isDroppingStrawSwath() and not isFinishingRow and not self:isOnHeadland()
 
     self:debugSparse('Turn maneuver=> Autoaim: %s, discharging: %s, wait for straw: %s, straw swath active: %s, processing: %s, finishing row: %s',
             tostring(self:hasAutoAimPipe()), tostring(discharging), tostring(waitForStraw),
@@ -1494,7 +1494,8 @@ function AIDriveStrategyCombineCourse:handlePipe(dt)
 end
 
 function AIDriveStrategyCombineCourse:handleCombinePipe(dt)
-    if self:isAGoodTrailerInRange() or self:isAutoDriveWaitingForPipe() then
+    -- don't open the pipe while turning
+    if self:isPipeOpenEnabled() and (self:isAGoodTrailerInRange() or self:isAutoDriveWaitingForPipe()) then
         self.pipeController:openPipe()
     else
         if not self.forcePipeOpen:get() then
@@ -1503,6 +1504,18 @@ function AIDriveStrategyCombineCourse:handleCombinePipe(dt)
             -- upwards
             self.pipeController:closePipe(true)
         end
+    end
+end
+
+--- we don't want random triggers to open the pipe while turning or driving to another trailer
+function AIDriveStrategyCombineCourse:isPipeOpenEnabled()
+    if self:isTurning() then
+        return false
+    elseif self.state == self.states.UNLOADING_ON_FIELD and
+            self:isUnloadStateOneOf(self.drivingToSelfUnloadStates) and not self:isCloseToCourseEnd(10) then
+        return false
+    else
+        return true
     end
 end
 
@@ -2013,7 +2026,7 @@ function AIDriveStrategyCombineCourse:measureBackDistance()
     -- raycast from a point behind the vehicle forward towards the direction node
     local nx, ny, nz = localDirectionToWorld(AIUtil.getDirectionNode(self.vehicle), 0, 0, 1)
     local x, y, z = localToWorld(AIUtil.getDirectionNode(self.vehicle), 0, 1.5, -self.maxBackDistance)
-    raycastAll(x, y, z, nx, ny, nz, 'raycastBackCallback', self.maxBackDistance, self)
+    raycastAll(x, y, z, nx, ny, nz, self.maxBackDistance, 'raycastBackCallback', self)
 end
 
 -- I believe this tries to figure out how far the back of a combine is from its direction node.

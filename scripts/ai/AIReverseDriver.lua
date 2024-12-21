@@ -109,21 +109,21 @@ function AIReverseDriver:getDriveData()
         local rotDelta = (self.reversingImplement.reversingProperties.nodeDistance *
                 (0.5 - (0.023 * self.reversingImplement.reversingProperties.nodeDistance - 0.073)))
         local trailerToWaypointAngle = self:getLocalYRotationToPoint(trailerNode, tx, ty, tz, -1) * rotDelta
-        trailerToWaypointAngle = MathUtil.clamp(trailerToWaypointAngle, -math.rad(90), math.rad(90))
+        trailerToWaypointAngle = CpMathUtil.clamp(trailerToWaypointAngle, -math.rad(90), math.rad(90))
 
         local dollyToTrailerAngle = self:getLocalYRotationToPoint(trailerFrontNode, xTrailer, yTrailer, zTrailer, -1)
 
         local tractorToDollyAngle = self:getLocalYRotationToPoint(tractorNode, xFrontNode, yFrontNode, zFrontNode, -1)
 
         local rearAngleDiff = (dollyToTrailerAngle - trailerToWaypointAngle)
-        rearAngleDiff = MathUtil.clamp(rearAngleDiff, -math.rad(45), math.rad(45))
+        rearAngleDiff = CpMathUtil.clamp(rearAngleDiff, -math.rad(45), math.rad(45))
 
         local frontAngleDiff = (tractorToDollyAngle - dollyToTrailerAngle)
-        frontAngleDiff = MathUtil.clamp(frontAngleDiff, -math.rad(45), math.rad(45))
+        frontAngleDiff = CpMathUtil.clamp(frontAngleDiff, -math.rad(45), math.rad(45))
 
         angleDiff = (frontAngleDiff - rearAngleDiff) *
                 (1.5 - (self.reversingImplement.reversingProperties.nodeDistance * 0.4 - 0.9) + rotDelta)
-        angleDiff = MathUtil.clamp(angleDiff, -math.rad(45), math.rad(45))
+        angleDiff = CpMathUtil.clamp(angleDiff, -math.rad(45), math.rad(45))
 
         lx, lz = MathUtil.getDirectionFromYRotation(angleDiff)
     else
@@ -131,7 +131,7 @@ function AIReverseDriver:getDriveData()
         -- is supported by the tractor
         local crossTrackError, orientationError, curvatureError, currentHitchAngle = self:calculateErrors(tractorNode, trailerNode)
         angleDiff = self:calculateHitchCorrectionAngle(crossTrackError, orientationError, curvatureError, currentHitchAngle)
-        angleDiff = MathUtil.clamp(angleDiff, -maxTractorAngle, maxTractorAngle)
+        angleDiff = CpMathUtil.clamp(angleDiff, -maxTractorAngle, maxTractorAngle)
 
         lx, lz = MathUtil.getDirectionFromYRotation(angleDiff)
     end
@@ -264,7 +264,7 @@ function AIReverseDriver:calculateHitchCorrectionAngle(crossTrackError, orientat
                     kCeBase * curvatureError
     )
     local maxHitchAngle = math.rad(35)
-    hitchAngle = MathUtil.clamp(hitchAngle, -maxHitchAngle, maxHitchAngle)
+    hitchAngle = CpMathUtil.clamp(hitchAngle, -maxHitchAngle, maxHitchAngle)
 
     local correctionAngle = -(hitchAngle - currentHitchAngle)
 

@@ -125,6 +125,8 @@ function CpMathUtil.isPointInPolygon(polygon, x, z)
 	return pointInPolygon ~= -1
 end
 
+-- TODO: this isn't the distance to the edge, this is the distance to a vertex, so won't be accurate for polygons
+-- with long edges
 function CpMathUtil.getClosestDistanceToPolygonEdge(polygon, x, z)
     local closestDistance = math.huge
     for _, p in ipairs(polygon) do
@@ -307,4 +309,14 @@ function CpMathUtil.angleFromGame(angle)
 		a = 2 * math.pi + a
 	end
 	return a
+end
+
+-- TODO: consider math.clamp instead, that is part of Luau
+function CpMathUtil.clamp(val, min, max)
+	return math.min(math.max(val, min), max)
+end
+
+--- Divide a by b, but instead of throwing an error when b is 0, return math.huge
+function CpMathUtil.divide(a, b)
+	return b == 0 and math.huge or a / b
 end

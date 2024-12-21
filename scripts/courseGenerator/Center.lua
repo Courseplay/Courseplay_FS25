@@ -12,21 +12,22 @@ local Center = CpObject()
 ---@param headland CourseGenerator.Headland|nil the innermost headland if exists
 ---@param startLocation Vector location of the vehicle before it starts working on the center.
 ---@param bigIslands CourseGenerator.Island[] islands too big to circle
-function Center:init(context, boundary, headland, startLocation, bigIslands)
+---@param noVirtualHeadland boolean if true, do not generate a virtual headland, just use the boundary as is
+function Center:init(context, boundary, headland, startLocation, bigIslands, noVirtualHeadland)
     self.logger = Logger('Center', Logger.level.debug)
     self.context = context
     if headland == nil then
         -- if there are no headlands, we generate a virtual one, from the field boundary
         -- so using this later is equivalent of having an actual headland
         -- using the nominal (without overlap) working the width for the headland, since the rows adjacent to the
-        -- headland must not extend beyond the field boundary
+        -- headland must not extend beyond the field boundary, unless we don't want to have a virtual headland
+        -- and want to use the actual field boundary instead, such as when detecting islands
         local virtualHeadland = CourseGenerator.FieldworkCourseHelper.createVirtualHeadland(boundary, self.context.headlandClockwise,
-                self.context.workingWidth)
+                noVirtualHeadland and 0 or self.context.workingWidth)
         if self.context.sharpenCorners then
             virtualHeadland:sharpenCorners(self.context.turningRadius)
         end
         self.headlandPolygon = virtualHeadland:getPolygon()
-        CourseGenerator.addDebugPolyline(self.headlandPolygon, { 1, 1, 0, 0.5 })
         self.headland = virtualHeadland
         self.mayOverlapHeadland = false
     else
@@ -34,6 +35,7 @@ function Center:init(context, boundary, headland, startLocation, bigIslands)
         self.headland = headland
         self.mayOverlapHeadland = true
     end
+    CourseGenerator.addDebugPolyline(self.headlandPolygon, {0, 0, 1, 0.2})
     self.useBaselineEdge = self.context.useBaselineEdge
     self.boundary = boundary
     self.startLocation = startLocation
@@ -172,7 +174,7 @@ function Center:generate()
         local sequencedBlocks, entries = chromosome:getBlockSequenceAndEntries()
         local distance, _ = calculateDistanceAndConnectingPaths(sequencedBlocks, entries)
         chromosome:setDistance(distance)
-        chromosome:setFitness(10000 / distance)
+        chromosome:setFitness(CpMathUtil.divide(10000, distance))
     end
 
     local blocksInSequence, entries, _ = CourseGenerator.BlockSequencer(blocks):findBlockSequence(calculateFitness)

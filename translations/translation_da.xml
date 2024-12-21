@@ -156,6 +156,7 @@
     <!--Vehicle settings-->
     <!---->
     <text name="CP_vehicle_setting_title" text="Køretøjsinstillinger (%s)"/>
+    <text name="CP_vehicle_setting_subTitle_vehicle" text="Vehicle settings"/>
     <text name="CP_vehicle_setting_subTitle_basic" text="Grundinstillinger"/>
     <text name="CP_vehicle_setting_subTitle_implement" text="Redskabsinstillinger"/>
     <text name="CP_vehicle_setting_subTitle_combine" text="Instillinger til mejetærsker"/>
@@ -271,6 +272,8 @@
     <!---->
     <text name="CP_vehicle_courseGeneratorSetting_title" text="Rutegenerator indstilling for (%s)"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="Rutegenerator indstilling for (%s)"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Vine field settings"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Fieldwork settings"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="Forager"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="Mitte"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Settings island"/>
@@ -501,6 +504,7 @@ Ruten gemmes automatisk ved lukning af editoren og tilsidesætter den valgte rut
     <!---->
     <!--Custom field manager-->
     <!---->
+    <text name="CP_customFieldManager_hotspotName" text="Custom field"/>
     <text name="CP_customFieldManager_confirm_save" text="Ønsker du at gemme den optegnede rute som en brugerdefineret mark %s?"/>
     <text name="CP_customFieldManager_confirm_delete" text="Ønsker du at slette den brugerdefinerede mark %s?"/>
     <text name="CP_customFieldManager_delete" text="Slet brugerdefineret mark"/>
@@ -515,6 +519,10 @@ Ruten gemmes automatisk ved lukning af editoren og tilsidesætter den valgte rut
     <text name="CP_controllerGui_stopRecording" text="Stop brugerdefineret markoptegnelse."/>
     <text name="CP_controllerGui_pauseRecording" text="Pause custom field recording."/>
     <text name="CP_controllerGui_unpauseRecording" text="Unpause custom field recording."/>
+    <!---->
+    <!--CP ingame menu-->
+    <!---->
+    <text name="CP_ingameMenu_map_title" text="Map"/>
     <!---->
     <!--Help menu-->
     <!---->
@@ -1017,6 +1025,7 @@ Now your selection should look similar to the image.
     <text name="input_CP_DBG_CHANNEL_MENU_VISIBILITY" text="CP: Vis debug channels menu ja/nej."/>
     <text name="input_CP_OPEN_CLOSE_VEHICLE_SETTING_DISPLAY" text="CP: Åbne mini GUI"/>
     <text name="input_CP_START_STOP" text="CP: Start/stop CP hjælper"/>
+    <text name="input_CP_GENERATE_COURSE" text="CP: Change current selected job"/>
     <text name="input_CP_CHANGE_SELECTED_JOB" text="CP: Change current selected job"/>
     <text name="input_CP_CHANGE_STARTING_POINT" text="CP: Skift start punkt"/>
     <text name="input_CP_CLEAR_COURSE" text="CP: Fjern nuværende aktive rute"/>

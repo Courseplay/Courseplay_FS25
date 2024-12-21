@@ -21,7 +21,6 @@ function ProximityController:init(vehicle, width)
     self.blockingVehicle = CpTemporaryObject(nil)
     self.blockingObject = CpTemporaryObject(nil)
     self.ignoreObjectCallbackRegistrations = {}
-    self:setState(self.states.NO_OBSTACLE, 'proximity controller initialized')
     local frontMarker, backMarker = Markers.getMarkerNodes(self.vehicle)
     self.forwardLookingProximitySensorPack = WideForwardLookingProximitySensorPack(
             self.vehicle, frontMarker, self.sensorRange, 1, width)
@@ -29,6 +28,7 @@ function ProximityController:init(vehicle, width)
             self.vehicle, backMarker, self.sensorRange, 1, self.vehicle.size.width)
 
     self.showBlockedByObjectMessageTimer = CpTemporaryObject(false)
+    self:setState(self.states.NO_OBSTACLE, 'proximity controller initialized')
 end
 
 function ProximityController:setState(state, debugString)

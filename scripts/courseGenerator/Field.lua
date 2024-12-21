@@ -17,6 +17,8 @@ function Field:init(id, num, boundary)
     self.islands = {}
     if boundary then
         self.boundary:calculateProperties()
+        -- Giants field polygons are usually just the corner vertices, our generator likes many vertices...
+        self.boundary:splitEdges(CourseGenerator.cMaxEdgeLength)
     end
 end
 

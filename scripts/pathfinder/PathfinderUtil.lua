@@ -1,5 +1,5 @@
 --[[
-This file is part of Courseplay (https://github.com/Courseplay/Courseplay_FS22)
+This file is part of Courseplay (https://github.com/Courseplay/Courseplay_FS25)
 Copyright (C) 2024 Courseplay Dev Team
 
 This program is free software: you can redistribute it and/or modify
@@ -175,7 +175,7 @@ end
 --- Is the land at this position owned by me?
 function PathfinderUtil.isWorldPositionOwned(posX, posZ)
     local farmland = g_farmlandManager:getFarmlandAtWorldPosition(posX, posZ)
-    local missionAllowed = g_missionManager:getIsMissionWorkAllowed(g_currentMission.player.farmId, posX, posZ, nil)
+    local missionAllowed = g_missionManager:getIsMissionWorkAllowed(g_currentMission.playerSystem:getLocalPlayer().farmId, posX, posZ, nil)
     return (farmland and farmland.isOwned) or missionAllowed
 end
 
@@ -288,7 +288,7 @@ function PathfinderUtil.CollisionDetector:overlapBoxCallback(transformId)
         if collidingObject:isa(Bale) then
             self:debug('collision with bale %d', collidingObject.id)
         else
-            self:debug('collision: %s', collidingObject:getName())
+            self:debug('collision: %s', collidingObject.getName and collidingObject:getName() or 'unknown')
         end
     end
     if getHasClassId(transformId, ClassIds.TERRAIN_TRANSFORM_GROUP) then
@@ -343,7 +343,7 @@ function PathfinderUtil.CollisionDetector:findCollidingShapes(node, vehicleData,
     self.collidingShapes = 0
     self.collidingShapesText = 'unknown'
 
-    local collisionMask = CollisionFlag.STATIC_WORLD + CollisionFlag.TREE + CollisionFlag.DYNAMIC_OBJECT + CollisionFlag.VEHICLE + CollisionFlag.TERRAIN_DELTA
+    local collisionMask = CpUtil.getDefaultCollisionFlags() + CollisionFlag.TERRAIN_DELTA
 
     overlapBox(x, y + 0.2, z, xRot, yRot, zRot, width, 1, length, 'overlapBoxCallback', self, collisionMask, true, true, true)
 
@@ -604,7 +604,9 @@ end
 ------------------------------------------------------------------------------------------------------------------------
 ---@param solver AnalyticSolver for instance PathfinderUtil.dubinsSolver or PathfinderUtil.reedsSheppSolver
 ---@param vehicleDirectionNode number Giants node
----@param startOffset number offset in meters relative to the vehicle position (forward positive, backward negative) where
+---@param startXOffset number offset in meters relative to the vehicle position (left positive, right negative) where
+--- we want the turn to start
+---@param startZOffset number offset in meters relative to the vehicle position (forward positive, backward negative) where
 --- we want the turn to start
 ---@param goalReferenceNode table node used to determine the goal
 ---@param xOffset number offset in meters relative to the goal node (left positive, right negative)
@@ -613,9 +615,9 @@ end
 ---@param turnRadius number vehicle turning radius
 ---@return table|nil path
 ---@return number length
-function PathfinderUtil.findAnalyticPath(solver, vehicleDirectionNode, startOffset, goalReferenceNode,
+function PathfinderUtil.findAnalyticPath(solver, vehicleDirectionNode, startXOffset, startZOffset, goalReferenceNode,
                                          xOffset, zOffset, turnRadius)
-    local x, z, yRot = PathfinderUtil.getNodePositionAndDirection(vehicleDirectionNode, 0, startOffset or 0)
+    local x, z, yRot = PathfinderUtil.getNodePositionAndDirection(vehicleDirectionNode, startXOffset, startZOffset or 0)
     local start = State3D(x, -z, CpMathUtil.angleFromGame(yRot))
     x, z, yRot = PathfinderUtil.getNodePositionAndDirection(goalReferenceNode, xOffset or 0, zOffset or 0)
     local goal = State3D(x, -z, CpMathUtil.angleFromGame(yRot))

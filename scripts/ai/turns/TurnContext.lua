@@ -230,6 +230,7 @@ end
 
 ---@return number angle (radian) between the row and the headland, 90 degrees means the headland is perpendicular to the row
 function TurnContext:getHeadlandAngle()
+    print(self.turnEndWp.angle, self.turnStartWp.angle)
     return  math.abs(CpMathUtil.getDeltaAngle(math.rad(self.turnEndWp.angle), math.rad(self.turnStartWp.angle)))
 end
 
@@ -382,7 +383,7 @@ end
 ---@param extraLength number add so many meters to the calculated course (for example to allow towed implements to align
 --- before reversing)
 ---@return number length added to the course in meters
-function TurnContext:appendEndingTurnCourse(course, extraLength, useTightTurnOffset)
+function TurnContext:appendEndingTurnCourse(course, extraLength)
     -- make sure course reaches the front marker node so end it well behind that node
     local _, _, dzFrontMarker = course:getWaypointLocalPosition(self.vehicleAtTurnEndNode, course:getNumberOfWaypoints())
     local _, _, dzWorkStart = course:getWaypointLocalPosition(self.workStartNode, course:getNumberOfWaypoints())
@@ -398,7 +399,7 @@ function TurnContext:appendEndingTurnCourse(course, extraLength, useTightTurnOff
             dzFrontMarker, dzWorkStart, extraLength)
     for d = math.min(dzFrontMarker, dzWorkStart) + 1, extraLength, 1 do
         local x, y, z = localToWorld(startNode, 0, 0, d)
-        table.insert(waypoints, {x = x, y = y, z = z, useTightTurnOffset = useTightTurnOffset or nil})
+        table.insert(waypoints, {x = x, y = y, z = z})
     end
     local oldLength = course:getLength()
     course:appendWaypoints(waypoints)

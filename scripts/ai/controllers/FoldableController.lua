@@ -40,3 +40,11 @@ function FoldableController:delete()
         Foldable.onRootVehicleChanged(self.implement, self.vehicle)
     end
 end
+
+function FoldableController:canContinueWork()
+    if self.foldActionWasRemoved then
+        return true
+    else
+        return self.foldableSpec:getIsUnfolded()
+    end
+end

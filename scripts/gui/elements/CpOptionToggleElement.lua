@@ -5,7 +5,7 @@ local CpOptionToggleElement_mt = Class(CpOptionToggleElement, OptionToggleElemen
 
 function CpOptionToggleElement.new(target, custom_mt)
 	local self = OptionToggleElement.new(target, custom_mt or CpOptionToggleElement_mt)
-
+	self.toolTipElement = nil
 	return self
 end
 
@@ -18,7 +18,6 @@ function CpOptionToggleElement:copyAttributes(src)
 	CpOptionToggleElement:superClass().copyAttributes(self, src)
 	self.onClickCenterCallback = src.onClickCenterCallback
 end
-
 
 function CpOptionToggleElement:onCenterButtonClicked()
 	self:raiseCallback("onClickCenterCallback", self)
@@ -38,11 +37,6 @@ function CpOptionToggleElement:addElement(element, ...)
 		self.textElement.target = self
 		self.textElement:setCallback("onClickCallback", "onCenterButtonClicked")
 	end
-	if self.namedComponents then
-		if element.name == "tooltip" then
-			self.toolTipElement = element
-		end
-	end
 end
 
 function CpOptionToggleElement:updateTitle()
@@ -53,8 +47,9 @@ function CpOptionToggleElement:updateTitle()
 	if self.labelElement and self.labelElement.setText then 
 		self.labelElement:setText(self.dataSource:getTitle())
 	end
-	if self.toolTipElement and self.toolTipElement.setText and self.dataSource.getTooltip then
-		self.toolTipElement:setText(self.dataSource:getTooltip())
+	self.toolTipElement = self:getDescendantByName("tooltip")
+	if self.toolTipElement then 
+		self.toolTipText = self.dataSource:getTooltip()
 	end
 end
 
@@ -89,12 +84,9 @@ function CpOptionToggleElement:inputEvent(action, value, eventUsed)
 	end
 	return eventUsed
 end
-
 function CpOptionToggleElement:raiseClickCallback(...)
 	CpOptionToggleElement:superClass().raiseClickCallback(self, ...)
 	--- Magic gui fix, no idea why this is needed ...
 	FocusManager:unsetFocus(self)
 end
-
-
-Gui.CONFIGURATION_CLASS_MAPPING.cpOptionToggle = CpOptionToggleElement 
+Gui.registerGuiElement("CpOptionToggle", CpOptionToggleElement)

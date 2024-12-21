@@ -368,7 +368,7 @@ function FieldworkCourse:findPathToNextRow(boundaryId, rowEnd, rowStart, minDist
     local headlands = self:_getCachedHeadlands(boundaryId)
     local headlandWidth = #headlands * self:_getHeadlandWorkingWidth()
     local usableHeadlandWidth = headlandWidth - (minDistanceFromRowEnd or 0)
-    local headlandPassNumber = CourseGenerator.clamp(math.floor(usableHeadlandWidth / self:_getHeadlandWorkingWidth()), 1, #headlands)
+    local headlandPassNumber = CpMathUtil.clamp(math.floor(usableHeadlandWidth / self:_getHeadlandWorkingWidth()), 1, #headlands)
     local headland = headlands[headlandPassNumber]
     if headland == nil then
         return Polyline()
@@ -455,7 +455,6 @@ function FieldworkCourse:_getHeadlandOffset(n)
         return self:_getHeadlandWorkingWidth(1) / 2
     else
         -- for n > 1, the headland width is with the overlap
-        print(n)
         return self:_getHeadlandWorkingWidth(1) + (n - 1 - 0.5) * self:_getHeadlandWorkingWidth(n)
     end
 end

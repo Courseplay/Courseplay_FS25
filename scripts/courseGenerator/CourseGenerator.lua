@@ -133,8 +133,9 @@ function CourseGenerator.addDebugPolyline(p, color)
         end
         lastDebugPolylineAdded = g_time
     end
-    p.debugColor = color
-    table.insert(CourseGenerator.debugPolylines, p)
+    local debugPolyline = p:clone()
+    debugPolyline.debugColor = color
+    table.insert(CourseGenerator.debugPolylines, debugPolyline)
 end
 
 --- Draw debug polylines in the game
@@ -147,9 +148,11 @@ function CourseGenerator.drawDebugPolylines()
         for i = 1, #p - 1 do
             local v1 = p[i]
             local v2 = p[i + 1]
-            local y1 = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, v1.x, 0, -v1.y)
-            local y2 = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, v2.x, 0, -v2.y)
-            DebugUtil.drawDebugLine(v1.x, y1 + 3.5, -v1.y, v2.x, y2 + 3.5, -v2.y, color[1], color[2], color[3])
+            if v1.x and v1.y and v2.x and v2.y then
+                local y1 = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, v1.x, 0, -v1.y)
+                local y2 = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, v2.x, 0, -v2.y)
+                DebugUtil.drawDebugLine(v1.x, y1 + 3.5, -v1.y, v2.x, y2 + 3.5, -v2.y, color[1], color[2], color[3])
+            end
         end
     end
 end

@@ -9,7 +9,7 @@ function AIMessageErrorIsFull.new(customMt)
 	return self
 end
 
-function AIMessageErrorIsFull:getMessage()
+function AIMessageErrorIsFull:getI18NText()
 	return g_i18n:getText("CP_ai_messageErrorIsFull")
 end
 
@@ -24,7 +24,7 @@ function AIMessageCpError.new(customMt)
 	return self
 end
 
-function AIMessageCpError:getMessage()
+function AIMessageCpError:getI18NText()
 	return g_i18n:getText("CP_ai_messageError")
 end
 
@@ -39,7 +39,7 @@ function AIMessageCpErrorNoPathFound.new(customMt)
 	return self
 end
 
-function AIMessageCpErrorNoPathFound:getMessage()
+function AIMessageCpErrorNoPathFound:getI18NText()
 	return g_i18n:getText("CP_ai_messageErrorNoPathFound")
 end
 
@@ -55,7 +55,7 @@ function AIMessageErrorWrongBaleWrapType.new(customMt)
 	return self
 end
 
-function AIMessageErrorWrongBaleWrapType:getMessage()
+function AIMessageErrorWrongBaleWrapType:getI18NText()
 	return g_i18n:getText("CP_ai_messageErrorWrongBaleWrapType")
 end
 
@@ -71,7 +71,7 @@ function AIMessageErrorGroundUnloadNotSupported.new(customMt)
 	return self
 end
 
-function AIMessageErrorGroundUnloadNotSupported:getMessage()
+function AIMessageErrorGroundUnloadNotSupported:getI18NText()
 	return g_i18n:getText("CP_ai_messageErrorGroundUnloadNotSupported")
 end
 
@@ -86,7 +86,7 @@ function AIMessageErrorCutterNotSupported.new(customMt)
 	return self
 end
 
-function AIMessageErrorCutterNotSupported:getMessage()
+function AIMessageErrorCutterNotSupported:getI18NText()
 	return g_i18n:getText("CP_ai_messageErrorCutterNotSupported")
 end
 
@@ -101,7 +101,7 @@ function AIMessageErrorAutomaticCutterAttachNotActive.new(customMt)
 	return self
 end
 
-function AIMessageErrorAutomaticCutterAttachNotActive:getMessage()
+function AIMessageErrorAutomaticCutterAttachNotActive:getI18NText()
 	return g_i18n:getText("CP_ai_messageErrorAutomaticCutterAttachNotActive")
 end
 
@@ -116,7 +116,7 @@ function AIMessageErrorWrongMissionFruitType.new(customMt)
 	return self
 end
 
-function AIMessageErrorWrongMissionFruitType:getMessage()
+function AIMessageErrorWrongMissionFruitType:getI18NText()
 	return g_i18n:getText("CP_ai_messageErrorWrongMissionFruitType")
 end
 

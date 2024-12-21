@@ -229,6 +229,7 @@ end
 ---@param w number
 function FieldworkContext:setHeadlandWorkingWidth(w)
     self.headlandWorkingWidth = w
+    return self
 end
 
 ---@return number width of a headland pass in meters
@@ -247,6 +248,7 @@ end
 --- no need for a CPU intensive, very long running block sequencing.
 function FieldworkContext:_setGenerateBlocksOnly()
     self.generateBlocksOnly = true
+    return self
 end
 
 function FieldworkContext:_generateBlocksOnly()
@@ -279,6 +281,7 @@ end
 ---@param w number
 function FieldworkContext:setCenterRowSpacing(w)
     self.centerRowSpacing = w
+    return self
 end
 
 ---@return number distance between two adjacent up/down rows.
@@ -289,6 +292,7 @@ end
 ---@see Row.adjustLength()
 function FieldworkContext:setCenterRowWidthForAdjustment(width)
     self.centerRowWidthForAdjustment = width
+    return self
 end
 
 --- Width of the row to use when adjusting a row length for full coverage where it meets the headland at an angle
@@ -300,6 +304,7 @@ end
 ---@see Row.adjustLength()
 function FieldworkContext:setHeadlandWidthForAdjustment(width)
     self.headlandWidthForAdjustment = width
+    return self
 end
 
 --- Width of the headland to use when adjusting a row length for full coverage where it meets the headland at an angle

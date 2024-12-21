@@ -8,7 +8,7 @@ CpInGameMenuAIFrameExtended.positionUvs = GuiUtils.getUVs({
 	4,
 	100,
 	100
-}, AITargetHotspot.FILE_RESOLUTION)
+}, AIPlaceableMarkerHotspot.FILE_RESOLUTION)
 
 CpInGameMenuAIFrameExtended.curDrawPositions={}
 CpInGameMenuAIFrameExtended.drawDelay = g_updateLoopIndex
@@ -47,7 +47,7 @@ function CpInGameMenuAIFrameExtended:onAIFrameLoadMapFinished()
 
 	CpInGameMenuAIFrameExtended.setupButtons(self)		
 
-	self:registerControls({"multiTextOptionPrefab","subTitlePrefab","courseGeneratorLayoutElements",
+	self:exposeControlsAsFields({"multiTextOptionPrefab","subTitlePrefab","courseGeneratorLayoutElements",
 		"courseGeneratorLayout","courseGeneratorHeader","drawingCustomFieldHeader", "drawingCustomFieldSubHeader",
 		"courseGeneratorFrame", "createCpMultiOptionTemplate", "createCpTextTemplate"})
 
@@ -113,7 +113,7 @@ function CpInGameMenuAIFrameExtended:onAIFrameLoadMapFinished()
 	local function onOpenInGameMenu(inGameMenu)
 		local pageAI = inGameMenu.pageAI
 		if CpInGameMenuAIFrameExtended.getVehicle() == nil then 
-			pageAI.lastVehicle = g_currentMission.controlledVehicle
+			pageAI.lastVehicle = CpUtil.getCurrentVehicle()
 		end
 	end
 	g_messageCenter:subscribe(MessageType.GUI_AFTER_CLOSE, onCloseInGameMenu, g_currentMission.inGameMenu)
@@ -484,10 +484,10 @@ function CpInGameMenuAIFrameExtended:draw()
 			if Input.isKeyPressed(Input.KEY_lshift) then
 				if math.abs(dx) > math.abs(dz) then 
 					dz = 0
-					dx = MathUtil.sign(dx)
+					dx = math.sign(dx)
 				else
 					dx = 0
-					dz = MathUtil.sign(dz)
+					dz = math.sign(dz)
 				end
 				worldX = pos.x + dx * length
 				worldZ = pos.z + dz * length
@@ -786,10 +786,10 @@ function CpInGameMenuAIFrameExtended:mouseEvent(superFunc,posX, posY, isDown, is
 					if Input.isKeyPressed(Input.KEY_lshift) then
 						if math.abs(dx) > math.abs(dz) then 
 							dz = 0
-							dx = MathUtil.sign(dx)
+							dx = math.sign(dx)
 						else
 							dx = 0
-							dz = MathUtil.sign(dz)
+							dz = math.sign(dz)
 						end
 						worldX = pos.x + dx * length
 						worldZ = pos.z + dz * length

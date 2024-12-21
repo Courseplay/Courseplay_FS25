@@ -113,8 +113,8 @@ function SimpleSign:setWaypointData(wp, np)
 		local ny = self:getHeight(np.x, np.z)
 		local yRot, xRot, dist = 0, 0, 0
 		dist = MathUtil.vector3Length(np.x - wp.x, ny - y, np.z - wp.z)
-		local dx, dy, dz = MathUtil.vector3Normalize(np.x - wp.x, ny - y, np.z - wp.z)
-		if dx == dx and dz == dz then
+		if dist > 0 then
+			local dx, dy, dz = MathUtil.vector3Normalize(np.x - wp.x, ny - y, np.z - wp.z)
 			xRot = -math.sin((ny-y)/dist)
 			yRot = MathUtil.getYRotationFromDirection(dx, dz)
 		end	

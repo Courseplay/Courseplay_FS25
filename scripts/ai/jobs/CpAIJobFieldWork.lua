@@ -33,8 +33,8 @@ function CpAIJobFieldWork:onPreStart()
     self:removeTask(self.driveToFieldWorkStartTask)
     self:removeTask(self.fieldWorkTask)
     local vehicle = self:getVehicle()
-    if vehicle and (AIUtil.hasCutterOnTrailerAttached(vehicle) 
-        or AIUtil.hasCutterAsTrailerAttached(vehicle)) then 
+    if vehicle and (AIUtil.hasCutterOnTrailerAttached(vehicle)
+        or AIUtil.hasCutterAsTrailerAttached(vehicle)) then
         --- Only add the attach header task, if needed.
         self:addTask(self.attachHeaderTask)
     end
@@ -49,19 +49,19 @@ end
 
 function CpAIJobFieldWork:isFinishingAllowed(message)
     local nextTaskIndex = self:getNextTaskIndex()
-	if message:isa(AIMessageErrorOutOfFill) then 
+	if message:isa(AIMessageErrorOutOfFill) then
         --- At least one implement type needs to be refilled.
-        
+
         local vehicle = self:getVehicle()
         local setting = vehicle:getCpSettings().refillOnTheField
 
-        if setting:getValue() == CpVehicleSettings.REFILL_ON_FIELD_DISABLED then 
+        if setting:getValue() == CpVehicleSettings.REFILL_ON_FIELD_DISABLED then
             return true
         elseif setting:getValue() == CpVehicleSettings.REFILL_ON_FIELD_WAITING then
             if self.currentTaskIndex == self.fieldWorkTask.taskIndex then
                 self.fieldWorkTask:setWaitingForRefillingActive()
             end
-        elseif setting:getValue() == CpVehicleSettings.REFILL_ON_FIELD_ACTIVE then 
+        elseif setting:getValue() == CpVehicleSettings.REFILL_ON_FIELD_ACTIVE then
             --- TODO_25 Add driving to trailer for refilling here and so on ..
             self.fieldWorkTask:skip()
         end
@@ -88,10 +88,10 @@ function CpAIJobFieldWork:applyCurrentState(vehicle, mission, farmId, isDirectSt
     self.cpJobParameters.fieldPosition:setPosition(x, z)
 
     if isStartPositionInvalid then
-        local x, _, z = getWorldTranslation(vehicle.rootNode) 
+        local x, _, z = getWorldTranslation(vehicle.rootNode)
         local dirX, _, dirZ = localDirectionToWorld(vehicle.rootNode, 0, 0, 1)
         local angle = MathUtil.getYRotationFromDirection(dirX, dirZ)
-        
+
         self.cpJobParameters.startPosition:setPosition(x, z)
         self.cpJobParameters.startPosition:setAngle(angle)
 
@@ -110,7 +110,7 @@ function CpAIJobFieldWork:validateFieldSetup(isValid, errorMessage)
 
     -- everything else is valid, now find the field
     local tx, tz = self.cpJobParameters.fieldPosition:getPosition()
-    if tx == nil or tz == nil then 
+    if tx == nil or tz == nil then
         return false, g_i18n:getText("CP_error_not_on_field")
     end
     self.hasValidPosition = false
@@ -222,8 +222,10 @@ function CpAIJobFieldWork:onClickGenerateFieldWorkCourse()
                 vineSettings.vineCenterOffset:getValue(),
                 tx, tz
         )
-        ok, course = CourseGeneratorInterface.generateVineCourse(vertices,
+        ok, course = CourseGeneratorInterface.generateVineCourse(
+                vertices,
                 startingPoint,
+                vehicle,
                 width,
                 AIUtil.getTurningRadius(vehicle),
                 rowAngleDeg,
@@ -242,27 +244,18 @@ function CpAIJobFieldWork:onClickGenerateFieldWorkCourse()
         )
     end
     if not ok then
-        g_gui:showInfoDialog({
-            dialogType = DialogElement.TYPE_ERROR,
-            text = g_i18n:getText('CP_error_could_not_generate_course')
-        })
+        InfoDialog.show(g_i18n:getText('CP_error_could_not_generate_course'),
+            nil, nil, DialogElement.TYPE_ERROR)
         return false
     end
-
-    vehicle:setFieldWorkCourse(course)
-    if course and course:getMultiTools() > 1 then
-        --- Um das Setting zu übernehmen warten wir bis der Kurs ins Fahrzeug geladen ist.
-        --- Zusätzlich muss dieses jetzt noch geupdated werden.
-        course:setPosition(vehicle:getCpLaneOffsetSetting():getValue())
-        SpecializationUtil.raiseEvent(vehicle, "onCpCourseChange", vehicle:getFieldWorkCourse(), true)
-    end
+    return true
 end
 
 function CpAIJobFieldWork:isPipeOnLeftSide(vehicle)
     local pipeObject = AIUtil.getImplementOrVehicleWithSpecialization(vehicle, Pipe)
     if pipeObject and SpecializationUtil.hasSpecialization(Combine, pipeObject.specializations) then
         --- The controller measures the pipe attributes on creation.
-        local controller = PipeController(vehicle, pipeObject)
+        local controller = PipeController(vehicle, pipeObject, true)
         local isPipeOnLeftSide = controller:isPipeOnTheLeftSide()
         controller:delete()
         return isPipeOnLeftSide
@@ -271,8 +264,8 @@ function CpAIJobFieldWork:isPipeOnLeftSide(vehicle)
     end
 end
 
-function CpAIJobFieldWork:getIsAvailableForVehicle(vehicle)
-    return vehicle.getCanStartCpFieldWork and vehicle:getCanStartCpFieldWork()
+function CpAIJobFieldWork:getIsAvailableForVehicle(vehicle, cpJobsAllowed)
+    return CpAIJob.getIsAvailableForVehicle(self, vehicle, cpJobsAllowed) and vehicle.getCanStartCpFieldWork and vehicle:getCanStartCpFieldWork() -- TODO_25
 end
 
 function CpAIJobFieldWork:resetStartPositionAngle(vehicle)

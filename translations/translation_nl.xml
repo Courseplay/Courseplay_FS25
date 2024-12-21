@@ -156,6 +156,7 @@
     <!--Vehicle settings-->
     <!---->
     <text name="CP_vehicle_setting_title" text="Voertuiginstellingen voor (%s)"/>
+    <text name="CP_vehicle_setting_subTitle_vehicle" text="Vehicle settings"/>
     <text name="CP_vehicle_setting_subTitle_basic" text="Basisinstellingen"/>
     <text name="CP_vehicle_setting_subTitle_implement" text="Werktuig instellingen"/>
     <text name="CP_vehicle_setting_subTitle_combine" text="Maaidorser instellingen"/>
@@ -271,6 +272,8 @@
     <!---->
     <text name="CP_vehicle_courseGeneratorSetting_title" text="Instellingen koersgenerator van (%s)"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="basis"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Vine field settings"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Fieldwork settings"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="wendakker"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="midden"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Settings island"/>
@@ -501,6 +504,7 @@ The course is saved automatically on closing of the editor and overrides the sel
     <!---->
     <!--Custom field manager-->
     <!---->
+    <text name="CP_customFieldManager_hotspotName" text="Custom field"/>
     <text name="CP_customFieldManager_confirm_save" text="Wil je de geregistreerde koers opslaan als aangepast veld %s?"/>
     <text name="CP_customFieldManager_confirm_delete" text="Wilt u het aangepaste veld %s verwijderen?"/>
     <text name="CP_customFieldManager_delete" text="Delete custom field"/>
@@ -515,6 +519,10 @@ The course is saved automatically on closing of the editor and overrides the sel
     <text name="CP_controllerGui_stopRecording" text="Stop aangepaste veldopname."/>
     <text name="CP_controllerGui_pauseRecording" text="Pause custom field recording."/>
     <text name="CP_controllerGui_unpauseRecording" text="Unpause custom field recording."/>
+    <!---->
+    <!--CP ingame menu-->
+    <!---->
+    <text name="CP_ingameMenu_map_title" text="Map"/>
     <!---->
     <!--Help menu-->
     <!---->
@@ -1013,6 +1021,7 @@ Now your selection should look similar to the image.
     <text name="input_CP_DBG_CHANNEL_MENU_VISIBILITY" text="CP: Toont debug kanaalmenu ja/nee."/>
     <text name="input_CP_OPEN_CLOSE_VEHICLE_SETTING_DISPLAY" text="CP: mini GUI openen"/>
     <text name="input_CP_START_STOP" text="CP: Start/stop driver"/>
+    <text name="input_CP_GENERATE_COURSE" text="CP: Change current selected job"/>
     <text name="input_CP_CHANGE_SELECTED_JOB" text="CP: Change current selected job"/>
     <text name="input_CP_CHANGE_STARTING_POINT" text="CP: Changes starting point"/>
     <text name="input_CP_CLEAR_COURSE" text="CP: Clears currently loaded course"/>

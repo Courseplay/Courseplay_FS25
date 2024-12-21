@@ -59,7 +59,8 @@ function CpObject(base, init)
 		end
 		return false
 	end
-	c.__tostring = function (self)
+	-- TODO 25 deactivated (no leading __) as the for loop, probably pairs() sometimes leads to a stack overflow
+	c.tostring = function (self)
 		-- Default tostring function for printing all attributes and assigned functions.
 		local str = '[ '
 		for attribute, value in pairs(self) do

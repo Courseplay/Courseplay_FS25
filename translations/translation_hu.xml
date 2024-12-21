@@ -156,6 +156,7 @@
     <!--Vehicle settings-->
     <!---->
     <text name="CP_vehicle_setting_title" text="CoursePlay jármű beállítások"/>
+    <text name="CP_vehicle_setting_subTitle_vehicle" text="Vehicle settings"/>
     <text name="CP_vehicle_setting_subTitle_basic" text="Alapbeállítások"/>
     <text name="CP_vehicle_setting_subTitle_implement" text="Eszközök beállításai"/>
     <text name="CP_vehicle_setting_subTitle_combine" text="Kombájn beállításai"/>
@@ -271,6 +272,8 @@
     <!---->
     <text name="CP_vehicle_courseGeneratorSetting_title" text="Az útvonaltervező beállításai (%s)"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="Általános"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Vine field settings"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Fieldwork settings"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="Fordulósáv"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="Sorok"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Settings island"/>
@@ -501,6 +504,7 @@ Az útvonal automatikusan mentésre kerül a szerkesztő bezárásakor és felü
     <!---->
     <!--Custom field manager-->
     <!---->
+    <text name="CP_customFieldManager_hotspotName" text="Custom field"/>
     <text name="CP_customFieldManager_confirm_save" text="El akarod menteni az útvonalat szántóföldként %s néven?"/>
     <text name="CP_customFieldManager_confirm_delete" text="Törlöd a %s szántóföldet?"/>
     <text name="CP_customFieldManager_delete" text="Szántóföld törlés"/>
@@ -515,6 +519,10 @@ Az útvonal automatikusan mentésre kerül a szerkesztő bezárásakor és felü
     <text name="CP_controllerGui_stopRecording" text="Szántóföld-határ rögzítés leállítása"/>
     <text name="CP_controllerGui_pauseRecording" text="Egyedi tábla rögzítés szüneteltetése."/>
     <text name="CP_controllerGui_unpauseRecording" text="Egyedi tábla rögzítés folytatása."/>
+    <!---->
+    <!--CP ingame menu-->
+    <!---->
+    <text name="CP_ingameMenu_map_title" text="Map"/>
     <!---->
     <!--Help menu-->
     <!---->
@@ -1023,6 +1031,7 @@ A kijelölésnek hasonlónak kell lennie, mint a képen.
     <text name="input_CP_DBG_CHANNEL_MENU_VISIBILITY" text="CP: Megjeleníti a hibakeresés menüjét igen/nem."/>
     <text name="input_CP_OPEN_CLOSE_VEHICLE_SETTING_DISPLAY" text="CP: Nyissa meg a mini GUI-t"/>
     <text name="input_CP_START_STOP" text="CP: Segítő indítás/leállítás"/>
+    <text name="input_CP_GENERATE_COURSE" text="CP: Change current selected job"/>
     <text name="input_CP_CHANGE_SELECTED_JOB" text="CP: Change current selected job"/>
     <text name="input_CP_CHANGE_STARTING_POINT" text="CP: Kiindulópont módosítása"/>
     <text name="input_CP_CLEAR_COURSE" text="CP: Törli az aktuálisan betöltött útvonalat"/>

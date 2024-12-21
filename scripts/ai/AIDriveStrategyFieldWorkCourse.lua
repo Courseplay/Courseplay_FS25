@@ -1,5 +1,5 @@
 --[[
-This file is part of Courseplay (https://github.com/Courseplay/Courseplay_FS22)
+This file is part of Courseplay (https://github.com/Courseplay/Courseplay_FS25)
 Copyright (C) 2021 Peter Vaiko
 
 This program is free software: you can redistribute it and/or modify
@@ -89,6 +89,7 @@ function AIDriveStrategyFieldWorkCourse:start(course, startIx, jobParameters)
         self:debug('Close enough to start waypoint %d, no alignment course needed', startIx)
         self:startCourse(course, startIx)
         self.state = self.states.INITIAL
+        self:prepareForFieldWork()
     end
     --- Store a reference to the original generated course
     self.originalGeneratedFieldWorkCourse = self.vehicle:getFieldWorkCourse()
@@ -97,6 +98,11 @@ function AIDriveStrategyFieldWorkCourse:start(course, startIx, jobParameters)
         self:debug("No field polygon received, so regenerate it by the course.")
         self.fieldPolygon = self.fieldWorkCourse:getFieldPolygon()
     end
+end
+
+--- Make sure all implements are in the working state
+function AIDriveStrategyFieldWorkCourse:prepareForFieldWork()
+    self.vehicle:raiseAIEvent('onAIFieldWorkerPrepareForWork', 'onAIImplementPrepareForWork')
 end
 
 --- Event raised when the driver has finished.
@@ -217,11 +223,13 @@ end
 function AIDriveStrategyFieldWorkCourse:setAITarget()
     --local dx, _, dz = localDirectionToWorld(self.vehicle:getAIDirectionNode(), 0, 0, 1)
     local wp = self.ppc:getCurrentWaypoint()
-    --- TODO: For some reason wp.dx and wp.dz are nil sometimes.
+    --- TODO: For some reason wp.dx and wp.dz are nil sometimes
     local dx, dz = wp.dx or 0, wp.dz or 0
-    local length = MathUtil.vector2Length(dx, dz)
-    dx = dx / length
-    dz = dz / length
+    if wp.dx ~= 0 or wp.dz ~= 0 then
+        local length = MathUtil.vector2Length(dx, dz)
+        dx = dx / length
+        dz = dz / length
+    end
     self.vehicle.aiDriveDirection = { dx, dz }
     local x, _, z = getWorldTranslation(self.vehicle:getAIDirectionNode())
     self.vehicle.aiDriveTarget = { x, z }
@@ -275,7 +283,8 @@ end
 -- true otherwise. Due to some timing issues it may return true just after we started lowering it, so we
 -- set a different state for those implements
 function AIDriveStrategyFieldWorkCourse:startWaitingForLower()
-    if AIUtil.hasAIImplementWithSpecialization(self.vehicle, SowingMachine) or self.ppc:isReversing() then
+    -- TODO 25 looks like we always need to wait that extra cycle with FS25
+    if true or AIUtil.hasAIImplementWithSpecialization(self.vehicle, SowingMachine) or self.ppc:isReversing() then
         -- sowing machines want to stop while the implement is being lowered
         -- also, when reversing, we assume that we'll switch to forward, so stop while lowering, then start forward
         self.state = self.states.WAITING_FOR_LOWER_DELAYED
@@ -561,6 +570,7 @@ function AIDriveStrategyFieldWorkCourse:startAlignmentTurn(fieldWorkCourse, star
         alignmentCourse = self:createAlignmentCourse(fieldWorkCourse, startIx)
     end
     self.ppc:setShortLookaheadDistance()
+    self:prepareForFieldWork()
     if alignmentCourse then
         local fm, bm = self:getFrontAndBackMarkers()
         self.turnContext = RowStartOrFinishContext(self.vehicle, fieldWorkCourse, startIx, startIx, self.turnNodes,
@@ -570,8 +580,9 @@ function AIDriveStrategyFieldWorkCourse:startAlignmentTurn(fieldWorkCourse, star
         self:startCourse(self.workStarter:getCourse(), 1)
     else
         self:debug('Could not create alignment course to first up/down row waypoint, continue without it')
-        self:startWaitingForLower()
-        self:lowerImplements()
+        self:startCourse(fieldWorkCourse, startIx)
+        self.state = self.states.INITIAL
+        self:prepareForFieldWork()
     end
 end
 
@@ -765,7 +776,7 @@ function AIDriveStrategyFieldWorkCourse:calculateTightTurnOffset()
     if self.state == self.states.WORKING or self.state == self.states.DRIVING_TO_WORK_START_WAYPOINT then
         -- when rounding small islands or to start on a course with curves
         self.tightTurnOffset = AIUtil.calculateTightTurnOffset(self.vehicle, self.turningRadius, self.course,
-                self.tightTurnOffset, true)
+                self.tightTurnOffset)
     else
         self.tightTurnOffset = 0
     end
@@ -836,3 +847,21 @@ end
 --- Makes sure the automatic work width isn't being reset.
 VariableWorkWidth.onAIFieldWorkerStart = Utils.overwrittenFunction(VariableWorkWidth.onAIFieldWorkerStart, emptyFunction)
 VariableWorkWidth.onAIImplementStart = Utils.overwrittenFunction(VariableWorkWidth.onAIImplementStart, emptyFunction)
+
+-- TODO 25
+-- This seems to be called when the Giants AI is done generating a field course, but we don't want the stock
+-- AI to do anything when the course is loaded, so we just return if the vehicle is a CP vehicle.
+local function noOpWhenCpActive(self, superFunc, ...)
+    -- TODO this also comes when we just stopped a CP vehicle right after it was started
+    if self.vehicle:getIsCpActive() then
+        return
+    end
+    return superFunc(self, ...)
+end
+AIDriveStrategyFieldCourse.onFieldCourseLoadedCallback = Utils.overwrittenFunction(AIDriveStrategyFieldCourse.onFieldCourseLoadedCallback, noOpWhenCpActive)
+
+-- TODO 25
+-- The other thing messing us up is the delete() when we remove the Giants strategies in CpAITaskFieldWork,
+-- because it triggers an AI end line event, raising all implements
+
+AIDriveStrategyFieldCourse.delete = Utils.overwrittenFunction(AIDriveStrategyFieldCourse.delete, noOpWhenCpActive)

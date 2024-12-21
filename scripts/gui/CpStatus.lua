@@ -143,6 +143,22 @@ function CpStatus:getTimeRemainingText()
     return self.remainingTimeText
 end
 
+function CpStatus:getText()
+    if not self.isActive then 
+        return ""
+    end
+    if self.fillLevelLeftOver ~= nil then 
+        return self:getSiloFillLevelPercentageLeftOver()
+    end
+    if self.compactionPercentage ~= nil then 
+        return self:getCompactionText()
+    end
+    if self.numBalesLeftOver ~= nil then 
+        return self:getBalesText()
+    end
+    return self.remainingTimeText or ""
+end
+
 function CpStatus:getIsActive()
     return self.isActive
 end

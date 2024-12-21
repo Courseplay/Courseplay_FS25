@@ -4,18 +4,7 @@
 	This frame is a page for the course manager.
 ]]--
 
-CpCourseManagerFrame = {
-	CONTROLS = {
-		HEADER = "header",
-		MAIN_BOC = "mainBox",
-		LEFT_COLUMN = "leftColumn",
-		RIGHT_COLUMN = "rightColumn",
-		LEFT_LIST = "leftList",
-		RIGHT_LIST = "rightList",
-		LEFT_COLUMN_HEADER ="leftColumnHeader",
-		RIGHT_COLUMN_HEADER = "rightColumnHeader",
-	},
-}
+CpCourseManagerFrame = {}
 
 CpCourseManagerFrame.translations = {
 	title = "CP_courseManager_title",
@@ -72,11 +61,42 @@ CpCourseManagerFrame.colors = {
 
 local CpCourseManagerFrame_mt = Class(CpCourseManagerFrame, TabbedMenuFrameElement)
 
-function CpCourseManagerFrame.new(courseStorage, target, custom_mt)
+function CpCourseManagerFrame.new(target, custom_mt)
 	local self = TabbedMenuFrameElement.new(target, custom_mt or CpCourseManagerFrame_mt)
-	self:registerControls(CpCourseManagerFrame.CONTROLS)
-	self.courseStorage = courseStorage
+
 	return self
+end
+
+function CpCourseManagerFrame.createFromExistingGui(gui, guiName)
+	local newGui = CpCourseManagerFrame.new(nil, nil)
+
+	g_gui.frames[gui.name].target:delete()
+	g_gui.frames[gui.name]:delete()
+	g_gui:loadGui(gui.xmlFilename, guiName, newGui, true)
+
+	return newGui
+end
+
+function CpCourseManagerFrame.setupGui()
+	local courseManagerFrame = CpCourseManagerFrame.new()
+	g_gui:loadGui(Utils.getFilename("config/gui/pages/CourseManagerFrame.xml", Courseplay.BASE_DIRECTORY),
+	 			 "CpCourseManagerFrame", courseManagerFrame, true)
+end
+
+function CpCourseManagerFrame.registerXmlSchema(xmlSchema, xmlKey)
+	
+end
+
+function CpCourseManagerFrame:loadFromXMLFile(xmlFile, baseKey)
+   
+end
+
+function CpCourseManagerFrame:saveToXMLFile(xmlFile, baseKey)
+   
+end
+
+function CpCourseManagerFrame:setCourseStorage(courseStorage)
+	self.courseStorage = courseStorage
 end
 
 function CpCourseManagerFrame:getCurrentEntry()
@@ -84,15 +104,14 @@ function CpCourseManagerFrame:getCurrentEntry()
 	if not layout then 
 		return
 	end
-	local element = layout:getSelectedElement()
-	return element.viewEntry
+	if layout.getSelectedElement then
+		local element = layout:getSelectedElement()
+		return element.viewEntry
+	end
 end
 
-function CpCourseManagerFrame:onGuiSetupFinished()
-	CpCourseManagerFrame:superClass().onGuiSetupFinished(self)
-	
-
-	
+function CpCourseManagerFrame:initialize(menu)	
+	self.cpMenu = menu
 	--- Changes the input actions.
 	self.modeButton = {
 		profile = "buttonActivate",
@@ -126,7 +145,10 @@ function CpCourseManagerFrame:onGuiSetupFinished()
 					local viewEntry = self:getCurrentEntry()
 					if viewEntry then
 						if not viewEntry:isDirectory() then 
-							self.currentVehicle:appendLoadedCpCourse(viewEntry:getEntity())
+							local vehicle = CpUtil.getCurrentVehicle()
+							if not vehicle:appendLoadedCpCourse(viewEntry:getEntity()) then 
+								--TODO_25 Error message missing!
+							end
 						else 
 							self.showInfoDialog(
 								self.translations.targetIsNoCourse, viewEntry)
@@ -185,9 +207,10 @@ function CpCourseManagerFrame:onGuiSetupFinished()
 				inputAction = InputAction.MENU_EXTRA_2,
 				text = g_i18n:getText(self.translations.createDirectory),
 				callback = function ()
+					local viewEntry = self:getCurrentEntry()
 					CpCourseManagerFrame.showInputTextDialog(
-					self, self.translations.folderDialogTitle,
-					self.onClickCreateDirectoryDialog)
+						self, self.translations.folderDialogTitle,
+						self.onClickCreateDirectoryDialog, viewEntry)
 				--	self.actionState = CpCourseManagerFrame.actionStates.createDirectory
 					self:updateMenuButtons()
 				end,
@@ -245,11 +268,10 @@ function CpCourseManagerFrame:onGuiSetupFinished()
 	self.rightList:setDataSource(self)
 end
 function CpCourseManagerFrame:onFrameOpen()
-	InGameMenuPricesFrame:superClass().onFrameOpen(self)
+	self:superClass().onFrameOpen(self)
 	self.curMode = self.minMode
 	self.actionState = self.actionStates.disabled
 	self.selectedEntry = nil
-	self.currentVehicle = CpInGameMenuAIFrameExtended.getVehicle()
 	self:setSoundSuppressed(true)
 	FocusManager:loadElementFromCustomValues(self.leftList)
 	FocusManager:loadElementFromCustomValues(self.rightList)
@@ -262,10 +284,10 @@ function CpCourseManagerFrame:onFrameOpen()
 end
 	
 function CpCourseManagerFrame:onFrameClose()
+	self:superClass().onFrameClose(self)
 	if self.moveElementSelected then
 		self.moveElementSelected.element:setAlternating(false)
 	end
-	InGameMenuPricesFrame:superClass().onFrameClose(self)
 	self.initialized = false
 end
 
@@ -293,15 +315,13 @@ end
 
 function CpCourseManagerFrame.setFolderIcon(element)
 	element.iconImageSize = {32, 32}
-	element:setImageFilename(Utils.getFilename('img/iconSprite.dds', g_Courseplay.BASE_DIRECTORY))
-	element:setImageUVs(nil, unpack(GuiUtils.getUVs({0, 220, 32, 32}, {256, 512})))
+	element:setImageSlice(nil, "cpIconSprite.folder")
 	element:setImageColor(nil, 0, 0, 0, 0.5)
 end
 
 function CpCourseManagerFrame.setCourseIcon(element)
 	element.iconImageSize = {32, 32}
-	element:setImageFilename(Utils.getFilename('img/iconSprite.dds', g_Courseplay.BASE_DIRECTORY))
-	element:setImageUVs(nil, unpack(GuiUtils.getUVs({40, 76, 32, 32}, {256, 512})))
+	element:setImageSlice(nil, "cpIconSprite.white_fieldworkCourse")
 	element:setImageColor(nil, 0, 0, 0, 0.5)
 end
 
@@ -459,18 +479,12 @@ end
 
 --- Updates the button at the bottom, which depends on the current select mode.
 function CpCourseManagerFrame:updateMenuButtons()
-	local courseName = self.currentVehicle:getCurrentCpCourseName()
-	local title = string.format(g_i18n:getText(self.translations.title), self.currentVehicle:getName(), courseName)
+	local vehicle = CpUtil.getCurrentVehicle()
+	local courseName = vehicle:getCurrentCpCourseName()
+	local title = string.format(g_i18n:getText(self.translations.title), vehicle:getName(), courseName)
 	
-	self.header:setText(title)
-	self.menuButtonInfo = {
-		{
-			inputAction = InputAction.MENU_BACK,
-		}
-	}
-	if self.courseStorage:getCanIterateBackwards() then
-		self.menuButtonInfo[1].callback = function () self:onClickIterateBack() end
-	end
+	self.categoryHeaderText:setText(title)
+	self.menuButtonInfo = table.clone(self.cpMenu.defaultMenuButtonInfo) 
 	if self.activateButton.callbackDisabled == nil or not self.activateButton.callbackDisabled(self) then
 		table.insert(self.menuButtonInfo, self.activateButton)
 	end
@@ -487,6 +501,14 @@ function CpCourseManagerFrame:updateMenuButtons()
 					or  g_i18n:getText(self.translations.advancedSettings)
 	self.rightColumnHeader:setText(text)
 	--self.rightToggleBtn:setText(text)
+end
+
+function CpCourseManagerFrame:onClickBack()
+	if self.courseStorage:getCanIterateBackwards() then
+		self:onClickIterateBack()
+		return true
+	end
+	return false
 end
 
 ---------------------------------------------------
@@ -514,9 +536,10 @@ end
 --- Clears the current courses.
 function CpCourseManagerFrame:onClickClearCurrentCourse()
 	CpUtil.debugFormat(CpUtil.DBG_HUD, "onClickClearCurrentCourse")
-	local hasCourse = self.currentVehicle:hasCpCourse()
+	local vehicle = CpUtil.getCurrentVehicle()
+	local hasCourse = vehicle:hasCpCourse()
 	if hasCourse then 
-		self.currentVehicle:resetCpCoursesFromGui()
+		vehicle:resetCpCoursesFromGui()
 	end
 	self:updateLists()
 end
@@ -532,11 +555,10 @@ function CpCourseManagerFrame:onClickSaveEntryDialog(text, clickOk, viewEntry)
 				self.translations.entryExistAlreadyError, viewEntry)
 			return 
 		end
-		if not self.currentVehicle:saveCpCourses(file, text) then 
-			g_gui:showInfoDialog({
-				text = string.format(g_i18n:getText(self.translations.invalidNameError), 
-					text)
-			})
+		local vehicle = CpUtil.getCurrentVehicle()
+		if not vehicle:saveCpCourses(file, text) then 
+			InfoDialog.show(
+				string.format(g_i18n:getText(self.translations.invalidNameError), text))
 		end
 	end
 end
@@ -611,39 +633,30 @@ end
 
 
 function CpCourseManagerFrame:showInputTextDialog(title, callbackFunc, viewEntry, defaultText)
-	g_gui:showTextInputDialog({
-		disableFilter = true,
-		callback = function (self, text, clickOk, viewEntry)
+	TextInputDialog.show(
+		function (self, text, clickOk, viewEntry)
 			text = CpUtil.cleanFilePath(text)
 			callbackFunc(self, text, clickOk, viewEntry)
 			self:updateLists()
 		end,
-		target = self,
-		defaultText = defaultText or "",
-		dialogPrompt = string.format(g_i18n:getText(title), viewEntry and viewEntry:getName()),
-		imePrompt = g_i18n:getText(title),
-		maxCharacters = 50,
-		confirmText = g_i18n:getText("button_ok"),
-		args = viewEntry
-	})
+		self, defaultText or "",  
+		string.format(g_i18n:getText(title), viewEntry and viewEntry:getName()),
+		g_i18n:getText(title), 50, g_i18n:getText("button_ok"), viewEntry)
 end
 
 function CpCourseManagerFrame:showYesNoDialog(title, callbackFunc, viewEntry)
-	g_gui:showYesNoDialog({
-		text = string.format(g_i18n:getText(title), viewEntry:getName()),
-		callback = function (self, clickOk, viewEntry)
+	YesNoDialog.show(
+		function (self, clickOk, viewEntry)
 			callbackFunc(self, clickOk, viewEntry)
 			self:updateLists()
 		end,
-		target = self,
-		args = viewEntry
-	})
+		self, string.format(g_i18n:getText(title), viewEntry:getName()),
+		nil, nil, nil, nil,
+		nil, nil, viewEntry)
 end
 
 function CpCourseManagerFrame.showInfoDialog(title, viewEntry)
-	g_gui:showInfoDialog({
-		text = string.format(g_i18n:getText(title), viewEntry:getName())
-	})
+	InfoDialog.show(string.format(g_i18n:getText(title), viewEntry:getName()))
 end
 
 ---------------------------------------------------
@@ -651,15 +664,18 @@ end
 ---------------------------------------------------
 
 function CpCourseManagerFrame:clearCurrentCourseDisabled()
-	return not self.currentVehicle:hasCpCourse() or self.actionState ~= self.actionStates.disabled
+	local vehicle = CpUtil.getCurrentVehicle()
+	return not vehicle:hasCpCourse() or self.actionState ~= self.actionStates.disabled
 end
 
 function CpCourseManagerFrame:loadCourseDisabled()
-	return self.currentVehicle:hasCpCourse() or self.actionState ~= self.actionStates.disabled or not self.courseStorage.currentDirectoryView:areEntriesVisible()
+	local vehicle = CpUtil.getCurrentVehicle()
+	return vehicle:hasCpCourse() or self.actionState ~= self.actionStates.disabled or not self.courseStorage.currentDirectoryView:areEntriesVisible()
 end
 
 function CpCourseManagerFrame:saveCourseDisabled()
-	return not self.currentVehicle:hasCpCourse() or self.actionState ~= self.actionStates.disabled or not self.courseStorage.currentDirectoryView:areEntriesVisible()
+	local vehicle = CpUtil.getCurrentVehicle()
+	return not vehicle:hasCpCourse() or self.actionState ~= self.actionStates.disabled or not self.courseStorage.currentDirectoryView:areEntriesVisible()
 end
 
 function CpCourseManagerFrame:createDirectoryDisabled()
@@ -691,5 +707,5 @@ function CpCourseManagerFrame:modeDisabled()
 end
 
 function CpCourseManagerFrame:openEditorDisabled()
-	return not self:clearCurrentCourseDisabled() or self.actionState ~= self.actionStates.disabled
+	return true --not self:clearCurrentCourseDisabled() or self.actionState ~= self.actionStates.disabled -- TODO_25
 end
