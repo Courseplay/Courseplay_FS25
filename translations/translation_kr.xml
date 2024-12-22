@@ -8,329 +8,329 @@
     <!---->
     <!--basic-->
     <!---->
-    <text name="CP_activated" text="activated"/>
-    <text name="CP_deactivated" text="deactivated"/>
-    <text name="CP_automatic" text="auto"/>
+    <text name="CP_activated" text="활성화됨"/>
+    <text name="CP_deactivated" text="비활성화됨"/>
+    <text name="CP_automatic" text="자동"/>
     <text name="CP_unit_meter" text="m"/>
     <text name="CP_unit_foot" text="ft"/>
-    <text name="CP_copy" text="Copy course: "/>
-    <text name="CP_infoText" text="Courseplay(%s): For help, bug reports or patch notes, please visit: https://github.com/Courseplay/Courseplay_FS22."/>
-    <text name="CP_error_no_course" text="Generate a course before starting the job."/>
-    <text name="CP_error_could_not_generate_course" text="Could not generate course. The log may have more information."/>
-    <text name="CP_error_not_on_field" text="Target is not on a field."/>
-    <text name="CP_error_unloader_to_far_away_from_field" text="Unloader to far away from the field."/>
-    <text name="CP_error_start_position_to_far_away_from_field" text="Starting position to far away from the field."/>
-    <text name="CP_error_giants_unloader_not_available" text="Giants unloader not available."/>
-    <text name="CP_error_fieldUnloadPosition_too_far_away_from_field" text="Field unload position is too far away from the field."/>
-    <text name="CP_error_vehicle_too_far_away_from_field" text="Vehicle is too far away from the field to start."/>
-    <text name="CP_error_no_bunkerSilo_found" text="No silo found."/>
-    <text name="CP_error_no_heap_found" text="No silo found."/>
-    <text name="CP_error_no_unload_trigger_found" text="No unloading point found."/>
-    <text name="CP_error_unload_target_to_far_away_from_silo" text="Chosen unloading point is to far away from the silo."/>
+    <text name="CP_copy" text="작업 경로 복사: "/>
+    <text name="CP_infoText" text="Courseplay(%s): 도움말, 버그리포트 또는 패치 노트를 보려면 다음 링크를 방문하세요: https://github.com/Courseplay/Courseplay_FS25."/>
+    <text name="CP_error_no_course" text="작업을 실행하기 전에 경로를 생성하세요."/>
+    <text name="CP_error_could_not_generate_course" text="경로를 생성할 수 없습니다. 자세한 내용은 로그를 확인하세요."/>
+    <text name="CP_error_not_on_field" text="목표 지점이 필드 내부에 있지 않습니다."/>
+    <text name="CP_error_unloader_to_far_away_from_field" text="언로더가 필드에서 너무 멀리 떨어져 있습니다."/>
+    <text name="CP_error_start_position_to_far_away_from_field" text="작업 시작 위치가 필드에서 너무 멀리 떨어져 있습니다."/>
+    <text name="CP_error_giants_unloader_not_available" text="최종 하역 지점을 사용할 수 없습니다."/>
+    <text name="CP_error_fieldUnloadPosition_too_far_away_from_field" text="하역 지점이 필드에서 너무 멀리 떨어져 있습니다."/>
+    <text name="CP_error_vehicle_too_far_away_from_field" text="작업 차량이 필드와의 거리가 너무 멀어 작업을 시작할 수 없습니다."/>
+    <text name="CP_error_no_bunkerSilo_found" text="벙커 사일로를 찾을 수 없습니다."/>
+    <text name="CP_error_no_heap_found" text="사일로를 찾을 수 없습니다."/>
+    <text name="CP_error_no_unload_trigger_found" text="하역 지점을 찾을 수 없습니다."/>
+    <text name="CP_error_unload_target_to_far_away_from_silo" text="선택한 하역 지점이 사일로에서 너무 멀리 떨어져 있습니다."/>
     <!---->
     <!--AI job parameters-->
     <!---->
-    <text name="CP_fieldWorkJobParameters_fieldPosition_title" text="Field position:"/>
-    <text name="CP_fieldWorkJobParameters_bunkerSiloPosition_title" text="Silo position:"/>
-    <text name="CP_fieldWorkJobParameters_parkPosition_title" text="Park position:"/>
-    <text name="CP_fieldWorkJobParameters_subTitle_startAt" text="Start at:"/>
-    <text name="CP_fieldWorkJobParameters_startAt_title" text="Start at:"/>
-    <text name="CP_fieldWorkJobParameters_startAt_tooltip" text="Where to start field work"/>
-    <text name="CP_fieldWorkJobParameters_startAt_nearest" text="nearest waypoint"/>
-    <text name="CP_fieldWorkJobParameters_startAt_first" text="first waypoint"/>
-    <text name="CP_fieldWorkJobParameters_startAt_last" text="last waypoint"/>
-    <text name="CP_fieldWorkJobParameters_startAt_bunkerSilo" text="Bunker silo mode"/>
-    <text name="CP_fieldWorkJobParameters_startAt_siloLoader" text="Silo load mode"/>
-    <text name="CP_fieldWorkJobParameters_startAt_unload" text="unloading combine/chopper"/>
-    <text name="CP_fieldWorkJobParameters_startAt_unload_siloLoader" text="Unload Silo loader"/>
-    <text name="CP_fieldWorkJobParameters_startAt_bales" text="collecting/wrapping bales"/>
-    <text name="CP_fieldWorkJobParameters_subTitle_laneOffset" text="Lane offset:"/>
-    <text name="CP_fieldWorkJobParameters_laneOffset_title" text="Lane offset:"/>
-    <text name="CP_fieldWorkJobParameters_laneOffset_tooltip" text="Lane offset"/>
-    <text name="CP_fieldWorkJobParameters_laneOffset_center" text="center"/>
-    <text name="CP_fieldWorkJobParameters_laneOffset_left" text="left(1)"/>
-    <text name="CP_fieldWorkJobParameters_laneOffset_right" text="right(1)"/>
-    <text name="CP_fieldWorkJobParameters_laneOffset_left_2" text="left(2)"/>
-    <text name="CP_fieldWorkJobParameters_laneOffset_right_2" text="right(2)"/>
+    <text name="CP_fieldWorkJobParameters_fieldPosition_title" text="필드 위치:"/>
+    <text name="CP_fieldWorkJobParameters_bunkerSiloPosition_title" text="벙커 사일로 위치:"/>
+    <text name="CP_fieldWorkJobParameters_parkPosition_title" text="주차 위치:"/>
+    <text name="CP_fieldWorkJobParameters_subTitle_startAt" text="시작 위치:"/>
+    <text name="CP_fieldWorkJobParameters_startAt_title" text="시작 위치:"/>
+    <text name="CP_fieldWorkJobParameters_startAt_tooltip" text="필드 작업을 시작할 위치를 선택하세요"/>
+    <text name="CP_fieldWorkJobParameters_startAt_nearest" text="가장 가까운 지점"/>
+    <text name="CP_fieldWorkJobParameters_startAt_first" text="시작 지점"/>
+    <text name="CP_fieldWorkJobParameters_startAt_last" text="종료 지점"/>
+    <text name="CP_fieldWorkJobParameters_startAt_bunkerSilo" text="벙커 사일로 모드"/>
+    <text name="CP_fieldWorkJobParameters_startAt_siloLoader" text="사일로 적재 모드"/>
+    <text name="CP_fieldWorkJobParameters_startAt_unload" text="하역 시작하기 콤바인/사일리지 수확기"/>
+    <text name="CP_fieldWorkJobParameters_startAt_unload_siloLoader" text="사일로 하역 모드"/>
+    <text name="CP_fieldWorkJobParameters_startAt_bales" text="수집하기/포장하기 베일"/>
+    <text name="CP_fieldWorkJobParameters_subTitle_laneOffset" text="작업 경로 위치 보정:"/>
+    <text name="CP_fieldWorkJobParameters_laneOffset_title" text="작업 경로 위치 보정:"/>
+    <text name="CP_fieldWorkJobParameters_laneOffset_tooltip" text="작업 경로 위치 보정"/>
+    <text name="CP_fieldWorkJobParameters_laneOffset_center" text="가운데"/>
+    <text name="CP_fieldWorkJobParameters_laneOffset_left" text="왼쪽(1)"/>
+    <text name="CP_fieldWorkJobParameters_laneOffset_right" text="오른쪽(1)"/>
+    <text name="CP_fieldWorkJobParameters_laneOffset_left_2" text="왼쪽(2)"/>
+    <text name="CP_fieldWorkJobParameters_laneOffset_right_2" text="오른쪽(2)"/>
     <!---->
     <!--AI bale finder job parameters-->
     <!---->
-    <text name="CP_baleFinderJobParameters_subTitle_baleWrapType" text="Baletype:"/>
-    <text name="CP_baleFinderJobParameters_baleWrapType_title" text="Baletype:"/>
-    <text name="CP_baleFinderJobParameters_baleWrapType_all_bales" text="all bales"/>
-    <text name="CP_baleFinderJobParameters_baleWrapType_only_wrapped_bales" text="only wrapped"/>
-    <text name="CP_baleFinderJobParameters_baleWrapType_only_not_wrapped_bales" text="only not wrapped"/>
-    <text name="CP_baleFinder_balesLeftover" text="Bales left:"/>
+    <text name="CP_baleFinderJobParameters_subTitle_baleWrapType" text="베일 유형:"/>
+    <text name="CP_baleFinderJobParameters_baleWrapType_title" text="베일 유형:"/>
+    <text name="CP_baleFinderJobParameters_baleWrapType_all_bales" text="모든 종류의 베일"/>
+    <text name="CP_baleFinderJobParameters_baleWrapType_only_wrapped_bales" text="포장된 베일만"/>
+    <text name="CP_baleFinderJobParameters_baleWrapType_only_not_wrapped_bales" text="포장되지 않은 베일만"/>
+    <text name="CP_baleFinder_balesLeftover" text="남은 베일:"/>
     <!---->
     <!--AI combine unloader job parameters-->
     <!---->
-    <text name="CP_combineUnloaderJobParameters_subTitle_unloadTarget" text="Unload: "/>
-    <text name="CP_combineUnloaderJobParameters_unloadTarget_title" text="Unload:"/>
-    <text name="CP_combineUnloaderJobParameters_unloadTarget_combine" text="Combine"/>
-    <text name="CP_combineUnloaderJobParameters_unloadTarget_siloLoader" text="Loader"/>
-    <text name="CP_combineUnloaderJobParameters_subTitle_giantsUnloader" text="Giants unloader:"/>
-    <text name="CP_combineUnloaderJobParameters_useGiantsUnload_title" text="Use giants unloader:"/>
-    <text name="CP_combineUnloaderJobParameters_unloadingStation_title" text="Unloading station:"/>
-    <text name="CP_combineUnloaderJobParameters_subTitle_fieldUnload" text="Giants unloader:"/>
-    <text name="CP_combineUnloaderJobParameters_useFieldUnload_title" text="Use unload on field:"/>
-    <text name="CP_combineUnloaderJobParameters_fieldUnloadPosition_title" text="Field unloading position:"/>
-    <text name="CP_combineUnloaderJobParameters_unloadingTipSide_title" text="Trailer tip side:"/>
+    <text name="CP_combineUnloaderJobParameters_subTitle_unloadTarget" text="하역: "/>
+    <text name="CP_combineUnloaderJobParameters_unloadTarget_title" text="하역:"/>
+    <text name="CP_combineUnloaderJobParameters_unloadTarget_combine" text="콤바인"/>
+    <text name="CP_combineUnloaderJobParameters_unloadTarget_siloLoader" text="적재"/>
+    <text name="CP_combineUnloaderJobParameters_subTitle_giantsUnloader" text="최종 하역:"/>
+    <text name="CP_combineUnloaderJobParameters_useGiantsUnload_title" text="최종 하역 활성화:"/>
+    <text name="CP_combineUnloaderJobParameters_unloadingStation_title" text="하역 장소:"/>
+    <text name="CP_combineUnloaderJobParameters_subTitle_fieldUnload" text="최종 하역 장소:"/>
+    <text name="CP_combineUnloaderJobParameters_useFieldUnload_title" text="필드 하역 사용:"/>
+    <text name="CP_combineUnloaderJobParameters_fieldUnloadPosition_title" text="필드 하역 위치:"/>
+    <text name="CP_combineUnloaderJobParameters_unloadingTipSide_title" text="트레일러 하역 방향:"/>
     <!---->
     <!--AI bunker silo worker job parameters-->
     <!---->
-    <text name="CP_bunkerSiloJobParameters_subTitle_drivingForwardsIntoSilo" text="Direction into the silo:"/>
-    <text name="CP_bunkerSiloJobParameters_drivingForwardsIntoSilo_title" text="Direction into the silo:"/>
-    <text name="CP_bunkerSiloJobParameters_drivingForwardsIntoSilo_forwards" text="Forwards"/>
-    <text name="CP_bunkerSiloJobParameters_drivingForwardsIntoSilo_reverse" text="Reverse"/>
-    <text name="CP_bunkerSiloJobParameters_subTitle_waitAtParkPosition" text="Waiting for unloader:"/>
-    <text name="CP_bunkerSiloJobParameters_waitAtParkPosition_title" text="Waiting for unloader:"/>
-    <text name="CP_bunkerSiloJobParameters_waitAtParkPosition_silo" text="in silo"/>
-    <text name="CP_bunkerSiloJobParameters_waitAtParkPosition_parkPosition" text="at park position"/>
-    <text name="CP_bunkerSiloJobParameters_stopWithCompactedSilo_title" text="Stop at 99% compaction"/>
-    <text name="CP_bunkerSiloJobParameters_subTitle_stopWithCompactedSilo" text="Stop at 99% compaction"/>
-    <text name="CP_bunkerSilo_compactionPercentage" text="Silo compaction:"/>
+    <text name="CP_bunkerSiloJobParameters_subTitle_drivingForwardsIntoSilo" text="사일로 진입 방향:"/>
+    <text name="CP_bunkerSiloJobParameters_drivingForwardsIntoSilo_title" text="사일로 진입 방향:"/>
+    <text name="CP_bunkerSiloJobParameters_drivingForwardsIntoSilo_forwards" text="전진"/>
+    <text name="CP_bunkerSiloJobParameters_drivingForwardsIntoSilo_reverse" text="후진"/>
+    <text name="CP_bunkerSiloJobParameters_subTitle_waitAtParkPosition" text="언로더 대기 중:"/>
+    <text name="CP_bunkerSiloJobParameters_waitAtParkPosition_title" text="언로더 대기 중:"/>
+    <text name="CP_bunkerSiloJobParameters_waitAtParkPosition_silo" text="사일로 내부"/>
+    <text name="CP_bunkerSiloJobParameters_waitAtParkPosition_parkPosition" text="주차 위치"/>
+    <text name="CP_bunkerSiloJobParameters_stopWithCompactedSilo_title" text="사일로 99% 압축 시 정지"/>
+    <text name="CP_bunkerSiloJobParameters_subTitle_stopWithCompactedSilo" text="사일로 99% 압축 시 정지"/>
+    <text name="CP_bunkerSilo_compactionPercentage" text="사일로 압축률:"/>
     <!---->
     <!--AI silo lader worker job parameters-->
     <!---->
-    <text name="CP_siloLoaderJobParameters_subTitle_loadPosition" text="Loading position"/>
-    <text name="CP_siloLoaderJobParameters_loadPosition_title" text="Loading position"/>
-    <text name="CP_siloLoader_fillLevelProgress" text="Progress: "/>
-    <text name="CP_siloLoaderJobParameters_subTitle_unloading" text="Unloading at:"/>
-    <text name="CP_siloLoaderJobParameters_unloadAt_trailer" text="Trailer"/>
-    <text name="CP_siloLoaderJobParameters_unloadAt_unloadTrigger" text="Unload station"/>
+    <text name="CP_siloLoaderJobParameters_subTitle_loadPosition" text="적재 위치"/>
+    <text name="CP_siloLoaderJobParameters_loadPosition_title" text="적재 위치"/>
+    <text name="CP_siloLoader_fillLevelProgress" text="진행 상태: "/>
+    <text name="CP_siloLoaderJobParameters_subTitle_unloading" text="하역 위치:"/>
+    <text name="CP_siloLoaderJobParameters_unloadAt_trailer" text="트레일러"/>
+    <text name="CP_siloLoaderJobParameters_unloadAt_unloadTrigger" text="하역 위치"/>
     <!---->
     <!--AI jobs-->
     <!---->
-    <text name="CP_job_fieldWork" text="CP: Fieldwork"/>
-    <text name="CP_job_baleCollect" text="CP: Bale collect/wrap"/>
-    <text name="CP_job_combineUnload" text="CP: Unload Combine"/>
-    <text name="CP_job_bunkerSilo" text="CP: Silo work"/>
-    <text name="CP_job_siloLoader" text="CP: Silo loading"/>
-    <text name="CP_ai_page_generate_course" text="CP: Generate fieldwork course."/>
-    <text name="CP_ai_page_open_course_generator" text="CP: Open/close course generator."/>
+    <text name="CP_job_fieldWork" text="CP: 밭 작업"/>
+    <text name="CP_job_baleCollect" text="CP: 베일 수집/포장"/>
+    <text name="CP_job_combineUnload" text="CP: 콤바인 하역"/>
+    <text name="CP_job_bunkerSilo" text="CP: 사일로 작업"/>
+    <text name="CP_job_siloLoader" text="CP: 사일로 적재"/>
+    <text name="CP_ai_page_generate_course" text="CP: 밭 작업 경로 생성."/>
+    <text name="CP_ai_page_open_course_generator" text="CP: 경로 생성기 열기/닫기."/>
     <!---->
     <!--AI error messages-->
     <!---->
-    <text name="CP_ai_messageErrorIsFull" text="AI worker %s has stopped work unexpectedly - tank is full!"/>
-    <text name="CP_ai_messageError" text="AI worker %s has stopped work unexpectedly - left the course!"/>
-    <text name="CP_ai_messageErrorWrongBaleWrapType" text="AI worker %s has stopped work unexpectedly - no bales of selected type found!"/>
-    <text name="CP_ai_messageErrorNoPathFound" text="AI worker %s has stopped work unexpectedly - no Path found!"/>
-    <text name="CP_ai_messageErrorGroundUnloadNotSupported" text="AI worker %s has stopped work unexpectedly - unloading on the field not possible!"/>
-    <text name="CP_ai_messageErrorCutterNotSupported" text="AI worker %s has stopped work unexpectedly - attaching of the header is impossible!"/>
-    <text name="CP_ai_messageErrorAutomaticCutterAttachNotActive" text="AI worker %s has stopped work unexpectedly - automatic cutter attach disabled!"/>
-    <text name="CP_ai_messageErrorWrongMissionFruitType" text="AI worker %s has stopped work unexpectedly - wrong fill type for mission selected!"/>
+    <text name="CP_ai_messageErrorIsFull" text="AI 작업자 %s가 예기치 않게 작업을 중단했습니다 - 저장소가 가득 찼습니다!"/>
+    <text name="CP_ai_messageError" text="AI 작업자 %s가 예기치 않게 작업을 중단했습니다 - 경로를 벗어났습니다!"/>
+    <text name="CP_ai_messageErrorWrongBaleWrapType" text="AI 작업자 %s가 예기치 않게 작업을 중단했습니다 - 선택된 유형의 베일을 찾을 수 없습니다!"/>
+    <text name="CP_ai_messageErrorNoPathFound" text="작업자 %s가 예기치 않게 작업을 중단했습니다 - 경로를 찾을 수 없습니다!"/>
+    <text name="CP_ai_messageErrorGroundUnloadNotSupported" text="AI 작업자 %s가 예기치 않게 작업을 중단했습니다 - 해당 필드에서 하역이 불가능합니다!"/>
+    <text name="CP_ai_messageErrorCutterNotSupported" text="AI 작업자 %s가 예기치 않게 작업을 중단했습니다 - 헤더 연결이 지원되지 않습니다!"/>
+    <text name="CP_ai_messageErrorAutomaticCutterAttachNotActive" text="AI 작업자 %s가 예기치 않게 작업을 중단했습니다 - 자동 헤더 연결이 비활성화되어 있습니다!"/>
+    <text name="CP_ai_messageErrorWrongMissionFruitType" text="AI 작업자 %s가 예기치 않게 작업을 중단했습니다 - 선택된 임무의 작물 유형이 잘못되었습니다!"/>
     <!---->
     <!--AI fieldwork task descriptions-->
     <!---->
-    <text name="CP_ai_taskDescriptionAttachHeader" text="Picks the header up"/>
+    <text name="CP_ai_taskDescriptionAttachHeader" text="헤더를 연결합니다"/>
     <!---->
     <!--AI bale finder task descriptions-->
     <!---->
-    <text name="CP_ai_taskDescriptionCollectsBales" text="Collects bales on the field"/>
-    <text name="CP_ai_taskDescriptionWrapsBales" text="Wraps bales on the field"/>
+    <text name="CP_ai_taskDescriptionCollectsBales" text="필드에서 베일을 수집합니다"/>
+    <text name="CP_ai_taskDescriptionWrapsBales" text="필드에서 베일을 포장합니다"/>
     <!---->
     <!--AI combine unloader task descriptions-->
     <!---->
-    <text name="CP_ai_taskDescriptionUnloadCombine" text="Unloads combine"/>
-    <text name="CP_ai_taskDescriptionWaitsForTargetCombine" text="Waits for combine"/>
-    <text name="CP_ai_taskDescriptionUnloadSiloLoader" text="Unloads loader"/>
-    <text name="CP_ai_taskDescriptionWaitsForTargetSiloLoader" text="Waits for loader"/>
-    <text name="CP_ai_taskDescriptionUnloadingToHeap" text="Unloads to a heap"/>
-    <text name="CP_ai_taskDescriptionUnloadingToTrailer" text="Unloads into trailer"/>
-    <text name="CP_ai_taskDescriptionUnloadingWithGiants" text="Unloads with giants worker"/>
+    <text name="CP_ai_taskDescriptionUnloadCombine" text="콤바인을 하역합니다"/>
+    <text name="CP_ai_taskDescriptionWaitsForTargetCombine" text="콤바인을 기다립니다"/>
+    <text name="CP_ai_taskDescriptionUnloadSiloLoader" text="사일로 로더에서 하역합니다"/>
+    <text name="CP_ai_taskDescriptionWaitsForTargetSiloLoader" text="사일로 로더를 기다립니다"/>
+    <text name="CP_ai_taskDescriptionUnloadingToHeap" text="작물더미에 하역합니다"/>
+    <text name="CP_ai_taskDescriptionUnloadingToTrailer" text="언로더에 하역합니다"/>
+    <text name="CP_ai_taskDescriptionUnloadingWithGiants" text="Giants 작업자와 함께 하역합니다"/>
     <!---->
     <!--AI silo worker task descriptions-->
     <!---->
-    <text name="CP_ai_taskDescriptionWorksInTheSilo" text="Works in the silo"/>
-    <text name="CP_ai_taskDescriptionWaitsForUnloaders" text="Waits for unloader"/>
+    <text name="CP_ai_taskDescriptionWorksInTheSilo" text="사일로에서 작업합니다"/>
+    <text name="CP_ai_taskDescriptionWaitsForUnloaders" text="언로더를 기다립니다"/>
     <!---->
     <!--AI silo loader task descriptions-->
     <!---->
-    <text name="CP_ai_taskDescriptionWaitsForTrailer" text="Waits for a trailer"/>
-    <text name="CP_ai_taskDescriptionUnloadingToTrigger" text="Unloads to an unload trigger"/>
+    <text name="CP_ai_taskDescriptionWaitsForTrailer" text="트레일러를 기다립니다"/>
+    <text name="CP_ai_taskDescriptionUnloadingToTrigger" text="하역 트리거로 하역합니다"/>
     <!---->
     <!--Hud settings-->
     <!---->
-    <text name="CP_hud_settings_selectedJob_title" text="TODO: Selected Job:"/>
+    <text name="CP_hud_settings_selectedJob_title" text="선택된 작업:"/>
     <!---->
     <!--Vehicle settings-->
     <!---->
-    <text name="CP_vehicle_setting_title" text="Vehicle settings for (%s)"/>
-    <text name="CP_vehicle_setting_subTitle_basic" text="Basic settings"/>
-    <text name="CP_vehicle_setting_subTitle_implement" text="Tools settings"/>
-    <text name="CP_vehicle_setting_subTitle_combine" text="Combine settings"/>
-    <text name="CP_vehicle_setting_subTitle_seeder" text="Seeder settings"/>
-    <text name="CP_vehicle_setting_subTitle_multitool" text="Multitool settings"/>
-    <text name="CP_vehicle_setting_subTitle_speed" text="Speeds"/>
-    <text name="CP_vehicle_setting_subTitle_debug" text="Debug settings"/>
-    <text name="CP_vehicle_setting_showCourse_title" text="Show course"/>
-    <text name="CP_vehicle_setting_showCourse_tooltip" text="Show the current course of the vehicle"/>
-    <text name="CP_vehicle_setting_showCourse_startStop" text="Start/stop only"/>
-    <text name="CP_vehicle_setting_showCourse_currentWaypoint" text="Current waypoints"/>
-    <text name="CP_vehicle_setting_showCourse_all" text="All waypoints"/>
-    <text name="CP_vehicle_setting_openHudWithMouse_title" text="Open Hud with mouse"/>
-    <text name="CP_vehicle_setting_openHudWithMouse_tooltip" text="When deactivated, Hud can only be opened with the Keybind."/>
-    <text name="CP_vehicle_setting_fuelSave_title" text="Fuel save"/>
-    <text name="CP_vehicle_setting_fuelSave_tooltip" text="Turns off the vehicle, while waiting."/>
-    <text name="CP_vehicle_setting_stopAtEnd_title" text="Stop at end"/>
-    <text name="CP_vehicle_setting_stopAtEnd_tooltip" text="Stop at end"/>
-    <text name="CP_vehicle_setting_allowReversePathfinding_title" text="Allow reverse for pathfinding"/>
-    <text name="CP_vehicle_setting_allowReversePathfinding_tooltip" text="When applicable, allow the pathfinder to generate courses containing reverse driving"/>
-    <text name="CP_vehicle_setting_allowPathfinderTurns_title" text="Allow using the pathfinder in turns"/>
-    <text name="CP_vehicle_setting_allowPathfinderTurns_tooltip" text="Enables using the pathfinder in turns, for example to avoid obstacles and fruit"/>
-    <text name="CP_vehicle_setting_foldImplementAtEnd_title" text="Fold tools at course end"/>
-    <text name="CP_vehicle_setting_foldImplementAtEnd_tooltip" text="Enables/disables automatic folding of implements at the end of the course."/>
-    <text name="CP_vehicle_setting_returnToStart_title" text="Return to starting point"/>
-    <text name="CP_vehicle_setting_returnToStart_tooltip" text="Return to starting point after finished fieldwork."/>
-    <text name="CP_vehicle_setting_raiseImplementLate_title" text="Raise tools"/>
-    <text name="CP_vehicle_setting_raiseImplementLate_tooltip" text="Raise tools early or late at the start of a turn."/>
-    <text name="CP_vehicle_setting_raiseImplementLate_early" text="early"/>
-    <text name="CP_vehicle_setting_raiseImplementLate_late" text="late"/>
-    <text name="CP_vehicle_setting_lowerImplementEarly_title" text="Lower tools"/>
-    <text name="CP_vehicle_setting_lowerImplementEarly_tooltip" text="Lower tools early or late at the end of a turn."/>
-    <text name="CP_vehicle_setting_lowerImplementEarly_early" text="early"/>
-    <text name="CP_vehicle_setting_lowerImplementEarly_late" text="late"/>
-    <text name="CP_vehicle_setting_turnOnField_title" text="Only turning on the field"/>
-    <text name="CP_vehicle_setting_turnOnField_tooltip" text="Only turning on the field. Not possible with all tools."/>
-    <text name="CP_vehicle_setting_avoidFruit_title" text="Avoid driving in fruit"/>
-    <text name="CP_vehicle_setting_avoidFruit_tooltip" text="The AI will try to avoid driving in the fruit"/>
-    <text name="CP_vehicle_setting_toolOffsetX_title" text="Tool offset horizontal"/>
-    <text name="CP_vehicle_setting_toolOffsetX_tooltip" text="Tool offset horizontal"/>
-    <text name="CP_vehicle_setting_baleCollectorOffset_title" text="Bale pickup offset"/>
-    <text name="CP_vehicle_setting_baleCollectorOffset_tooltip" text="Offset for the bale collector"/>
-    <text name="CP_vehicle_setting_combineOffsetX_title" text="Offset forwards/backwards"/>
-    <text name="CP_vehicle_setting_combineOffsetX_tooltip" text="Offset for harvester pipe with forwards(+) and backwards(-)"/>
-    <text name="CP_vehicle_setting_combineOffsetZ_title" text="Offset forwards/backwards"/>
-    <text name="CP_vehicle_setting_combineOffsetZ_tooltip" text="Offset for harvester pipe with forwards(+) and backwards(-)"/>
-    <text name="CP_vehicle_setting_fullThreshold_title" text="Empty when over:"/>
-    <text name="CP_vehicle_setting_fullThreshold_tooltip" text="TODO"/>
-    <text name="CP_vehicle_setting_useAdditiveFillUnit_title" text="Check for silage additive."/>
-    <text name="CP_vehicle_setting_useAdditiveFillUnit_tooltip" text="If active and silage additive is emtpy, the driver will stop."/>
-    <text name="CP_vehicle_setting_symmetricLaneChange_title" text="Symmetric lane change"/>
-    <text name="CP_vehicle_setting_symmetricLaneChange_tooltip" text="Symmetric lane change"/>
-    <text name="CP_vehicle_setting_convoyDistance_title" text="Convoy Distance"/>
-    <text name="CP_vehicle_setting_convoyDistance_tooltip" text="Distance between vehicles. Value: 40 - 400"/>
-    <text name="CP_vehicle_setting_debugActive_title" text="Vehicle debug"/>
-    <text name="CP_vehicle_setting_debugActive_tooltip" text="Enables/disables debug for this vehicle."/>
-    <text name="CP_vehicle_setting_refillOnTheField_title" text="Refill tool"/>
-    <text name="CP_vehicle_setting_refillOnTheField_tooltip" text="Refill tool on the field"/>
-    <text name="CP_vehicle_setting_refillOnTheField_waiting" text="Waiting"/>
-    <text name="CP_vehicle_setting_refillOnTheField_active" text="Active"/>
+    <text name="CP_vehicle_setting_title" text="차량 설정 (%s)"/>
+    <text name="CP_vehicle_setting_subTitle_basic" text="기본 설정"/>
+    <text name="CP_vehicle_setting_subTitle_implement" text="장비 설정"/>
+    <text name="CP_vehicle_setting_subTitle_combine" text="콤바인 설정"/>
+    <text name="CP_vehicle_setting_subTitle_seeder" text="파종기 설정"/>
+    <text name="CP_vehicle_setting_subTitle_multitool" text="다중 장비 설정"/>
+    <text name="CP_vehicle_setting_subTitle_speed" text="속도 설정"/>
+    <text name="CP_vehicle_setting_subTitle_debug" text="디버그 설정"/>
+    <text name="CP_vehicle_setting_showCourse_title" text="경로 표시"/>
+    <text name="CP_vehicle_setting_showCourse_tooltip" text="차량의 현재 경로 표시"/>
+    <text name="CP_vehicle_setting_showCourse_startStop" text="시작/정지 지점만 표시"/>
+    <text name="CP_vehicle_setting_showCourse_currentWaypoint" text="현재 웨이포인트만 표시"/>
+    <text name="CP_vehicle_setting_showCourse_all" text="모든 웨이포인트 표시"/>
+    <text name="CP_vehicle_setting_openHudWithMouse_title" text="마우스로 HUD 열기"/>
+    <text name="CP_vehicle_setting_openHudWithMouse_tooltip" text="비활성화시 HUD는 단축키로만 열 수 있습니다."/>
+    <text name="CP_vehicle_setting_fuelSave_title" text="연료 절약"/>
+    <text name="CP_vehicle_setting_fuelSave_tooltip" text="대기 중 차량을 정지시킵니다."/>
+    <text name="CP_vehicle_setting_stopAtEnd_title" text="끝지점에서 정지"/>
+    <text name="CP_vehicle_setting_stopAtEnd_tooltip" text="작업 끝지점에서 정지합니다."/>
+    <text name="CP_vehicle_setting_allowReversePathfinding_title" text="후진 경로 탐색 허용"/>
+    <text name="CP_vehicle_setting_allowReversePathfinding_tooltip" text="적용 가능한 경우, 후진 주행이 포함된 경로를 생성하도록 경로 탐색기를 허용합니다."/>
+    <text name="CP_vehicle_setting_allowPathfinderTurns_title" text="곡선주행 시 경로 탐색 사용을 허용합니다."/>
+    <text name="CP_vehicle_setting_allowPathfinderTurns_tooltip" text="경로 탐색기를 곡선주행 시 사용하도록 허용합니다. 예를 들어 장애물이나 작물을 피할 수 있습니다."/>
+    <text name="CP_vehicle_setting_foldImplementAtEnd_title" text="작업 종료 시 장비 접기"/>
+    <text name="CP_vehicle_setting_foldImplementAtEnd_tooltip" text="업 종료 시 장비를 자동으로 접거나 펴도록 설정합니다."/>
+    <text name="CP_vehicle_setting_returnToStart_title" text="시작 지점으로 돌아가기"/>
+    <text name="CP_vehicle_setting_returnToStart_tooltip" text="밭 작업이 끝난 후 시작 지점으로 돌아갑니다."/>
+    <text name="CP_vehicle_setting_raiseImplementLate_title" text="장비 올리기"/>
+    <text name="CP_vehicle_setting_raiseImplementLate_tooltip" text="곡선주행 시작 시 장비를 일찍 또는 늦게 올립니다."/>
+    <text name="CP_vehicle_setting_raiseImplementLate_early" text="일찍"/>
+    <text name="CP_vehicle_setting_raiseImplementLate_late" text="늦게"/>
+    <text name="CP_vehicle_setting_lowerImplementEarly_title" text="장비 내리기"/>
+    <text name="CP_vehicle_setting_lowerImplementEarly_tooltip" text="곡선구간 끝에서 장비를 일찍 또는 늦게 내립니다."/>
+    <text name="CP_vehicle_setting_lowerImplementEarly_early" text="일찍"/>
+    <text name="CP_vehicle_setting_lowerImplementEarly_late" text="늦게"/>
+    <text name="CP_vehicle_setting_turnOnField_title" text="필드 내 곡선주행만"/>
+    <text name="CP_vehicle_setting_turnOnField_tooltip" text="필드 내에서만 곡선주행을 수행합니다. 모든 장비에서 가능하지는 않습니다."/>
+    <text name="CP_vehicle_setting_avoidFruit_title" text="작물 피해 방지"/>
+    <text name="CP_vehicle_setting_avoidFruit_tooltip" text="AI가 작물을 밟지 않도록 주행합니다."/>
+    <text name="CP_vehicle_setting_toolOffsetX_title" text="장비 수평 오프셋"/>
+    <text name="CP_vehicle_setting_toolOffsetX_tooltip" text="도구의 수평 오프셋 설정"/>
+    <text name="CP_vehicle_setting_baleCollectorOffset_title" text="베일 수집기 오프셋"/>
+    <text name="CP_vehicle_setting_baleCollectorOffset_tooltip" text="베일 수집기의 오프셋 설정"/>
+    <text name="CP_vehicle_setting_combineOffsetX_title" text="콤바인 전방/후방 오프셋(수평)"/>
+    <text name="CP_vehicle_setting_combineOffsetX_tooltip" text="수확 파이프의 오프셋 설정 (좌/우)"/>
+    <text name="CP_vehicle_setting_combineOffsetZ_title" text="콤바인 전방/후방 오프셋(수직)"/>
+    <text name="CP_vehicle_setting_combineOffsetZ_tooltip" text="수확 파이프의 수직 오프셋 설정 (전방+ 및 후방-)"/>
+    <text name="CP_vehicle_setting_fullThreshold_title" text="하역 임계값:"/>
+    <text name="CP_vehicle_setting_fullThreshold_tooltip" text="트레일러가 설정된 비율 이상 채워졌을 때 비우러 갑니다."/>
+    <text name="CP_vehicle_setting_useAdditiveFillUnit_title" text="사일리지 첨가제 확인"/>
+    <text name="CP_vehicle_setting_useAdditiveFillUnit_tooltip" text="활성화 시 사일리지 첨가제가 비어 있으면 운전자가 멈춥니다."/>
+    <text name="CP_vehicle_setting_symmetricLaneChange_title" text="대칭 작업 경로 변경"/>
+    <text name="CP_vehicle_setting_symmetricLaneChange_tooltip" text="작업 경로를 대칭적으로 변경합니다."/>
+    <text name="CP_vehicle_setting_convoyDistance_title" text="대열 거리"/>
+    <text name="CP_vehicle_setting_convoyDistance_tooltip" text="차량 간 거리 설정. 거리: 40 - 400"/>
+    <text name="CP_vehicle_setting_debugActive_title" text="차량 디버그"/>
+    <text name="CP_vehicle_setting_debugActive_tooltip" text="이 차량의 디버그 기능을 활성화/비활성화합니다."/>
+    <text name="CP_vehicle_setting_refillOnTheField_title" text="현장에서 장비 보충"/>
+    <text name="CP_vehicle_setting_refillOnTheField_tooltip" text="현장에서 장비를 보충합니다."/>
+    <text name="CP_vehicle_setting_refillOnTheField_waiting" text="대기 중"/>
+    <text name="CP_vehicle_setting_refillOnTheField_active" text="활성화"/>
     <!---->
     <!--Vehicle bunker silo settings-->
     <!---->
-    <text name="CP_vehicle_setting_subTitle_bunkerSilo" text="Siloworker settings"/>
-    <text name="CP_vehicle_setting_bunkerSiloWorkWidth_title" text="Work width"/>
-    <text name="CP_vehicle_setting_bunkerSiloWorkWidth_tooltip" text="Work width. Value: 0 - 50"/>
-    <text name="CP_vehicle_setting_levelerHeightOffset_title" text="Shield height offset"/>
-    <text name="CP_vehicle_setting_levelerHeightOffset_tooltip" text="Offset of the shield form the ground. Value: 0 - 1"/>
-    <text name="CP_vehicle_setting_loadingShovelHeightOffset_title" text="Shovel loading offset. Value: -1 - 1"/>
-    <text name="CP_vehicle_setting_loadingShovelHeightOffset_tooltip" text="Shovel loading offset. Value: -1 - 1"/>
+    <text name="CP_vehicle_setting_subTitle_bunkerSilo" text="벙커사일로 설정"/>
+    <text name="CP_vehicle_setting_bunkerSiloWorkWidth_title" text="작업 폭"/>
+    <text name="CP_vehicle_setting_bunkerSiloWorkWidth_tooltip" text="작업 폭을 설정합니다. 값: 0 - 50"/>
+    <text name="CP_vehicle_setting_levelerHeightOffset_title" text="수평조절기 높이 오프셋"/>
+    <text name="CP_vehicle_setting_levelerHeightOffset_tooltip" text="수평조절기를 지면과의 높이로 조정합니다. 값: 0 - 1"/>
+    <text name="CP_vehicle_setting_loadingShovelHeightOffset_title" text="로더 삽 적재 높이 오프셋"/>
+    <text name="CP_vehicle_setting_loadingShovelHeightOffset_tooltip" text="로더 삽 적재 높이를 조정합니다. 값: -1 - 1"/>
     <!---->
     <!--Vehicle settings speed-->
     <!---->
-    <text name="CP_vehicle_setting_fieldWorkSpeed_title" text="Fieldwork"/>
-    <text name="CP_vehicle_setting_fieldWorkSpeed_tooltip" text="Maximum speed while working on the field. Value: 5 - 50"/>
-    <text name="CP_vehicle_setting_fieldSpeed_title" text="Field"/>
-    <text name="CP_vehicle_setting_fieldSpeed_tooltip" text="Maximum speed while driving on field. Value: 5 - 50"/>
-    <text name="CP_vehicle_setting_turnSpeed_title" text="Turn"/>
-    <text name="CP_vehicle_setting_turnSpeed_tooltip" text="Maximum speed during turn maneuvers. Value: 2 - 25"/>
-    <text name="CP_vehicle_setting_reverseSpeed_title" text="Reverse"/>
-    <text name="CP_vehicle_setting_reverseSpeed_tooltip" text="Maximum speed while reversing. Value: 2 - 25"/>
-    <text name="CP_vehicle_setting_bunkerSiloSpeed_title" text="Silo"/>
-    <text name="CP_vehicle_setting_bunkerSiloSpeed_tooltip" text="Maximum speed while driving in a silo. Value: 2 - 25"/>
+    <text name="CP_vehicle_setting_fieldWorkSpeed_title" text="작업"/>
+    <text name="CP_vehicle_setting_fieldWorkSpeed_tooltip" text="작업 중 최대 속도를 설정합니다. 값: 5 - 50"/>
+    <text name="CP_vehicle_setting_fieldSpeed_title" text="필드 주행"/>
+    <text name="CP_vehicle_setting_fieldSpeed_tooltip" text="필드 주행 시 최대 속도를 설정합니다. 값: 5 - 50"/>
+    <text name="CP_vehicle_setting_turnSpeed_title" text="곡선주행"/>
+    <text name="CP_vehicle_setting_turnSpeed_tooltip" text="곡선 주행 시 최대 속도를 설정합니다. 값: 2 - 25"/>
+    <text name="CP_vehicle_setting_reverseSpeed_title" text="후진"/>
+    <text name="CP_vehicle_setting_reverseSpeed_tooltip" text="후진 시 최대 속도를 설정합니다. 값: 2 - 25"/>
+    <text name="CP_vehicle_setting_bunkerSiloSpeed_title" text="사일로"/>
+    <text name="CP_vehicle_setting_bunkerSiloSpeed_tooltip" text="사일로 작업 시 최대 속도를 설정합니다. 값: 2 - 25"/>
     <!---->
     <!--Vehicle settings sowing-->
     <!---->
-    <text name="CP_vehicle_setting_ridgeMarkersAutomatic_title" text="Ridge markers"/>
-    <text name="CP_vehicle_setting_ridgeMarkersAutomatic_tooltip" text="Ridge markers on/off."/>
-    <text name="CP_vehicle_setting_sowingMachineFertilizerEnabled_title" text="Sowing machines use fertilizer"/>
-    <text name="CP_vehicle_setting_sowingMachineFertilizerEnabled_tooltip" text="Enables/disables fertilizer usage of sowing machines."/>
-    <text name="CP_vehicle_setting_optionalSowingMachineEnabled_title" text="Sowing option"/>
-    <text name="CP_vehicle_setting_optionalSowingMachineEnabled_tooltip" text="Turns on or off the additional sowing function of the machine"/>
+    <text name="CP_vehicle_setting_ridgeMarkersAutomatic_title" text="이랑표시기"/>
+    <text name="CP_vehicle_setting_ridgeMarkersAutomatic_tooltip" text="이랑 표시기를 켜거나 끕니다."/>
+    <text name="CP_vehicle_setting_sowingMachineFertilizerEnabled_title" text="파종기 비료 사용"/>
+    <text name="CP_vehicle_setting_sowingMachineFertilizerEnabled_tooltip" text="파종기의 비료 사용을 활성화하거나 비활성화합니다."/>
+    <text name="CP_vehicle_setting_optionalSowingMachineEnabled_title" text="파종 옵션"/>
+    <text name="CP_vehicle_setting_optionalSowingMachineEnabled_tooltip" text="기계의 추가 파종 기능을 켜거나 끕니다."/>
     <!---->
     <!--Vehicle settings combine-->
     <!---->
-    <text name="CP_vehicle_setting_automaticCutterAttach_title" text="Automatic cutter attach"/>
-    <text name="CP_vehicle_setting_automaticCutterAttach_tooltip" text="Allows automatic attachment of a cutter, which needs to be attach as a trailer or on a seperate header trailer."/>
-    <text name="CP_vehicle_setting_pipeAlwaysUnfold_title" text="Always unfold the pipe"/>
-    <text name="CP_vehicle_setting_pipeAlwaysUnfold_tooltip" text="Always unfold the pipe when combine is full and waiting for unloader."/>
-    <text name="CP_vehicle_setting_stopForUnload_title" text="Stop while unloading"/>
-    <text name="CP_vehicle_setting_stopForUnload_tooltip" text="Always stops driving, while unloading."/>
-    <text name="CP_vehicle_setting_selfUnload_title" text="Combine self unload"/>
-    <text name="CP_vehicle_setting_selfUnload_tooltip" text="Combine drives to trailer on or near the field to unload. Not supported in multitools or convoy mode."/>
-    <text name="CP_vehicle_setting_unloadOnFirstHeadland_title" text="Unload on first headland"/>
-    <text name="CP_vehicle_setting_unloadOnFirstHeadland_tooltip" text="Combine will call the unloader on the first headland."/>
-    <text name="CP_vehicle_setting_strawSwath_title" text="Straw swath"/>
-    <text name="CP_vehicle_setting_strawSwath_tooltip" text="Enables/disables straw swath or only disables it on headlands."/>
-    <text name="CP_vehicle_setting_callUnloaderPercent_title" text="Call unloader at"/>
-    <text name="CP_vehicle_setting_callUnloaderPercent_tooltip" text="Call unloader when the harvester fill level is above this value."/>
-    <text name="CP_vehicle_setting_strawSwath_onlyCenter" text="Headlands disabled"/>
+    <text name="CP_vehicle_setting_automaticCutterAttach_title" text="커터 자동 부착"/>
+    <text name="CP_vehicle_setting_automaticCutterAttach_tooltip" text="커터를 자동으로 부착합니다. 커터는 트레일러 또는 별도의 헤더 트레일러에 장착되어야 합니다."/>
+    <text name="CP_vehicle_setting_pipeAlwaysUnfold_title" text="파이프 항상 펼치기"/>
+    <text name="CP_vehicle_setting_pipeAlwaysUnfold_tooltip" text="콤바인이 가득 차고 언로더를 기다리는 동안 파이프를 항상 펼칩니다."/>
+    <text name="CP_vehicle_setting_stopForUnload_title" text="하역 중 정지"/>
+    <text name="CP_vehicle_setting_stopForUnload_tooltip" text="하역 중에는 항상 정지합니다."/>
+    <text name="CP_vehicle_setting_selfUnload_title" text="콤바인 자율 하역"/>
+    <text name="CP_vehicle_setting_selfUnload_tooltip" text="콤바인이 트레일러로 이동하여 하역합니다. 멀티툴 또는 대열 모드에서는 지원되지 않습니다."/>
+    <text name="CP_vehicle_setting_unloadOnFirstHeadland_title" text="첫 번째 헤드랜드에서 하역"/>
+    <text name="CP_vehicle_setting_unloadOnFirstHeadland_tooltip" text="콤바인이 첫 번째 헤드랜드에서 언로더를 호출합니다."/>
+    <text name="CP_vehicle_setting_strawSwath_title" text="짚을 배출합니다"/>
+    <text name="CP_vehicle_setting_strawSwath_tooltip" text="짚 배출을 활성화하거나 헤드랜드에서만 비활성화합니다."/>
+    <text name="CP_vehicle_setting_callUnloaderPercent_title" text="언로더 호출 비율"/>
+    <text name="CP_vehicle_setting_callUnloaderPercent_tooltip" text="수확기가 설정 비율 이상이면 언로더를 호출합니다."/>
+    <text name="CP_vehicle_setting_strawSwath_onlyCenter" text="헤드랜드 비활성화"/>
     <!---->
     <!--Course generator settings-->
     <!---->
-    <text name="CP_vehicle_courseGeneratorSetting_title" text="Course generator settings of (%s)"/>
-    <text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="basic"/>
-    <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="headland"/>
-    <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="center"/>
-    <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Settings island"/>
-    <text name="CP_vehicle_courseGeneratorSetting_workWidth_title" text="Work width"/>
-    <text name="CP_vehicle_courseGeneratorSetting_workWidth_tooltip" text="Work width. Value: 0 - 50"/>
-    <text name="CP_vehicle_courseGeneratorSetting_numberOfHeadlands_title" text="Number of headlands"/>
-    <text name="CP_vehicle_courseGeneratorSetting_numberOfHeadlands_tooltip" text="Number of headlands. Value: 0 - 40"/>
-    <text name="CP_vehicle_courseGeneratorSetting_headlandOverlapPercent_title" text="Headland overlap"/>
-    <text name="CP_vehicle_courseGeneratorSetting_headlandOverlapPercent_tooltip" text="Overlap headland tracks as percent of working width. Value: 0 - 25"/>
-    <text name="CP_vehicle_courseGeneratorSetting_fieldMargin_title" text="Field margin"/>
-    <text name="CP_vehicle_courseGeneratorSetting_fieldMargin_tooltip" text="Positive values reduce field size, negative increase the field size. Value: -2 - 5.8"/>
-    <text name="CP_vehicle_courseGeneratorSetting_rowsToSkip_title" text="Rows to skip"/>
-    <text name="CP_vehicle_courseGeneratorSetting_rowsToSkip_tooltip" text="Rows to skip when changing to the next up/down row. Value: 0 - 6"/>
-    <text name="CP_vehicle_courseGeneratorSetting_numberOfCircles_title" text="Number of circles"/>
-    <text name="CP_vehicle_courseGeneratorSetting_numberOfCircles_tooltip" text="Number of circles for racetrack. Value: 1 - 12"/>
-    <text name="CP_vehicle_courseGeneratorSetting_rowsPerLand_title" text="Rows per land"/>
-    <text name="CP_vehicle_courseGeneratorSetting_rowsPerLand_tooltip" text="When the center mode is 'lands', this many rows are in each block. Value: 0 - 24"/>
-    <text name="CP_vehicle_courseGeneratorSetting_headlandClockwise_title" text="Headland direction"/>
-    <text name="CP_vehicle_courseGeneratorSetting_headlandClockwise_tooltip" text="Should the vehicle drive clockwise or counterclockwise on the headland."/>
-    <text name="CP_vehicle_courseGeneratorSetting_centerClockwise_title" text="Center direction"/>
-    <text name="CP_vehicle_courseGeneratorSetting_centerClockwise_tooltip" text="Should the vehicle drive clockwise or counterclockwise on the headland."/>
-    <text name="CP_vehicle_courseGeneratorSetting_islandHeadlandClockwise_title" text="Island Headland direction"/>
-    <text name="CP_vehicle_courseGeneratorSetting_islandHeadlandClockwise_tooltip" text="Should the vehicle drive clockwise or counterclockwise on the headland."/>
-    <text name="CP_vehicle_courseGeneratorSetting_headlandClockwise_clockwise" text="clockwise"/>
-    <text name="CP_vehicle_courseGeneratorSetting_headlandClockwise_counterclockwise" text="counterclockwise"/>
-    <text name="CP_vehicle_courseGeneratorSetting_centerClockwise_clockwise" text="clockwise"/>
-    <text name="CP_vehicle_courseGeneratorSetting_centerClockwise_counterclockwise" text="counterclockwise"/>
-    <text name="CP_vehicle_courseGeneratorSetting_islandHeadlandClockwise_clockwise" text="clockwise"/>
-    <text name="CP_vehicle_courseGeneratorSetting_islandHeadlandClockwise_counterclockwise" text="counterclockwise"/>
-    <text name="CP_vehicle_courseGeneratorSetting_centerMode_title" text="Field center"/>
-    <text name="CP_vehicle_courseGeneratorSetting_centerMode_tooltip" text="Field center"/>
-    <text name="CP_vehicle_courseGeneratorSetting_centerMode_up_down" text="up/down"/>
-    <text name="CP_vehicle_courseGeneratorSetting_centerMode_spiral" text="spiral"/>
-    <text name="CP_vehicle_courseGeneratorSetting_centerMode_circular" text="racetrack"/>
-    <text name="CP_vehicle_courseGeneratorSetting_centerMode_lands" text="lands"/>
-    <text name="CP_vehicle_courseGeneratorSetting_spiralFromInside_title" text="Spiral from inside"/>
-    <text name="CP_vehicle_courseGeneratorSetting_spiralFromInside_tooltip" text="Starts the spiral from inside."/>
-    <text name="CP_vehicle_courseGeneratorSetting_evenRowWidth_title" text="even row width"/>
-    <text name="CP_vehicle_courseGeneratorSetting_evenRowWidth_tooltip" text="Reduces the working width to achieve an even distribution across all lanes."/>
-    <text name="CP_vehicle_courseGeneratorSetting_sharpenCorners_title" text="Sharpen headland corners"/>
-    <text name="CP_vehicle_courseGeneratorSetting_sharpenCorners_tooltip" text="Sharpen corners of non-rounded headlands"/>
-    <text name="CP_vehicle_courseGeneratorSetting_headlandsWithRoundCorners_title" text="Number of round corners"/>
-    <text name="CP_vehicle_courseGeneratorSetting_headlandsWithRoundCorners_tooltip" text="Number of round corners, starting with the first headland."/>
-    <text name="CP_vehicle_courseGeneratorSetting_turningRadius_title" text="Corner radius"/>
-    <text name="CP_vehicle_courseGeneratorSetting_turningRadius_tooltip" text="Radius of round corners, based on the turning radius of the vehicle. Value: 5 - 15"/>
-    <text name="CP_vehicle_courseGeneratorSetting_autoRowAngle_title" text="Up/down row direction"/>
-    <text name="CP_vehicle_courseGeneratorSetting_autoRowAngle_tooltip" text="Direction of the rows in the center of the field."/>
-    <text name="CP_vehicle_courseGeneratorSetting_autoRowAngle_automatic" text="automatic"/>
-    <text name="CP_vehicle_courseGeneratorSetting_autoRowAngle_manual" text="manual"/>
-    <text name="CP_vehicle_courseGeneratorSetting_manualRowAngleDeg_title" text="Up/down row angle"/>
-    <text name="CP_vehicle_courseGeneratorSetting_manualRowAngleDeg_tooltip" text="Angle of up/down rows (0° is North) when manual. Value: 0 - 175 Steps: 5"/>
-    <text name="CP_vehicle_courseGeneratorSetting_bypassIslands_title" text="Island bypass mode"/>
-    <text name="CP_vehicle_courseGeneratorSetting_bypassIslands_tooltip" text="How the course should bypass islands in the field."/>
-    <text name="CP_vehicle_courseGeneratorSetting_nIslandHeadlands_title" text="Island headlands"/>
-    <text name="CP_vehicle_courseGeneratorSetting_nIslandHeadlands_tooltip" text="Number of headlands around islands. Value: 1 - 10"/>
-    <text name="CP_vehicle_courseGeneratorSetting_startOnHeadland_title" text="Start work on"/>
-    <text name="CP_vehicle_courseGeneratorSetting_startOnHeadland_tooltip" text="Start working on the headland (harvest) or center of the field (other works)"/>
-    <text name="CP_vehicle_courseGeneratorSetting_startOnHeadland_on_headland" text="headland"/>
-    <text name="CP_vehicle_courseGeneratorSetting_startOnHeadland_up_down_rows" text="center"/>
-    <text name="CP_vehicle_courseGeneratorSetting_multiTools_title" text="Multiple tools"/>
+    <text name="CP_vehicle_courseGeneratorSetting_title" text="작업 경로 생성 설정 (%s)"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="기본"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="헤드랜드"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="중앙"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="헤드랜드 제외 구역 설정"/>
+    <text name="CP_vehicle_courseGeneratorSetting_workWidth_title" text="작업 폭"/>
+    <text name="CP_vehicle_courseGeneratorSetting_workWidth_tooltip" text="작업 폭. 값: 0 - 50"/>
+    <text name="CP_vehicle_courseGeneratorSetting_numberOfHeadlands_title" text="헤드랜드 횟수"/>
+    <text name="CP_vehicle_courseGeneratorSetting_numberOfHeadlands_tooltip" text="헤드랜드 횟수. 값: 0 - 40"/>
+    <text name="CP_vehicle_courseGeneratorSetting_headlandOverlapPercent_title" text="헤드랜드 중첩"/>
+    <text name="CP_vehicle_courseGeneratorSetting_headlandOverlapPercent_tooltip" text="작업 폭 대비 헤드랜드 경로 중첩 비율. 값: 0 - 25%"/>
+    <text name="CP_vehicle_courseGeneratorSetting_fieldMargin_title" text="필드 여백"/>
+    <text name="CP_vehicle_courseGeneratorSetting_fieldMargin_tooltip" text="양수 값은 필드 크기를 줄이고, 음수 값은 필드 크기를 늘립니다. 값: -2 ~ 5.8"/>
+    <text name="CP_vehicle_courseGeneratorSetting_rowsToSkip_title" text="건너뛸 행 수"/>
+    <text name="CP_vehicle_courseGeneratorSetting_rowsToSkip_tooltip" text="다음 상하 행으로 변경할 때 건너뛸 행 수. 값: 0 - 6"/>
+    <text name="CP_vehicle_courseGeneratorSetting_numberOfCircles_title" text="레이스트랙 작업 횟수"/>
+    <text name="CP_vehicle_courseGeneratorSetting_numberOfCircles_tooltip" text="레이스트랙 형태로 작업을 반복하는 횟수입니다. 값: 1 - 12"/>
+    <text name="CP_vehicle_courseGeneratorSetting_rowsPerLand_title" text="구획당 행 수"/>
+    <text name="CP_vehicle_courseGeneratorSetting_rowsPerLand_tooltip" text="중앙 모드가 '구획'일 때 각 블록의 행 수. 값: 0 - 24"/>
+    <text name="CP_vehicle_courseGeneratorSetting_headlandClockwise_title" text="헤드랜드 방향"/>
+    <text name="CP_vehicle_courseGeneratorSetting_headlandClockwise_tooltip" text="헤드랜드에서 차량이 시계 방향 또는 반시계 방향으로 주행할지 설정합니다."/>
+    <text name="CP_vehicle_courseGeneratorSetting_centerClockwise_title" text="중앙구역 방향"/>
+    <text name="CP_vehicle_courseGeneratorSetting_centerClockwise_tooltip" text="중앙구역에서 차량이 시계 방향 또는 반시계 방향으로 주행할지 설정합니다."/>
+    <text name="CP_vehicle_courseGeneratorSetting_islandHeadlandClockwise_title" text="섬모양 헤드랜드 방향"/>
+    <text name="CP_vehicle_courseGeneratorSetting_islandHeadlandClockwise_tooltip" text="섬모양의 헤드랜드에서 차량이 시계 방향 또는 반시계 방향으로 주행할지 설정합니다."/>
+    <text name="CP_vehicle_courseGeneratorSetting_headlandClockwise_clockwise" text="시계 방향"/>
+    <text name="CP_vehicle_courseGeneratorSetting_headlandClockwise_counterclockwise" text="반시계 방향"/>
+    <text name="CP_vehicle_courseGeneratorSetting_centerClockwise_clockwise" text="시계 방향"/>
+    <text name="CP_vehicle_courseGeneratorSetting_centerClockwise_counterclockwise" text="반시계 방향"/>
+    <text name="CP_vehicle_courseGeneratorSetting_islandHeadlandClockwise_clockwise" text="시계 방향"/>
+    <text name="CP_vehicle_courseGeneratorSetting_islandHeadlandClockwise_counterclockwise" text="반시계 방향"/>
+    <text name="CP_vehicle_courseGeneratorSetting_centerMode_title" text="필드 중앙"/>
+    <text name="CP_vehicle_courseGeneratorSetting_centerMode_tooltip" text="필드 중앙 모드 설정"/>
+    <text name="CP_vehicle_courseGeneratorSetting_centerMode_up_down" text="상하"/>
+    <text name="CP_vehicle_courseGeneratorSetting_centerMode_spiral" text="나선형"/>
+    <text name="CP_vehicle_courseGeneratorSetting_centerMode_circular" text="레이스트랙"/>
+    <text name="CP_vehicle_courseGeneratorSetting_centerMode_lands" text="구획"/>
+    <text name="CP_vehicle_courseGeneratorSetting_spiralFromInside_title" text="내부에서 시작"/>
+    <text name="CP_vehicle_courseGeneratorSetting_spiralFromInside_tooltip" text="나선형 작업을 내부에서 시작합니다."/>
+    <text name="CP_vehicle_courseGeneratorSetting_evenRowWidth_title" text="작업 폭 균등화"/>
+    <text name="CP_vehicle_courseGeneratorSetting_evenRowWidth_tooltip" text="작업 폭을 줄여 모든 작업 경로의 폭을 균등하게 설정합니다."/>
+    <text name="CP_vehicle_courseGeneratorSetting_sharpenCorners_title" text="헤드랜드 모서리 정리"/>
+    <text name="CP_vehicle_courseGeneratorSetting_sharpenCorners_tooltip" text="라운드 처리되지 않은 헤드랜드의 모서리를 정리합니다."/>
+    <text name="CP_vehicle_courseGeneratorSetting_headlandsWithRoundCorners_title" text="라운드 코너 수"/>
+    <text name="CP_vehicle_courseGeneratorSetting_headlandsWithRoundCorners_tooltip" text="첫 번째 헤드랜드부터 시작하여 라운드 코너의 수를 설정합니다."/>
+    <text name="CP_vehicle_courseGeneratorSetting_turningRadius_title" text="코너 반지름"/>
+    <text name="CP_vehicle_courseGeneratorSetting_turningRadius_tooltip" text="차량 회전 반지름을 기반으로 코너의 반지름을 설정합니다. 값: 5 - 15"/>
+    <text name="CP_vehicle_courseGeneratorSetting_autoRowAngle_title" text="열 작업 방향"/>
+    <text name="CP_vehicle_courseGeneratorSetting_autoRowAngle_tooltip" text="필드 중앙의 열의 방향을 설정합니다"/>
+    <text name="CP_vehicle_courseGeneratorSetting_autoRowAngle_automatic" text="자동"/>
+    <text name="CP_vehicle_courseGeneratorSetting_autoRowAngle_manual" text="수동"/>
+    <text name="CP_vehicle_courseGeneratorSetting_manualRowAngleDeg_title" text="상하 작업 각도"/>
+    <text name="CP_vehicle_courseGeneratorSetting_manualRowAngleDeg_tooltip" text="수동일 때 상하 작업 각도를 설정합니다 (0°는 북쪽). 값: 0 - 175, 단계: 5°"/>
+    <text name="CP_vehicle_courseGeneratorSetting_bypassIslands_title" text="섬 우회 모드"/>
+    <text name="CP_vehicle_courseGeneratorSetting_bypassIslands_tooltip" text="필드 내 섬을 우회하는 방법을 설정합니다."/>
+    <text name="CP_vehicle_courseGeneratorSetting_nIslandHeadlands_title" text="섬 헤드랜드"/>
+    <text name="CP_vehicle_courseGeneratorSetting_nIslandHeadlands_tooltip" text="섬 주변의 헤드랜드 횟수를 설정합니다. 값: 1 - 10"/>
+    <text name="CP_vehicle_courseGeneratorSetting_startOnHeadland_title" text="작업 시작 지점"/>
+    <text name="CP_vehicle_courseGeneratorSetting_startOnHeadland_tooltip" text="헤드랜드(수확 작업) 또는 필드 중앙(기타 작업)에서 작업을 시작합니다."/>
+    <text name="CP_vehicle_courseGeneratorSetting_startOnHeadland_on_headland" text="헤드랜드"/>
+    <text name="CP_vehicle_courseGeneratorSetting_startOnHeadland_up_down_rows" text="중앙구역"/>
+    <text name="CP_vehicle_courseGeneratorSetting_multiTools_title" text="다중 작업"/>
     <text name="CP_vehicle_courseGeneratorSetting_multiTools_tooltip" text="Number of vehicles on the same course."/>
     <text name="CP_vehicle_courseGeneratorSetting_useSameTurnWidth_title" text="Switching lanes"/>
     <text name="CP_vehicle_courseGeneratorSetting_useSameTurnWidth_tooltip" text="Sets the lanes to always switch. This leads to similar turns. See help menu for more details."/>
