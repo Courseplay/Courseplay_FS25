@@ -46,7 +46,7 @@
     <text name="CP_fieldWorkJobParameters_startAt_bales" text="collecting/wrapping bales"/>
     <text name="CP_fieldWorkJobParameters_subTitle_laneOffset" text="Lane offset:"/>
     <text name="CP_fieldWorkJobParameters_laneOffset_title" text="Lane offset:"/>
-    <text name="CP_fieldWorkJobParameters_laneOffset_tooltip" text="Lane offset"/>
+    <text name="CP_fieldWorkJobParameters_laneOffset_tooltip" text="Lane offset if a multitool course has been loaded."/>
     <text name="CP_fieldWorkJobParameters_laneOffset_center" text="center"/>
     <text name="CP_fieldWorkJobParameters_laneOffset_left" text="left(1)"/>
     <text name="CP_fieldWorkJobParameters_laneOffset_right" text="right(1)"/>
@@ -95,7 +95,7 @@
     <text name="CP_siloLoaderJobParameters_subTitle_loadPosition" text="Loading position"/>
     <text name="CP_siloLoaderJobParameters_loadPosition_title" text="Loading position"/>
     <text name="CP_siloLoader_fillLevelProgress" text="Liters left:"/>
-    <text name="CP_siloLoaderJobParameters_subTitle_unloading" text="Unloading at:"/>
+    <text name="CP_siloLoaderJobParameters_subTitle_unloading" text="Unload at:"/>
     <text name="CP_siloLoaderJobParameters_unloadAt_trailer" text="Trailer"/>
     <text name="CP_siloLoaderJobParameters_unloadAt_unloadTrigger" text="Unload station"/>
     <!---->
@@ -195,7 +195,7 @@
     <text name="CP_vehicle_setting_turnOnField_tooltip" text="Only turning on the field. Not possible with all tools. If turned off, the tool won't drive in reverse."/>
     <text name="CP_vehicle_setting_avoidFruit_title" text="Avoid driving in fruit"/>
     <text name="CP_vehicle_setting_avoidFruit_tooltip" text="The AI will try to avoid driving in the fruit."/>
-    <text name="CP_vehicle_setting_toolOffsetX_title" text="Tool offset horizontal"/>
+    <text name="CP_vehicle_setting_toolOffsetX_title" text="Horizontal tool offset"/>
     <text name="CP_vehicle_setting_toolOffsetX_tooltip" text="Tool offset horizontal"/>
     <text name="CP_vehicle_setting_baleCollectorOffset_title" text="Bale pickup offset"/>
     <text name="CP_vehicle_setting_baleCollectorOffset_tooltip" text="Offset for the bale collector"/>
@@ -215,18 +215,18 @@
     <text name="CP_vehicle_setting_debugActive_tooltip" text="Enables/disables debug for this vehicle."/>
     <text name="CP_vehicle_setting_refillOnTheField_title" text="Refill tool"/>
     <text name="CP_vehicle_setting_refillOnTheField_tooltip" text="Tool waits on the field to be refilled."/>
-    <text name="CP_vehicle_setting_refillOnTheField_waiting" text="Waiting"/>
+    <text name="CP_vehicle_setting_refillOnTheField_waiting" text="Wait"/>
     <text name="CP_vehicle_setting_refillOnTheField_active" text="Active"/>
     <!---->
     <!--Vehicle bunker silo settings-->
     <!---->
-    <text name="CP_vehicle_setting_subTitle_bunkerSilo" text="Siloworker settings"/>
-    <text name="CP_vehicle_setting_bunkerSiloWorkWidth_title" text="Work width"/>
-    <text name="CP_vehicle_setting_bunkerSiloWorkWidth_tooltip" text="Work width. Value: 0 - 50"/>
+    <text name="CP_vehicle_setting_subTitle_bunkerSilo" text="Silo work settings"/>
+    <text name="CP_vehicle_setting_bunkerSiloWorkWidth_title" text="Working width"/>
+    <text name="CP_vehicle_setting_bunkerSiloWorkWidth_tooltip" text="Working width. Value: 0 - 50"/>
     <text name="CP_vehicle_setting_levelerHeightOffset_title" text="Shield height offset"/>
-    <text name="CP_vehicle_setting_levelerHeightOffset_tooltip" text="Offset of the shield from the ground. Value: 0 - 1"/>
+    <text name="CP_vehicle_setting_levelerHeightOffset_tooltip" text="Height offset from the shield to the ground. Value: 0 - 1"/>
     <text name="CP_vehicle_setting_loadingShovelHeightOffset_title" text="Shovel height offset"/>
-    <text name="CP_vehicle_setting_loadingShovelHeightOffset_tooltip" text="Offset for the shovel loading position. Value: -1 - 1"/>
+    <text name="CP_vehicle_setting_loadingShovelHeightOffset_tooltip" text="Height offset for the shovel loading position. Value: -1 - 1"/>
     <!---->
     <!--Vehicle settings speed-->
     <!---->
@@ -270,15 +270,15 @@
     <!---->
     <!--Course generator settings-->
     <!---->
-    <text name="CP_vehicle_courseGeneratorSetting_title" text="Helper settings of (%s)"/>
+    <text name="CP_vehicle_courseGeneratorSetting_title" text="Helper settings for (%s)"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="Basic settings"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Vine settings"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Fieldwork settings"/>
-    <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="Settings headland"/>
-    <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="Settings center"/>
-    <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Settings island"/>
-    <text name="CP_vehicle_courseGeneratorSetting_workWidth_title" text="Work width"/>
-    <text name="CP_vehicle_courseGeneratorSetting_workWidth_tooltip" text="Work width. Value: 0 - 50"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="Headland settings"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="Center settings"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Island settings"/>
+    <text name="CP_vehicle_courseGeneratorSetting_workWidth_title" text="Working width"/>
+    <text name="CP_vehicle_courseGeneratorSetting_workWidth_tooltip" text="Working width. Value: 0 - 55"/>
     <text name="CP_vehicle_courseGeneratorSetting_numberOfHeadlands_title" text="Number of headlands"/>
     <text name="CP_vehicle_courseGeneratorSetting_numberOfHeadlands_tooltip" text="Number of headlands. Value: 0 - 40"/>
     <text name="CP_vehicle_courseGeneratorSetting_headlandOverlapPercent_title" text="Headland overlap"/>
@@ -288,7 +288,7 @@
     <text name="CP_vehicle_courseGeneratorSetting_rowsToSkip_title" text="Rows to skip"/>
     <text name="CP_vehicle_courseGeneratorSetting_rowsToSkip_tooltip" text="Rows to skip when changing to the next up/down row. Value: 0 - 6"/>
     <text name="CP_vehicle_courseGeneratorSetting_numberOfCircles_title" text="Number of circles"/>
-    <text name="CP_vehicle_courseGeneratorSetting_numberOfCircles_tooltip" text="Number of circles for racetrack. Value: 1 - 12"/>
+    <text name="CP_vehicle_courseGeneratorSetting_numberOfCircles_tooltip" text="Number of circles for 'racetrack'. Value: 1 - 12"/>
     <text name="CP_vehicle_courseGeneratorSetting_rowsPerLand_title" text="Rows per land"/>
     <text name="CP_vehicle_courseGeneratorSetting_rowsPerLand_tooltip" text="When the center mode is 'lands', this many rows are in each block. Value: 0 - 24"/>
     <text name="CP_vehicle_courseGeneratorSetting_headlandClockwise_title" text="Headland direction"/>
@@ -489,7 +489,7 @@ The course is saved automatically on closing of the editor and overrides the sel
     <text name="CP_infoTexts_drivingToSelfUnload" text="Driving to trailer"/>
     <text name="CP_infoTexts_outOfMoney" text="Out of money"/>
     <text name="CP_infoTexts_waitForRainToFinish" text="Waiting for rain to finish"/>
-    <text name="CP_infoTexts_waitForSnowToClear" text="Waits for snow to disappear"/>
+    <text name="CP_infoTexts_waitForSnowToClear" text="Waiting for snow to disappear"/>
     <text name="CP_infoTexts_waitForUnloader" text="Waiting on unloader"/>
     <text name="CP_infoTexts_errorStopped" text="Left the course, stopped"/>
     <text name="CP_infoTexts_wrongBaleWrapType" text="Wrong bale type"/>
@@ -527,7 +527,7 @@ The course is saved automatically on closing of the editor and overrides the sel
     <!--Help menu-->
     <!---->
     <text name="CP_help_title" text="Courseplay"/>
-    <text name="CP_help_subTitle" text="A Modification for Farming Simulator 22 "/>
+    <text name="CP_help_subTitle" text="A Modification for Farming Simulator 25"/>
     <text name="CP_help_page_blank" text=""/>
     <text name="CP_help_page_General_title" text="General Information"/>
     <text name="CP_help_page_GeneralBase_text" text="
@@ -538,18 +538,18 @@ Courseplay is also able to work on rice fields and vines.
 Fieldwork courses can be setup in multitool mode, which allows the use of up to 5 driver working in a convoy on the same field.
 It's also possible to have the combine unload in a trailer on/near the field automatically.
 Custom field borders can be assigned for Courseplay to use, for example: in case of a meadow, which isn't recognised as a normal field.
-Lastly cp has a interface for AutoDrive, which allows for refilling of a seeder at a nearby silo or unloading a forage wagon and so on.
-Combine unloader are able to create a heap near the field with their loaded fruit.
-In Farming Simulator 25, Courseplay got its own menu wich you can access over different buttons on the HUD.
+Lastly CP has an interface for AutoDrive, which allows for refilling of a seeder at a nearby silo or unloading a forage wagon and so on.
+Combine unloaders are able to create a heap near the field with their loaded fruit.
+In Farming Simulator 25, Courseplay got its own menu, which you can access over different buttons on the HUD.
 
 For more information please visit our GitHub: https://github.com/Courseplay/Courseplay_FS25 .
 There you can get help or report any issues you've experienced.
-Finally, we thank every translator and our community for reporting bugs, giving use feedback and new ideas.
+Finally, we thank every translator and our community for reporting bugs and giving us feedback and new ideas.
 
-What is the expert Mode:
-When the expert Mode is deactivated, you have only access to some settings.
-The other settings are hidden and set to default values, which works in most situations.
-That way, we try to help Users to get easier into Courseplay without being overwhelmed from all the settings.
+What is the expert mode:
+When the expert mode is deactivated, you only have access to some settings.
+The other settings are hidden and set to default values, which work in most situations.
+That way, we try to make it easier for new Courseplay users to get started without overwhelming them with the various settings.
 "/>
     <text name="CP_help_page_extendedJobMenu_title" text="Extended AI Menu"/>
     <text name="CP_help_page_startJobMenuBase_text" text="
@@ -579,7 +579,7 @@ If you are creating a CP: Fieldwork job, you will gain access to the course gene
 Now it's possible to start the driver directly from the menu. The Giants helper will drive to the target position and from there the CP job automatically takes over.
 Alternatively you can also start the driver from the HUD if you are close to the field with the vehicle or using the AutoDrive mod to deliver the CP job close to the field.
 "/>
-    <text name="CP_help_page_courseGeneratorBasic_title" text="Course Generator Basics"/>
+    <text name="CP_help_page_courseGeneratorBasic_title" text="Course generator basics"/>
     <text name="CP_help_page_courseGeneratorBase_text" text="
 Courseplay's course generator is a sophisticated tool that can generate fieldwork courses customized for every possible job.
 It has many settings and it may take some time to familiarize yourself with it. If you are new to Courseplay, you should
@@ -590,9 +590,9 @@ the generator offers is to experiment with it.
     <text name="CP_help_page_courseGeneratorBaseFunctions_text" text="
 Basics:
 The first few values you see here are real basic stuff.
-- Work width: Courseplay automatically detects the working width for most tools, so you won't have to worry about this,
+- Working width: Courseplay automatically detects the working width for most tools, so you won't have to worry about this,
 but if automatic detection fails, you can set it manually. This setting has an impact on the overall course.
-- Number of Headlands: The best way to keep your vehicles on the field while turning at the end of each row is to add headlands.
+- Number of headlands: The best way to keep your vehicles on the field while turning at the end of each row is to add headlands.
 The Number of the Headlands multiplied by the work width should be at least the total length of your vehicle plus the attached tool.
 - Start work on: As mentioned in the extended AI Menu, the field position is used to set the start or end position for
 the fieldwork course. You want to start working on the headland when harvesting, and work towards the middle of the field.
@@ -666,18 +666,18 @@ Some settings are only visible, if you set the expert mode to active on the glob
 Before you play around with those settings, you should make sure you know what the basic settings do.
 Some expert settings only work properly under some conditions.
 
-- Multiple Tools: This setting is used when you want more than just one vehicle to work on your course. As this gets a bit more complicated, there is a separate help topic for it.
+- Multiple tools: This setting is used when you want more than just one vehicle to work on your course. As this gets a bit more complicated, there is a separate help topic for it.
 - Switching lanes: With this option active, vehicles switch lanes at each turn, so every vehicle's turn is of the same width. See the extra help menu &quot;Switching lanes&quot; for more details.
 - Narrow field: Creates the headland only at two short edges of the field. In that case, it is not possible to keep your vehicle on the field on the longest edges at the headland.
 - Headland overlap: By default, headland passes overlap each other (but never the field edge) by a few percent to avoid missing fruit in some edge cases. You can change that overlap here.
 - Field margin: This setting lets you move the field border in- or outwards of the original border.
-- Use base line edge: With this setting you can generate curved up/down rows, running parallel with the edge of the field near the field marker. This makes sense when the field edge is not straight, the up/down rows will follow the curve of the edge.
+- Rows follow field edge curve: With this setting you can generate curved up/down rows, running parallel with the edge of the field near the field marker. This makes sense when the field edge is not straight, the up/down rows will follow the curve of the edge.
 IMPORTANT NOTE: This is an experimental setting which may not work for all field shapes. If it doesn't work, try another setting.
 "/>
-    <text name="CP_help_page_courseGeneratorHeadland_title" text="Course generator headland"/>
-    <text name="CP_help_page_courseGeneratorCenter_title" text="Course generator center"/>
-    <text name="CP_help_page_courseGeneratorIsland_title" text="Course generator island"/>
-    <text name="CP_help_page_courseGeneratorExpert_title" text="Course generator expert"/>
+    <text name="CP_help_page_courseGeneratorHeadland_title" text="Course generator: headland"/>
+    <text name="CP_help_page_courseGeneratorCenter_title" text="Course generator: center"/>
+    <text name="CP_help_page_courseGeneratorIsland_title" text="Course generator: islands"/>
+    <text name="CP_help_page_courseGeneratorExpert_title" text="Course generator: expert settings"/>
     <text name="CP_help_page_courseManager_title" text="Course manager"/>
     <text name="CP_help_page_courseManagerBase_text" text="
 The course manager allows you to save courses and enables you to load the saved course later again.
@@ -871,7 +871,7 @@ The status messages are:
 - Driving to trailer
 - Ouf of money
 - Waiting for rain to finish
-- Waits for snow to disappear
+- Waiting for snow to disappear
 - Waiting on unloader
 - Left the course, stopped
 - Wrong bale type

@@ -33,10 +33,10 @@
     <text name="CP_fieldWorkJobParameters_fieldPosition_title" text="Feldposition:"/>
     <text name="CP_fieldWorkJobParameters_bunkerSiloPosition_title" text="Siloposition:"/>
     <text name="CP_fieldWorkJobParameters_parkPosition_title" text="Parkposition:"/>
-    <text name="CP_fieldWorkJobParameters_subTitle_startAt" text="Start am:"/>
-    <text name="CP_fieldWorkJobParameters_startAt_title" text="Start am:"/>
+    <text name="CP_fieldWorkJobParameters_subTitle_startAt" text="Startpunkt:"/>
+    <text name="CP_fieldWorkJobParameters_startAt_title" text="Startpunkt:"/>
     <text name="CP_fieldWorkJobParameters_startAt_tooltip" text="Wo die Arbeit gestartet wird."/>
-    <text name="CP_fieldWorkJobParameters_startAt_nearest" text="Nahester Wegpunkt"/>
+    <text name="CP_fieldWorkJobParameters_startAt_nearest" text="Nächstgelegener Wegpunkt"/>
     <text name="CP_fieldWorkJobParameters_startAt_first" text="Erster Wegpunkt"/>
     <text name="CP_fieldWorkJobParameters_startAt_last" text="Letzter Wegpunkt"/>
     <text name="CP_fieldWorkJobParameters_startAt_bunkerSilo" text="Bunkersilo-Modus"/>
@@ -46,7 +46,7 @@
     <text name="CP_fieldWorkJobParameters_startAt_bales" text="Ballen sammeln/wickeln"/>
     <text name="CP_fieldWorkJobParameters_subTitle_laneOffset" text="Bahn:"/>
     <text name="CP_fieldWorkJobParameters_laneOffset_title" text="Bahn:"/>
-    <text name="CP_fieldWorkJobParameters_laneOffset_tooltip" text="Bahnauswahl, wenn ein Multitoolkurs erstellt wurde."/>
+    <text name="CP_fieldWorkJobParameters_laneOffset_tooltip" text="Bahnauswahl, wenn ein Multitoolkurs geladen wurde."/>
     <text name="CP_fieldWorkJobParameters_laneOffset_center" text="Mitte"/>
     <text name="CP_fieldWorkJobParameters_laneOffset_left" text="Links(1)"/>
     <text name="CP_fieldWorkJobParameters_laneOffset_right" text="Rechts(1)"/>
@@ -155,15 +155,15 @@
     <!---->
     <!--Vehicle settings-->
     <!---->
-    <text name="CP_vehicle_setting_title" text="Fahrzeugeinstellungen für (%s)"/>
+    <text name="CP_vehicle_setting_title" text="Fahrzeugeinstellungen von (%s)"/>
     <text name="CP_vehicle_setting_subTitle_vehicle" text="Fahrzeugeinstellungen"/>
     <text name="CP_vehicle_setting_subTitle_basic" text="Grundeinstellungen"/>
-    <text name="CP_vehicle_setting_subTitle_implement" text="Geräteeinstellungen"/>
-    <text name="CP_vehicle_setting_subTitle_combine" text="Einstellungen für Drescher"/>
-    <text name="CP_vehicle_setting_subTitle_seeder" text="Einstellungen für Saatmaschine"/>
-    <text name="CP_vehicle_setting_subTitle_multitool" text="Multitooleinstellungen"/>
+    <text name="CP_vehicle_setting_subTitle_implement" text="Geräte"/>
+    <text name="CP_vehicle_setting_subTitle_combine" text="Drescher"/>
+    <text name="CP_vehicle_setting_subTitle_seeder" text="Sämaschine"/>
+    <text name="CP_vehicle_setting_subTitle_multitool" text="Multitool"/>
     <text name="CP_vehicle_setting_subTitle_speed" text="Geschwindigkeiten"/>
-    <text name="CP_vehicle_setting_subTitle_debug" text="Debugeinstellungen"/>
+    <text name="CP_vehicle_setting_subTitle_debug" text="Debugging"/>
     <text name="CP_vehicle_setting_showCourse_title" text="Kurs anzeigen"/>
     <text name="CP_vehicle_setting_showCourse_tooltip" text="Zeigt den Kurs des aktuell gewählten Fahrzeugs."/>
     <text name="CP_vehicle_setting_showCourse_startStop" text="Nur Start/Ende"/>
@@ -195,7 +195,7 @@
     <text name="CP_vehicle_setting_turnOnField_tooltip" text="Versucht beim Wendemanöver auf dem Feld zu bleiben. Nicht mit allen Geräten möglich. Wenn ausgeschaltet, wird das Gerät nicht rückwärts fahren."/>
     <text name="CP_vehicle_setting_avoidFruit_title" text="Fruchtumfahrung"/>
     <text name="CP_vehicle_setting_avoidFruit_tooltip" text="Versucht nach Möglichkeit, nicht in der Frucht zu fahren."/>
-    <text name="CP_vehicle_setting_toolOffsetX_title" text="Geräteversatz horizontal"/>
+    <text name="CP_vehicle_setting_toolOffsetX_title" text="Horizontaler Geräteversatz"/>
     <text name="CP_vehicle_setting_toolOffsetX_tooltip" text="Geräteversatz horizontal"/>
     <text name="CP_vehicle_setting_baleCollectorOffset_title" text="Ballenaufnahmeversatz"/>
     <text name="CP_vehicle_setting_baleCollectorOffset_tooltip" text="Versatz für den Ballensammler"/>
@@ -209,9 +209,9 @@
     <text name="CP_vehicle_setting_useAdditiveFillUnit_tooltip" text="Wenn aktiv und das Siliermittel leer ist, wird der Fahrer gestoppt."/>
     <text name="CP_vehicle_setting_symmetricLaneChange_title" text="Symmetrischer Bahnenwechsel"/>
     <text name="CP_vehicle_setting_symmetricLaneChange_tooltip" text="Symmetrischer Bahnenwechsel"/>
-    <text name="CP_vehicle_setting_convoyDistance_title" text="Entfernung Fahrzeugverband"/>
+    <text name="CP_vehicle_setting_convoyDistance_title" text="Entfernung im Fahrzeugverband"/>
     <text name="CP_vehicle_setting_convoyDistance_tooltip" text="Entfernung zwischen den Fahrzeugen. Wert: 40 - 400"/>
-    <text name="CP_vehicle_setting_debugActive_title" text="Fahrzeug-Debug"/>
+    <text name="CP_vehicle_setting_debugActive_title" text="Fahrzeug-Debugging"/>
     <text name="CP_vehicle_setting_debugActive_tooltip" text="Debuginformationen für das Fahrzeug ein- oder ausschalten. Visuell und Logeinträge."/>
     <text name="CP_vehicle_setting_refillOnTheField_title" text="Gerät auffüllen"/>
     <text name="CP_vehicle_setting_refillOnTheField_tooltip" text="Gerät wartet auf dem Feld, um aufgefüllt zu werden."/>
@@ -220,7 +220,7 @@
     <!---->
     <!--Vehicle bunker silo settings-->
     <!---->
-    <text name="CP_vehicle_setting_subTitle_bunkerSilo" text="Siloarbeiter Einstellungen"/>
+    <text name="CP_vehicle_setting_subTitle_bunkerSilo" text="Siloarbeit"/>
     <text name="CP_vehicle_setting_bunkerSiloWorkWidth_title" text="Arbeitsbreite"/>
     <text name="CP_vehicle_setting_bunkerSiloWorkWidth_tooltip" text="Arbeitsbreite. Wert: 0 - 50"/>
     <text name="CP_vehicle_setting_levelerHeightOffset_title" text="Versatz Schildhöhe"/>
@@ -270,27 +270,27 @@
     <!---->
     <!--Course generator settings-->
     <!---->
-    <text name="CP_vehicle_courseGeneratorSetting_title" text="Helfer Einstellungen von (%s)"/>
+    <text name="CP_vehicle_courseGeneratorSetting_title" text="Helfereinstellungen von (%s)"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="Grundeinstellungen"/>
-    <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Reben Einstellungen"/>
-    <text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Feldarbeit Einstellungen"/>
-    <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="Einstellungen Vorgewende"/>
-    <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="Einstellungen Mitte"/>
-    <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Einstellungen Insel"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Kurseinstellungen - Reben"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Kurseinstellungen - Feldarbeit"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="Vorgewende"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="Feldmitte"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Feldinseln"/>
     <text name="CP_vehicle_courseGeneratorSetting_workWidth_title" text="Arbeitsbreite"/>
-    <text name="CP_vehicle_courseGeneratorSetting_workWidth_tooltip" text="Arbeitsbreite. Wert: 0 - 50"/>
-    <text name="CP_vehicle_courseGeneratorSetting_numberOfHeadlands_title" text="Anzahl Vorgewende"/>
-    <text name="CP_vehicle_courseGeneratorSetting_numberOfHeadlands_tooltip" text="Anzahl Vorgewende. Wert: 0 - 40"/>
+    <text name="CP_vehicle_courseGeneratorSetting_workWidth_tooltip" text="Arbeitsbreite. Wert: 0 - 55"/>
+    <text name="CP_vehicle_courseGeneratorSetting_numberOfHeadlands_title" text="Anzahl der Vorgewende"/>
+    <text name="CP_vehicle_courseGeneratorSetting_numberOfHeadlands_tooltip" text="Anzahl der Vorgewende. Wert: 0 - 40"/>
     <text name="CP_vehicle_courseGeneratorSetting_headlandOverlapPercent_title" text="Vorgewende-Überlappung"/>
-    <text name="CP_vehicle_courseGeneratorSetting_headlandOverlapPercent_tooltip" text="Überlappung Vorgewende in % der Arbeitsbreite. Wert: 0 - 25"/>
+    <text name="CP_vehicle_courseGeneratorSetting_headlandOverlapPercent_tooltip" text="Überlappung der Vorgewende in % der Arbeitsbreite. Wert: 0 - 25"/>
     <text name="CP_vehicle_courseGeneratorSetting_fieldMargin_title" text="Feldgrenze"/>
     <text name="CP_vehicle_courseGeneratorSetting_fieldMargin_tooltip" text="Positive Werte reduzieren die Feldgröße, negative Werte vergrößern den Arbeitsbereich. Wert: -2 - 5.8"/>
     <text name="CP_vehicle_courseGeneratorSetting_rowsToSkip_title" text="Reihen überspringen"/>
     <text name="CP_vehicle_courseGeneratorSetting_rowsToSkip_tooltip" text="Zu überspringende Reihen, wenn auf nächste Reihe gewendet wird. Nur für hoch/runter. Wert: 0 - 6"/>
-    <text name="CP_vehicle_courseGeneratorSetting_numberOfCircles_title" text="Anzahl Runden"/>
-    <text name="CP_vehicle_courseGeneratorSetting_numberOfCircles_tooltip" text="Anzahl Runden für kreisförmig. Wert: 1 - 12"/>
+    <text name="CP_vehicle_courseGeneratorSetting_numberOfCircles_title" text="Anzahl der Runden"/>
+    <text name="CP_vehicle_courseGeneratorSetting_numberOfCircles_tooltip" text="Anzahl der Runden für &quot;kreisförmig&quot;. Wert: 1 - 12"/>
     <text name="CP_vehicle_courseGeneratorSetting_rowsPerLand_title" text="Reihen pro Beet"/>
-    <text name="CP_vehicle_courseGeneratorSetting_rowsPerLand_tooltip" text="Wenn Zentrierung Beete ausgewählt ist, dann befinden sich so viele Reihen im Block. Wert: 0 - 24"/>
+    <text name="CP_vehicle_courseGeneratorSetting_rowsPerLand_tooltip" text="Wenn Feldmitte &quot;Beete&quot; ausgewählt ist, dann befinden sich so viele Reihen im Block. Wert: 0 - 24"/>
     <text name="CP_vehicle_courseGeneratorSetting_headlandClockwise_title" text="Vorgewende-Richtung"/>
     <text name="CP_vehicle_courseGeneratorSetting_headlandClockwise_tooltip" text="Auf dem Vorgewende im oder gegen den Uhrzeigersinn fahren."/>
     <text name="CP_vehicle_courseGeneratorSetting_centerClockwise_title" text="Mitte-Richtung"/>
@@ -313,10 +313,10 @@
     <text name="CP_vehicle_courseGeneratorSetting_spiralFromInside_tooltip" text="Startet die Spirale von innen."/>
     <text name="CP_vehicle_courseGeneratorSetting_evenRowWidth_title" text="Gleichmäßige Bahnenbreite"/>
     <text name="CP_vehicle_courseGeneratorSetting_evenRowWidth_tooltip" text="Reduziert die Arbeitsbreite um eine gleichmäßige Verteilung über alle Bahnen zu erreichen."/>
-    <text name="CP_vehicle_courseGeneratorSetting_sharpenCorners_title" text="Vorgewende-Ecken"/>
+    <text name="CP_vehicle_courseGeneratorSetting_sharpenCorners_title" text="Scharfe Vorgewende-Ecken"/>
     <text name="CP_vehicle_courseGeneratorSetting_sharpenCorners_tooltip" text="Wenn aktiv, werden die Ecken des Feldes als scharfe Ecken generiert."/>
-    <text name="CP_vehicle_courseGeneratorSetting_headlandsWithRoundCorners_title" text="Anzahl runde Ecken"/>
-    <text name="CP_vehicle_courseGeneratorSetting_headlandsWithRoundCorners_tooltip" text="Anzahl runde Ecken, beginnend mit dem ersten Vorgewende."/>
+    <text name="CP_vehicle_courseGeneratorSetting_headlandsWithRoundCorners_title" text="Anzahl der runden Ecken"/>
+    <text name="CP_vehicle_courseGeneratorSetting_headlandsWithRoundCorners_tooltip" text="Anzahl der Vorgewende mit runden Ecken, beginnend mit dem ersten Vorgewende."/>
     <text name="CP_vehicle_courseGeneratorSetting_turningRadius_title" text="Eckenradius"/>
     <text name="CP_vehicle_courseGeneratorSetting_turningRadius_tooltip" text="Radius der runden Ecken, basierend auf dem Wenderadius des Fahrzeugs. Wert: 5 - 15"/>
     <text name="CP_vehicle_courseGeneratorSetting_autoRowAngle_title" text="Startrichtung"/>
@@ -324,11 +324,11 @@
     <text name="CP_vehicle_courseGeneratorSetting_autoRowAngle_automatic" text="Automatisch"/>
     <text name="CP_vehicle_courseGeneratorSetting_autoRowAngle_manual" text="Manuell"/>
     <text name="CP_vehicle_courseGeneratorSetting_manualRowAngleDeg_title" text="Richtungswinkel der Bahnen"/>
-    <text name="CP_vehicle_courseGeneratorSetting_manualRowAngleDeg_tooltip" text="Winkel der Bahnen (0 ist Norden), wenn Einstellung auf Manuell gesetzt ist. Wert: 0 - 175 Schritte: 5"/>
+    <text name="CP_vehicle_courseGeneratorSetting_manualRowAngleDeg_tooltip" text="Winkel der Bahnen (0 ist Norden), wenn Einstellung auf &quot;Manuell&quot; gesetzt ist. Wert: 0 - 175 Schritte: 5"/>
     <text name="CP_vehicle_courseGeneratorSetting_bypassIslands_title" text="Inselumfahrung"/>
     <text name="CP_vehicle_courseGeneratorSetting_bypassIslands_tooltip" text="Inseln auf dem Feld umfahren oder ignorieren."/>
-    <text name="CP_vehicle_courseGeneratorSetting_nIslandHeadlands_title" text="Insel Vorgewende"/>
-    <text name="CP_vehicle_courseGeneratorSetting_nIslandHeadlands_tooltip" text="Anzahl Vorgewende bei Inseln. Wert: 1 - 10"/>
+    <text name="CP_vehicle_courseGeneratorSetting_nIslandHeadlands_title" text="Insel-Vorgewende"/>
+    <text name="CP_vehicle_courseGeneratorSetting_nIslandHeadlands_tooltip" text="Anzahl der Vorgewende bei Inseln. Wert: 1 - 10"/>
     <text name="CP_vehicle_courseGeneratorSetting_startOnHeadland_title" text="Starte auf"/>
     <text name="CP_vehicle_courseGeneratorSetting_startOnHeadland_tooltip" text="Startpunkt auf dem Vorgewende oder auf den Bahnen."/>
     <text name="CP_vehicle_courseGeneratorSetting_startOnHeadland_on_headland" text="Vorgewende"/>
@@ -337,7 +337,7 @@
     <text name="CP_vehicle_courseGeneratorSetting_multiTools_tooltip" text="Wie viele Fahrzeuge zusammen auf dem Kurs fahren."/>
     <text name="CP_vehicle_courseGeneratorSetting_useSameTurnWidth_title" text="Bahnen tauschen"/>
     <text name="CP_vehicle_courseGeneratorSetting_useSameTurnWidth_tooltip" text="Stellt ein ob die Bahnen in der Feldmitte getauscht werden sollen. Das führt zu gleichmäßigen Wendemanövern. Siehe Hilfemenü für mehr Details."/>
-    <text name="CP_vehicle_courseGeneratorSetting_useBaseLineEdge_title" text="Bahnenform anhand Feldkante"/>
+    <text name="CP_vehicle_courseGeneratorSetting_useBaseLineEdge_title" text="Bahnenform anhand der Feldkante"/>
     <text name="CP_vehicle_courseGeneratorSetting_useBaseLineEdge_tooltip" text="Die Feldkante, die am nächsten am Feldmarker ist, wird verwendet, um den Verlauf der Bahnen zu bestimmen."/>
     <text name="CP_vehicle_courseGeneratorSetting_narrowField_title" text="Schmales Feld"/>
     <text name="CP_vehicle_courseGeneratorSetting_narrowField_tooltip" text="Generiert das Vorgewende nur an den schmalen Kanten des Felds."/>
@@ -368,11 +368,11 @@
     <text name="CP_global_setting_autoRepair_less_than_25" text="&lt; 25%"/>
     <text name="CP_global_setting_autoRepair_less_than_70" text="&lt; 70%"/>
     <text name="CP_global_setting_autoRepair_always" text="Instandhalten"/>
-    <text name="CP_global_setting_fuelThreshold_title" text="Minimum Kraftstoff"/>
+    <text name="CP_global_setting_fuelThreshold_title" text="Mindestfüllstand Kraftstoff"/>
     <text name="CP_global_setting_fuelThreshold_tooltip" text="Fahrer wird entlassen, wenn Kraftstoff unter diesem Wert liegt."/>
-    <text name="CP_global_setting_waitForRefueling_title" text="Wartet auf auftanken"/>
+    <text name="CP_global_setting_waitForRefueling_title" text="Warten auf auftanken"/>
     <text name="CP_global_setting_waitForRefueling_tooltip" text="Fahrzeug wartet vor Ort, um aufgefüllt zu werden."/>
-    <text name="CP_global_setting_brokenThreshold_title" text="Minimum Zustand"/>
+    <text name="CP_global_setting_brokenThreshold_title" text="Mindestzustand"/>
     <text name="CP_global_setting_brokenThreshold_tooltip" text="Fahrer wird entlassen, wenn der Schaden des Fahrzeugs oder Arbeitsgeräts über diesem Wert liegt. 100% ist aus."/>
     <text name="CP_global_setting_stopThreshingDuringRain_title" text="Drescher während Regen stoppen"/>
     <text name="CP_global_setting_stopThreshingDuringRain_tooltip" text="Wenn die Einstellung aktiviert ist, dann warten alle Drescher solange, bis der Regen aufhört."/>
@@ -408,7 +408,7 @@
     <!---->
     <!--Global settings pathfinder-->
     <!---->
-    <text name="CP_global_setting_subTitle_pathfinder" text="Pathfindereinstellungen"/>
+    <text name="CP_global_setting_subTitle_pathfinder" text="Pathfinder"/>
     <text name="CP_global_setting_maxDeltaAngleAtGoalDeg_title" text="Ankunftswinkel am Ziel"/>
     <text name="CP_global_setting_maxDeltaAngleAtGoalDeg_tooltip" text="Maximaler zulässiger Winkel am Ziel. Kleine Winkel sind genauer, große schneller."/>
     <text name="CP_global_setting_deltaAngleRelaxFactorDeg_title" text="Änderungsfaktor Pathfinder"/>
@@ -527,7 +527,7 @@ Der Kurs wird beim Schließen automatisch gespeichert und überschrieben.
     <!--Help menu-->
     <!---->
     <text name="CP_help_title" text="Courseplay"/>
-    <text name="CP_help_subTitle" text="Modifikation für den Landwirtschafts-Simulator 22"/>
+    <text name="CP_help_subTitle" text="Modifikation für den Landwirtschafts-Simulator 25"/>
     <text name="CP_help_page_blank" text=""/>
     <text name="CP_help_page_General_title" text="Generelle Informationen"/>
     <text name="CP_help_page_GeneralBase_text" text="
@@ -543,7 +543,7 @@ Außerdem hat CP ein Interface für AutoDrive, dadurch ist es möglich Sämaschi
 Drescher-Abfahrer sind in der Lage, die geladene Frucht als Haufen am Feldrand abzulegen.
 Im Farming Simulator 25 besitzt Courseplay sein eigenes Menü, welches ihr über verschiedene Buttons im HUD erreicht.
 
-Für weitere Informationen, schaut bitte auf GitHub vorbei unter:  https://github.com/Courseplay/Courseplay_FS25 .
+Für weitere Informationen, schaut bitte auf GitHub vorbei unter: https://github.com/Courseplay/Courseplay_FS25 .
 Dort könnt ihr Fragen stellen, Fehlerberichte einreichen oder Verbesserungen vorschlagen.
 Ein ganz großes Danke geht an unsere Übersetzer und an die Community für die zahlreichen Fehlermeldungen, Feedbacks und Ideen.
 
@@ -554,12 +554,12 @@ Mit dieser Funktion versuchen wir neuen Courseplay-Nutzern den Einstieg zu erlei
 "/>
     <text name="CP_help_page_extendedJobMenu_title" text="Erweitertes Helfermenü"/>
     <text name="CP_help_page_startJobMenuBase_text" text="
-Die Einstellungen für jeden Helfer finden jetzt im Menü &quot;Helfer Einstellungen&quot; statt.
-Das Menü funktioniert grundlegend wie das alte Helfer Menü.
+Die Einstellungen für jeden Helfer finden jetzt im Menü &quot;Helfereinstellungen&quot; statt.
+Das Menü funktioniert grundlegend wie das alte Helfermenü.
 Wird ein Fahrzeug auf der Map ausgewählt, könnt ihr einen Job erstellen, in Abhängigkeit der angeschlossenen Geräte und des Fahrzeugstyps.
-Neben der Karte und den Job Einstellungen findet ihr oben im Menü noch die Einstellungen für den Feldkurs Generator und den Reben Generator. Diese sind nur verfügbar, wenn ihr ein gültiges Fahrzeug ausgewählt habt und einen Job erstellt habt.
+Neben der Karte und den Job-Einstellungen findet ihr oben im Menü noch die Kursgenerator-Einstellungen für Feldarbeit und Reben. Diese sind nur verfügbar, wenn ihr ein gültiges Fahrzeug ausgewählt habt und einen Job erstellt habt.
 Um einen Feldkurs generieren zu können, muss ein gültiges Fahrzeug für Feldarbeit auf der Helferkarte ausgewählt sein.
-Tip: Um etwas schneller zu sein, könnt ihr das Menü über den Text im HUD &quot;Kein Kurs&quot; öffnen. Ihr seid dann direkt im Modus Job erstellen des Fahrzeugs in dem ihr drin sitzt.
+Tipp: Um etwas schneller zu sein, könnt ihr das Menü über den Text im HUD &quot;Kein Kurs&quot; öffnen. Ihr seid dann direkt im Modus Job erstellen des Fahrzeugs in dem ihr drin sitzt.
 "/>
     <text name="CP_help_page_startJobMenuFunctions_text" text="
 Um deinen ersten Job zu starten, musst du ein Fahrzeug mit einem für die Arbeit gültigen Arbeitsgerät auswählen.
@@ -581,7 +581,7 @@ Mit erstelltem Kurs ist es jetzt möglich, den Fahrer über &quot;Job starten&qu
 Der Giants-Helfer wird zu dem Zielpunkt fahren und dann automatisch an CP übergeben.
 Alternativ kannst du den Fahrer auch über das HUD direkt am Kurs starten, oder mit Hilfe von AutoDrive dein Gespann zum Feld fahren lassen und es wird dann an CP übergeben.
 "/>
-    <text name="CP_help_page_courseGeneratorBasic_title" text="Kursgenerator Basis"/>
+    <text name="CP_help_page_courseGeneratorBasic_title" text="Kursgenerator: Grundlagen"/>
     <text name="CP_help_page_courseGeneratorBase_text" text="
 Das mit Abstand mächtigste und wichtigste Tool für die Feldarbeit ist der Kursgenerator. Dieser erlaubt es dir, die Kurse für deine Feldarbeit zu generieren.
 Mit der Version 2.0 des Generators lassen sich die Kurse noch mehr individualisieren.
@@ -593,7 +593,7 @@ Durch Experimentieren mit den Werten oder auch der Startposition kannst du dich 
     <text name="CP_help_page_courseGeneratorBaseFunctions_text" text="
 Grundeinstellungen:
 - Arbeitsbreite: Die Arbeitsbreite der meisten Geräte wird exakt erkannt und es muss nichts weiter eingestellt werden. Wird der Wert angepasst, hat es Einfluss auf den gesamten Kurs.
-- Anzahl Vorgewende: Damit deine Fahrzeuge und Geräte beim Wenden auf dem Feld bleiben, solltest du am besten ein paar Vorgewende einstellen.
+- Anzahl der Vorgewende: Damit deine Fahrzeuge und Geräte beim Wenden auf dem Feld bleiben, solltest du am besten ein paar Vorgewende einstellen.
 Die Anzahl der Vorgewende, multipliziert mit der Arbeitsbreite sollte in etwa die Länge des Fahrzeugs plus das angehängte Arbeitsgerät sein.
 - Starten auf: Wie im erweiterten Helfermenü beschrieben, wird die Feldposition benutzt, um den Start- oder Endpunkt auf dem Feld zu bestimmen.
 Wenn auf dem Vorgewende gestartet wird, ist es der Startpunkt. Wird auf den Feldreihen gestartet, bestimmt das den Endpunkt.
@@ -604,8 +604,8 @@ Du erhältst Zugang zu Einstellungen, wie z.B. dem Wendemanöver für die Ecken,
 Vorgewende sind empfohlen, damit die Arbeitsgeräte beim Wenden von einer Feldbahn zur nächsten auf dem Feld bleiben.
 "/>
     <text name="CP_help_page_courseGeneratorHeadlandFunctions_text" text="
-- Scharfe Ecken: Erzwingt die Ecken scharf zu fahren, sodass ein Wendemanöver durchgeführt wird.
-- Anzahl runde Ecken: Hat man z.B. drei Vorgewende und stellt die Anzahl runder Ecken auf eins, wird vom ersten Vorgewende an gezählt, die Ecken des ersten Vorgewendes auf Rund gestellt, basierend auf den Eckenradius.
+- Scharfe Vorgewende-Ecken: Erzwingt die Ecken scharf zu fahren, sodass ein Wendemanöver durchgeführt wird.
+- Anzahl der runden Ecken: Hat man z.B. drei Vorgewende und stellt die Anzahl runder Ecken auf eins, wird vom ersten Vorgewende an gezählt, die Ecken des ersten Vorgewendes auf Rund gestellt, basierend auf den Eckenradius.
 - Eckenradius: Bestimmt den Radius den runde Ecken haben sollen. Weiß man bereits, dass ein nachfolgender Arbeitsschritt mit einem Gerät bearbeitet wird, was einen minimalen Radius von 10 hat, kann man für den Kurs bereits diesen Radius einstellen.
 - Vorgewende-Richtung: Im Uhrzeigersinn oder gegen den Uhrzeigersinn. Das kann für Drescher oder Ernter entscheidend sein, abhängig davon auf welcher Seite sich das Abladerohr oder Förderband befindet.
 - Vorgewende-Überlappung: Wie viel % Überlappung die Vorgewende haben sollen. Die erste Vorgewendebahn hat keine Überlappung mit dem Feldrand, alle weiteren Bahnen überlappen mit der jeweils vorherigen Bahn.
@@ -621,7 +621,7 @@ Spiralförmig hingegen kann man gut für schmale gezogene Ernter verwenden, so d
     <text name="CP_help_page_courseGeneratorCenterFunctions_text" text="
 - Feldmitte: Es gibt verschiedene Arbeitsweisen, um die Feldmitte zu bearbeiten. Der klassische Weg ist hoch/runter.
 Spiralförmig, kreisförmig und Beete haben jeweils ihre eigenen Vorteile gegenüber den anderen. Bei Beeten zum Beispiel wird der Drescher die meiste Zeit mit dem Rohr außerhalb der Frucht fahren, um ein einfacheres Entladen zu ermöglichen.
-- Mitte Richtung: Funktioniert genau so wie beim Vorgewende, ist jetzt aber unabhängig davon einstellbar.
+- Mitte-Richtung: Funktioniert genau so wie beim Vorgewende, ist jetzt aber unabhängig davon einstellbar.
 - Gleichmäßige Bahnenbreite: Wenn die Feldmitte eine gesammte Breite hat, die sich nicht gleichmäßig auf die Arbeitsbreite des Tools aufteilen lässt, wird am Anfang oder am Ende eine sehr schmale Bahn gezogen. Um das zu vermeiden, wird die Bahnenbreite so reduziert, dass alle Bahnen die gleiche Breite haben.
 - Startrichtung: Automatisch findet meistens die beste Startrichtung, manchmal hilft es aber auch, die längste Kante zu nehmen. Sollte das auch nicht passen, kannst du den Wert auf Manuell stellen.
 - Richtungswinkel der Bahnen: Ist die Startrichtung auf Manuell gesetzt, erscheint diese Einstellung und bestimmt die Richtung der Bahnen.
@@ -630,7 +630,7 @@ Folgende Einstellungen erscheinen erst Anhand bestimmter vorheriger Einstellung:
 - Reihen überspringen: Erscheint bei Feldmitte &quot;hoch/runter&quot;. Mit Reihen überspringen lässt sich die Arbeit beschleunigen, da die Arbeitsgeräte nicht rückwärtsfahren müssen, um in die nächste Reihe zu kommen.
 - Reihen pro Beet: Erscheint bei Feldmitte &quot;Beete&quot;. Diese Einstellung wirkt sich nur auf Beete aus. Je mehr Reihen pro Beete eingestellt werden, desto weniger Beete werden generiert.
 - Spirale von Innen: Erscheint bei Feldmitte &quot;spiralförmig&quot;.
-- Anzahl Runden: Erscheint bei Feldmitte &quot;kreisförmig&quot;.
+- Anzahl der Runden: Erscheint bei Feldmitte &quot;kreisförmig&quot;.
 "/>
     <text name="CP_help_page_courseGeneratorCenterExampleUpdown_text" text="
 hoch/runter
@@ -664,13 +664,13 @@ Bevor ihr euch mit den Einstellmöglichkeiten beschäftigt, solltet ihr euch ers
 - Enges Feld: Erzeugt nur an den kürzesten Feldrandseiten ein Vorgewende. Es lässt sich aktuell nicht vermeiden, dass Fahrzeuge an den langen Seiten im Vorgewende das Feld verlassen.
 - Vorgewende-Überlappung: Es ist ein Standardwert eingestellt, der immer verwendet wird. Dieser kann aber mit dieser Einstellung angepasst werden. Die Überlappung findet innerhalb des Feldes statt und ragt nicht über den Feldrand hinaus.
 - Feldgrenze: Mit dieser Einstellung lässt sich die Feldgrenze weiter nach innen oder außen verschieben und somit lässt sich der normale Feldrand verschieben.
-- Feldrand für Bahnen: Ein ganz neues Feature, welches nur auf bestimmten Feldern funktioniert. Hat man ein Feld mit einem langen Bogen als Feldgrenze und setzt den Feldmarker in die Nähe dieses Feldrands, so werden die Bahnen in der Mitte den Verlauf des Feldrands annehmen.
+- Bahnenform anhand der Feldkante: Ein ganz neues Feature, welches nur auf bestimmten Feldern funktioniert. Hat man ein Feld mit einem langen Bogen als Feldgrenze und setzt den Feldmarker in die Nähe dieses Feldrands, so werden die Bahnen in der Mitte den Verlauf des Feldrands annehmen.
 ANMERKUNG: Sollte ein Kurs nicht sauber generiert werden, funktioniert diese Funktion nicht auf dem Feld oder mit dem Feldrand. Es wird dafür auch kein Update geben!
 "/>
-    <text name="CP_help_page_courseGeneratorHeadland_title" text="Kursgenerator Vorgewende"/>
-    <text name="CP_help_page_courseGeneratorCenter_title" text="Kursgenerator Feldmitte"/>
-    <text name="CP_help_page_courseGeneratorIsland_title" text="Kursgenerator Insel"/>
-    <text name="CP_help_page_courseGeneratorExpert_title" text="Kursgenerator Expert"/>
+    <text name="CP_help_page_courseGeneratorHeadland_title" text="Kursgenerator: Vorgewende"/>
+    <text name="CP_help_page_courseGeneratorCenter_title" text="Kursgenerator: Feldmitte"/>
+    <text name="CP_help_page_courseGeneratorIsland_title" text="Kursgenerator: Feldinseln"/>
+    <text name="CP_help_page_courseGeneratorExpert_title" text="Kursgenerator: Experteneinstellungen"/>
     <text name="CP_help_page_courseManager_title" text="Kursmanager"/>
     <text name="CP_help_page_courseManagerBase_text" text="
 Der Kursmanager erlaubt es dir, Kurse zu speichern und später wieder zu laden.
@@ -712,7 +712,7 @@ A: Mit gedrückter linker Maustaste auf der Kopfzeile lässt sich das HUD auf ei
 B: Um schnell zu den globalen Einstellungen zu gelangen, kannst du mit der Maus auf das CP-Icon klicken.
 C: Hier wird der Name deines Fahrzeugs angezeigt, klickst du darauf, gelangst du direkt in die CP-Fahrzeugeinstellungen.
 D: Diese Symbole sind dafür da um (1) den aktuell geladenen Kurs zu löschen, (2a) die Anzeige des geladenen Kurs durch zu schalten (2b) wenn kein Kurs geladen ist, ein Aufnahme-Button um einen Feldrandkurs aufzuzeichnen, (3) den Helfer zu starten und zu stoppen.
-E: Dieses Ziel Icon hat verschiedene Funktionen. Je nach dem gewähltem Modus gelangt man direkt auf die Helferkarte mit dem passenden Helferjob. Dort können dann mögliche fehlende Marker, wie die Feldposition platziert werden. Links davon wird bei der Feldarbeit die verbleibende Zeit vom Kurs angezeigt.
+E: Dieses Ziel-Icon hat verschiedene Funktionen. Je nach dem gewähltem Modus gelangt man direkt auf die Helferkarte mit dem passenden Helferjob. Dort können dann mögliche fehlende Marker, wie die Feldposition platziert werden. Links davon wird bei der Feldarbeit die verbleibende Zeit vom Kurs angezeigt.
 F: Durch das Klicken auf diesen Text werden die erlaubten Modi je nach Fahrzeuggespann durchgeschaltet.
 G: Unterhalb dieser Linie befinden sich modusabhängige Einstellungen, die in den nachfolgenden Bildern erklärt werden.
 "/>
@@ -729,7 +729,7 @@ E: Mit einem Klick auf das Symbol auf der rechten Seite wird der Kurs des Fahrze
 A: Da sowohl ein Drescher als auch ein Lader (z.B. ROPA Maus) gleichzeitig auf einem Feld arbeiten könnten, kann hier gewählt werden, welches Gerät abgetankt werden soll.
 B: Hier kannst du bestimmen, ab wie viel Prozent der Abfahrer zum Entladen fahren soll. Einstellbar zwischen 40% und 100%. Die Bedienung ist gleich wie bei der Arbeitsbreite vom Feldarbeitsmodus.
 C: Es kann vorkommen, dass die Position des Abfahrers nicht perfekt passt. Das kann am Anhänger oder am Abladerohr des Ernters liegen. Manchmal reicht auch ein Gefälle des Feldes aus. Hier kannst du den Abstand zum Ernter einstellen.
-D: Das gleiche lässt sich auch für eine Korrektur nach vorne oder nach hinten zum Ernter einstellen.
+D: Das Gleiche lässt sich auch für eine Korrektur nach vorne oder nach hinten zum Ernter einstellen.
 E: Ähnlich wie beim Kopieren eines Kurses, werden hier die Positionen der Marker für den Abfahrer kopiert und können dann auf weiteren Abfahrer übertragen werden.
 "/>
     <text name="CP_help_page_minihud_balecollect_title" text="Ballen sammeln/wickeln"/>
@@ -745,7 +745,7 @@ B: Arbeitsbreite des Laders oder der Schaufel, genauso wie bei der Feldarbeit.
 C: Versatz für die Ladehöhe einer Schaufel. Kann genutzt werden falls die Schaufel nicht tief genug oder zu tief gesenkt wird.
 D: Wie schon beim Abfahrer, kannst du hier die benötigten Marker kopieren und auf ein weiteres Gerät einfügen.
 "/>
-    <text name="CP_help_page_minihud_siloworker_title" text="Silo Arbeiter"/>
+    <text name="CP_help_page_minihud_siloworker_title" text="Siloarbeiter"/>
     <text name="CP_help_page_minihud_siloworker_text" text="
 A: Wie auch beim Silolader, ist die Schildhöhe entscheidend. Die kannst du hier anpassen.
 B: Diese Anzeige zeigt dir den aktuellen Fortschritt der Siloverdichtung an. Durch einen Mausklick auf den Text, kannst du umschalten, ob der Abfahrer automatisch bei 100% Siloverdichtung stoppen soll.
@@ -790,7 +790,7 @@ Die Fahrzeuge halten automatisch den Abstand zum vorderen Fahrzeug ein.
 Außerdem sorgt der Fahrzeugverband dafür, dass z.B. eine Ballenpresse, die hinter einem Drescher fährt, auf Abstand bleibt.
 "/>
     <text name="CP_help_page_convoyFunction_text" text="
-Die Einstellung &quot;Entfernung Fahrzeugverband&quot; bei den Multitooleinstellungen bestimmt die Entfernung zum vorderen Fahrzeug.
+Die Einstellung &quot;Entfernung im Fahrzeugverband&quot; bei den Multitooleinstellungen bestimmt die Entfernung zum vorderen Fahrzeug.
 Die Einstellung von allen Fahrzeugen mit dem gleichen Kursnamen wird auf den höchsten Wert eines einzelnen Fahrzeuges gesetzt.
 "/>
     <text name="CP_help_page_wrapCollect_title" text="Ballen wickeln und sammeln"/>
