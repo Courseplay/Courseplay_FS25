@@ -102,11 +102,11 @@
 			<Text language="en"><![CDATA[Park position:]]></Text>
 		</Translation>
 		<Translation name="CP_fieldWorkJobParameters_subTitle_startAt">
-			<Text language="de"><![CDATA[Start am:]]></Text>
+			<Text language="de"><![CDATA[Startpunkt:]]></Text>
 			<Text language="en"><![CDATA[Start at:]]></Text>
 		</Translation>
 		<Translation name="CP_fieldWorkJobParameters_startAt_title">
-			<Text language="de"><![CDATA[Start am:]]></Text>
+			<Text language="de"><![CDATA[Startpunkt:]]></Text>
 			<Text language="en"><![CDATA[Start at:]]></Text>
 		</Translation>
 		<Translation name="CP_fieldWorkJobParameters_startAt_tooltip">
@@ -114,7 +114,7 @@
 			<Text language="en"><![CDATA[Where to start field work.]]></Text>
 		</Translation>
 		<Translation name="CP_fieldWorkJobParameters_startAt_nearest">
-			<Text language="de"><![CDATA[Nahester Wegpunkt]]></Text>
+			<Text language="de"><![CDATA[Nächstgelegener Wegpunkt]]></Text>
 			<Text language="en"><![CDATA[nearest waypoint]]></Text>
 		</Translation>
 		<Translation name="CP_fieldWorkJobParameters_startAt_first">
@@ -154,8 +154,8 @@
 			<Text language="en"><![CDATA[Lane offset:]]></Text>
 		</Translation>
 		<Translation name="CP_fieldWorkJobParameters_laneOffset_tooltip">
-			<Text language="de"><![CDATA[Bahnauswahl, wenn ein Multitoolkurs erstellt wurde.]]></Text>
-			<Text language="en"><![CDATA[Lane offset]]></Text>
+			<Text language="de"><![CDATA[Bahnauswahl, wenn ein Multitoolkurs geladen wurde.]]></Text>
+			<Text language="en"><![CDATA[Lane offset if a multitool course has been loaded.]]></Text>
 		</Translation>
 		<Translation name="CP_fieldWorkJobParameters_laneOffset_center">
 			<Text language="de"><![CDATA[Mitte]]></Text>
@@ -311,7 +311,7 @@
 		</Translation>
 		<Translation name="CP_siloLoaderJobParameters_subTitle_unloading">
 			<Text language="de"><![CDATA[Abladen in:]]></Text>
-			<Text language="en"><![CDATA[Unloading at:]]></Text>
+			<Text language="en"><![CDATA[Unload at:]]></Text>
 		</Translation>
 		<Translation name="CP_siloLoaderJobParameters_unloadAt_trailer">
 			<Text language="de"><![CDATA[Anhänger]]></Text>
@@ -460,7 +460,7 @@
 	</Category>
 	<Category name="Vehicle settings">	
 		<Translation name="CP_vehicle_setting_title">
-			<Text language="de"><![CDATA[Fahrzeugeinstellungen für (%s)]]></Text>
+			<Text language="de"><![CDATA[Fahrzeugeinstellungen von (%s)]]></Text>
 			<Text language="en"><![CDATA[Vehicle settings for (%s)]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_setting_subTitle_vehicle">
@@ -472,19 +472,19 @@
 			<Text language="en"><![CDATA[Basic settings]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_setting_subTitle_implement">
-			<Text language="de"><![CDATA[Geräteeinstellungen]]></Text>
+			<Text language="de"><![CDATA[Geräte]]></Text>
 			<Text language="en"><![CDATA[Tools settings]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_setting_subTitle_combine">
-			<Text language="de"><![CDATA[Einstellungen für Drescher]]></Text>
+			<Text language="de"><![CDATA[Drescher]]></Text>
 			<Text language="en"><![CDATA[Combine settings]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_setting_subTitle_seeder">
-			<Text language="de"><![CDATA[Einstellungen für Saatmaschine]]></Text>
+			<Text language="de"><![CDATA[Sämaschine]]></Text>
 			<Text language="en"><![CDATA[Seeder settings]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_setting_subTitle_multitool">
-			<Text language="de"><![CDATA[Multitooleinstellungen]]></Text>
+			<Text language="de"><![CDATA[Multitool]]></Text>
 			<Text language="en"><![CDATA[Multitool settings]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_setting_subTitle_speed">
@@ -492,7 +492,7 @@
 			<Text language="en"><![CDATA[Speeds]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_setting_subTitle_debug">
-			<Text language="de"><![CDATA[Debugeinstellungen]]></Text>
+			<Text language="de"><![CDATA[Debugging]]></Text>
 			<Text language="en"><![CDATA[Debug settings]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_setting_showCourse_title">
@@ -620,8 +620,8 @@
 			<Text language="en"><![CDATA[The AI will try to avoid driving in the fruit.]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_setting_toolOffsetX_title">
-			<Text language="de"><![CDATA[Geräteversatz horizontal]]></Text>
-			<Text language="en"><![CDATA[Tool offset horizontal]]></Text>
+			<Text language="de"><![CDATA[Horizontaler Geräteversatz]]></Text>
+			<Text language="en"><![CDATA[Horizontal tool offset]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_setting_toolOffsetX_tooltip">
 			<Text language="de"><![CDATA[Geräteversatz horizontal]]></Text>
@@ -676,7 +676,7 @@
 			<Text language="en"><![CDATA[Symmetric lane change]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_setting_convoyDistance_title">
-			<Text language="de"><![CDATA[Entfernung Fahrzeugverband]]></Text>
+			<Text language="de"><![CDATA[Entfernung im Fahrzeugverband]]></Text>
 			<Text language="en"><![CDATA[Convoy distance]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_setting_convoyDistance_tooltip">
@@ -684,7 +684,7 @@
 			<Text language="en"><![CDATA[Distance between vehicles. Value: 40 - 400]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_setting_debugActive_title">
-			<Text language="de"><![CDATA[Fahrzeug-Debug]]></Text>
+			<Text language="de"><![CDATA[Fahrzeug-Debugging]]></Text>
 			<Text language="en"><![CDATA[Vehicle debug]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_setting_debugActive_tooltip">
@@ -701,7 +701,7 @@
 		</Translation>
 		<Translation name="CP_vehicle_setting_refillOnTheField_waiting">
 			<Text language="de"><![CDATA[Warten]]></Text>
-			<Text language="en"><![CDATA[Waiting]]></Text>
+			<Text language="en"><![CDATA[Wait]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_setting_refillOnTheField_active">
 			<Text language="de"><![CDATA[Aktiv]]></Text>
@@ -710,16 +710,16 @@
 	</Category>
 	<Category name="Vehicle bunker silo settings">
 		<Translation name="CP_vehicle_setting_subTitle_bunkerSilo">
-			<Text language="de"><![CDATA[Siloarbeiter Einstellungen]]></Text>
-			<Text language="en"><![CDATA[Siloworker settings]]></Text>
+			<Text language="de"><![CDATA[Siloarbeit]]></Text>
+			<Text language="en"><![CDATA[Silo work settings]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_setting_bunkerSiloWorkWidth_title">
 			<Text language="de"><![CDATA[Arbeitsbreite]]></Text>
-			<Text language="en"><![CDATA[Work width]]></Text>
+			<Text language="en"><![CDATA[Working width]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_setting_bunkerSiloWorkWidth_tooltip">
 			<Text language="de"><![CDATA[Arbeitsbreite. Wert: 0 - 50]]></Text>
-			<Text language="en"><![CDATA[Work width. Value: 0 - 50]]></Text>
+			<Text language="en"><![CDATA[Working width. Value: 0 - 50]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_setting_levelerHeightOffset_title">
 			<Text language="de"><![CDATA[Versatz Schildhöhe]]></Text>
@@ -727,7 +727,7 @@
 		</Translation>
 		<Translation name="CP_vehicle_setting_levelerHeightOffset_tooltip">
 			<Text language="de"><![CDATA[Höhenversatz vom Schild zum Boden. Wert: 0 - 1]]></Text>
-			<Text language="en"><![CDATA[Offset of the shield from the ground. Value: 0 - 1]]></Text>
+			<Text language="en"><![CDATA[Height offset from the shield to the ground. Value: 0 - 1]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_setting_loadingShovelHeightOffset_title">
 			<Text language="de"><![CDATA[Versatz Schaufelhöhe]]></Text>
@@ -735,7 +735,7 @@
 		</Translation>
 		<Translation name="CP_vehicle_setting_loadingShovelHeightOffset_tooltip">
 			<Text language="de"><![CDATA[Höhenversatz der Schaufel für die Ladeposition. Wert: -1 - 1]]></Text>
-			<Text language="en"><![CDATA[Offset for the shovel loading position. Value: -1 - 1]]></Text>
+			<Text language="en"><![CDATA[Height offset for the shovel loading position. Value: -1 - 1]]></Text>
 		</Translation>
 	</Category> 
 	<Category name="Vehicle settings speed">
@@ -870,47 +870,47 @@
 	</Category>
 	<Category name="Course generator settings">	
 		<Translation name="CP_vehicle_courseGeneratorSetting_title">
-			<Text language="de"><![CDATA[Helfer Einstellungen von (%s)]]></Text>
-			<Text language="en"><![CDATA[Helper settings of (%s)]]></Text>
+			<Text language="de"><![CDATA[Helfereinstellungen von (%s)]]></Text>
+			<Text language="en"><![CDATA[Helper settings for (%s)]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_subTitle_basic">
 			<Text language="de"><![CDATA[Grundeinstellungen]]></Text>
 			<Text language="en"><![CDATA[Basic settings]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_subTitle_vineField">
-			<Text language="de"><![CDATA[Reben Einstellungen]]></Text>
+			<Text language="de"><![CDATA[Kurseinstellungen - Reben]]></Text>
 			<Text language="en"><![CDATA[Vine settings]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork">
-			<Text language="de"><![CDATA[Feldarbeit Einstellungen]]></Text>
+			<Text language="de"><![CDATA[Kurseinstellungen - Feldarbeit]]></Text>
 			<Text language="en"><![CDATA[Fieldwork settings]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_subTitle_headland">
-			<Text language="de"><![CDATA[Einstellungen Vorgewende]]></Text>
-			<Text language="en"><![CDATA[Settings headland]]></Text>
+			<Text language="de"><![CDATA[Vorgewende]]></Text>
+			<Text language="en"><![CDATA[Headland settings]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_subTitle_center">
-			<Text language="de"><![CDATA[Einstellungen Mitte]]></Text>
-			<Text language="en"><![CDATA[Settings center]]></Text>
+			<Text language="de"><![CDATA[Feldmitte]]></Text>
+			<Text language="en"><![CDATA[Center settings]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_subTitle_island">
-			<Text language="de"><![CDATA[Einstellungen Insel]]></Text>
-			<Text language="en"><![CDATA[Settings island]]></Text>
+			<Text language="de"><![CDATA[Feldinseln]]></Text>
+			<Text language="en"><![CDATA[Island settings]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_workWidth_title">
 			<Text language="de"><![CDATA[Arbeitsbreite]]></Text>
-			<Text language="en"><![CDATA[Work width]]></Text>
+			<Text language="en"><![CDATA[Working width]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_workWidth_tooltip">
-			<Text language="de"><![CDATA[Arbeitsbreite. Wert: 0 - 50]]></Text>
-			<Text language="en"><![CDATA[Work width. Value: 0 - 50]]></Text>
+			<Text language="de"><![CDATA[Arbeitsbreite. Wert: 0 - 55]]></Text>
+			<Text language="en"><![CDATA[Working width. Value: 0 - 55]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_numberOfHeadlands_title">
-			<Text language="de"><![CDATA[Anzahl Vorgewende]]></Text>
+			<Text language="de"><![CDATA[Anzahl der Vorgewende]]></Text>
 			<Text language="en"><![CDATA[Number of headlands]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_numberOfHeadlands_tooltip">
-			<Text language="de"><![CDATA[Anzahl Vorgewende. Wert: 0 - 40]]></Text>
+			<Text language="de"><![CDATA[Anzahl der Vorgewende. Wert: 0 - 40]]></Text>
 			<Text language="en"><![CDATA[Number of headlands. Value: 0 - 40]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_headlandOverlapPercent_title">
@@ -918,7 +918,7 @@
 			<Text language="en"><![CDATA[Headland overlap]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_headlandOverlapPercent_tooltip">
-			<Text language="de"><![CDATA[Überlappung Vorgewende in % der Arbeitsbreite. Wert: 0 - 25]]></Text>
+			<Text language="de"><![CDATA[Überlappung der Vorgewende in % der Arbeitsbreite. Wert: 0 - 25]]></Text>
 			<Text language="en"><![CDATA[Overlap headland tracks as percent of working width. Value: 0 - 25]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_fieldMargin_title">
@@ -938,19 +938,19 @@
 			<Text language="en"><![CDATA[Rows to skip when changing to the next up/down row. Value: 0 - 6]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_numberOfCircles_title">
-			<Text language="de"><![CDATA[Anzahl Runden]]></Text>
+			<Text language="de"><![CDATA[Anzahl der Runden]]></Text>
 			<Text language="en"><![CDATA[Number of circles]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_numberOfCircles_tooltip">
-			<Text language="de"><![CDATA[Anzahl Runden für kreisförmig. Wert: 1 - 12]]></Text>
-			<Text language="en"><![CDATA[Number of circles for racetrack. Value: 1 - 12]]></Text>
+			<Text language="de"><![CDATA[Anzahl der Runden für "kreisförmig". Wert: 1 - 12]]></Text>
+			<Text language="en"><![CDATA[Number of circles for 'racetrack'. Value: 1 - 12]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_rowsPerLand_title">
 			<Text language="de"><![CDATA[Reihen pro Beet]]></Text>
 			<Text language="en"><![CDATA[Rows per land]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_rowsPerLand_tooltip">
-			<Text language="de"><![CDATA[Wenn Zentrierung Beete ausgewählt ist, dann befinden sich so viele Reihen im Block. Wert: 0 - 24]]></Text>
+			<Text language="de"><![CDATA[Wenn Feldmitte "Beete" ausgewählt ist, dann befinden sich so viele Reihen im Block. Wert: 0 - 24]]></Text>
 			<Text language="en"><![CDATA[When the center mode is 'lands', this many rows are in each block. Value: 0 - 24]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_headlandClockwise_title">
@@ -1042,7 +1042,7 @@
 			<Text language="en"><![CDATA[Reduces the working width to achieve an even distribution across all lanes.]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_sharpenCorners_title">
-			<Text language="de"><![CDATA[Vorgewende-Ecken]]></Text>
+			<Text language="de"><![CDATA[Scharfe Vorgewende-Ecken]]></Text>
 			<Text language="en"><![CDATA[Sharpen headland corners]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_sharpenCorners_tooltip">
@@ -1050,11 +1050,11 @@
 			<Text language="en"><![CDATA[On non-rounded headlands, add a headland turn maneuver where the headland direction changes abruptly.]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_headlandsWithRoundCorners_title">
-			<Text language="de"><![CDATA[Anzahl runde Ecken]]></Text>
+			<Text language="de"><![CDATA[Anzahl der runden Ecken]]></Text>
 			<Text language="en"><![CDATA[Number of round corners]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_headlandsWithRoundCorners_tooltip">
-			<Text language="de"><![CDATA[Anzahl runde Ecken, beginnend mit dem ersten Vorgewende.]]></Text>
+			<Text language="de"><![CDATA[Anzahl der Vorgewende mit runden Ecken, beginnend mit dem ersten Vorgewende.]]></Text>
 			<Text language="en"><![CDATA[Number of headlands with round corners, starting with the outermost headland.]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_turningRadius_title">
@@ -1086,7 +1086,7 @@
 			<Text language="en"><![CDATA[Center rows direction]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_manualRowAngleDeg_tooltip">
-			<Text language="de"><![CDATA[Winkel der Bahnen (0 ist Norden), wenn Einstellung auf Manuell gesetzt ist. Wert: 0 - 175 Schritte: 5]]></Text>
+			<Text language="de"><![CDATA[Winkel der Bahnen (0 ist Norden), wenn Einstellung auf "Manuell" gesetzt ist. Wert: 0 - 175 Schritte: 5]]></Text>
 			<Text language="en"><![CDATA[Direction of center rows (0° is North) when manual. Value: 0 - 175 Steps: 5]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_bypassIslands_title">
@@ -1098,11 +1098,11 @@
 			<Text language="en"><![CDATA[Bypass islands on the field or ignore them.]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_nIslandHeadlands_title">
-			<Text language="de"><![CDATA[Insel Vorgewende]]></Text>
+			<Text language="de"><![CDATA[Insel-Vorgewende]]></Text>
 			<Text language="en"><![CDATA[Island headlands]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_nIslandHeadlands_tooltip">
-			<Text language="de"><![CDATA[Anzahl Vorgewende bei Inseln. Wert: 1 - 10]]></Text>
+			<Text language="de"><![CDATA[Anzahl der Vorgewende bei Inseln. Wert: 1 - 10]]></Text>
 			<Text language="en"><![CDATA[Number of headlands around islands. Value: 1 - 10]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_startOnHeadland_title">
@@ -1138,7 +1138,7 @@
 			<Text language="en"><![CDATA[Sets the lanes to always switch. This leads to similar turns. See help menu for more details.]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_useBaseLineEdge_title">
-			<Text language="de"><![CDATA[Bahnenform anhand Feldkante]]></Text>
+			<Text language="de"><![CDATA[Bahnenform anhand der Feldkante]]></Text>
 			<Text language="en"><![CDATA[Rows follow field edge curve]]></Text>
 		</Translation>
 		<Translation name="CP_vehicle_courseGeneratorSetting_useBaseLineEdge_tooltip">
@@ -1242,7 +1242,7 @@
 			<Text language="en"><![CDATA[Keep it healthy]]></Text>
 		</Translation>
 		<Translation name="CP_global_setting_fuelThreshold_title">
-			<Text language="de"><![CDATA[Minimum Kraftstoff]]></Text>
+			<Text language="de"><![CDATA[Mindestfüllstand Kraftstoff]]></Text>
 			<Text language="en"><![CDATA[Fuel threshold]]></Text>
 		</Translation>
 		<Translation name="CP_global_setting_fuelThreshold_tooltip">
@@ -1250,7 +1250,7 @@
 			<Text language="en"><![CDATA[Driver will be released, if the fuel percentage is less.]]></Text>
 		</Translation>
 		<Translation name="CP_global_setting_waitForRefueling_title">
-			<Text language="de"><![CDATA[Wartet auf auftanken]]></Text>
+			<Text language="de"><![CDATA[Warten auf auftanken]]></Text>
 			<Text language="en"><![CDATA[Waits for refueling]]></Text>
 		</Translation>
 		<Translation name="CP_global_setting_waitForRefueling_tooltip">
@@ -1258,7 +1258,7 @@
 			<Text language="en"><![CDATA[Vehicle waits until it is refueled.]]></Text>
 		</Translation>
 		<Translation name="CP_global_setting_brokenThreshold_title">
-			<Text language="de"><![CDATA[Minimum Zustand]]></Text>
+			<Text language="de"><![CDATA[Mindestzustand]]></Text>
 			<Text language="en"><![CDATA[Broken threshold]]></Text>
 		</Translation>
 		<Translation name="CP_global_setting_brokenThreshold_tooltip">
@@ -1382,7 +1382,7 @@
 	</Category>
 	<Category name="Global settings pathfinder">
 		<Translation name="CP_global_setting_subTitle_pathfinder">
-			<Text language="de"><![CDATA[Pathfindereinstellungen]]></Text>
+			<Text language="de"><![CDATA[Pathfinder]]></Text>
 			<Text language="en"><![CDATA[Pathfinder settings]]></Text>
 		</Translation>
 		<Translation name="CP_global_setting_maxDeltaAngleAtGoalDeg_title">
@@ -1730,7 +1730,7 @@ The course is saved automatically on closing of the editor and overrides the sel
 		</Translation>
 		<Translation name="CP_infoTexts_waitForSnowToClear">
 			<Text language="de"><![CDATA[Warte solange Schnee liegt]]></Text>
-			<Text language="en"><![CDATA[Waits for snow to disappear]]></Text>
+			<Text language="en"><![CDATA[Waiting for snow to disappear]]></Text>
 		</Translation>
 		<Translation name="CP_infoTexts_waitForUnloader">
 			<Text language="de"><![CDATA[Warte auf Abfahrer]]></Text>
@@ -1851,8 +1851,8 @@ The course is saved automatically on closing of the editor and overrides the sel
 			<Text language="en"><![CDATA[Courseplay]]></Text>
 		</Translation>
 		<Translation name="CP_help_subTitle">
-			<Text language="de"><![CDATA[Modifikation für den Landwirtschafts-Simulator 22]]></Text>
-			<Text language="en"><![CDATA[A Modification for Farming Simulator 22 ]]></Text>
+			<Text language="de"><![CDATA[Modifikation für den Landwirtschafts-Simulator 25]]></Text>
+			<Text language="en"><![CDATA[A Modification for Farming Simulator 25]]></Text>
 		</Translation>
 		<Translation name="CP_help_page_blank">
 			<Text language="de"><![CDATA[]]></Text>
@@ -1876,7 +1876,7 @@ Außerdem hat CP ein Interface für AutoDrive, dadurch ist es möglich Sämaschi
 Drescher-Abfahrer sind in der Lage, die geladene Frucht als Haufen am Feldrand abzulegen.
 Im Farming Simulator 25 besitzt Courseplay sein eigenes Menü, welches ihr über verschiedene Buttons im HUD erreicht.
 
-Für weitere Informationen, schaut bitte auf GitHub vorbei unter:  https://github.com/Courseplay/Courseplay_FS25 .
+Für weitere Informationen, schaut bitte auf GitHub vorbei unter: https://github.com/Courseplay/Courseplay_FS25 .
 Dort könnt ihr Fragen stellen, Fehlerberichte einreichen oder Verbesserungen vorschlagen.
 Ein ganz großes Danke geht an unsere Übersetzer und an die Community für die zahlreichen Fehlermeldungen, Feedbacks und Ideen.
 
@@ -1893,18 +1893,18 @@ Courseplay is also able to work on rice fields and vines.
 Fieldwork courses can be setup in multitool mode, which allows the use of up to 5 driver working in a convoy on the same field.
 It's also possible to have the combine unload in a trailer on/near the field automatically.
 Custom field borders can be assigned for Courseplay to use, for example: in case of a meadow, which isn't recognised as a normal field.
-Lastly cp has a interface for AutoDrive, which allows for refilling of a seeder at a nearby silo or unloading a forage wagon and so on.
-Combine unloader are able to create a heap near the field with their loaded fruit.
-In Farming Simulator 25, Courseplay got its own menu wich you can access over different buttons on the HUD.
+Lastly CP has an interface for AutoDrive, which allows for refilling of a seeder at a nearby silo or unloading a forage wagon and so on.
+Combine unloaders are able to create a heap near the field with their loaded fruit.
+In Farming Simulator 25, Courseplay got its own menu, which you can access over different buttons on the HUD.
 
 For more information please visit our GitHub: https://github.com/Courseplay/Courseplay_FS25 .
 There you can get help or report any issues you've experienced.
-Finally, we thank every translator and our community for reporting bugs, giving use feedback and new ideas.
+Finally, we thank every translator and our community for reporting bugs and giving us feedback and new ideas.
 
-What is the expert Mode:
-When the expert Mode is deactivated, you have only access to some settings.
-The other settings are hidden and set to default values, which works in most situations.
-That way, we try to help Users to get easier into Courseplay without being overwhelmed from all the settings.
+What is the expert mode:
+When the expert mode is deactivated, you only have access to some settings.
+The other settings are hidden and set to default values, which work in most situations.
+That way, we try to make it easier for new Courseplay users to get started without overwhelming them with the various settings.
 ]]></Text>
 		</Translation>
 		<Translation name="CP_help_page_extendedJobMenu_title">
@@ -1913,12 +1913,12 @@ That way, we try to help Users to get easier into Courseplay without being overw
 		</Translation>
 		<Translation name="CP_help_page_startJobMenuBase_text">
 			<Text language="de"><![CDATA[
-Die Einstellungen für jeden Helfer finden jetzt im Menü "Helfer Einstellungen" statt.
-Das Menü funktioniert grundlegend wie das alte Helfer Menü.
+Die Einstellungen für jeden Helfer finden jetzt im Menü "Helfereinstellungen" statt.
+Das Menü funktioniert grundlegend wie das alte Helfermenü.
 Wird ein Fahrzeug auf der Map ausgewählt, könnt ihr einen Job erstellen, in Abhängigkeit der angeschlossenen Geräte und des Fahrzeugstyps.
-Neben der Karte und den Job Einstellungen findet ihr oben im Menü noch die Einstellungen für den Feldkurs Generator und den Reben Generator. Diese sind nur verfügbar, wenn ihr ein gültiges Fahrzeug ausgewählt habt und einen Job erstellt habt.
+Neben der Karte und den Job-Einstellungen findet ihr oben im Menü noch die Kursgenerator-Einstellungen für Feldarbeit und Reben. Diese sind nur verfügbar, wenn ihr ein gültiges Fahrzeug ausgewählt habt und einen Job erstellt habt.
 Um einen Feldkurs generieren zu können, muss ein gültiges Fahrzeug für Feldarbeit auf der Helferkarte ausgewählt sein.
-Tip: Um etwas schneller zu sein, könnt ihr das Menü über den Text im HUD "Kein Kurs" öffnen. Ihr seid dann direkt im Modus Job erstellen des Fahrzeugs in dem ihr drin sitzt.
+Tipp: Um etwas schneller zu sein, könnt ihr das Menü über den Text im HUD "Kein Kurs" öffnen. Ihr seid dann direkt im Modus Job erstellen des Fahrzeugs in dem ihr drin sitzt.
 ]]></Text>
 			<Text language="en"><![CDATA[
 Helper settings are now under our own new "Helper settings" menu.
@@ -1977,8 +1977,8 @@ Alternatively you can also start the driver from the HUD if you are close to the
 ]]></Text>
 		</Translation>
 		<Translation name="CP_help_page_courseGeneratorBasic_title">
-			<Text language="de"><![CDATA[Kursgenerator Basis]]></Text>
-			<Text language="en"><![CDATA[Course Generator Basics]]></Text>
+			<Text language="de"><![CDATA[Kursgenerator: Grundlagen]]></Text>
+			<Text language="en"><![CDATA[Course generator basics]]></Text>
 		</Translation>
 		<Translation name="CP_help_page_courseGeneratorBase_text">
 			<Text language="de"><![CDATA[
@@ -2001,7 +2001,7 @@ the generator offers is to experiment with it.
 			<Text language="de"><![CDATA[
 Grundeinstellungen:
 - Arbeitsbreite: Die Arbeitsbreite der meisten Geräte wird exakt erkannt und es muss nichts weiter eingestellt werden. Wird der Wert angepasst, hat es Einfluss auf den gesamten Kurs.
-- Anzahl Vorgewende: Damit deine Fahrzeuge und Geräte beim Wenden auf dem Feld bleiben, solltest du am besten ein paar Vorgewende einstellen.
+- Anzahl der Vorgewende: Damit deine Fahrzeuge und Geräte beim Wenden auf dem Feld bleiben, solltest du am besten ein paar Vorgewende einstellen.
 Die Anzahl der Vorgewende, multipliziert mit der Arbeitsbreite sollte in etwa die Länge des Fahrzeugs plus das angehängte Arbeitsgerät sein.
 - Starten auf: Wie im erweiterten Helfermenü beschrieben, wird die Feldposition benutzt, um den Start- oder Endpunkt auf dem Feld zu bestimmen.
 Wenn auf dem Vorgewende gestartet wird, ist es der Startpunkt. Wird auf den Feldreihen gestartet, bestimmt das den Endpunkt.
@@ -2009,9 +2009,9 @@ Wenn auf dem Vorgewende gestartet wird, ist es der Startpunkt. Wird auf den Feld
 			<Text language="en"><![CDATA[
 Basics:
 The first few values you see here are real basic stuff.
-- Work width: Courseplay automatically detects the working width for most tools, so you won't have to worry about this,
+- Working width: Courseplay automatically detects the working width for most tools, so you won't have to worry about this,
 but if automatic detection fails, you can set it manually. This setting has an impact on the overall course.
-- Number of Headlands: The best way to keep your vehicles on the field while turning at the end of each row is to add headlands.
+- Number of headlands: The best way to keep your vehicles on the field while turning at the end of each row is to add headlands.
 The Number of the Headlands multiplied by the work width should be at least the total length of your vehicle plus the attached tool.
 - Start work on: As mentioned in the extended AI Menu, the field position is used to set the start or end position for
 the fieldwork course. You want to start working on the headland when harvesting, and work towards the middle of the field.
@@ -2032,8 +2032,8 @@ Headlands are highly recommended to prevent tools leaving the field when turning
 		</Translation>
 		<Translation name="CP_help_page_courseGeneratorHeadlandFunctions_text">
 			<Text language="de"><![CDATA[
-- Scharfe Ecken: Erzwingt die Ecken scharf zu fahren, sodass ein Wendemanöver durchgeführt wird.
-- Anzahl runde Ecken: Hat man z.B. drei Vorgewende und stellt die Anzahl runder Ecken auf eins, wird vom ersten Vorgewende an gezählt, die Ecken des ersten Vorgewendes auf Rund gestellt, basierend auf den Eckenradius.
+- Scharfe Vorgewende-Ecken: Erzwingt die Ecken scharf zu fahren, sodass ein Wendemanöver durchgeführt wird.
+- Anzahl der runden Ecken: Hat man z.B. drei Vorgewende und stellt die Anzahl runder Ecken auf eins, wird vom ersten Vorgewende an gezählt, die Ecken des ersten Vorgewendes auf Rund gestellt, basierend auf den Eckenradius.
 - Eckenradius: Bestimmt den Radius den runde Ecken haben sollen. Weiß man bereits, dass ein nachfolgender Arbeitsschritt mit einem Gerät bearbeitet wird, was einen minimalen Radius von 10 hat, kann man für den Kurs bereits diesen Radius einstellen.
 - Vorgewende-Richtung: Im Uhrzeigersinn oder gegen den Uhrzeigersinn. Das kann für Drescher oder Ernter entscheidend sein, abhängig davon auf welcher Seite sich das Abladerohr oder Förderband befindet.
 - Vorgewende-Überlappung: Wie viel % Überlappung die Vorgewende haben sollen. Die erste Vorgewendebahn hat keine Überlappung mit dem Feldrand, alle weiteren Bahnen überlappen mit der jeweils vorherigen Bahn.
@@ -2074,7 +2074,7 @@ Spiral is a best for towed harvesters with an offset to keep the tool in the fru
 			<Text language="de"><![CDATA[
 - Feldmitte: Es gibt verschiedene Arbeitsweisen, um die Feldmitte zu bearbeiten. Der klassische Weg ist hoch/runter.
 Spiralförmig, kreisförmig und Beete haben jeweils ihre eigenen Vorteile gegenüber den anderen. Bei Beeten zum Beispiel wird der Drescher die meiste Zeit mit dem Rohr außerhalb der Frucht fahren, um ein einfacheres Entladen zu ermöglichen.
-- Mitte Richtung: Funktioniert genau so wie beim Vorgewende, ist jetzt aber unabhängig davon einstellbar.
+- Mitte-Richtung: Funktioniert genau so wie beim Vorgewende, ist jetzt aber unabhängig davon einstellbar.
 - Gleichmäßige Bahnenbreite: Wenn die Feldmitte eine gesammte Breite hat, die sich nicht gleichmäßig auf die Arbeitsbreite des Tools aufteilen lässt, wird am Anfang oder am Ende eine sehr schmale Bahn gezogen. Um das zu vermeiden, wird die Bahnenbreite so reduziert, dass alle Bahnen die gleiche Breite haben.
 - Startrichtung: Automatisch findet meistens die beste Startrichtung, manchmal hilft es aber auch, die längste Kante zu nehmen. Sollte das auch nicht passen, kannst du den Wert auf Manuell stellen.
 - Richtungswinkel der Bahnen: Ist die Startrichtung auf Manuell gesetzt, erscheint diese Einstellung und bestimmt die Richtung der Bahnen.
@@ -2083,7 +2083,7 @@ Folgende Einstellungen erscheinen erst Anhand bestimmter vorheriger Einstellung:
 - Reihen überspringen: Erscheint bei Feldmitte "hoch/runter". Mit Reihen überspringen lässt sich die Arbeit beschleunigen, da die Arbeitsgeräte nicht rückwärtsfahren müssen, um in die nächste Reihe zu kommen.
 - Reihen pro Beet: Erscheint bei Feldmitte "Beete". Diese Einstellung wirkt sich nur auf Beete aus. Je mehr Reihen pro Beete eingestellt werden, desto weniger Beete werden generiert.
 - Spirale von Innen: Erscheint bei Feldmitte "spiralförmig".
-- Anzahl Runden: Erscheint bei Feldmitte "kreisförmig".
+- Anzahl der Runden: Erscheint bei Feldmitte "kreisförmig".
 ]]></Text>
 			<Text language="en"><![CDATA[
 - Field center: There are different modes on how your field center pattern should look like. The classic and most used one is up/down.
@@ -2168,7 +2168,7 @@ Bevor ihr euch mit den Einstellmöglichkeiten beschäftigt, solltet ihr euch ers
 - Enges Feld: Erzeugt nur an den kürzesten Feldrandseiten ein Vorgewende. Es lässt sich aktuell nicht vermeiden, dass Fahrzeuge an den langen Seiten im Vorgewende das Feld verlassen.
 - Vorgewende-Überlappung: Es ist ein Standardwert eingestellt, der immer verwendet wird. Dieser kann aber mit dieser Einstellung angepasst werden. Die Überlappung findet innerhalb des Feldes statt und ragt nicht über den Feldrand hinaus.
 - Feldgrenze: Mit dieser Einstellung lässt sich die Feldgrenze weiter nach innen oder außen verschieben und somit lässt sich der normale Feldrand verschieben.
-- Feldrand für Bahnen: Ein ganz neues Feature, welches nur auf bestimmten Feldern funktioniert. Hat man ein Feld mit einem langen Bogen als Feldgrenze und setzt den Feldmarker in die Nähe dieses Feldrands, so werden die Bahnen in der Mitte den Verlauf des Feldrands annehmen.
+- Bahnenform anhand der Feldkante: Ein ganz neues Feature, welches nur auf bestimmten Feldern funktioniert. Hat man ein Feld mit einem langen Bogen als Feldgrenze und setzt den Feldmarker in die Nähe dieses Feldrands, so werden die Bahnen in der Mitte den Verlauf des Feldrands annehmen.
 ANMERKUNG: Sollte ein Kurs nicht sauber generiert werden, funktioniert diese Funktion nicht auf dem Feld oder mit dem Feldrand. Es wird dafür auch kein Update geben!
 ]]></Text>
 			<Text language="en"><![CDATA[
@@ -2176,30 +2176,30 @@ Some settings are only visible, if you set the expert mode to active on the glob
 Before you play around with those settings, you should make sure you know what the basic settings do.
 Some expert settings only work properly under some conditions.
 
-- Multiple Tools: This setting is used when you want more than just one vehicle to work on your course. As this gets a bit more complicated, there is a separate help topic for it.
+- Multiple tools: This setting is used when you want more than just one vehicle to work on your course. As this gets a bit more complicated, there is a separate help topic for it.
 - Switching lanes: With this option active, vehicles switch lanes at each turn, so every vehicle's turn is of the same width. See the extra help menu "Switching lanes" for more details.
 - Narrow field: Creates the headland only at two short edges of the field. In that case, it is not possible to keep your vehicle on the field on the longest edges at the headland.
 - Headland overlap: By default, headland passes overlap each other (but never the field edge) by a few percent to avoid missing fruit in some edge cases. You can change that overlap here.
 - Field margin: This setting lets you move the field border in- or outwards of the original border.
-- Use base line edge: With this setting you can generate curved up/down rows, running parallel with the edge of the field near the field marker. This makes sense when the field edge is not straight, the up/down rows will follow the curve of the edge.
+- Rows follow field edge curve: With this setting you can generate curved up/down rows, running parallel with the edge of the field near the field marker. This makes sense when the field edge is not straight, the up/down rows will follow the curve of the edge.
 IMPORTANT NOTE: This is an experimental setting which may not work for all field shapes. If it doesn't work, try another setting.
 ]]></Text>
 		</Translation>
 		<Translation name="CP_help_page_courseGeneratorHeadland_title">
-			<Text language="de"><![CDATA[Kursgenerator Vorgewende]]></Text>
-			<Text language="en"><![CDATA[Course generator headland]]></Text>
+			<Text language="de"><![CDATA[Kursgenerator: Vorgewende]]></Text>
+			<Text language="en"><![CDATA[Course generator: headland]]></Text>
 		</Translation>
 		<Translation name="CP_help_page_courseGeneratorCenter_title">
-			<Text language="de"><![CDATA[Kursgenerator Feldmitte]]></Text>
-			<Text language="en"><![CDATA[Course generator center]]></Text>
+			<Text language="de"><![CDATA[Kursgenerator: Feldmitte]]></Text>
+			<Text language="en"><![CDATA[Course generator: center]]></Text>
 		</Translation>
 		<Translation name="CP_help_page_courseGeneratorIsland_title">
-			<Text language="de"><![CDATA[Kursgenerator Insel]]></Text>
-			<Text language="en"><![CDATA[Course generator island]]></Text>
+			<Text language="de"><![CDATA[Kursgenerator: Feldinseln]]></Text>
+			<Text language="en"><![CDATA[Course generator: islands]]></Text>
 		</Translation>
 		<Translation name="CP_help_page_courseGeneratorExpert_title">
-			<Text language="de"><![CDATA[Kursgenerator Expert]]></Text>
-			<Text language="en"><![CDATA[Course generator expert]]></Text>
+			<Text language="de"><![CDATA[Kursgenerator: Experteneinstellungen]]></Text>
+			<Text language="en"><![CDATA[Course generator: expert settings]]></Text>
 		</Translation>
 		<Translation name="CP_help_page_courseManager_title">
 			<Text language="de"><![CDATA[Kursmanager]]></Text>
@@ -2293,7 +2293,7 @@ A: Mit gedrückter linker Maustaste auf der Kopfzeile lässt sich das HUD auf ei
 B: Um schnell zu den globalen Einstellungen zu gelangen, kannst du mit der Maus auf das CP-Icon klicken.
 C: Hier wird der Name deines Fahrzeugs angezeigt, klickst du darauf, gelangst du direkt in die CP-Fahrzeugeinstellungen.
 D: Diese Symbole sind dafür da um (1) den aktuell geladenen Kurs zu löschen, (2a) die Anzeige des geladenen Kurs durch zu schalten (2b) wenn kein Kurs geladen ist, ein Aufnahme-Button um einen Feldrandkurs aufzuzeichnen, (3) den Helfer zu starten und zu stoppen.
-E: Dieses Ziel Icon hat verschiedene Funktionen. Je nach dem gewähltem Modus gelangt man direkt auf die Helferkarte mit dem passenden Helferjob. Dort können dann mögliche fehlende Marker, wie die Feldposition platziert werden. Links davon wird bei der Feldarbeit die verbleibende Zeit vom Kurs angezeigt.
+E: Dieses Ziel-Icon hat verschiedene Funktionen. Je nach dem gewähltem Modus gelangt man direkt auf die Helferkarte mit dem passenden Helferjob. Dort können dann mögliche fehlende Marker, wie die Feldposition platziert werden. Links davon wird bei der Feldarbeit die verbleibende Zeit vom Kurs angezeigt.
 F: Durch das Klicken auf diesen Text werden die erlaubten Modi je nach Fahrzeuggespann durchgeschaltet.
 G: Unterhalb dieser Linie befinden sich modusabhängige Einstellungen, die in den nachfolgenden Bildern erklärt werden.
 ]]></Text>
@@ -2336,7 +2336,7 @@ E: Use the symbol on the right side to copy the current course to the clipboard.
 A: Da sowohl ein Drescher als auch ein Lader (z.B. ROPA Maus) gleichzeitig auf einem Feld arbeiten könnten, kann hier gewählt werden, welches Gerät abgetankt werden soll.
 B: Hier kannst du bestimmen, ab wie viel Prozent der Abfahrer zum Entladen fahren soll. Einstellbar zwischen 40% und 100%. Die Bedienung ist gleich wie bei der Arbeitsbreite vom Feldarbeitsmodus.
 C: Es kann vorkommen, dass die Position des Abfahrers nicht perfekt passt. Das kann am Anhänger oder am Abladerohr des Ernters liegen. Manchmal reicht auch ein Gefälle des Feldes aus. Hier kannst du den Abstand zum Ernter einstellen.
-D: Das gleiche lässt sich auch für eine Korrektur nach vorne oder nach hinten zum Ernter einstellen.
+D: Das Gleiche lässt sich auch für eine Korrektur nach vorne oder nach hinten zum Ernter einstellen.
 E: Ähnlich wie beim Kopieren eines Kurses, werden hier die Positionen der Marker für den Abfahrer kopiert und können dann auf weiteren Abfahrer übertragen werden.
 ]]></Text>
 	<Text language="en"><![CDATA[
@@ -2382,7 +2382,7 @@ D: Just like with the unloader, you can copy the marker positions to another veh
 ]]></Text>
 		</Translation>
 		<Translation name="CP_help_page_minihud_siloworker_title">
-			<Text language="de"><![CDATA[Silo Arbeiter]]></Text>
+			<Text language="de"><![CDATA[Siloarbeiter]]></Text>
 			<Text language="en"><![CDATA[Silo worker]]></Text>
 		</Translation>
 		<Translation name="CP_help_page_minihud_siloworker_text">
@@ -2492,7 +2492,7 @@ Additionally, the convoy feature also gets applied when for example a baler is d
 		</Translation>
 		<Translation name="CP_help_page_convoyFunction_text">
 			<Text language="de"><![CDATA[
-Die Einstellung "Entfernung Fahrzeugverband" bei den Multitooleinstellungen bestimmt die Entfernung zum vorderen Fahrzeug.
+Die Einstellung "Entfernung im Fahrzeugverband" bei den Multitooleinstellungen bestimmt die Entfernung zum vorderen Fahrzeug.
 Die Einstellung von allen Fahrzeugen mit dem gleichen Kursnamen wird auf den höchsten Wert eines einzelnen Fahrzeuges gesetzt.
 ]]></Text>
 			<Text language="en"><![CDATA[
@@ -2673,7 +2673,7 @@ The status messages are:
 - Driving to trailer
 - Ouf of money
 - Waiting for rain to finish
-- Waits for snow to disappear
+- Waiting for snow to disappear
 - Waiting on unloader
 - Left the course, stopped
 - Wrong bale type
