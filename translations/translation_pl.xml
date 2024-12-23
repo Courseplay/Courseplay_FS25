@@ -14,7 +14,7 @@
     <text name="CP_unit_meter" text="m"/>
     <text name="CP_unit_foot" text="ft"/>
     <text name="CP_copy" text="Skopiuj kurs: "/>
-    <text name="CP_infoText" text="Courseplay(%s): Aby uzyskać pomoc, zgłosić błąd lub przeczytać informacje o aktualizacji, odwiedź: https://github.com/Courseplay/Courseplay_FS22."/>
+    <text name="CP_infoText" text="Courseplay(%s): Aby uzyskać pomoc, zgłosić błąd lub przeczytać informacje o aktualizacji, odwiedź: https://github.com/Courseplay/Courseplay_FS25."/>
     <text name="CP_error_no_course" text="Wygeneruj kurs przed rozpoczęciem pracy."/>
     <text name="CP_error_could_not_generate_course" text="Nie udało się wygenerować kursu. Więcej informacji w pliku LOG."/>
     <text name="CP_error_not_on_field" text="Cel nie jest na polu."/>
@@ -156,6 +156,7 @@
     <!--Vehicle settings-->
     <!---->
     <text name="CP_vehicle_setting_title" text="Ustawienia pojazdu dla (%s)"/>
+    <text name="CP_vehicle_setting_subTitle_vehicle" text="Ustawienia pojazdu"/>
     <text name="CP_vehicle_setting_subTitle_basic" text="Ustawienia podstawowe"/>
     <text name="CP_vehicle_setting_subTitle_implement" text="Ustawienia narzędzi"/>
     <text name="CP_vehicle_setting_subTitle_combine" text="Ustawienia kombajnu"/>
@@ -271,6 +272,8 @@
     <!---->
     <text name="CP_vehicle_courseGeneratorSetting_title" text="Ustawienia generatora kursu dla (%s)"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="Podstawowe"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Ustawienia winorośli"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Ustawienia prac polowych"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="Uwrocia"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="Środek"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Ustawienia przeszkód"/>
@@ -501,6 +504,7 @@ Kurs jest automatycznie zapisywany po zamknięciu edytora i nadpisuje wybrany ku
     <!---->
     <!--Custom field manager-->
     <!---->
+    <text name="CP_customFieldManager_hotspotName" text="Nowe pole"/>
     <text name="CP_customFieldManager_confirm_save" text="Czy chcesz zapisać nagrany kurs jako nowe pole %s?"/>
     <text name="CP_customFieldManager_confirm_delete" text="Czy chcesz usunąć nowe pole %s?"/>
     <text name="CP_customFieldManager_delete" text="Usuń nowe pole"/>
@@ -516,10 +520,14 @@ Kurs jest automatycznie zapisywany po zamknięciu edytora i nadpisuje wybrany ku
     <text name="CP_controllerGui_pauseRecording" text="Wstrzymaj nagrywanie nowego pola."/>
     <text name="CP_controllerGui_unpauseRecording" text="Wznów nagrywanie nowego pola."/>
     <!---->
+    <!--CP ingame menu-->
+    <!---->
+    <text name="CP_ingameMenu_map_title" text="Mapa"/>
+    <!---->
     <!--Help menu-->
     <!---->
     <text name="CP_help_title" text="Courseplay"/>
-    <text name="CP_help_subTitle" text="Modyfikacja do Farming Simulator 22 "/>
+    <text name="CP_help_subTitle" text="Modyfikacja do Farming Simulator 25"/>
     <text name="CP_help_page_blank" text=""/>
     <text name="CP_help_page_General_title" text="Informacje ogólne"/>
     <text name="CP_help_page_GeneralBase_text" text="
@@ -532,7 +540,7 @@ Możliwe jest również automatyczne rozładowanie kombajnu na przyczepę stoją
 Niestandardowe granice pól mogą być przypisane do wykorzystania podczas np. prac na łąkach, które nie są rozpoznawana jako normalne pole.
 Wreszcie CP posiada interfejs do Autodrive, który pozwala na uzupełnianie siewnika w pobliskim silosie lub rozładować przyczepę samozbierającą itd.
 
-Aby uzyskać więcej informacji, odwiedź nasz GitHub: https://github.com/Courseplay/Courseplay_FS22
+Aby uzyskać więcej informacji, odwiedź nasz GitHub: https://github.com/Courseplay/Courseplay_FS25
 Tam możesz uzyskać pomoc lub zgłosić napotkany problem.
 Na koniec dziękujemy każdemu tłumaczowi i naszej społeczności za zgłaszanie błędów, przekazywanie opinii dotyczących użytkowania i nowych pomysłów.
 
@@ -661,7 +669,7 @@ WAŻNA UWAGA: Jeśli wygenerowany kurs nie będzie idealny lub nawet zły przez 
 Jest to bardzo ważne, gdy chcesz, aby wielu pomocników jeździło tym samym kursem dla konwoju (wiele maszyn).
 Ta funkcja umożliwia również zbieranie pokosu pozostawionego przez kombajn lub zgrabiarkę z przyczepą samozbierającą lub prasą.
 "/>
-    <text name="CP_help_page_courseManagerBaseFunctions_text" text="Lokalizacja zapisu plików kursu to: Dokumenty\My Games\FarmingSimulator2022\modSettings\FS22_Courseplay\Courses\Nazwa_mapy.SampleModMap (lub w przypadku map z gry, np. MapUS).
+    <text name="CP_help_page_courseManagerBaseFunctions_text" text="Lokalizacja zapisu plików kursu to: Dokumenty\My Games\FarmingSimulator2025\modSettings\FS25_Courseplay\Courses\Nazwa_mapy.SampleModMap (lub w przypadku map z gry, np. MapUS).
 Menedżer kursu działa inaczej niż ten, do którego przywykłeś w FS19.
 Kursy zapisywane są w folderach, które wyświetlą się po lewej stronie. Oznacza to, że aby rozpocząć zapisywanie kursów, potrzebujesz co najmniej jednego folderu.
 Foldery można po prostu utworzyć, naciskając przycisk u dołu ekranu i wprowadzając nazwę.
@@ -983,6 +991,7 @@ Twój wybór powinien wyglądać podobnie do tego zdjęcia.
     <text name="input_CP_DBG_CHANNEL_MENU_VISIBILITY" text="CP: Menu kanałów debugowania"/>
     <text name="input_CP_OPEN_CLOSE_VEHICLE_SETTING_DISPLAY" text="CP: Otwórz mini GUI"/>
     <text name="input_CP_START_STOP" text="CP: Uruchom/Zatrzymaj kierowcę"/>
+    <text name="input_CP_GENERATE_COURSE" text="CP: Generuj kurs"/>
     <text name="input_CP_CHANGE_SELECTED_JOB" text="CP: Zmień obecnie wybraną pracę"/>
     <text name="input_CP_CHANGE_STARTING_POINT" text="CP: Zmień punkt startowy"/>
     <text name="input_CP_CLEAR_COURSE" text="CP: Wyczyść aktualnie załadowany kurs"/>
