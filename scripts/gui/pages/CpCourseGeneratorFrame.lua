@@ -1515,7 +1515,7 @@ function CpCourseGeneratorFrame:setActiveJobTypeSelection(jobTypeIndex)
 		self:validateParameters()
 		self.jobMenuLayout:invalidateLayout()
 		FocusManager:setFocus(self.jobTypeElement)
-		self:updateCourseGenerator(self.currentJob:isa(CpAIJobFieldWork), self.currentJobVehicle)
+		self:updateCourseGenerator(self.currentJob.is_a and self.currentJob:is_a(CpAIJobFieldWork), self.currentJobVehicle)
 	end
 	self:updateContextActions()
 end

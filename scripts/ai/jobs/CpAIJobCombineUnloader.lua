@@ -1,36 +1,26 @@
 --- Combine unloader job.
 ---@class CpAIJobCombineUnloader : CpAIJob
-CpAIJobCombineUnloader = {
-	name = "COMBINE_UNLOADER_CP",
-	jobName = "CP_job_combineUnload",
-	minStartDistanceToField = 20,
-	minFieldUnloadDistanceToField = 20,
-	maxHeapLength = 150
-}
-
-local AIJobCombineUnloaderCp_mt = Class(CpAIJobCombineUnloader, CpAIJob)
-
-function CpAIJobCombineUnloader.new(isServer, customMt)
-	local self = CpAIJob.new(isServer, customMt or AIJobCombineUnloaderCp_mt)
-
+CpAIJobCombineUnloader = CpObject(CpAIJob)
+CpAIJobCombineUnloader.name = "COMBINE_UNLOADER_CP"
+CpAIJobCombineUnloader.jobName = "CP_job_combineUnload"
+CpAIJobCombineUnloader.minStartDistanceToField = 20
+CpAIJobCombineUnloader.minFieldUnloadDistanceToField = 20
+CpAIJobCombineUnloader.maxHeapLength = 150
+function CpAIJobCombineUnloader:init(isServer)
+	CpAIJob.init(self, isServer)
 	self.lastPositionX, self.lastPositionZ = math.huge, math.huge
-
     self.selectedFieldPlot = FieldPlot(true)
     self.selectedFieldPlot:setVisible(false)
 	self.selectedFieldPlot:setBrightColor(true)
-
 	self.heapPlot = HeapPlot()
 	self.heapPlot:setVisible(false)
 	self.heapNode = CpUtil.createNode("siloNode", 0, 0, 0, nil)
-
 	--- Giants unload
 	self.dischargeNodeInfos = {}
-	
-	return self
 end
 
 function CpAIJobCombineUnloader:delete()
-	CpAICombineUnloader:superClass().delete(self)
+	CpAIJob.delete(self)
 	CpUtil.destroyNode(self.heapNode)
 end
 
@@ -301,7 +291,7 @@ function CpAIJobCombineUnloader:getNextTaskIndex(isSkipTask)
 end
 
 function CpAIJobCombineUnloader:canContinueWork()
-	local canContinueWork, errorMessage = CpAIJobCombineUnloader:superClass().canContinueWork(self)
+	local canContinueWork, errorMessage = CpAIJob.canContinueWork(self)
 	if not canContinueWork then 
 		return canContinueWork, errorMessage
 	end
@@ -340,7 +330,7 @@ function CpAIJobCombineUnloader:startTask(task)
 			dischargeNodeInfo.dirty = true
 		end
 	end
-	CpAIJobCombineUnloader:superClass().startTask(self, task)
+	CpAIJob.startTask(self, task)
 end
 
 --- Starting index for giants unload: 
@@ -348,7 +338,7 @@ end
 ---  - Else if the trailer is full and we are far away from the field, then let giants drive to unload directly.
 ---@return number
 function CpAIJobCombineUnloader:getStartTaskIndex()
-	local startTask = CpAIJobCombineUnloader:superClass().getStartTaskIndex(self)
+	local startTask = CpAIJob.getStartTaskIndex(self)
 	if not self.cpJobParameters.useGiantsUnload:getValue() then 
 		return startTask
 	end
@@ -387,7 +377,7 @@ end
 --- TODO: Add the missing description once the task system is better implemented.
 ---@return unknown
 function CpAIJobCombineUnloader:getDescription()
-	local desc = CpAIJob:superClass().getDescription(self)
+	local desc = CpAIJob.getDescription(self)
 	local currentTask = self:getTaskByIndex(self.currentTaskIndex)
     if currentTask == self.driveToTask then
 		desc = desc .. " - " .. g_i18n:getText("ai_taskDescriptionDriveToField")

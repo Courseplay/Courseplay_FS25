@@ -16,26 +16,13 @@
 ---@field groupedParameters table
 ---@field isServer boolean
 ---@field helperIndex number
-CpAIJob = {
-	name = "",
-	jobName = "",
-}
-local AIJobCp_mt = Class(CpAIJob, AIJob)
-
-function CpAIJob.new(isServer, customMt)
-	local self = AIJob.new(isServer, customMt or AIJobCp_mt)
+CpAIJob = CpObject(AIJob, AIJob.new)
+function CpAIJob:init(isServer)
 	self.isDirectStart = false
 	self.debugChannel = CpDebug.DBG_FIELDWORK
-
-	--- Small translation fix, needs to be removed once giants fixes it.
-	local ai = g_currentMission.aiJobTypeManager
-	ai:getJobTypeByIndex(ai:getJobTypeIndexByName(self.name)).title = g_i18n:getText(self.jobName)
-
 	self:setupJobParameters()
 	self:setupTasks(isServer)
-
-	return self
-end
+end 
 
 ---@param task CpAITask
 function CpAIJob:removeTask(task)
@@ -123,7 +110,7 @@ end
 
 function CpAIJob:start(farmId)
 	self:onPreStart()
-	CpAIJob:superClass().start(self, farmId)
+	AIJob.start(self, farmId)
 
 	if self.isServer then
 		local vehicle = self.vehicleParameter:getVehicle()
@@ -135,7 +122,7 @@ end
 
 function CpAIJob:stop(aiMessage)
 	if not self.isServer then 
-		CpAIJob:superClass().stop(self, aiMessage)
+		AIJob.stop(self, aiMessage)
 		return
 	end
 	local vehicle = self.vehicleParameter:getVehicle()
@@ -148,7 +135,7 @@ function CpAIJob:stop(aiMessage)
 		if driveStrategy then
 			driveStrategy:onFinished()
 		end
-		CpAIJob:superClass().stop(self, aiMessage)
+		AIJob.stop(self, aiMessage)
 		return
 	end
 	local releaseMessage, hasFinished, event, isOnlyShownOnPlayerStart = 
@@ -161,7 +148,7 @@ function CpAIJob:stop(aiMessage)
 		--- TODO: Add check if passing to ad is active maybe?
 		vehicle:setCpInfoTextActive(releaseMessage)
 	end
-	CpAIJob:superClass().stop(self, aiMessage)
+	AIJob.stop(self, aiMessage)
 	if event then
 		SpecializationUtil.raiseEvent(vehicle, event)
 	end
@@ -173,7 +160,7 @@ end
 
 --- Updates the parameter values.
 function CpAIJob:applyCurrentState(vehicle, mission, farmId, isDirectStart)
-	CpAIJob:superClass().applyCurrentState(self, vehicle, mission, farmId, isDirectStart)
+	AIJob.applyCurrentState(self, vehicle, mission, farmId, isDirectStart)
 	self.vehicleParameter:setVehicle(vehicle)
 	if not self.cpJobParameters or not self.cpJobParameters.startPosition then 
 		return
@@ -339,7 +326,7 @@ function CpAIJob:readStream(streamId, connection)
 end
 
 function CpAIJob:saveToXMLFile(xmlFile, key, usedModNames)
-	CpAIJob:superClass().saveToXMLFile(self, xmlFile, key, usedModNames)
+	AIJob.saveToXMLFile(self, xmlFile, key, usedModNames)
 	if self.cpJobParameters then
 		self.cpJobParameters:saveToXMLFile(xmlFile, key)
 	end
@@ -347,7 +334,7 @@ function CpAIJob:saveToXMLFile(xmlFile, key, usedModNames)
 end
 
 function CpAIJob:loadFromXMLFile(xmlFile, key)
-	CpAIJob:superClass().loadFromXMLFile(self, xmlFile, key)
+	AIJob.loadFromXMLFile(self, xmlFile, key)
 	if self.cpJobParameters then
 		self.cpJobParameters:validateSettings()
 		self.cpJobParameters:loadFromXMLFile(xmlFile, key)
@@ -378,7 +365,7 @@ end
 --- Applies the global wage modifier. 
 function CpAIJob:getPricePerMs()
 	local modifier = g_Courseplay.globalSettings:getSettings().wageModifier:getValue()/100
-	return CpAIJob:superClass().getPricePerMs(self) * modifier
+	return AIJob.getPricePerMs(self) * modifier
 end
 
 --- Fix for precision farming ...
@@ -439,13 +426,13 @@ end
 
 function CpAIJob:showNotification(aiMessage)
 	if g_Courseplay.globalSettings.infoTextHudActive:getValue() == g_Courseplay.globalSettings.DISABLED then 
-		CpAIJob:superClass().showNotification(self, aiMessage)
+		AIJob.showNotification(self, aiMessage)
 		return
 	end
 	local releaseMessage, hasFinished, event = g_infoTextManager:getInfoTextDataByAIMessage(aiMessage)
 	if not releaseMessage and not aiMessage:isa(AIMessageSuccessStoppedByUser) then 
 		self:debug("No release message found, so we use the giants notification!")
-		CpAIJob:superClass().showNotification(self, aiMessage)
+		AIJob.showNotification(self, aiMessage)
 		return
 	end
 	local vehicle = self:getVehicle()
@@ -482,9 +469,9 @@ end
 AIJobTypeManager.getJobTypeIndex = Utils.overwrittenFunction(AIJobTypeManager.getJobTypeIndex ,CpAIJob.getJobTypeIndex)
 
 --- Registers additional jobs.
-function CpAIJob.registerJob(AIJobTypeManager)
+function CpAIJob.registerJob(aiJobTypeManager)
 	local function register(class)
-		AIJobTypeManager:registerJobType(class.name, class.jobName, class)
+		aiJobTypeManager:registerJobType(class.name, g_i18n:getText(class.jobName), class)
 	end
 	register(CpAIJobBaleFinder)
 	register(CpAIJobFieldWork)
@@ -493,5 +480,4 @@ function CpAIJob.registerJob(AIJobTypeManager)
 	register(CpAIJobBunkerSilo)
 end
 
-AIJobTypeManager.loadMapData = Utils.appendedFunction(AIJobTypeManager.loadMapData,CpAIJob.registerJob)
 

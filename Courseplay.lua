@@ -95,6 +95,7 @@ end
 --- This function is called on loading a savegame.
 ---@param filename string
 function Courseplay:loadMap(filename)
+	CpAIJob.registerJob(g_currentMission.aiJobTypeManager)
 	self.globalSettings = CpGlobalSettings()
 	self:registerXmlSchema()
 	--- Savegame infos here

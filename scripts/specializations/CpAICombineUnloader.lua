@@ -311,5 +311,5 @@ function CpAICombineUnloader:getCpCombineUnloaderJob()
 end
 
 function CpAICombineUnloader:getIsCpCombineUnloaderActive()
-    return self:getIsAIActive() and self:getJob() and self:getJob():isa(CpAIJobCombineUnloader)
+    return self:getIsAIActive() and self:getJob() and self:getJob().is_a and self:getJob():is_a(CpAIJobCombineUnloader)
 end

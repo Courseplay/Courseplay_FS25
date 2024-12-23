@@ -3,13 +3,10 @@
 ---@field heapPlot HeapPlot
 ---@field trailerAreaPlot HeapPlot
 ---@field heapNode number
-CpAIJobSiloLoader = {
-	name = "SILO_LOADER_CP",
-	jobName = "CP_job_siloLoader",
-	maxHeapLength = 150
-}
-local AIJobCombineUnloaderCp_mt = Class(CpAIJobSiloLoader, CpAIJob)
-
+CpAIJobSiloLoader = CpObject(CpAIJob)
+CpAIJobSiloLoader.name = "SILO_LOADER_CP"
+CpAIJobSiloLoader.jobName = "CP_job_siloLoader"
+CpAIJobSiloLoader.maxHeapLength = 150
 --- Trailer unload marker length, -TRAILER_SEARCH_LENGTH/2 to TRAILER_SEARCH_LENGTH/2 
 CpAIJobSiloLoader.TRAILER_SEARCH_LENGTH = 25
 --- Trailer unload marker width, -TRAILER_SEARCH_WIDTH/2 to TRAILER_SEARCH_WIDTH/2 
@@ -17,24 +14,19 @@ CpAIJobSiloLoader.TRAILER_SEARCH_WIDTH = 20
 --- Max distance the trailer unload spot can be from the silo/heap.
 CpAIJobSiloLoader.MAX_UNLOAD_TARGET_DISTANCE_FROM_SILO = 180
 
-function CpAIJobSiloLoader.new(isServer, customMt)
-	local self = CpAIJob.new(isServer, customMt or AIJobCombineUnloaderCp_mt)
-
+function CpAIJobSiloLoader:init(isServer)
+	CpAIJob.init(self, isServer)
 	self.heapPlot = HeapPlot()
 	self.heapPlot:setVisible(false)
-
 	self.trailerAreaPlot = HeapPlot()
-
-
 	self.heapNode = CpUtil.createNode("siloNode", 0, 0, 0, nil)
 	self.heap = nil
 	self.hasValidPosition = false
 	self.debugChannel = CpDebug.DBG_SILO
-	return self
 end
 
 function CpAIJobSiloLoader:delete()
-	CpAIJobSiloLoader:superClass().delete(self)
+	CpAIJob.delete(self)
 	CpUtil.destroyNode(self.heapNode)
 end
 
@@ -45,7 +37,7 @@ function CpAIJobSiloLoader:setupTasks(isServer)
 end
 
 function CpAIJobSiloLoader:setupJobParameters()
-	CpAIJobSiloLoader:superClass().setupJobParameters(self)
+	CpAIJob.setupJobParameters(self)
 	self:setupCpJobParameters(CpSiloLoaderJobParameters(self))
 	self.cpJobParameters.loadPosition:setSnappingAngle(math.pi/8) -- AI menu snapping angle of 22.5 degree.
 	self.cpJobParameters.unloadPosition:setSnappingAngle(math.pi/8) -- AI menu snapping angle of 22.5 degree.
@@ -372,7 +364,7 @@ end
 --- Gets the additional task description shown.
 --- TODO: Add the missing task descriptions
 function CpAIJobSiloLoader:getDescription()
-	local desc = CpAIJob:superClass().getDescription(self)
+	local desc = CpAIJob.getDescription(self)
 	local currentTask = self:getTaskByIndex(self.currentTaskIndex)
     if currentTask == self.driveToTask then
 		desc = desc .. " - " .. g_i18n:getText("ai_taskDescriptionDriveToField")

@@ -271,7 +271,7 @@ end
 --- Is a cp worker active ?
 --- Every cp job should be an instance of type CpAIJob.
 function CpAIWorker:getIsCpActive()
-    return self:getIsAIActive() and self:getJob() and self:getJob():isa(CpAIJob)
+    return self:getIsAIActive() and self:getJob() and self:getJob().is_a and self:getJob():is_a(CpAIJob)
 end
 
 --- Is cp drive to field work active

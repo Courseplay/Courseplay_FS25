@@ -17,16 +17,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]
 
 -- Class implementation stolen from http://lua-users.org/wiki/SimpleLuaClasses
-
----@class CpObject
-function CpObject(base, init)
+---@generic K : CpObject
+---@param base `K`|nil Optional base class
+---@param baseClassInit function|nil Optional giants constructor function for the base class
+---@return K
+function CpObject(base, baseClassInit)
+	---@class CpObject
 	local c = {}    -- a new class instance
-	if not init and type(base) == 'function' then
-		init = base
-		base = nil
-	elseif type(base) == 'table' then
+	if type(base) == 'table' then
 		-- our new class is a shallow copy of the base class!
-		for i,v in pairs(base) do
+		for i, v in pairs(base) do
 			c[i] = v
 		end
 		c._base = base
@@ -38,8 +38,15 @@ function CpObject(base, init)
 	-- expose a constructor which can be called by <classname>(<args>)
 	local mt = {}
 	mt.__call = function(class_tbl, ...)
-		local obj = {}
-		setmetatable(obj, c)
+		local obj
+		if base and base.baseClassInit then 
+			--- A custom init function from a giants class
+			obj = base.baseClassInit(..., c)
+		end
+		if obj == nil then
+			obj = {}
+			setmetatable(obj, c)
+		end
 		if class_tbl.init then
 			class_tbl.init(obj,...)
 		else
@@ -50,7 +57,7 @@ function CpObject(base, init)
 		end
 		return obj
 	end
-	c.init = init
+	c.baseClassInit = baseClassInit
 	c.is_a = function(self, klass)
 		local m = getmetatable(self)
 		while m do
@@ -83,7 +90,12 @@ function CpObject(base, init)
 		end
 		return str
 	end
-
+	c.new = function(...)
+		return c(...)
+	end
+	c.superClass = function ()
+		return c._base
+	end
 	setmetatable(c, mt)
 	return c
 end

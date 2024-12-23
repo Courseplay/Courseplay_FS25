@@ -1,21 +1,15 @@
 --- Bale finder job.
 ---@class CpAIJobBaleFinder : CpAIJobFieldWork
 ---@field selectedFieldPlot FieldPlot
-CpAIJobBaleFinder = {
-	name = "BALE_FINDER_CP",
-	jobName = "CP_job_baleCollect",
-	minStartDistanceToField = 20,
-}
-local AIJobBaleFinderCp_mt = Class(CpAIJobBaleFinder, CpAIJob)
-
-
-function CpAIJobBaleFinder.new(isServer, customMt)
-	local self = CpAIJob.new(isServer, customMt or AIJobBaleFinderCp_mt)
+CpAIJobBaleFinder = CpObject(CpAIJob)
+CpAIJobBaleFinder.name = "BALE_FINDER_CP"
+CpAIJobBaleFinder.jobName = "CP_job_baleCollect"
+CpAIJobBaleFinder.minStartDistanceToField = 20
+function CpAIJobBaleFinder:init(isServer)
+	CpAIJob.init(self, isServer)
 	self.selectedFieldPlot = FieldPlot(true)
     self.selectedFieldPlot:setVisible(false)
-	self.selectedFieldPlot:setBrightColor(true)
-
-	return self
+	self.selectedFieldPlot:setBrightColor()
 end
 
 function CpAIJobBaleFinder:setupTasks(isServer)
@@ -39,7 +33,7 @@ end
 
 
 function CpAIJobBaleFinder:applyCurrentState(vehicle, mission, farmId, isDirectStart, isStartPositionInvalid)
-	CpAIJobBaleFinder:superClass().applyCurrentState(self, vehicle, mission, farmId, isDirectStart, isStartPositionInvalid)
+	CpAIJob.applyCurrentState(self, vehicle, mission, farmId, isDirectStart)
 	self.cpJobParameters:validateSettings()
 
 	self:copyFrom(vehicle:getCpBaleFinderJob())
@@ -116,7 +110,7 @@ end
 
 --- Gets the additional task description shown.
 function CpAIJobBaleFinder:getDescription()
-	local desc = CpAIJob:superClass().getDescription(self)
+	local desc = CpAIJob.getDescription(self)
 	local currentTask = self:getTaskByIndex(self.currentTaskIndex)
     if currentTask == self.driveToTask then
 		desc = desc .. " - " .. g_i18n:getText("ai_taskDescriptionDriveToField")

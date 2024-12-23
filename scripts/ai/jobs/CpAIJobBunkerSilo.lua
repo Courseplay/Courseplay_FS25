@@ -1,18 +1,12 @@
 --- AI job for the silo driver.
 ---@class CpAIJobBunkerSilo : CpAIJob
-CpAIJobBunkerSilo = {
-	name = "BUNKER_SILO_CP",
-	jobName = "CP_job_bunkerSilo",
-}
-local CpAIJobBunkerSilo_mt = Class(CpAIJobBunkerSilo, CpAIJob)
-
-function CpAIJobBunkerSilo.new(isServer, customMt)
-	local self = CpAIJob.new(isServer, customMt or CpAIJobBunkerSilo_mt)
-	
+CpAIJobBunkerSilo = CpObject(CpAIJob)
+CpAIJobBunkerSilo.name = "BUNKER_SILO_CP"
+CpAIJobBunkerSilo.jobName = "CP_job_bunkerSilo"
+function CpAIJobBunkerSilo:init(isServer)
+	CpAIJob.init(self, isServer)
 	self.hasValidPosition = nil 
 	self.bunkerSilo = nil
-
-	return self
 end
 
 function CpAIJobBunkerSilo:setupTasks(isServer)
@@ -115,7 +109,7 @@ function CpAIJobBunkerSilo:draw(map, isOverviewMap)
 end
 
 function CpAIJobBunkerSilo:readStream(streamId, connection)
-	CpAIJobBunkerSilo:superClass().readStream(self, streamId, connection)
+	CpAIJob.readStream(self, streamId, connection)
 	
 	local x, z = self.cpJobParameters.siloPosition:getPosition()
 	self.hasValidPosition, self.bunkerSilo =  g_bunkerSiloManager:getBunkerSiloAtPosition(x, z)
@@ -124,7 +118,7 @@ end
 
 --- Gets the additional task description shown.
 function CpAIJobBunkerSilo:getDescription()
-	local desc = CpAIJob:superClass().getDescription(self)
+	local desc = CpAIJob.getDescription(self)
 	local currentTask = self:getTaskByIndex(self.currentTaskIndex)
     if currentTask == self.driveToTask then
 		desc = desc .. " - " .. g_i18n:getText("ai_taskDescriptionDriveToField")

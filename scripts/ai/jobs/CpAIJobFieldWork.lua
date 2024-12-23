@@ -1,25 +1,20 @@
 --- AI job derived of CpAIJob.
 ---@class CpAIJobFieldWork : CpAIJob
-CpAIJobFieldWork = {
-    name = "FIELDWORK_CP",
-    jobName = "CP_job_fieldWork",
-    GenerateButton = "FIELDWORK_BUTTON",
-}
-local AIJobFieldWorkCp_mt = Class(CpAIJobFieldWork, CpAIJob)
-
-function CpAIJobFieldWork.new(isServer, customMt)
-    local self = CpAIJob.new(isServer, customMt or AIJobFieldWorkCp_mt)
-
+CpAIJobFieldWork = CpObject(CpAIJob)
+CpAIJobFieldWork.name = "FIELDWORK_CP"
+CpAIJobFieldWork.jobName = "CP_job_fieldWork"
+CpAIJobFieldWork.GenerateButton = "FIELDWORK_BUTTON"
+function CpAIJobFieldWork:init(isServer)
+    CpAIJob.init(self, isServer)
     self.hasValidPosition = false
     self.foundVines = nil
     self.selectedFieldPlot = FieldPlot(true)
     self.selectedFieldPlot:setVisible(false)
-    return self
 end
 
 function CpAIJobFieldWork:setupTasks(isServer)
     -- this will add a standard driveTo task to drive to the target position selected by the user
-    CpAIJobFieldWork:superClass().setupTasks(self, isServer)
+    CpAIJob.setupTasks(self, isServer)
     -- then we add our own driveTo task to drive from the target position to the waypoint where the
     -- fieldwork starts (first waypoint or the one we worked on last)
     self.attachHeaderTask = CpAITaskAttachHeader(isServer, self)
@@ -76,7 +71,7 @@ end
 ---@param isDirectStart boolean disables the drive to by giants
 ---@param isStartPositionInvalid boolean resets the drive to target position by giants and the field position to the vehicle position.
 function CpAIJobFieldWork:applyCurrentState(vehicle, mission, farmId, isDirectStart, isStartPositionInvalid)
-    CpAIJobFieldWork:superClass().applyCurrentState(self, vehicle, mission, farmId, isDirectStart)
+    CpAIJob.applyCurrentState(self, vehicle, mission, farmId, isDirectStart)
 
     local _
     local x, z = self.cpJobParameters.fieldPosition:getPosition()
@@ -137,7 +132,7 @@ function CpAIJobFieldWork:validateFieldSetup(isValid, errorMessage)
 end
 
 function CpAIJobFieldWork:setValues()
-    CpAIJobFieldWork:superClass().setValues(self)
+    CpAIJob.setValues(self)
     local vehicle = self.vehicleParameter:getVehicle()
     self.driveToFieldWorkStartTask:reset()
     self.driveToFieldWorkStartTask:setVehicle(vehicle)
@@ -147,7 +142,7 @@ end
 
 --- Called when parameters change, scan field
 function CpAIJobFieldWork:validate(farmId)
-    local isValid, errorMessage = CpAIJobFieldWork:superClass().validate(self, farmId)
+    local isValid, errorMessage = CpAIJob.validate(self, farmId)
     if not isValid then
         return isValid, errorMessage
     end
@@ -269,14 +264,14 @@ function CpAIJobFieldWork:getIsAvailableForVehicle(vehicle, cpJobsAllowed)
 end
 
 function CpAIJobFieldWork:resetStartPositionAngle(vehicle)
-    CpAIJobFieldWork:superClass().resetStartPositionAngle(self, vehicle)
+    CpAIJob.resetStartPositionAngle(self, vehicle)
     local x, _, z = getWorldTranslation(vehicle.rootNode)
     self.cpJobParameters.fieldPosition:setPosition(x, z)
 end
 
 --- Ugly hack to fix a mp problem from giants, where the helper is not always reset correctly on the client side.
 function CpAIJobFieldWork:stop(aiMessage)
-    CpAIJobFieldWork:superClass().stop(self, aiMessage)
+    CpAIJob.stop(self, aiMessage)
 
     local vehicle = self.vehicleParameter:getVehicle()
     if vehicle and vehicle.spec_aiFieldWorker.isActive then
@@ -296,7 +291,7 @@ end
 
 --- Gets the additional task description shown.
 function CpAIJobFieldWork:getDescription()
-	local desc = CpAIJob:superClass().getDescription(self)
+	local desc = CpAIJob.getDescription(self)
 	local currentTask = self:getTaskByIndex(self.currentTaskIndex)
     if currentTask == self.driveToTask then
 		desc = desc .. " - " .. g_i18n:getText("ai_taskDescriptionDriveToField")

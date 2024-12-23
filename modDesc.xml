@@ -265,15 +265,14 @@ Changelog 8.0.0.0:
 		<sourceFile filename="scripts/ai/tasks/CpAITaskSiloLoader.lua"/>
 
 		<sourceFile filename="scripts/gui/CpGuiUtil.lua"/>
-		<sourceFile filename="scripts/gui/CoursePlot.lua"/>
-		<sourceFile filename="scripts/gui/FieldPlot.lua"/>
-		<sourceFile filename="scripts/gui/BunkerSiloPlot.lua"/>
-		<sourceFile filename="scripts/gui/HeapPlot.lua"/>
-		<sourceFile filename="scripts/gui/UnloadingTriggerPlot.lua"/>
+		<sourceFile filename="scripts/gui/plots/CoursePlot.lua"/>
+		<sourceFile filename="scripts/gui/plots/FieldPlot.lua"/>
+		<sourceFile filename="scripts/gui/plots/BunkerSiloPlot.lua"/>
+		<sourceFile filename="scripts/gui/plots/HeapPlot.lua"/>
+		<sourceFile filename="scripts/gui/plots/UnloadingTriggerPlot.lua"/>
 		<sourceFile filename="scripts/gui/CpStatus.lua"/>
 		<sourceFile filename="scripts/gui/CustomFieldHotspot.lua"/>
 		<sourceFile filename="scripts/gui/CourseDisplay.lua"/>
-		<!-- <sourceFile filename="scripts/gui/CpGamePadHudScreen.lua"/> -->
 		<sourceFile filename="scripts/gui/elements/CpBinaryOptionElement.lua"/>
 		<sourceFile filename="scripts/gui/elements/CpOptionToggleElement.lua"/>
 		<sourceFile filename="scripts/gui/pages/CpCourseManagerFrame.lua"/>

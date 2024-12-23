@@ -257,7 +257,7 @@ function LevelerController.actionEventAttacherJointControl(object, superFunc, ..
 	local rootVehicle = object:getRootVehicle()
 	if rootVehicle and rootVehicle.getJob then
 		local job = rootVehicle:getJob()
-		if job and job:isa(CpAIJobBunkerSilo) then 
+		if job and job.is_a and job:is_a(CpAIJobBunkerSilo) then 
 			return
 		end
 	end
