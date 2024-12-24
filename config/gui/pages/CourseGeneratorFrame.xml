@@ -179,20 +179,20 @@
                         </ListItem>
                     </SmoothList>
                 </GuiElement>
-                <GuiElement profile="fs25_mapContextBox" id="contextBoxFarmland" height="150px">
+                <GuiElement profile="fs25_mapContextBox" id="contextBoxCustomField" height="150px">
                     <Bitmap profile="fs25_mapContextBoxBgFarmland" />
                     <Bitmap profile="fs25_mapContextImage" name="image" />
                     <Bitmap profile="fs25_mapContextImageVehicle" name="imageVehicle" />
                     <Bitmap profile="fs25_mapContextSeparator" />
                     <Text profile="fs25_mapContextTextTop" name="text" position="0px -5px" />
                     <Text profile="fs25_mapContextFarmTop" name="farm" position="0px -50px" />
-                    <Text profile="fs25_mapContextFarmlandTitle" text="$l10n_contract_details_fieldSize:"
+                    <Text profile="fs25_mapContextFarmlandTitle" text=""
                         position="0px -80px" />
-                    <Text profile="fs25_mapContextFarmlandTitle" text="$l10n_ui_sellValue:"
+                    <Text profile="fs25_mapContextFarmlandTitle" text=""
                         position="0px -110px" />
                     <Text profile="fs25_mapContextFarmlandValue" name="farmlandSize" position="0px -80px" />
                     <Text profile="fs25_mapContextFarmlandValue" name="farmlandValue" position="0px -110px" />
-                    <SmoothList profile="fs25_mapContextButtonList" id="contextButtonListFarmland"
+                    <SmoothList profile="fs25_mapContextButtonList" id="contextButtonCustomFieldList"
                         name="buttonBox" onClick="onClickList">
                         <ListItem profile="fs25_mapContextButtonListItem">
                             <ThreePartBitmap profile="fs25_mapContextButtonListItemBg" />
@@ -201,11 +201,11 @@
                         </ListItem>
                     </SmoothList>
                 </GuiElement>
-                <GuiElement profile="fs25_mapContextBox" id="contextBoxPlayer" height="80px">
+                <!-- <GuiElement profile="fs25_mapContextBox" id="contextBoxPlayer" height="80px">
                     <Bitmap profile="fs25_mapContextBoxBgFarmland" />
                     <Text profile="fs25_mapContextTextTop" name="player" position="0px -5px" />
                     <Text profile="fs25_mapContextFarmTop" name="farm" position="0px -50px" />
-                </GuiElement>
+                </GuiElement> -->
             </GuiElement>
             <Text profile="ingameMenuAIActionText" id="actionMessage" visible = "false" />
             <GuiElement profile="fs25_inGameMapLoadingBg" visible = "false">

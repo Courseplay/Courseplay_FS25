@@ -70,8 +70,7 @@ function CpVehicleSettingsFrame:initialize(menu)
 		FocusManager:loadElementFromCustomValues(self.subCategoryPages[key])
 		self.subCategoryTabs[key] = self.selectorPrefab:clone(self.subCategoryBox)
 		FocusManager:loadElementFromCustomValues(self.subCategoryTabs[key])
-		self.subCategoryBox:invalidateLayout()
-	
+
 		self.subCategoryTabs[key]:setText(g_i18n:getText(self.CATEGRORY_TEXTS[key]))
 		self.subCategoryTabs[key]:getDescendantByName("background"):setSize(
 			self.subCategoryTabs[key].size[1], self.subCategoryTabs[key].size[2])
@@ -79,6 +78,8 @@ function CpVehicleSettingsFrame:initialize(menu)
 			self:updateSubCategoryPages(key)
 		end
 	end
+	self.subCategoryBox:invalidateLayout()
+	self.subCategoryPaging:setSize(self.subCategoryBox.maxFlowSize + 140 * g_pixelSizeScaledX)
 end
 
 

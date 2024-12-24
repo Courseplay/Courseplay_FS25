@@ -32,6 +32,8 @@ function CustomFieldManager:init(fileSystem)
     self.fileSystem = fileSystem
     self.currentView = fileSystem.currentDirectoryView
     self.rootDir = fileSystem.rootDirectory
+    MessageType.CP_CUSTOM_FIELD_CHANGED = nextMessageTypeId()
+
     self:load()
 end
 
@@ -165,6 +167,7 @@ function CustomFieldManager:onClickDeleteDialog(clickOk, fieldToDelete)
                     field:delete()
                     table.remove(self.fields, i)
                     self.fileSystem:refresh()
+                    g_messageCenter:publish(MessageType.CP_CUSTOM_FIELD_CHANGED)
                 else 
                     CpUtil.debugFormat(CpDebug.DBG_COURSES, 'Custom field %s was found, but the file not.', fieldToDelete:getName())
                 end
@@ -187,6 +190,7 @@ function CustomFieldManager:onClickRenameDialog(newName, clickOk, fieldToRename)
                         CpUtil.debugFormat(CpDebug.DBG_COURSES, 'Renamed custom field from %s to %s.', fieldToRename:getName(), newName)
                         fieldToRename:setName(newName)
                         self.fileSystem:refresh()
+                        g_messageCenter:publish(MessageType.CP_CUSTOM_FIELD_CHANGED)
                     else 
                         CpUtil.debugFormat(CpDebug.DBG_COURSES, 'Could not rename custom field from %s to %s.', fieldToRename:getName(), newName)
                         --- New field name already in use.

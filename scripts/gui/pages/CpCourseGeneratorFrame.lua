@@ -36,7 +36,10 @@ CpCourseGeneratorFrame = {
 		CREATE_JOB		= 2,
 		START_JOB		= 3,
 		STOP_JOB		= 4,
-		GENERATE_COURSE = 5
+		GENERATE_COURSE = 5,
+		DELETE_CUSTOM_FIELD = 6,
+		RENAME_CUSTOM_FIELD = 7,
+		EDIT_CUSTOM_FIELD 	= 8
 	},
 	AI_MODE_OVERVIEW = 1,
 	AI_MODE_CREATE = 2,
@@ -184,7 +187,6 @@ function CpCourseGeneratorFrame:initialize(menu)
 		self.subCategoryPaging:addText(tostring(key))
 		self.subCategoryTabs[key] = self.selectorPrefab:clone(self.subCategoryBox)
 		FocusManager:loadElementFromCustomValues(self.subCategoryTabs[key])
-		self.subCategoryBox:invalidateLayout()
 		self.subCategoryTabs[key]:setText(g_i18n:getText(self.CATEGRORY_TEXTS[key]))
 		self.subCategoryTabs[key]:getDescendantByName("background"):setSize(
 			self.subCategoryTabs[key].size[1], self.subCategoryTabs[key].size[2])
@@ -204,6 +206,8 @@ function CpCourseGeneratorFrame:initialize(menu)
 	end
 	self.mapOverviewSelector:setTexts(self.mapSelectorTexts)
 	self.mapOverviewSelector:setState(1, true)
+	self.subCategoryBox:invalidateLayout()
+	self.subCategoryPaging:setSize(self.subCategoryBox.maxFlowSize + 140 * g_pixelSizeScaledX)
 
 	self.hotspotFilterCategories = table.clone(InGameMenuMapFrame.HOTSPOT_FILTER_CATEGORIES)
 	table.insert(self.hotspotFilterCategories[2], {
@@ -224,12 +228,6 @@ function CpCourseGeneratorFrame:initialize(menu)
 
 	self.currentContextBox = self.contextBox 
 	self.currentHotspot = nil
-	g_messageCenter:subscribe(MessageType.GUI_CP_INGAME_CURRENT_VEHICLE_CHANGED, 
-		function(self, vehicle)
-			local _, pageTitle = CpCourseGeneratorSettings.getSettingSetup()
-			local title = string.format(g_i18n:getText(pageTitle), vehicle and vehicle:getName() or "--")
-			self.categoryHeaderText:setText(title)
-		end, self)
 end
 
 function CpCourseGeneratorFrame:update(dt)
@@ -245,13 +243,13 @@ function CpCourseGeneratorFrame:update(dt)
 			end
 		end
 		self.updateTime = g_time + 1000
-		local vehicle = self.currentHotspot and self.currentContextBox and self.currentHotspot:getVehicle()
+		local vehicle = self.cpMenu:getCurrentVehicle()
 		if vehicle then 
 			if vehicle.getIsCpActive and vehicle:getIsCpActive() then 
 				local status = vehicle:getCpStatus()
-				self.currentContextBox:getDescendantByName("statusText"):setText(status:getText())
+				self.contextBox:getDescendantByName("statusText"):setText(status:getText())
 			else 
-				self.currentContextBox:getDescendantByName("statusText"):setText("")
+				self.contextBox:getDescendantByName("statusText"):setText("")
 			end
 		end
 	end
@@ -296,8 +294,15 @@ end
 
 function CpCourseGeneratorFrame:onFrameOpen()
 	self.ingameMap:setTerrainSize(g_currentMission.terrainSize)
+	g_messageCenter:subscribe(MessageType.GUI_CP_INGAME_CURRENT_VEHICLE_CHANGED, 
+		function(self, vehicle)
+			local _, pageTitle = CpCourseGeneratorSettings.getSettingSetup()
+			local title = string.format(g_i18n:getText(pageTitle), vehicle and vehicle:getName() or "--")
+			self.categoryHeaderText:setText(title)
+		end, self)
+
 	g_messageCenter:subscribe(MessageType.AI_VEHICLE_STATE_CHANGE, function(self, _, vehicle)
-		if self.currentHotspot and vehicle and InGameMenuMapUtil.getHotspotVehicle(self.currentHotspot) == vehicle then
+		if self.cpMenu:getCurrentVehicle() == vehicle then
 			self:updateContextActions()
 		end
 	end, self)
@@ -323,6 +328,12 @@ function CpCourseGeneratorFrame:onFrameOpen()
 		-- InGameMenuMapUtil.hideContextBox(self.contextBox) 
 	end, self)
 	g_messageCenter:subscribe(MessageType.CP_INFO_TEXT_CHANGED, function (menu)
+		self.infoTextList:reloadData()
+	end, self)
+	g_messageCenter:subscribe(MessageType.CP_CUSTOM_FIELD_CHANGED, function (menu)
+		if self.currentHotspot and self.currentHotspot:isa(CustomFieldHotspot) then 
+			self:setMapSelectionItem(self.currentHotspot)
+		end
 		self.infoTextList:reloadData()
 	end, self)
 	-- g_messageCenter:subscribe(MessageType.AI_TASK_SKIPPED, self.onAITaskSkipped, self)
@@ -430,12 +441,7 @@ end
 
 function CpCourseGeneratorFrame:onFrameClose()
 	self:closeMap()
-	g_messageCenter:unsubscribe(MessageType.AI_JOB_STARTED, self)
-	g_messageCenter:unsubscribe(MessageType.AI_JOB_STOPPED, self)
-	g_messageCenter:unsubscribe(MessageType.AI_JOB_REMOVED, self)
-	g_messageCenter:unsubscribe(MessageType.AI_VEHICLE_STATE_CHANGE, self)
-	g_messageCenter:unsubscribe(MessageType.CP_INFO_TEXT_CHANGED, self)
-	g_messageCenter:unsubscribe(AIJobStartRequestEvent, self)
+	g_messageCenter:unsubscribeAll(self)
 	self.jobTypeInstances = {}
 	g_currentMission:removeMapHotspot(self.driveToAiTargetMapHotspot)
 	g_currentMission:removeMapHotspot(self.fieldSiloAiTargetMapHotspot)
@@ -608,7 +614,7 @@ end
 
 function CpCourseGeneratorFrame:onDrawPostIngameMap(element, ingameMap)
 	local areCursePlotsAlwaysVisible = g_Courseplay.globalSettings:getSettings().showsAllActiveCourses:getValue()
-	local vehicle = self.currentHotspot and self.currentHotspot:getVehicle()
+	local vehicle = self.cpMenu:getCurrentVehicle()
 	if areCursePlotsAlwaysVisible then
 		local vehicles = g_assignedCoursesManager:getRegisteredVehicles()
 		for _, v in pairs(vehicles) do
@@ -757,7 +763,7 @@ function CpCourseGeneratorFrame:executePickingCallback(...)
 end
 
 function CpCourseGeneratorFrame:onClickPositionParameter(element)
-	self.contextBox:setVisible(false)
+	self.currentContextBox:setVisible(false)
 	local parameter = element.aiParameter
 	g_currentMission:removeMapHotspot(self.loadAiTargetMapHotspot)
 	g_currentMission:removeMapHotspot(self.fieldSiloAiTargetMapHotspot)
@@ -790,7 +796,7 @@ function CpCourseGeneratorFrame:onClickPositionParameter(element)
 end
 
 function CpCourseGeneratorFrame:onClickPositionRotationParameter(element)
-	self.contextBox:setVisible(false)
+	self.currentContextBox:setVisible(false)
 	local parameter = element.aiParameter
 	g_currentMission:removeMapHotspot(self.loadAiTargetMapHotspot)
 	g_currentMission:removeMapHotspot(self.fieldSiloAiTargetMapHotspot)
@@ -813,10 +819,10 @@ function CpCourseGeneratorFrame:onClickPositionRotationParameter(element)
 	function self.pickingCallback(success, x, z)
 		self:showActionMessage()
 		self.ingameMap:setIsCursorAvailable(true)
-		self.contextBox:setVisible(true)
+		self.currentContextBox:setVisible(true)
 
 		if success then
-			self.contextBox:setVisible(false)
+			self.currentContextBox:setVisible(false)
 			self.ingameMap:setHotspotSelectionActive(false)
 			self.ingameMap:setIsCursorAvailable(false)
 			self.ingameMap:lockMapMovement()
@@ -829,7 +835,7 @@ function CpCourseGeneratorFrame:onClickPositionRotationParameter(element)
 			function self.pickingCallback(successRotation, angle)
 				self:showActionMessage()
 				self.ingameMap:setIsCursorAvailable(true)
-				self.contextBox:setVisible(true)
+				self.currentContextBox:setVisible(true)
 				if successRotation then
 					parameter:setPosition(x, z)
 					parameter:setAngle(angle)
@@ -993,7 +999,7 @@ function CpCourseGeneratorFrame:tryStartJob(job, farmId, callback)
 end
 
 function CpCourseGeneratorFrame:cancelJob()
-	local vehicle = InGameMenuMapUtil.getHotspotVehicle(self.currentHotspot)
+	local vehicle = self.cpMenu:getCurrentVehicle()
 	if vehicle and vehicle:getIsAIActive() then
 		vehicle:stopCurrentAIJob(AIMessageSuccessStoppedByUser.new())
 		g_currentMission:removeMapHotspot(self.driveToAiTargetMapHotspot)
@@ -1032,6 +1038,15 @@ function CpCourseGeneratorFrame:getNumberOfItemsInSection(list, section)
 		end
 		if self.mode == self.AI_MODE_CREATE then  
 			return 0
+		end
+		return #self.contextActionMapping
+	end
+	if list == self.contextButtonCustomFieldList then 
+		self.contextActionMapping = {}
+		for index, action in pairs(self.contextActions) do 
+			if action.isActive then 
+				table.insert(self.contextActionMapping, index)
+			end
 		end
 		return #self.contextActionMapping
 	end
@@ -1084,6 +1099,10 @@ function CpCourseGeneratorFrame:populateCellForItemInSection(list, section, inde
 		local buttonInfo = self.contextActions[self.contextActionMapping[index]]
 		cell:getAttribute("text"):setText(buttonInfo.text)
 		cell.onClickCallback = buttonInfo.callback
+	elseif list == self.contextButtonCustomFieldList then
+		local buttonInfo = self.contextActions[self.contextActionMapping[index]]
+		cell:getAttribute("text"):setText(buttonInfo.text)
+		cell.onClickCallback = buttonInfo.callback
 	elseif list == self.activeWorkerList then 
 		local count = 0
 		local currentJob = nil
@@ -1111,7 +1130,7 @@ function CpCourseGeneratorFrame:populateCellForItemInSection(list, section, inde
 	elseif list == self.infoTextList then 
 		cell:getAttribute("text"):setText(self.activeInfoTexts[index].text)
 		cell:getAttribute("icon").getIsSelected = function ()
-			return self.currentHotspot and self.currentHotspot:getVehicle() == self.activeInfoTexts[index].vehicle
+			return self.cpMenu:getCurrentVehicle() == self.activeInfoTexts[index].vehicle
 		end
 		cell.onClickCallback = function ()
 			if self:getIsPicking() then 
@@ -1142,6 +1161,8 @@ function CpCourseGeneratorFrame:onClickList(list, section, index, listElement)
 			end
 		end
 	elseif list == self.contextButtonList then
+		listElement.onClickCallback(self)	
+	elseif list == self.contextButtonCustomFieldList then
 		listElement.onClickCallback(self)	
 	elseif list == self.createJobButtonList then
 		listElement.onClickCallback(self)	
@@ -1259,13 +1280,11 @@ function CpCourseGeneratorFrame:initializeContextActions()
 		[self.CONTEXT_ACTIONS.ENTER_VEHICLE] = {
 			text = g_i18n:getText("button_enterVehicle"),
 			callback = function()
-				if self.currentHotspot then 
-					local vehicle = self.currentHotspot:getVehicle()
-					if vehicle then 
-						if vehicle.getIsEnterableFromMenu ~= nil and vehicle:getIsEnterableFromMenu() then
-							self.onClickBackCallback()
-							g_localPlayer:requestToEnterVehicle(vehicle)
-						end
+				local vehicle = self.cpMenu:getCurrentVehicle()
+				if vehicle then 
+					if vehicle.getIsEnterableFromMenu ~= nil and vehicle:getIsEnterableFromMenu() then
+						self.onClickBackCallback()
+						g_localPlayer:requestToEnterVehicle(vehicle)
 					end
 				end
 			end,
@@ -1296,12 +1315,39 @@ function CpCourseGeneratorFrame:initializeContextActions()
 				end
 			end,
 			isActive = false
+		},
+		[self.CONTEXT_ACTIONS.DELETE_CUSTOM_FIELD] = {
+			text = g_i18n:getText("CP_customFieldManager_delete"),
+			callback = function()
+				if self.currentHotspot and self.currentHotspot:isa(CustomFieldHotspot) then 
+					self.currentHotspot:onClickDelete()
+				end
+			end,
+			isActive = false
+		},
+		[self.CONTEXT_ACTIONS.RENAME_CUSTOM_FIELD] = {
+			text = g_i18n:getText("CP_customFieldManager_rename"),
+			callback = function()
+				if self.currentHotspot and self.currentHotspot:isa(CustomFieldHotspot) then 
+					self.currentHotspot:onClickRename()
+				end
+			end,
+			isActive = false
+		},
+		[self.CONTEXT_ACTIONS.EDIT_CUSTOM_FIELD] = {
+			text = g_i18n:getText("CP_customFieldManager_edit"),
+			callback = function()
+				if self.currentHotspot and self.currentHotspot:isa(CustomFieldHotspot) then 
+					self.currentHotspot:onClickEdit()
+				end
+			end,
+			isActive = false
 		}
 	}
 end
 
 function CpCourseGeneratorFrame:updateContextActions()
-	local vehicle = self.currentHotspot and self.currentHotspot:getVehicle()
+	local vehicle = self.cpMenu:getCurrentVehicle()
 	self.contextActions[self.CONTEXT_ACTIONS.ENTER_VEHICLE].isActive = vehicle and vehicle:getIsEnterableFromMenu() and self.mode ~= self.AI_MODE_CREATE
 	self.canCreateJob = false
 	if vehicle and not self.currentJobVehicle then
@@ -1316,12 +1362,16 @@ function CpCourseGeneratorFrame:updateContextActions()
 	self.contextActions[self.CONTEXT_ACTIONS.START_JOB].isActive = self:getCanStartJob()
 	self.contextActions[self.CONTEXT_ACTIONS.STOP_JOB].isActive = self:getCanCancelJob() and self.mode ~= self.AI_MODE_CREATE
 	self.contextActions[self.CONTEXT_ACTIONS.GENERATE_COURSE].isActive = self:getCanGenerateFieldWorkCourse() 
+	self.contextActions[self.CONTEXT_ACTIONS.DELETE_CUSTOM_FIELD].isActive = self.currentHotspot and self.currentHotspot:isa(CustomFieldHotspot)
+	self.contextActions[self.CONTEXT_ACTIONS.RENAME_CUSTOM_FIELD].isActive = self.currentHotspot and self.currentHotspot:isa(CustomFieldHotspot)
+	self.contextActions[self.CONTEXT_ACTIONS.EDIT_CUSTOM_FIELD].isActive = false--self.currentHotspot and self.currentHotspot:isa(CustomFieldHotspot)
 	for _, action in ipairs(self.contextActions) do 
 		if action.action then 
 			g_inputBinding:removeActionEventsByActionName(action.action)
 		end
 	end
 	self.contextButtonList:reloadData()	
+	self.contextButtonCustomFieldList:reloadData()
 	self.createJobButtonList:reloadData()
 end
 
@@ -1374,6 +1424,7 @@ function CpCourseGeneratorFrame:setMapSelectionItem(hotspot)
 			imageFilename = vehicle:getImageFilename()
 			uvs = Overlay.DEFAULT_UVS
 			self.currentHotspot = hotspot
+			self.currentContextBox = self.contextBox
 			if hotspot:isa(PlayerHotspot) then
 				local player = hotspot:getPlayer()
 				if player then 
@@ -1388,15 +1439,24 @@ function CpCourseGeneratorFrame:setMapSelectionItem(hotspot)
 				end
 			end
 			showContextBox = true
+		elseif hotspot:isa(CustomFieldHotspot) then 
+			farmId = g_localPlayer:getFarmId()
+			name = hotspot:getName()
+			uvs = Overlay.DEFAULT_UVS
+			self.currentHotspot = hotspot
+			self.currentContextBox = self.contextBoxCustomField
+			showContextBox = true
 		end
 	end
+	self.cpMenu:lockCurrentVehicle(self.currentHotspot and self.currentHotspot.getVehicle and self.currentHotspot:getVehicle())
 	if showContextBox then
-		InGameMenuMapUtil.showContextBox(self.contextBox, hotspot, name, imageFilename, uvs, farmId, playerName, false, true, false)
+		InGameMenuMapUtil.hideContextBox(self.contextBox)
+		InGameMenuMapUtil.hideContextBox(self.contextBoxCustomField)
+		InGameMenuMapUtil.showContextBox(self.currentContextBox, hotspot, name, imageFilename, uvs, farmId, playerName, false, true, false)
 		self:updateContextActions()
 	else
-		InGameMenuMapUtil.hideContextBox(self.contextBox)
+		InGameMenuMapUtil.hideContextBox(self.currentContextBox)
 	end
-	self.cpMenu:lockCurrentVehicle(self.currentHotspot and self.currentHotspot:getVehicle())
 end
 
 function CpCourseGeneratorFrame:setAIVehicle(vehicle)
@@ -1409,27 +1469,25 @@ function CpCourseGeneratorFrame:setAIVehicle(vehicle)
 end
 
 function CpCourseGeneratorFrame:onCreateJob()
-	if self.currentHotspot then 
-		local vehicle = self.currentHotspot:getVehicle()
-		if vehicle then 
-			self.currentJobTypes = {}
-			local currentJobTypesTexts = {}
-			for index, job in pairs(self.jobTypeInstances) do 
-				if job:getIsAvailableForVehicle(vehicle, true) then 
-					table.insert(self.currentJobTypes, index)
-					table.insert(currentJobTypesTexts, g_currentMission.aiJobTypeManager:getJobTypeByIndex(index).title)
-				end
+	local vehicle = self.cpMenu:getCurrentVehicle()
+	if vehicle then 
+		self.currentJobTypes = {}
+		local currentJobTypesTexts = {}
+		for index, job in pairs(self.jobTypeInstances) do 
+			if job:getIsAvailableForVehicle(vehicle, true) then 
+				table.insert(self.currentJobTypes, index)
+				table.insert(currentJobTypesTexts, g_currentMission.aiJobTypeManager:getJobTypeByIndex(index).title)
 			end
-			if #self.currentJobTypes > 0 then 
-				self.jobTypeElement:setTexts(currentJobTypesTexts)
-				self.jobTypeElement:setState(1)
-				self.mode = self.AI_MODE_CREATE
-				self.currentJobVehicle = vehicle
-				self.currentJob = nil
-				self:setJobMenuVisible(true)
-				FocusManager:setFocus(self.jobTypeElement)
-				self:setActiveJobTypeSelection(self.currentJobTypes[1])
-			end
+		end
+		if #self.currentJobTypes > 0 then 
+			self.jobTypeElement:setTexts(currentJobTypesTexts)
+			self.jobTypeElement:setState(1)
+			self.mode = self.AI_MODE_CREATE
+			self.currentJobVehicle = vehicle
+			self.currentJob = nil
+			self:setJobMenuVisible(true)
+			FocusManager:setFocus(self.jobTypeElement)
+			self:setActiveJobTypeSelection(self.currentJobTypes[1])
 		end
 	end
 	self:updateContextActions()

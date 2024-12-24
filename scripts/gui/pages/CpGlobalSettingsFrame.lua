@@ -68,7 +68,6 @@ function CpGlobalSettingsFrame:initialize(menu)
 		self.subCategoryPaging:addText(tostring(key))
 		self.subCategoryTabs[key] = self.selectorPrefab:clone(self.subCategoryBox)
 		FocusManager:loadElementFromCustomValues(self.subCategoryTabs[key])
-		self.subCategoryBox:invalidateLayout()
 		self.subCategoryTabs[key]:setText(g_i18n:getText(self.CATEGRORY_TEXTS[key]))
 		self.subCategoryTabs[key]:getDescendantByName("background"):setSize(
 			self.subCategoryTabs[key].size[1], self.subCategoryTabs[key].size[2])
@@ -80,6 +79,8 @@ function CpGlobalSettingsFrame:initialize(menu)
 		layout.scrollDirection = "vertical"
 		FocusManager:loadElementFromCustomValues(self.subCategoryPages[key])
 	end
+	self.subCategoryBox:invalidateLayout()
+	self.subCategoryPaging:setSize(self.subCategoryBox.maxFlowSize + 140 * g_pixelSizeScaledX)
 	local _, pageTitle = g_Courseplay.globalSettings:getSettingSetup()
 	self.categoryHeaderText:setText(g_i18n:getText(pageTitle))
 end

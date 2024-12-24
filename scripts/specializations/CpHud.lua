@@ -120,7 +120,7 @@ function CpHud:onRegisterActionEvents(isActiveForInput, isActiveForInputIgnoreSe
             end
             local _, actionEventId = self:addActionEvent(spec.actionEvents, 
                 InputAction.CP_OPEN_CLOSE_VEHICLE_SETTING_DISPLAY, self, 
-                CpHud.actionEventMouse, false, true, false, true, nil)
+                CpHud.openClose, false, true, false, true, nil)
             g_inputBinding:setActionEventTextPriority(actionEventId, GS_PRIO_HIGH)
             g_inputBinding:setActionEventText(actionEventId, spec.openCloseText)
             g_inputBinding:setActionEventTextVisibility(actionEventId, 
