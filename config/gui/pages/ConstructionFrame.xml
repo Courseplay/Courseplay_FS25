@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GUI name="cpInGameMenuConstruction">
+    <ThreePartBitmap profile="cpLeftSideBackground" id="leftBackground"/>
+    <ThreePartBitmap profile="cpRightSideBackground" id="rightBackground"/>
+    <ThreePartBitmap profile="cpTopSideBackground" id="topBackground"/>
+    <ThreePartBitmap profile="cpBottomSideBackground" id="bottomBackground"/>
+    <GuiElement profile="fs25_menuContainer">
+        <GuiElement profile="fs25_menuHeaderPanel">
+            <Bitmap profile="fs25_menuHeaderIconBg">
+                <Bitmap profile="fs25_menuHeaderIcon" id="categoryHeaderIcon" />
+            </Bitmap>
+            <Text profile="fs25_menuHeaderTitle" id="categoryHeaderText" />
+        </GuiElement>
+        <BoxLayout profile="fs25_subCategorySelectorTabbedBox" id="subCategoryBox">
+
+        </BoxLayout>
+        <ThreePartBitmap profile="fs25_lineSeparatorTopHighlighted" position="0px -57px" />
+        <MultiTextOption profile="fs25_subCategorySelectorTabbed" id="subCategoryPaging"
+            position="0px -10px" onClick="updateSubCategoryPages" />
+   
+        <!-- Prefabs -->
+
+        <Button profile="fs25_subCategorySelectorTabbedTab" id="selectorPrefab">
+            <ThreePartBitmap profile="fs25_subCategorySelectorTabbedTabBg" name="background" />
+        </Button>
+
+        <GuiElement profile="fs25_subCategorySelectorTabbedContainer" id="containerPrefab">
+            <Text profile="fs25_settingsNoPermissionText" name="noPermissionText"
+                text="$l10n_ui_settingsNoPermission" visible="false"/>
+            <ScrollingLayout profile="fs25_settingsLayout" name="layout" bottomClipperElementName="bottomClipper">
+
+            </ScrollingLayout>
+            <Bitmap profile="fs25_settingsTooltipSeparator" name="separator" />
+            <Bitmap profile="fs25_stopClipper" name="bottomClipper" />
+        </GuiElement>
+
+        <Bitmap profile="fs25_multiTextOptionContainer" id="booleanPrefab">
+            <CpBinaryyOption profile="fs25_settingsBinaryOption" name="setting" namedComponents="true" onClick="onClickCpMultiTextOption">
+                <Text profile="fs25_multiTextOptionTooltip" name="tooltip"/>
+                <Text profile="cpSettingsMultiOptionTitle" name="label"/>
+            </CpBinaryyOption>
+        </Bitmap>
+        <Text profile="fs25_settingsSectionHeader" name="sectionHeader" id="sectionHeaderPrefab"/>
+        <Bitmap profile="fs25_multiTextOptionContainer" id="multiTextPrefab">
+            <CpOptionToggle profile="fs25_settingsMultiTextOption" name="setting" namedComponents="true" onClick="onClickCpMultiTextOption" hideButtonOnLimitReached="False">
+                <Text profile="fs25_multiTextOptionTooltip" name="tooltip"/>
+                <Text profile="cpSettingsMultiOptionTitle" name="label"/>
+            </CpOptionToggle>
+        </Bitmap>
+
+        <RoundCorner profile="fs25_subCategorySelectorDot" id="subCategoryDotPrefab" />
+
+        <GuiElement profile="fs25_subCategorySelectorTabbedContainer" id="container">
+            <GuiElement absoluteSizeOffset="0 -21px">
+                <ThreePartBitmap profile="fs25_subCategoryContainerBg" id="contentContainer">
+                    <Bitmap profile="fs25_subCategoryContainerArrow" />           
+                    <Bitmap profile="fs25_subCategoryContainer" id="menuBox">
+                        <GuiElement profile="fs25_subCategoryContainer" id="listBox" absoluteSizeOffset="0 -75px">
+                            <MultiTextOption profile="fs25_subCategorySelector" id="subCategorySelector"
+                                onClick="onSubCategoryChanged" />
+                            <BoxLayout profile="fs25_subCategorySelectorBox" id="subCategoryDotBox" />
+                            <GuiElement profile="fs25_subCategoryListContainer">
+                                <SmoothList profile="fs25_constructionList" id="itemList" onClick="onClickItem"
+                                    startClipperElementName="leftClipper" endClipperElementName="rightClipper">
+                                    <ListItem profile="fs25_constructionListItem">
+                                        <Bitmap profile="fs25_constructionListItemBackground" />
+                                        <Bitmap profile="fs25_constructionListItemImage" name="icon" />
+                                        <Text profile="fs25_constructionListItemPrice" name="price" />
+                                        <TerrainLayer profile="fs25_constructionListItemTerrainIcon"
+                                            name="terrainLayer" />
+                                    </ListItem>
+                                </SmoothList>
+                                <ThreePartBitmap profile="fs25_subCategoryListSliderBox" position="26px 0px"
+                                    absoluteSizeOffset="0px 15px" pivot="1 1">
+                                    <Slider profile="fs25_listSlider" dataElementId="itemList" />
+                                </ThreePartBitmap>
+                                <Bitmap profile="fs25_subCategoryStartClipper" name="leftClipper" />
+                                <Bitmap profile="fs25_subCategoryStopClipper" name="rightClipper" />
+                            </GuiElement>
+                        </GuiElement>
+                        <GuiElement profile="fs25_subCategoryContainer" id="configsBox" visible="false">
+                            <Text profile="fs25_constructionConfigTitle" text="$l10n_shop_configurations" />
+                            <GuiElement profile="fs25_constructionConfigContainer">
+                                <Bitmap profile="fs25_shopConfigStartClipper" id="startClipper" />
+                                <ScrollingLayout profile="fs25_shopConfigConfigurationLayout"
+                                    id="configurationLayout">
+                                    <GuiElement profile="fs25_shopConfigConfigurationItem"
+                                        id="configurationItemTemplate">
+                                        <MultiTextOption profile="fs25_multiTextOption" name="option"
+                                            onFocus="onFocusConfigurationOption"
+                                            onLeave="onLeaveConfigurationOption" visible="false" width="100%" />
+                                        <BinaryOption profile="fs25_binaryOption" name="yesNoOption"
+                                            onFocus="onFocusConfigurationOption"
+                                            onLeave="onLeaveConfigurationOption" visible="false" width="100%" />
+                                        <Button profile="fs25_colorButton" name="color"
+                                            onFocus="onFocusConfigurationOption"
+                                            onLeave="onLeaveConfigurationOption" visible="false">
+                                            <ThreePartBitmap profile="fs25_colorButtonPicked" name="colorImage" />
+                                            <Bitmap profile="fs25_colorButtonPickedMetallic"
+                                                name="colorImageMetallic" />
+                                            <Bitmap profile="fs25_colorButtonPickedGlossy"
+                                                name="colorImageGlossy" />
+                                            <Bitmap profile="fs25_colorButtonPickedMatte" name="colorImageMatte" />
+                                            <Bitmap profile="fs25_colorButtonIconBox">
+                                                <Bitmap profile="fs25_colorButtonIcon" />
+                                            </Bitmap>
+                                            <Bitmap profile="fs25_colorButtonOverlay" />
+                                        </Button>
+                                        <Text profile="fs25_shopMultiTextOptionTitle" name="title" />
+                                        <Text profile="fs25_shopMultiTextOptionPrice" name="price" />
+                                    </GuiElement>
+                                    <GuiElement profile="fs25_shopConfigConfigurationItemLarge"
+                                        id="configurationItemTemplateLarge">
+                                        <MultiTextOption profile="fs25_shopMultiTextOptionLarge" name="option"
+                                            onFocus="onFocusConfigurationOption"
+                                            onLeave="onLeaveConfigurationOption" visible="false">
+                                            <Bitmap profile="fs25_shopMultiTextOptionLargeIcon" name="icon" />
+                                        </MultiTextOption>
+                                        <Text profile="fs25_shopMultiTextOptionTitle" name="title" />
+                                        <Text profile="fs25_shopMultiTextOptionPrice" name="price" />
+                                    </GuiElement>
+                                </ScrollingLayout>
+                                <ThreePartBitmap profile="fs25_listSliderBox" position="26px 0px"
+                                    absoluteSizeOffset="0px 5px" pivot="1 1">
+                                    <Slider profile="fs25_listSlider" dataElementId="configurationLayout"
+                                        id="configSlider" />
+                                </ThreePartBitmap>
+                            </GuiElement>
+                        </GuiElement>
+                        <GuiElement profile="fs25_constructionDetailsBox" visible="false">
+                            <Bitmap profile="fs25_constructionDetailsBrandImage" id="itemDetailsBrandImage" />
+                            <Text profile="fs25_constructionDetailsName" id="itemDetailsName" />
+                            <Text profile="fs25_constructionDetailsModName" id="itemDetailsModName" />
+                            <BoxLayout profile="fs25_constructionDescriptionLayout" id="descriptionLayout">
+                                <Text profile="fs25_constructionDetailsDescription" id="itemDetailsDescription" />
+                                <Bitmap profile="fs25_itemDetailsFruitIcon" id="fruitIconTemplate"
+                                    visible="false" />
+                                <BoxLayout profile="fs25_constructionDetailsLayout" id="attributesLayout">
+                                    <GuiElement profile="fs25_itemDetailsTemplateBox" name="detailTemplate">
+                                        <Bitmap profile="fs25_itemDetailsIcon" name="icon" />
+                                        <Text profile="fs25_constructionDetailsText" name="text" />
+                                    </GuiElement>
+                                    <GuiElement profile="fs25_itemDetailsTemplateBox" name="fillTypesTemplate">
+                                        <Bitmap profile="fs25_itemDetailsIcon" name="icon" />
+                                        <GuiElement profile="fs25_itemDetailsIconsLayoutBox">
+                                            <BoxLayout profile="fs25_itemDetailsIconsLayout" name="iconsLayout" />
+                                        </GuiElement>
+                                    </GuiElement>
+                                </BoxLayout>
+                            </BoxLayout>
+                        </GuiElement>
+                    </Bitmap>
+                </ThreePartBitmap>
+            </GuiElement>
+        </GuiElement>
+    </GuiElement>
+    <!-- <ThreePartBitmap profile="fs25_sliderDockedBg" id="settingsSliderBox">
+        <ThreePartBitmap profile="fs25_sliderDockedBox">
+            <Slider profile="fs25_sliderDocked" id="settingsSlider" />
+        </ThreePartBitmap>
+    </ThreePartBitmap> -->
+    <GUIProfiles>
+        <Profile name="cpSettingsMultiOptionTitle" extends="fs25_settingsMultiTextOptionTitle">
+            <position value="-500px 0px" />
+        </Profile>
+    </GUIProfiles>
+</GUI>

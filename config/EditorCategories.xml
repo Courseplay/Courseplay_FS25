@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Categories defaultIconFilename="img/iconSprite.dds" refSize="256 512">
-    <Category name="course" iconFilename="img/courseplayIconHud.dds" refSize="256 256">
-        <Tab name="basic" iconFilename="img/iconSprite.dds"  refSize="256 512" iconUVs="0 366px 28px 28px">
-			<Brush name="move" class="CpBrushMoveWP" iconFilename="img/ui_courseplay.dds" refSize="1024 1024" iconUVs="384px 640px 128px 128px"/>
-			<Brush name="insert" class="CpBrushInsertWP" iconFilename="img/ui_courseplay.dds" refSize="1024 1024" iconUVs="640px 640px 128px 128px"/>
-		</Tab>
-		<!-- 
-		<Tab name="changeAttributes" iconFilename="img/iconSprite.dds"  refSize="256 512" iconUVs="0 366px 28px 28px">
-			<Brush name="changeHeadland" class="CpBrushChangeHeadlandWP" iconFilename="img/iconSprite.dds" refSize="256 512" iconUVs="0 366px 28px 28px"/>
-			<Brush name="changeRowNumber" class="CpBrushChangeRowNumberWP" iconFilename="img/iconSprite.dds" refSize="256 512" iconUVs="0 366px 28px 28px"/>
-			<Brush name="changeConnectingPath" class="CpBrushChangeConnectingPathWP" iconFilename="img/iconSprite.dds" refSize="256 512" iconUVs="0 366px 28px 28px"/>
-		</Tab>
-	-->
-        <Tab name="advanced" iconFilename="img/iconSprite.dds"  refSize="256 512" iconUVs="0 366px 28px 28px">
-			<Brush name="changeTurn" class="CpBrushChangeTurnWP" iconFilename="img/ui_courseplay.dds" refSize="1024 1024" iconUVs="512px 640px 128px 128px" isCourseOnly="true"/>
-			<Brush name="moveExtended" class="CpBrushAdvancedMoveWP" iconFilename="img/ui_courseplay.dds" refSize="1024 1024" iconUVs="768px 640px 128px 128px"/>
-			<Brush name="curveInsert" class="CpBrushCurveInsertWP" iconFilename="img/ui_courseplay.dds" refSize="1024 1024" iconUVs="896px 640px 128px 128px"/>
-		</Tab>
-    </Category>
-</Categories>
+<Category>
+	<Tab name="basic" iconSliceId="cpIconSprite.circle">
+		<Brush name="move" class="CpBrushMoveWP" iconSliceId="cpUi.editorMove"/>
+		<Brush name="insert" class="CpBrushInsertWP" iconSliceId="cpUi.editorInsert"/>
+	</Tab>
+	<!-- 
+	<Tab name="changeAttributes" iconFilename="img/iconSprite.dds"  refSize="256 512" iconUVs="0 366px 28px 28px">
+		<Brush name="changeHeadland" class="CpBrushChangeHeadlandWP" iconFilename="img/iconSprite.dds" refSize="256 512" iconUVs="0 366px 28px 28px"/>
+		<Brush name="changeRowNumber" class="CpBrushChangeRowNumberWP" iconFilename="img/iconSprite.dds" refSize="256 512" iconUVs="0 366px 28px 28px"/>
+		<Brush name="changeConnectingPath" class="CpBrushChangeConnectingPathWP" iconFilename="img/iconSprite.dds" refSize="256 512" iconUVs="0 366px 28px 28px"/>
+	</Tab>
+-->
+	<Tab name="advanced" iconSliceId="cpIconSprite.circle">
+		<Brush name="changeTurn" class="CpBrushChangeTurnWP" iconSliceId="editorChangeTurn" isCourseOnly="true"/>
+		<Brush name="moveExtended" class="CpBrushAdvancedMoveWP" iconSliceId="editorAdvancedMove"/>
+		<Brush name="curveInsert" class="CpBrushCurveInsertWP" iconSliceId="editorAdvancedInsert"/>
+	</Tab>
+</Category>
