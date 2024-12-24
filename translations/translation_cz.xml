@@ -14,7 +14,7 @@
     <text name="CP_unit_meter" text="m"/>
     <text name="CP_unit_foot" text="st"/>
     <text name="CP_copy" text="Kopírovat trasu: "/>
-    <text name="CP_infoText" text="Courseplay(%s): Pro pomoc, chyby nebo poznámky o opravách navštivte: https://github.com/Courseplay/Courseplay_FS22. Překlad: SniperKittenCZ"/>
+    <text name="CP_infoText" text="Courseplay(%s): Pro pomoc, chyby nebo poznámky o opravách navštivte: https://github.com/Courseplay/Courseplay_FS25. Překlad: SniperKittenCZ"/>
     <text name="CP_error_no_course" text="Před zahájením práce vygenerujte trasu."/>
     <text name="CP_error_could_not_generate_course" text="Trasu se nepodařilo vygenerovat. Log může obsahovat více informací."/>
     <text name="CP_error_not_on_field" text="Cíl není na poli."/>
@@ -156,7 +156,7 @@
     <!--Vehicle settings-->
     <!---->
     <text name="CP_vehicle_setting_title" text="Nastavení pro vozidlo (%s)"/>
-    <text name="CP_vehicle_setting_subTitle_vehicle" text="Vehicle settings"/>
+    <text name="CP_vehicle_setting_subTitle_vehicle" text="Nastavení vozidla"/>
     <text name="CP_vehicle_setting_subTitle_basic" text="Základní nastavení"/>
     <text name="CP_vehicle_setting_subTitle_implement" text="Nastavení nástroje"/>
     <text name="CP_vehicle_setting_subTitle_combine" text="Nastavení kombajnu"/>
@@ -272,8 +272,8 @@
     <!---->
     <text name="CP_vehicle_courseGeneratorSetting_title" text="Nastavení generátoru tras (%s)"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="Základní"/>
-    <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Vine field settings"/>
-    <text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Fieldwork settings"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Nastavení pro vinice"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Nastavení polních prací"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="Souvrať"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="Střed"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Nastavení ostrova"/>
@@ -313,8 +313,8 @@
     <text name="CP_vehicle_courseGeneratorSetting_spiralFromInside_tooltip" text="Spouští spirálu zevnitř."/>
     <text name="CP_vehicle_courseGeneratorSetting_evenRowWidth_title" text="Rovnoměrná šířka řádků"/>
     <text name="CP_vehicle_courseGeneratorSetting_evenRowWidth_tooltip" text="Zmenšuje pracovní šířku, aby se dosáhlo rovnoměrného rozložení ve všech řádcích."/>
-    <text name="CP_vehicle_courseGeneratorSetting_sharpenCorners_title" text="Zaostření rohů souvratí"/>
-    <text name="CP_vehicle_courseGeneratorSetting_sharpenCorners_tooltip" text="Zaostření rohů nezaoblených souvratí"/>
+    <text name="CP_vehicle_courseGeneratorSetting_sharpenCorners_title" text="Zaoblení rohů souvratí"/>
+    <text name="CP_vehicle_courseGeneratorSetting_sharpenCorners_tooltip" text="Zaoblení rohů nezaoblených souvratí"/>
     <text name="CP_vehicle_courseGeneratorSetting_headlandsWithRoundCorners_title" text="Počet kulatých rohů"/>
     <text name="CP_vehicle_courseGeneratorSetting_headlandsWithRoundCorners_tooltip" text="Počet kulatých rohů, počínaje první souvratí."/>
     <text name="CP_vehicle_courseGeneratorSetting_turningRadius_title" text="Poloměr rohu"/>
@@ -370,8 +370,8 @@
     <text name="CP_global_setting_autoRepair_always" text="Udržovat v dobrém stavu"/>
     <text name="CP_global_setting_fuelThreshold_title" text="Hladina paliva"/>
     <text name="CP_global_setting_fuelThreshold_tooltip" text="Řidič bude uvolněn, pokud je procento paliva nižší."/>
-    <text name="CP_global_setting_waitForRefueling_title" text="Waits for refueling"/>
-    <text name="CP_global_setting_waitForRefueling_tooltip" text="Vehicle waits until it is refueled."/>
+    <text name="CP_global_setting_waitForRefueling_title" text="Čekání na doplnění paliva"/>
+    <text name="CP_global_setting_waitForRefueling_tooltip" text="Vozidlo bude čekat na dotankování."/>
     <text name="CP_global_setting_brokenThreshold_title" text="Hodnota opotřebení"/>
     <text name="CP_global_setting_brokenThreshold_tooltip" text="Řidič bude propuštěn, pokud je vozidlo nebo nářadí více rozbité. 100% je vypnuto."/>
     <text name="CP_global_setting_stopThreshingDuringRain_title" text="Zastavit kombajn, když prší"/>
@@ -449,7 +449,7 @@ Trasa se automaticky uloží při zavření editoru a přepíše vybranou trasu.
     <!--Course editor-->
     <!---->
     <text name="CP_editor_course_title" text="Editor tras"/>
-    <text name="CP_editor_change_lane_offset" text="Change selected lane offset(%s)"/>
+    <text name="CP_editor_change_lane_offset" text="Změnit vybrané odsazení trasy(%s)"/>
     <text name="CP_editor_delete_title" text="Vymazat body"/>
     <text name="CP_editor_delete_primary_text" text="Primární"/>
     <text name="CP_editor_delete_secondary_text" text="Sekundární"/>
@@ -473,7 +473,7 @@ Trasa se automaticky uloží při zavření editoru a přepíše vybranou trasu.
     <text name="CP_editor_course_advanced_curveInsert_title" text="Vložit trasové body jako křivku"/>
     <text name="CP_editor_course_advanced_curveInsert_primary_text" text="Primární"/>
     <text name="CP_editor_course_advanced_curveInsert_secondary_text" text="Sekundární"/>
-    <text name="CP_editor_course_advanced_curveInsert_err" text="Výběr bodu obrat není povolen."/>
+    <text name="CP_editor_course_advanced_curveInsert_err" text="Výběr bodu pro obrat není povolen."/>
     <!---->
     <!--Info texts-->
     <!---->
@@ -504,7 +504,7 @@ Trasa se automaticky uloží při zavření editoru a přepíše vybranou trasu.
     <!---->
     <!--Custom field manager-->
     <!---->
-    <text name="CP_customFieldManager_hotspotName" text="Custom field"/>
+    <text name="CP_customFieldManager_hotspotName" text="Vlastní pole"/>
     <text name="CP_customFieldManager_confirm_save" text="Chcete uložit zaznamenanou trasu jako vlastní pole %s?"/>
     <text name="CP_customFieldManager_confirm_delete" text="Chcete odstranit vlastní pole %s?"/>
     <text name="CP_customFieldManager_delete" text="Vymazat vlastní pole"/>
@@ -522,12 +522,12 @@ Trasa se automaticky uloží při zavření editoru a přepíše vybranou trasu.
     <!---->
     <!--CP ingame menu-->
     <!---->
-    <text name="CP_ingameMenu_map_title" text="Map"/>
+    <text name="CP_ingameMenu_map_title" text="Mapa"/>
     <!---->
     <!--Help menu-->
     <!---->
     <text name="CP_help_title" text="Courseplay"/>
-    <text name="CP_help_subTitle" text="Modifikace pro Farming Simulator 22 "/>
+    <text name="CP_help_subTitle" text="Modifikace pro Farming Simulator 25 "/>
     <text name="CP_help_page_blank" text=""/>
     <text name="CP_help_page_General_title" text="Všeobecné informace"/>
     <text name="CP_help_page_GeneralBase_text" text="
@@ -539,7 +539,7 @@ Trasy polních prací lze nastavit v režimu více nástrojů, který umožňuje
 Je také možné nechat sklízecí mlátičku automaticky vyložit do vleku na poli/v blízkosti pole.
 Pro hru lze přiřadit vlastní ohraničení pole, která se použijí například: v případě louky, která není rozpoznána jako normální pole.
 Konečně CP má rozhraní pro Autodrive, které umožňuje doplnění secího stroje v nedalekém sile nebo vyložení secího vozu a tak dále.
-Pro více informací navštivte náš github: https://github.com/Courseplay/Courseplay_FS22.
+Pro více informací navštivte náš github: https://github.com/Courseplay/Courseplay_FS25.
 Zde můžete získat pomoc nebo nahlásit jakýkoli problém, se kterým jste se setkali.
 Nakonec děkujeme všem překladatelům a naší komunitě za nahlášení chyb, poskytnutí zpětné vazby a nových nápadů.
 Co je expertní režim:
@@ -1012,8 +1012,8 @@ Nyní by váš výběr měl vypadat podobně jako na obrázku.
     <text name="input_CP_DBG_CHANNEL_MENU_VISIBILITY" text="CP: Zobrazit nabídku kanálu ladění ano/ne"/>
     <text name="input_CP_OPEN_CLOSE_VEHICLE_SETTING_DISPLAY" text="CP: Otevřt/zavřít nastavení vozidla"/>
     <text name="input_CP_START_STOP" text="CP: Spustit mini GUI"/>
-    <text name="input_CP_GENERATE_COURSE" text="CP: Change current selected job"/>
-    <text name="input_CP_CHANGE_SELECTED_JOB" text="CP: Change current selected job"/>
+    <text name="input_CP_GENERATE_COURSE" text="CP: Změnit aktuálně zvolenou práci"/>
+    <text name="input_CP_CHANGE_SELECTED_JOB" text="CP: Změnit aktuálně zvolenou práci"/>
     <text name="input_CP_CHANGE_STARTING_POINT" text="CP: Změnit startovní bod"/>
     <text name="input_CP_CLEAR_COURSE" text="CP: Vymazat aktuálně nahranou trasu"/>
     <text name="input_CP_CHANGE_COURSE_VISIBILITY" text="Zobrazit aktuální trasu vozidla"/>
@@ -1023,6 +1023,6 @@ Nyní by váš výběr měl vypadat podobně jako na obrázku.
     <text name="input_CP_OPEN_GLOBAL_SETTINGS" text="CP: Otevřít globální nastavení"/>
     <text name="input_CP_OPEN_COURSEGENERATOR_SETTINGS" text="CP: Otevřít generátor tras/nabídky pracovníků"/>
     <text name="input_CP_OPEN_COURSEMANAGER" text="CP: Otevřít správce tras"/>
-    <text name="input_CP_OPEN_INGAME_MENU" text="CP: Open menu"/>
+    <text name="input_CP_OPEN_INGAME_MENU" text="CP: Otevřít nabídku"/>
   </texts>
 </l10n>
