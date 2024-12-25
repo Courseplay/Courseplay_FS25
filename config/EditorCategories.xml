@@ -3,6 +3,7 @@
 	<Tab name="basic" iconSliceId="cpIconSprite.circle">
 		<Brush name="move" class="CpBrushMoveWP" iconSliceId="cpUi.editorMove"/>
 		<Brush name="insert" class="CpBrushInsertWP" iconSliceId="cpUi.editorInsert"/>
+		<Brush name="delete" class="CpBrushDeleteWP" iconSliceId="cpIconSprite.trashcan"/>
 	</Tab>
 	<!-- 
 	<Tab name="changeAttributes" iconFilename="img/iconSprite.dds"  refSize="256 512" iconUVs="0 366px 28px 28px">

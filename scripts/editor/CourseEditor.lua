@@ -5,7 +5,7 @@
 	and saved on closing of the editor. 
 ]]
 CourseEditor = CpObject()
-CourseEditor.TRANSLATION_PREFIX = "CP_editor_"
+CourseEditor.TRANSLATION_PREFIX = "CP_editor_course_"
 
 function CourseEditor:init()
 	--- Simple course display for the selected course.
@@ -24,6 +24,18 @@ end
 
 function CourseEditor:isEditingCustomField()
 	return self.field ~= nil
+end
+
+function CourseEditor:getStartPosition()
+	if not self:getIsActive() then 
+		return
+	end
+	local x, _, z = self.courseWrapper:getFirstWaypointPosition()
+	return x, z
+end
+
+function CourseEditor:getCourseWrapper()
+	return self.courseWrapper
 end
 
 --- Loads the course, might be a good idea to consolidate this with the loading of CpCourseManager.

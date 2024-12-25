@@ -451,12 +451,12 @@ Ruten gemmes automatisk ved lukning af editoren og tilsidesætter den valgte rut
     <text name="CP_editor_course_title" text="Rute editor"/>
     <text name="CP_editor_custom_field_title" text="Custom field editor : %s"/>
     <text name="CP_editor_change_lane_offset" text="Change selected lane offset(%s)"/>
-    <text name="CP_editor_delete_title" text="Slet vejpunkter"/>
-    <text name="CP_editor_delete_primary_text" text="primær"/>
-    <text name="CP_editor_delete_secondary_text" text="sekundær"/>
-    <text name="CP_editor_delete_tertiary_text" text="Sletter alle waypoints indtil det sidste waypoint."/>
-    <text name="CP_editor_delete_yesNo_deleteToLastWp_title" text="Er du sikker på, at alle waypoint indtil det sidste skal slettes?"/>
-    <text name="CP_editor_delete_err" text="For få vejpunkter tilbage."/>
+    <text name="CP_editor_course_basic_delete_title" text="Slet vejpunkter"/>
+    <text name="CP_editor_course_basic_delete_primary_text" text="primær"/>
+    <text name="CP_editor_course_basic_delete_secondary_text" text="sekundær"/>
+    <text name="CP_editor_course_basic_delete_tertiary_text" text="Sletter alle waypoints indtil det sidste waypoint."/>
+    <text name="CP_editor_course_basic_delete_yesNo_deleteToLastWp_title" text="Er du sikker på, at alle waypoint indtil det sidste skal slettes?"/>
+    <text name="CP_editor_course_basic_delete_err" text="For få vejpunkter tilbage."/>
     <text name="CP_editor_course_basic_title" text="grundlæggende"/>
     <text name="CP_editor_course_basic_move_title" text="Flyt et vejpunkt"/>
     <text name="CP_editor_course_basic_move_primary_text" text="primær"/>

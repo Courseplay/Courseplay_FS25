@@ -451,12 +451,12 @@ Kurs jest automatycznie zapisywany po zamknięciu edytora i nadpisuje wybrany ku
     <text name="CP_editor_course_title" text="Edytor kursu"/>
     <text name="CP_editor_custom_field_title" text="Custom field editor : %s"/>
     <text name="CP_editor_change_lane_offset" text="Zmień przes. wybranego pasa(%s)"/>
-    <text name="CP_editor_delete_title" text="Usuń punkt trasy"/>
-    <text name="CP_editor_delete_primary_text" text="główny"/>
-    <text name="CP_editor_delete_secondary_text" text="dodatkowy"/>
-    <text name="CP_editor_delete_tertiary_text" text="Usuwa wszystkie punkty trasy aż do ostatniego."/>
-    <text name="CP_editor_delete_yesNo_deleteToLastWp_title" text="Czy jesteś pewien, że wszystkie punkty trasy, aż do ostatniego, powinny zostać usunięte?"/>
-    <text name="CP_editor_delete_err" text="Pozostało za mało punktów trasy."/>
+    <text name="CP_editor_course_basic_delete_title" text="Usuń punkt trasy"/>
+    <text name="CP_editor_course_basic_delete_primary_text" text="główny"/>
+    <text name="CP_editor_course_basic_delete_secondary_text" text="dodatkowy"/>
+    <text name="CP_editor_course_basic_delete_tertiary_text" text="Usuwa wszystkie punkty trasy aż do ostatniego."/>
+    <text name="CP_editor_course_basic_delete_yesNo_deleteToLastWp_title" text="Czy jesteś pewien, że wszystkie punkty trasy, aż do ostatniego, powinny zostać usunięte?"/>
+    <text name="CP_editor_course_basic_delete_err" text="Pozostało za mało punktów trasy."/>
     <text name="CP_editor_course_basic_title" text="Podstawowy"/>
     <text name="CP_editor_course_basic_move_title" text="Przemieść punkt trasy"/>
     <text name="CP_editor_course_basic_move_primary_text" text="główny"/>

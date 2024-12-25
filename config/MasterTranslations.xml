@@ -1527,27 +1527,27 @@ The course is saved automatically on closing of the editor and overrides the sel
 			<Text language="de"><![CDATA[Ausgewählten Bahnenversatz(%s) ändern]]></Text>
 			<Text language="en"><![CDATA[Change selected lane offset(%s)]]></Text>
 		</Translation>
-		<Translation name="CP_editor_delete_title">
+		<Translation name="CP_editor_course_basic_delete_title">
 			<Text language="de"><![CDATA[Wegpunkte löschen]]></Text>
 			<Text language="en"><![CDATA[Delete waypoints]]></Text>
 		</Translation>
-		<Translation name="CP_editor_delete_primary_text">
+		<Translation name="CP_editor_course_basic_delete_primary_text">
 			<Text language="de"><![CDATA[Löscht den ausgewählten Wegpunkt.]]></Text>
 			<Text language="en"><![CDATA[Deletes the selected waypoint.]]></Text>
 		</Translation>
-		<Translation name="CP_editor_delete_secondary_text">
+		<Translation name="CP_editor_course_basic_delete_secondary_text">
 			<Text language="de"><![CDATA[Löscht Wegpunkte, über die die Maus gezogen wird.]]></Text>
 			<Text language="en"><![CDATA[Continues deletion of hovered waypoints.]]></Text>
 		</Translation>
-		<Translation name="CP_editor_delete_tertiary_text">
+		<Translation name="CP_editor_course_basic_delete_tertiary_text">
 			<Text language="de"><![CDATA[Löscht alle Wegpunkte bis zum letzten Wegpunkt.]]></Text>
 			<Text language="en"><![CDATA[Deletes all waypoints until the last waypoint.]]></Text>
 		</Translation>
-		<Translation name="CP_editor_delete_yesNo_deleteToLastWp_title">
+		<Translation name="CP_editor_course_basic_delete_yesNo_deleteToLastWp_title">
 			<Text language="de"><![CDATA[Sollen wirklich alle Wegpunkte bis zum Letzten gelöscht werden?]]></Text>
 			<Text language="en"><![CDATA[Are you sure, that all waypoints till the last one should be deleted?]]></Text>
 		</Translation>
-		<Translation name="CP_editor_delete_err">
+		<Translation name="CP_editor_course_basic_delete_err">
 			<Text language="de"><![CDATA[Zu wenige Wegpunkte übrig.]]></Text>
 			<Text language="en"><![CDATA[Too few waypoints left.]]></Text>
 		</Translation>

@@ -1,14 +1,25 @@
 CpConstructionFrame = {
-    INPUT_CONTEXT = "CP_CONSTRUCTION_MENU"
+    INPUT_CONTEXT = "CP_CONSTRUCTION_MENU",
+	BRUSH_EVENT_TYPES = {
+		PRIMARY_BUTTON = 1,
+		SECONDARY_BUTTON = 2,
+		TERTIARY_BUTTON = 3,
+		FOURTH_BUTTON = 4,
+		AXIS_PRIMARY = 5,
+		AXIS_SECONDARY = 6,
+		SNAPPING_BUTTON = 7
+	}
 }
 local CpConstructionFrame_mt = Class(CpConstructionFrame, TabbedMenuFrameElement)
 
 function CpConstructionFrame.new(target, custom_mt)
 	local self = TabbedMenuFrameElement.new(target, custom_mt or CpConstructionFrame_mt)
 	self.noBackgroundNeeded = true
+	self.hasCustomMenuButtons = true
 	self.camera = GuiTopDownCamera.new()
 	self.cursor = GuiTopDownCursor.new()
-	self.menuEvents = {}
+	self.brush = nil
+	self.brushEvents = {}
 
 	self.categorySchema = XMLSchema.new("cpConstructionCategories")
 	self.categorySchema:register(XMLValueType.STRING, "Category.Tab(?)#name", "Tab name")
@@ -61,11 +72,16 @@ function CpConstructionFrame:loadBrushCategory()
 			brushes = {}
 		}
 		xmlFile:iterate(tabKey .. ".Brush", function (_, brushKey)
+			local name = xmlFile:getValue(brushKey .. "#name")
 			local brush = {
-				name = xmlFile:getValue(brushKey .. "#name"),
+				name = name,
 				class = xmlFile:getValue(brushKey .. "#class"),
 				iconSliceId = xmlFile:getValue(brushKey .. "#iconSliceId"),
-				isCourseOnly = xmlFile:getValue(brushKey .. "#isCourseOnly")
+				isCourseOnly = xmlFile:getValue(brushKey .. "#isCourseOnly"),
+				brushParameters = {
+					g_courseEditor,
+					CourseEditor.TRANSLATION_PREFIX .. tab.name .. "_" .. name 
+				}
 			}
 			table.insert(tab.brushes, brush)
 		end)
@@ -84,6 +100,7 @@ end
 
 function CpConstructionFrame:initialize(menu)
 	self.cpMenu = menu
+	self.onClickBackCallback = menu.clickBackCallback
 
 	self.booleanPrefab:unlinkElement()
 	FocusManager:removeElement(self.booleanPrefab)
@@ -127,26 +144,30 @@ function CpConstructionFrame:onFrameOpen()
 	local tOffset = self.topBackground.size[2]
 	self.oldGameInfoDisplayPosition = {g_currentMission.hud.gameInfoDisplay:getPosition()}
 	g_currentMission.hud.gameInfoDisplay:setPosition(
-		self.oldGameInfoDisplayPosition[1] - rOffset, self.oldGameInfoDisplayPosition[2] - tOffset)
+		self.oldGameInfoDisplayPosition[1] - rOffset, 
+		self.oldGameInfoDisplayPosition[2] - tOffset)
 	self.oldBlinkingWarningDisplayPosition = {g_currentMission.hud.warningDisplay:getPosition()}
 	g_currentMission.hud.warningDisplay:setPosition(
-		self.oldBlinkingWarningDisplayPosition[1] - rOffset, self.oldBlinkingWarningDisplayPosition[2] - tOffset)
+		self.oldBlinkingWarningDisplayPosition[1] - rOffset, 
+		self.oldBlinkingWarningDisplayPosition[2] - tOffset)
 	self.oldSideNotificationsPosition = {g_currentMission.hud.sideNotifications:getPosition()}
 	g_currentMission.hud.sideNotifications:setPosition(
-		self.oldSideNotificationsPosition[1] - rOffset, self.oldSideNotificationsPosition[2] - tOffset)
+		self.oldSideNotificationsPosition[1] - rOffset, 
+		self.oldSideNotificationsPosition[2] - tOffset)
 
 	self.camera:setTerrainRootNode(g_terrainNode)
 	self.camera:setEdgeScrollingOffset(lOffset, bOffset, 1 - rOffset, 1 - tOffset)
 	self.camera:activate()
 	self.cursor:activate()
+	local x, z = g_courseEditor:getStartPosition()
+	if x ~= nil and z ~= nil then
+		self.camera:setCameraPosition(x, z)
+	end
 	self.isMouseMode = g_inputBinding.lastInputMode == GS_INPUT_HELP_MODE_KEYBOARD
+	self:toggleCustomInputContext(true, self.INPUT_CONTEXT)
 
-	g_messageCenter:subscribe(MessageType.INPUT_MODE_CHANGED, function (self)
-			self.isMouseMode = inputMode[1] == GS_INPUT_HELP_MODE_KEYBOARD
-		end, self)
-	self:updateActionEvents()
 	self:onSubCategoryChanged()
-
+	self:setBrush(nil, true)
 	if g_localPlayer ~= nil then
 		local isFirstPerson
 		if g_localPlayer:getCurrentVehicle() == nil then
@@ -176,8 +197,13 @@ function CpConstructionFrame:onFrameClose()
 	self.camera:setEdgeScrollingOffset(0, 0, 1, 1)
 	self.cursor:deactivate()
 	self.camera:deactivate()
-	g_inputBinding:setShowMouseCursor(true)
-	-- g_inputBinding:revertContext()
+	for _, id in ipairs(self.brushEvents) do
+		g_inputBinding:removeActionEvent(id)
+	end
+	self.brushEvents = {}
+	self.brushEventsByType = {}
+	self:toggleCustomInputContext(false, self.INPUT_CONTEXT)
+	-- g_inputBinding:setShowMouseCursor(true)
 	g_messageCenter:unsubscribeAll(self)
 	CpConstructionFrame:superClass().onFrameClose(self)
 end
@@ -188,8 +214,14 @@ function CpConstructionFrame:requestClose(callback)
 end
 
 function CpConstructionFrame:onClickBack()
-	
-	return true
+	if self.brush == nil then 
+		return true
+	elseif self.brush:canCancel() then 
+		self.brush:cancel()
+	else 
+		self:setBrush(nil)
+	end
+	return false
 end
 
 function CpConstructionFrame:update(dt)
@@ -204,16 +236,26 @@ function CpConstructionFrame:update(dt)
 		self.cursor:setCameraRay(self.camera:getPickRay())
 	end
 	self.cursor:update(dt)
+	if self.brush then
+		self.brush:update(dt)
+		if self.brush.inputTextDirty then
+			self:updateActionEventTexts(self.brush)
+			self.brush.inputTextDirty = false
+		end
+	end
 	-- self:updateMarqueeAnimation(dt)
 end
 
 function CpConstructionFrame:draw()
 	CpConstructionFrame:superClass().draw(self)
-	-- g_currentMission.hud:drawInputHelp(p39.helpDisplay.position[1], p39.helpDisplay.position[2])
+	g_currentMission.hud:drawInputHelp(self.helpDisplay.position[1], self.helpDisplay.position[2])
 	g_currentMission.hud.gameInfoDisplay:draw()
 	g_currentMission.hud:drawSideNotification()
 	g_currentMission.hud:drawBlinkingWarning()
 	self.cursor:draw()
+	if self.brush then 
+		self.brush:draw()
+	end
 end
 
 function CpConstructionFrame:mouseEvent(posX, posY, isDown, isUp, button, eventUsed)
@@ -227,70 +269,151 @@ function CpConstructionFrame:mouseEvent(posX, posY, isDown, isUp, button, eventU
 	return CpConstructionFrame:superClass().mouseEvent(self, posX, posY, isDown, isUp, button, eventUsed)
 end
 
-function CpConstructionFrame:registerMenuActionEvents(active)
-	-- self.menuEvents = {}
-	-- local _, id = g_inputBinding:registerActionEvent(InputAction.MENU_ACCEPT, self, function (self)
-	-- 		if self.isMouseMode then
-	-- 			self.dragIsLocked = true
-	-- 			g_gui:notifyControls("MENU_ACCEPT")
-	-- 		else
-	-- 			-- p70:onButtonPrimary()
-	-- 		end
-	-- 	end, false, true, false, true)
-	-- g_inputBinding:setActionEventTextPriority(id, GS_PRIO_VERY_LOW)
-	-- g_inputBinding:setActionEventTextVisibility(id, false)
-	-- self.acceptButtonEvent = id
-	-- table.insert(self.menuEvents, id)
-	-- local _, id = g_inputBinding:registerActionEvent(InputAction.MENU_BACK, self, function ()
-	-- 		self:changeScreen(nil)
-	-- 		-- if p71.brush:canCancel() then
-	-- 		-- 	p71.brush:cancel()
-	-- 		-- 	return
-	-- 		-- elseif p71.brush == p71.destructBrush then
-	-- 		-- 	p71.destructMode = false
-	-- 		-- 	p71:setBrush(p71.previousBrush)
-	-- 		-- 	return
-	-- 		-- elseif p71.configurations == nil then
-	-- 		-- 	if p71.brush.isSelector then
-	-- 		-- 		p71:changeScreen(nil)
-	-- 		-- 	else
-	-- 		-- 		p71:setBrush(p71.selectorBrush)
-	-- 		-- 	end
-	-- 		-- else
-	-- 		-- 	p71:onShowConfigs()
-	-- 		-- 	return
-	-- 		-- end
-	-- 	end, false, true, false, true)
-	-- g_inputBinding:setActionEventTextPriority(id, GS_PRIO_VERY_LOW)
-	-- self.backButtonEvent = id
-	-- table.insert(self.menuEvents, id)
-	-- if active then
-	-- 	local _, id = g_inputBinding:registerActionEvent(InputAction.MENU_PAGE_PREV, self, function (self)
-			
-	-- 		end, false, true, false, true)
-	-- 	g_inputBinding:setActionEventTextVisibility(id, false)
-	-- 	table.insert(self.menuEvents, id)
-	-- 	local _, id = g_inputBinding:registerActionEvent(InputAction.MENU_PAGE_NEXT, self, function (self)
-			
-	-- 		end, false, true, false, true)
-	-- 	g_inputBinding:setActionEventTextVisibility(id, false)
-	-- 	table.insert(self.menuEvents, id)
-	-- end
-end
 
-function CpConstructionFrame:removeMenuActionEvents()
-	for _, id in ipairs(self.menuEvents) do
+function CpConstructionFrame:updateActionEvents(brush)
+	for _, id in ipairs(self.brushEvents) do
 		g_inputBinding:removeActionEvent(id)
 	end
+	self.brushEvents = {}
+	self.brushEventsByType = {}
+	g_inputBinding:setContextEventsActive(self.INPUT_CONTEXT_NAME, InputAction.MENU_ACCEPT, self.brush == nil)
+	g_inputBinding:setContextEventsActive(self.INPUT_CONTEXT_NAME, InputAction.MENU_AXIS_UP_DOWN, self.brush == nil)
+	g_inputBinding:setContextEventsActive(self.INPUT_CONTEXT_NAME, InputAction.MENU_AXIS_LEFT_RIGHT, self.brush == nil)
+	g_inputBinding:setContextEventsActive(self.INPUT_CONTEXT_NAME, InputAction.MENU_PAGE_PREV, self.brush == nil)
+	g_inputBinding:setContextEventsActive(self.INPUT_CONTEXT_NAME, InputAction.MENU_PAGE_NEXT, self.brush == nil)
+	if brush then
+		if brush.supportsPrimaryButton then
+			local _, id
+			if brush.supportsPrimaryDragging then
+				_, id = g_inputBinding:registerActionEvent(InputAction.CONSTRUCTION_ACTION_PRIMARY, self, function(self, action, inputValue)
+						if not self.isMouseInMenu and self.brush then 
+							local isDown = inputValue == 1 and self.previousPrimaryDragValue ~= 1
+							local isDrag = inputValue == 1 and self.previousPrimaryDragValue == 1
+							local isUp = inputValue == 0
+							self.previousPrimaryDragValue = inputValue
+							if self.dragIsLocked then
+								if isUp then
+									self.dragIsLocked = false
+								end
+							else
+								self.brush:onButtonPrimary(isDown, isDrag, isUp)
+							end
+						end
+					end, true, true, true, true)
+			else
+				_, id = g_inputBinding:registerActionEvent(InputAction.CONSTRUCTION_ACTION_PRIMARY, self, function(self, action, inputValue)
+						if not self.isMouseInMenu and self.brush then 
+							self.brush:onButtonPrimary()
+						end
+					end, false, true, false, true)
+			end
+			table.insert(self.brushEvents, id)
+			self.brushEventsByType[self.BRUSH_EVENT_TYPES.PRIMARY_BUTTON] = id
+			g_inputBinding:setActionEventTextPriority(id, GS_PRIO_VERY_HIGH)
+		end
+		if brush.supportsSecondaryButton then
+			local _, id
+			if brush.supportsSecondaryDragging then
+				_, id = g_inputBinding:registerActionEvent(InputAction.CONSTRUCTION_ACTION_SECONDARY, self, function(self, action, inputValue)
+					if not self.isMouseInMenu and self.brush then 
+						local isDown = inputValue == 1 and self.previousSecondaryDragValue ~= 1
+						local isDrag = inputValue == 1 and self.previousSecondaryDragValue == 1
+						local isUp = inputValue == 0
+						self.previousSecondaryDragValue = inputValue
+						if self.dragIsLocked then
+							if isUp then
+								self.dragIsLocked = false
+							end
+						else
+							self.brush:onButtonSecondary(isDown, isDrag, isUp)
+						end
+					end
+				end, true, true, true, true)
+			else
+				_, id = g_inputBinding:registerActionEvent(InputAction.CONSTRUCTION_ACTION_SECONDARY, self, function(self, action, inputValue)
+					if not self.isMouseInMenu and self.brush then 
+						self.brush:onButtonSecondary()
+					end
+				end, false, true, false, true)
+			end
+			table.insert(self.brushEvents, id)
+			self.brushEventsByType[self.BRUSH_EVENT_TYPES.SECONDARY_BUTTON] = id
+			g_inputBinding:setActionEventTextPriority(v86, GS_PRIO_VERY_HIGH)
+		end
+		if brush.supportsTertiaryButton then
+			local _, id = g_inputBinding:registerActionEvent(InputAction.CONSTRUCTION_ACTION_TERTIARY, self, function(self, action, inputValue)
+					if self.brush then 
+						self.brush:onButtonTertiary()
+					end
+				end, false, true, false, true)
+			table.insert(self.brushEvents, id)
+			self.brushEventsByType[self.BRUSH_EVENT_TYPES.TERTIARY_BUTTON] = id
+			g_inputBinding:setActionEventTextPriority(id, GS_PRIO_HIGH)
+		end
+		if brush.supportsFourthButton then
+			local _, id = g_inputBinding:registerActionEvent(InputAction.CONSTRUCTION_ACTION_FOURTH, self, function (self, action, inputValue)
+					if self.brush then 
+						self.brush:onButtonFourth()
+					end
+				end, false, true, false, true)
+			table.insert(self.brushEvents, id)
+			self.brushEventsByType[self.BRUSH_EVENT_TYPES.FOURTH_BUTTON] = id
+			g_inputBinding:setActionEventTextPriority(id, GS_PRIO_HIGH)
+		end
+		if brush.supportsPrimaryAxis then
+			local _, id = g_inputBinding:registerActionEvent(InputAction.AXIS_CONSTRUCTION_ACTION_PRIMARY, self, function (self, action, inputValue)
+				if self.brush then 
+					self.brush:onAxisPrimary(inputValue)
+				end
+			end, false, not brush.primaryAxisIsContinuous, brush.primaryAxisIsContinuous, true)
+			table.insert(self.brushEvents, id)
+			self.brushEventsByType[self.BRUSH_EVENT_TYPES.AXIS_PRIMARY] = id
+			g_inputBinding:setActionEventTextPriority(id, GS_PRIO_HIGH)
+		end
+		if brush.supportsSecondaryAxis then
+			local _, id = g_inputBinding:registerActionEvent(InputAction.AXIS_CONSTRUCTION_ACTION_SECONDARY, self, function (self, action, inputValue)
+				if self.brush then 
+					self.brush:onAxisSecondary(inputValue)
+				end
+			end, false, not brush.secondaryAxisIsContinuous, brush.secondaryAxisIsContinuous, true)
+			table.insert(self.brushEvents, id)
+			self.brushEventsByType[self.BRUSH_EVENT_TYPES.AXIS_SECONDARY] = id
+			g_inputBinding:setActionEventTextPriority(id, GS_PRIO_HIGH)
+		end
+		if brush.supportsSnapping then
+			local _, id = g_inputBinding:registerActionEvent(InputAction.CONSTRUCTION_ACTION_SNAPPING, self, function (self, action, inputValue)
+				if self.brush then 
+					self.brush:onButtonSnapping()
+				end
+			end, false, true, false, true)
+			table.insert(self.brushEvents, id)
+			self.brushEventsByType[self.BRUSH_EVENT_TYPES.SNAPPING_BUTTON] = id
+			g_inputBinding:setActionEventTextPriority(id, GS_PRIO_HIGH)
+		end
+	end	
 end
 
-function CpConstructionFrame:updateActionEvents()
-	self:removeMenuActionEvents()
-	-- self:removeBrushActionEvents()
-	self.camera:removeActionEvents()
-	self.cursor:removeActionEvents()
-	self.camera:registerActionEvents()
-	self.cursor:registerActionEvents()
+function CpConstructionFrame:updateActionEventTexts(brush)
+	if brush then 
+		local updateText = function (event, getText)
+			if event then 
+				local text = getText(brush)
+				if text ~= nil then
+					g_inputBinding:setActionEventText(event, g_i18n:convertText(text))
+				end
+				g_inputBinding:setActionEventTextVisibility(event, text ~= nil)
+			end
+		end
+		updateText(brush.primaryBrushEvent, brush.getButtonPrimaryText)
+		updateText(brush.secondaryBrushEvent, brush.getButtonSecondaryText)
+		updateText(brush.tertiaryBrushEvent, brush.getButtonTertiaryText)
+		updateText(brush.fourthBrushEvent, brush.getButtonFourthText)
+		updateText(brush.primaryBrushAxisEvent, brush.getAxisPrimaryText)
+		updateText(brush.secondaryBrushAxisEvent, brush.getAxisSecondaryText)
+		updateText(brush.snappingBrushEvent, brush.getButtonSnappingText)
+	else 
+
+	end
 end
 
 function CpConstructionFrame:onSubCategoryChanged()
@@ -339,14 +462,34 @@ function CpConstructionFrame:onListHighlightChanged(list, section, index)
 end
 
 function CpConstructionFrame:onClickItem(list, section, index, cell)
-	-- local v181 = self.items[self.currentCategory][self.currentTab][self.itemList.selectedIndex]
-	-- local v182 = v181.brushClass.new(nil, self.cursor)
-	-- if v181.brushParameters ~= nil then
-	-- 	v182:setStoreItem(v181.storeItem)
-	-- 	local v183 = v181.brushParameters
-	-- 	v182:setParameters(unpack(v183))
-	-- 	v182.uniqueIndex = v181.uniqueIndex
-	-- end
-	-- self.destructMode = false
-	-- self:setBrush(v182, true)
+	local item = self.brushCategory[self.subCategorySelector:getState()].brushes[index]
+	local class = CpUtil.getClassObject(item.class)
+	local brush = class.new(nil, self.cursor)
+	if item.brushParameters ~= nil then
+		brush:setStoreItem(item.storeItem)
+		brush:setParameters(unpack(item.brushParameters))
+		brush.uniqueIndex = item.uniqueIndex
+	end
+	self:setBrush(brush)
+end
+
+function CpConstructionFrame:setBrush(brush, force)
+	if brush ~= self.brush or force then
+		if self.brush ~= nil then
+			self.brush:deactivate()
+			self.brush:delete()
+		end
+		self.brush = brush
+		self.camera:removeActionEvents()
+		self.cursor:removeActionEvents()
+		self.camera:registerActionEvents()
+		self.cursor:registerActionEvents()
+		if self.brush then 
+			self.brush:activate()
+			--- TODO Copy/restore old state here ..
+		end
+		self:updateActionEvents(self.brush)
+		self:updateActionEventTexts(self.brush)
+		self.camera:setMovementDisabledForGamepad(self.brush == nil)
+	end
 end

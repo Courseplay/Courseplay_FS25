@@ -451,12 +451,12 @@ The course is saved automatically on closing of the editor and overrides the sel
     <text name="CP_editor_course_title" text="Course editor : %s"/>
     <text name="CP_editor_custom_field_title" text="Custom field editor : %s"/>
     <text name="CP_editor_change_lane_offset" text="Change selected lane offset(%s)"/>
-    <text name="CP_editor_delete_title" text="Delete waypoints"/>
-    <text name="CP_editor_delete_primary_text" text="Deletes the selected waypoint."/>
-    <text name="CP_editor_delete_secondary_text" text="Continues deletion of hovered waypoints."/>
-    <text name="CP_editor_delete_tertiary_text" text="Deletes all waypoints until the last waypoint."/>
-    <text name="CP_editor_delete_yesNo_deleteToLastWp_title" text="Are you sure, that all waypoints till the last one should be deleted?"/>
-    <text name="CP_editor_delete_err" text="Too few waypoints left."/>
+    <text name="CP_editor_course_basic_delete_title" text="Delete waypoints"/>
+    <text name="CP_editor_course_basic_delete_primary_text" text="Deletes the selected waypoint."/>
+    <text name="CP_editor_course_basic_delete_secondary_text" text="Continues deletion of hovered waypoints."/>
+    <text name="CP_editor_course_basic_delete_tertiary_text" text="Deletes all waypoints until the last waypoint."/>
+    <text name="CP_editor_course_basic_delete_yesNo_deleteToLastWp_title" text="Are you sure, that all waypoints till the last one should be deleted?"/>
+    <text name="CP_editor_course_basic_delete_err" text="Too few waypoints left."/>
     <text name="CP_editor_course_basic_title" text="Basic"/>
     <text name="CP_editor_course_basic_move_title" text="Moves a waypoint"/>
     <text name="CP_editor_course_basic_move_primary_text" text="Drag and drops a waypoint with the Mouse."/>

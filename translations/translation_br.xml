@@ -451,12 +451,12 @@ A rota é salva automaticamente ao fechar o editor e substituir a rota seleciona
     <text name="CP_editor_course_title" text="Editor de rota"/>
     <text name="CP_editor_custom_field_title" text="Custom field editor : %s"/>
     <text name="CP_editor_change_lane_offset" text="Mudar para distânciamento da faixa (%s)"/>
-    <text name="CP_editor_delete_title" text="Excluir waypoints"/>
-    <text name="CP_editor_delete_primary_text" text="primário"/>
-    <text name="CP_editor_delete_secondary_text" text="secundário"/>
-    <text name="CP_editor_delete_tertiary_text" text="Excluir todos os waypoints até o último waypoint."/>
-    <text name="CP_editor_delete_yesNo_deleteToLastWp_title" text="Tem certeza de que todos os waypoints até o último devem ser excluídos?"/>
-    <text name="CP_editor_delete_err" text="Para poucos waypoints restantes."/>
+    <text name="CP_editor_course_basic_delete_title" text="Excluir waypoints"/>
+    <text name="CP_editor_course_basic_delete_primary_text" text="primário"/>
+    <text name="CP_editor_course_basic_delete_secondary_text" text="secundário"/>
+    <text name="CP_editor_course_basic_delete_tertiary_text" text="Excluir todos os waypoints até o último waypoint."/>
+    <text name="CP_editor_course_basic_delete_yesNo_deleteToLastWp_title" text="Tem certeza de que todos os waypoints até o último devem ser excluídos?"/>
+    <text name="CP_editor_course_basic_delete_err" text="Para poucos waypoints restantes."/>
     <text name="CP_editor_course_basic_title" text="Básico"/>
     <text name="CP_editor_course_basic_move_title" text="Mover um waypoint"/>
     <text name="CP_editor_course_basic_move_primary_text" text="primário"/>

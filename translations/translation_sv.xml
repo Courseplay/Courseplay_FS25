@@ -451,12 +451,12 @@ Banan sparas automatiskt vid stängning av editorn och åsidosätter den valda b
     <text name="CP_editor_course_title" text="Kursredaktör"/>
     <text name="CP_editor_custom_field_title" text="Custom field editor : %s"/>
     <text name="CP_editor_change_lane_offset" text="Change selected lane offset(%s)"/>
-    <text name="CP_editor_delete_title" text="Ta bort vägpunkt"/>
-    <text name="CP_editor_delete_primary_text" text="primär"/>
-    <text name="CP_editor_delete_secondary_text" text="sekundär"/>
-    <text name="CP_editor_delete_tertiary_text" text="Tar bort alla vägpunkter fram till den sista vägpunkten."/>
-    <text name="CP_editor_delete_yesNo_deleteToLastWp_title" text="Är du säker på att du vill radera alla vägpunkter till den sista vägpunkten?"/>
-    <text name="CP_editor_delete_err" text="Några få vägpunkter kvar."/>
+    <text name="CP_editor_course_basic_delete_title" text="Ta bort vägpunkt"/>
+    <text name="CP_editor_course_basic_delete_primary_text" text="primär"/>
+    <text name="CP_editor_course_basic_delete_secondary_text" text="sekundär"/>
+    <text name="CP_editor_course_basic_delete_tertiary_text" text="Tar bort alla vägpunkter fram till den sista vägpunkten."/>
+    <text name="CP_editor_course_basic_delete_yesNo_deleteToLastWp_title" text="Är du säker på att du vill radera alla vägpunkter till den sista vägpunkten?"/>
+    <text name="CP_editor_course_basic_delete_err" text="Några få vägpunkter kvar."/>
     <text name="CP_editor_course_basic_title" text="Grundläggande"/>
     <text name="CP_editor_course_basic_move_title" text="Flytta en vägpunkt"/>
     <text name="CP_editor_course_basic_move_primary_text" text="primär"/>

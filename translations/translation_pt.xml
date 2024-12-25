@@ -451,12 +451,12 @@ A rota é guardada automaticamente ao fechar o editor e sobrepõe-se a qualquer 
     <text name="CP_editor_course_title" text="Editor de Rota"/>
     <text name="CP_editor_custom_field_title" text="Custom field editor : %s"/>
     <text name="CP_editor_change_lane_offset" text="Change selected lane offset(%s)"/>
-    <text name="CP_editor_delete_title" text="Apagar pontos"/>
-    <text name="CP_editor_delete_primary_text" text="primário"/>
-    <text name="CP_editor_delete_secondary_text" text="secundário"/>
-    <text name="CP_editor_delete_tertiary_text" text="Apaga os pontos até ao último."/>
-    <text name="CP_editor_delete_yesNo_deleteToLastWp_title" text="Tem a certeza, que todos os pontos até ao último podem ser apagados?"/>
-    <text name="CP_editor_delete_err" text="Sobram poucos pontos."/>
+    <text name="CP_editor_course_basic_delete_title" text="Apagar pontos"/>
+    <text name="CP_editor_course_basic_delete_primary_text" text="primário"/>
+    <text name="CP_editor_course_basic_delete_secondary_text" text="secundário"/>
+    <text name="CP_editor_course_basic_delete_tertiary_text" text="Apaga os pontos até ao último."/>
+    <text name="CP_editor_course_basic_delete_yesNo_deleteToLastWp_title" text="Tem a certeza, que todos os pontos até ao último podem ser apagados?"/>
+    <text name="CP_editor_course_basic_delete_err" text="Sobram poucos pontos."/>
     <text name="CP_editor_course_basic_title" text="Geral"/>
     <text name="CP_editor_course_basic_move_title" text="Mexe um ponto"/>
     <text name="CP_editor_course_basic_move_primary_text" text="primário"/>

@@ -451,12 +451,12 @@ Trasa se automaticky uloží při zavření editoru a přepíše vybranou trasu.
     <text name="CP_editor_course_title" text="Editor tras"/>
     <text name="CP_editor_custom_field_title" text="Custom field editor : %s"/>
     <text name="CP_editor_change_lane_offset" text="Změnit vybrané odsazení trasy(%s)"/>
-    <text name="CP_editor_delete_title" text="Vymazat body"/>
-    <text name="CP_editor_delete_primary_text" text="Primární"/>
-    <text name="CP_editor_delete_secondary_text" text="Sekundární"/>
-    <text name="CP_editor_delete_tertiary_text" text="Smaže všechny trasové body až do posledního trasového bodu."/>
-    <text name="CP_editor_delete_yesNo_deleteToLastWp_title" text="Jste si jisti, že všechny body až do posledního by měly být smazány?"/>
-    <text name="CP_editor_delete_err" text="Příliš málo bodů na trase"/>
+    <text name="CP_editor_course_basic_delete_title" text="Vymazat body"/>
+    <text name="CP_editor_course_basic_delete_primary_text" text="Primární"/>
+    <text name="CP_editor_course_basic_delete_secondary_text" text="Sekundární"/>
+    <text name="CP_editor_course_basic_delete_tertiary_text" text="Smaže všechny trasové body až do posledního trasového bodu."/>
+    <text name="CP_editor_course_basic_delete_yesNo_deleteToLastWp_title" text="Jste si jisti, že všechny body až do posledního by měly být smazány?"/>
+    <text name="CP_editor_course_basic_delete_err" text="Příliš málo bodů na trase"/>
     <text name="CP_editor_course_basic_title" text="Základní"/>
     <text name="CP_editor_course_basic_move_title" text="Posunout bod"/>
     <text name="CP_editor_course_basic_move_primary_text" text="Primární"/>

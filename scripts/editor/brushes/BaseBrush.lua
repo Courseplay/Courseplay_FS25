@@ -43,10 +43,10 @@ function CpBrush:getHoveredWaypointIx()
 	end
 end
 
-function CpBrush:setParameters(editor, translation, courseWrapper)
+function CpBrush:setParameters(editor, translation)
 	self.editor = editor
 	self.translation = translation
-	self.courseWrapper = courseWrapper
+	self.courseWrapper = editor:getCourseWrapper()
 end
 
 function CpBrush:update(dt)

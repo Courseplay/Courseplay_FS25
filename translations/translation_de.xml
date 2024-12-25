@@ -451,12 +451,12 @@ Der Kurs wird beim Schließen automatisch gespeichert und überschrieben.
     <text name="CP_editor_course_title" text="Kurseditor : %s"/>
     <text name="CP_editor_custom_field_title" text="Randkurseditor : %s"/>
     <text name="CP_editor_change_lane_offset" text="Ausgewählten Bahnenversatz(%s) ändern"/>
-    <text name="CP_editor_delete_title" text="Wegpunkte löschen"/>
-    <text name="CP_editor_delete_primary_text" text="Löscht den ausgewählten Wegpunkt."/>
-    <text name="CP_editor_delete_secondary_text" text="Löscht Wegpunkte, über die die Maus gezogen wird."/>
-    <text name="CP_editor_delete_tertiary_text" text="Löscht alle Wegpunkte bis zum letzten Wegpunkt."/>
-    <text name="CP_editor_delete_yesNo_deleteToLastWp_title" text="Sollen wirklich alle Wegpunkte bis zum Letzten gelöscht werden?"/>
-    <text name="CP_editor_delete_err" text="Zu wenige Wegpunkte übrig."/>
+    <text name="CP_editor_course_basic_delete_title" text="Wegpunkte löschen"/>
+    <text name="CP_editor_course_basic_delete_primary_text" text="Löscht den ausgewählten Wegpunkt."/>
+    <text name="CP_editor_course_basic_delete_secondary_text" text="Löscht Wegpunkte, über die die Maus gezogen wird."/>
+    <text name="CP_editor_course_basic_delete_tertiary_text" text="Löscht alle Wegpunkte bis zum letzten Wegpunkt."/>
+    <text name="CP_editor_course_basic_delete_yesNo_deleteToLastWp_title" text="Sollen wirklich alle Wegpunkte bis zum Letzten gelöscht werden?"/>
+    <text name="CP_editor_course_basic_delete_err" text="Zu wenige Wegpunkte übrig."/>
     <text name="CP_editor_course_basic_title" text="Einfach"/>
     <text name="CP_editor_course_basic_move_title" text="Wegpunkt bewegen"/>
     <text name="CP_editor_course_basic_move_primary_text" text="Bewegt den ausgewählten Wegpunkt durch Festhalten der Maustaste."/>

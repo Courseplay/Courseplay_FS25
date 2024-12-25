@@ -451,12 +451,12 @@
     <text name="CP_editor_course_title" text="任务线路编辑"/>
     <text name="CP_editor_custom_field_title" text="Custom field editor : %s"/>
     <text name="CP_editor_change_lane_offset" text="Change selected lane offset(%s)"/>
-    <text name="CP_editor_delete_title" text="删除路线"/>
-    <text name="CP_editor_delete_primary_text" text="主要路线"/>
-    <text name="CP_editor_delete_secondary_text" text="次要路线"/>
-    <text name="CP_editor_delete_tertiary_text" text="删除所有路线直到最后一个路点."/>
-    <text name="CP_editor_delete_yesNo_deleteToLastWp_title" text="确定删除所有吗?"/>
-    <text name="CP_editor_delete_err" text="到剩下的几个路点。"/>
+    <text name="CP_editor_course_basic_delete_title" text="删除路线"/>
+    <text name="CP_editor_course_basic_delete_primary_text" text="主要路线"/>
+    <text name="CP_editor_course_basic_delete_secondary_text" text="次要路线"/>
+    <text name="CP_editor_course_basic_delete_tertiary_text" text="删除所有路线直到最后一个路点."/>
+    <text name="CP_editor_course_basic_delete_yesNo_deleteToLastWp_title" text="确定删除所有吗?"/>
+    <text name="CP_editor_course_basic_delete_err" text="到剩下的几个路点。"/>
     <text name="CP_editor_course_basic_title" text="普通"/>
     <text name="CP_editor_course_basic_move_title" text="移动一个路点"/>
     <text name="CP_editor_course_basic_move_primary_text" text="主要路点"/>

@@ -451,12 +451,12 @@
     <text name="CP_editor_course_title" text="任務編輯器"/>
     <text name="CP_editor_custom_field_title" text="Custom field editor : %s"/>
     <text name="CP_editor_change_lane_offset" text="Change selected lane offset(%s)"/>
-    <text name="CP_editor_delete_title" text="刪除航點"/>
-    <text name="CP_editor_delete_primary_text" text="主要"/>
-    <text name="CP_editor_delete_secondary_text" text="次要"/>
-    <text name="CP_editor_delete_tertiary_text" text="刪除最後一個航點之前的所有航點"/>
-    <text name="CP_editor_delete_yesNo_deleteToLastWp_title" text="你確定到最後一個的所有航點都應該被刪除嗎?"/>
-    <text name="CP_editor_delete_err" text="剩餘的航點太少."/>
+    <text name="CP_editor_course_basic_delete_title" text="刪除航點"/>
+    <text name="CP_editor_course_basic_delete_primary_text" text="主要"/>
+    <text name="CP_editor_course_basic_delete_secondary_text" text="次要"/>
+    <text name="CP_editor_course_basic_delete_tertiary_text" text="刪除最後一個航點之前的所有航點"/>
+    <text name="CP_editor_course_basic_delete_yesNo_deleteToLastWp_title" text="你確定到最後一個的所有航點都應該被刪除嗎?"/>
+    <text name="CP_editor_course_basic_delete_err" text="剩餘的航點太少."/>
     <text name="CP_editor_course_basic_title" text="基本"/>
     <text name="CP_editor_course_basic_move_title" text="移動航點"/>
     <text name="CP_editor_course_basic_move_primary_text" text="主要"/>

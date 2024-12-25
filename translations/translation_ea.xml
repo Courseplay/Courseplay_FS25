@@ -451,12 +451,12 @@ El curso se guarda automáticamente al cerrar el editor y anula el curso selecci
     <text name="CP_editor_course_title" text="Editor de Cursos"/>
     <text name="CP_editor_custom_field_title" text="Custom field editor : %s"/>
     <text name="CP_editor_change_lane_offset" text="Cambiar el desplazamiento del carril seleccionado(%s)"/>
-    <text name="CP_editor_delete_title" text="Borrar puntos de ruta"/>
-    <text name="CP_editor_delete_primary_text" text="primario"/>
-    <text name="CP_editor_delete_secondary_text" text="secundario"/>
-    <text name="CP_editor_delete_tertiary_text" text="Elimina todos los puntos de ruta hasta el último punto de ruta."/>
-    <text name="CP_editor_delete_yesNo_deleteToLastWp_title" text="¿Eliminar todos los puntos de ruta hasta el último?"/>
-    <text name="CP_editor_delete_err" text="Quedan pocos puntos de ruta."/>
+    <text name="CP_editor_course_basic_delete_title" text="Borrar puntos de ruta"/>
+    <text name="CP_editor_course_basic_delete_primary_text" text="primario"/>
+    <text name="CP_editor_course_basic_delete_secondary_text" text="secundario"/>
+    <text name="CP_editor_course_basic_delete_tertiary_text" text="Elimina todos los puntos de ruta hasta el último punto de ruta."/>
+    <text name="CP_editor_course_basic_delete_yesNo_deleteToLastWp_title" text="¿Eliminar todos los puntos de ruta hasta el último?"/>
+    <text name="CP_editor_course_basic_delete_err" text="Quedan pocos puntos de ruta."/>
     <text name="CP_editor_course_basic_title" text="Básico"/>
     <text name="CP_editor_course_basic_move_title" text="Mover un punto de ruta"/>
     <text name="CP_editor_course_basic_move_primary_text" text="primario"/>
@@ -475,7 +475,7 @@ El curso se guarda automáticamente al cerrar el editor y anula el curso selecci
     <text name="CP_editor_course_advanced_curveInsert_primary_text" text="primario"/>
     <text name="CP_editor_course_advanced_curveInsert_secondary_text" text="secundario"/>
     <text name="CP_editor_course_advanced_curveInsert_err" text="No se permite seleccionar un punto de giro."/>
-    <!---->
+   <!---->
     <!--Info texts-->
     <!---->
     <text name="CP_infoTexts_isStuck" text="Está Atascado"/>
