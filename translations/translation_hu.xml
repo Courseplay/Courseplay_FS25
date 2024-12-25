@@ -451,6 +451,7 @@ Az útvonal automatikusan mentésre kerül a szerkesztő bezárásakor és felü
     <text name="CP_editor_course_title" text="Útvonal szerkesztő"/>
     <text name="CP_editor_custom_field_title" text="Custom field editor : %s"/>
     <text name="CP_editor_change_lane_offset" text="Change selected lane offset(%s)"/>
+    <text name="CP_editor_save_changes" text="Should the changes to %s be saved?"/>
     <text name="CP_editor_course_basic_delete_title" text="Csomópontok törlése"/>
     <text name="CP_editor_course_basic_delete_primary_text" text="Kijelölt pont törlése"/>
     <text name="CP_editor_course_basic_delete_secondary_text" text="Kijelölt pont törlése"/>

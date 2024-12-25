@@ -451,6 +451,7 @@ Der Kurs wird beim Schließen automatisch gespeichert und überschrieben.
     <text name="CP_editor_course_title" text="Kurseditor : %s"/>
     <text name="CP_editor_custom_field_title" text="Randkurseditor : %s"/>
     <text name="CP_editor_change_lane_offset" text="Ausgewählten Bahnenversatz(%s) ändern"/>
+    <text name="CP_editor_save_changes" text="Sollen die Änderungen für %s übernommen werden?"/>
     <text name="CP_editor_course_basic_delete_title" text="Wegpunkte löschen"/>
     <text name="CP_editor_course_basic_delete_primary_text" text="Löscht den ausgewählten Wegpunkt."/>
     <text name="CP_editor_course_basic_delete_secondary_text" text="Löscht Wegpunkte, über die die Maus gezogen wird."/>

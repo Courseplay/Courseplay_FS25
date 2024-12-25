@@ -451,6 +451,7 @@ El curso se guarda automáticamente al cerrar el editor y anula el curso selecci
     <text name="CP_editor_course_title" text="Editor de Cursos"/>
     <text name="CP_editor_custom_field_title" text="Custom field editor : %s"/>
     <text name="CP_editor_change_lane_offset" text="Cambiar el desplazamiento del carril seleccionado(%s)"/>
+    <text name="CP_editor_save_changes" text="Should the changes to %s be saved?"/>
     <text name="CP_editor_course_basic_delete_title" text="Borrar puntos de ruta"/>
     <text name="CP_editor_course_basic_delete_primary_text" text="primario"/>
     <text name="CP_editor_course_basic_delete_secondary_text" text="secundario"/>
@@ -475,7 +476,7 @@ El curso se guarda automáticamente al cerrar el editor y anula el curso selecci
     <text name="CP_editor_course_advanced_curveInsert_primary_text" text="primario"/>
     <text name="CP_editor_course_advanced_curveInsert_secondary_text" text="secundario"/>
     <text name="CP_editor_course_advanced_curveInsert_err" text="No se permite seleccionar un punto de giro."/>
-   <!---->
+    <!---->
     <!--Info texts-->
     <!---->
     <text name="CP_infoTexts_isStuck" text="Está Atascado"/>

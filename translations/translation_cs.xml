@@ -451,6 +451,7 @@
     <text name="CP_editor_course_title" text="任务线路编辑"/>
     <text name="CP_editor_custom_field_title" text="Custom field editor : %s"/>
     <text name="CP_editor_change_lane_offset" text="Change selected lane offset(%s)"/>
+    <text name="CP_editor_save_changes" text="Should the changes to %s be saved?"/>
     <text name="CP_editor_course_basic_delete_title" text="删除路线"/>
     <text name="CP_editor_course_basic_delete_primary_text" text="主要路线"/>
     <text name="CP_editor_course_basic_delete_secondary_text" text="次要路线"/>
