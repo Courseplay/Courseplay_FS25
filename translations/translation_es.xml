@@ -449,6 +449,7 @@ El curso se guarda automáticamente al cerrar el editor y anula el curso selecci
     <!--Course editor-->
     <!---->
     <text name="CP_editor_course_title" text="Editor de Cursos"/>
+    <text name="CP_editor_custom_field_title" text="Custom field editor : %s"/>
     <text name="CP_editor_change_lane_offset" text="Cambiar el desplazamiento del carril seleccionado(%s)"/>
     <text name="CP_editor_delete_title" text="Borrar puntos de ruta"/>
     <text name="CP_editor_delete_primary_text" text="primario"/>

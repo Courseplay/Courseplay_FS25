@@ -449,6 +449,7 @@ Banan sparas automatiskt vid stängning av editorn och åsidosätter den valda b
     <!--Course editor-->
     <!---->
     <text name="CP_editor_course_title" text="Kursredaktör"/>
+    <text name="CP_editor_custom_field_title" text="Custom field editor : %s"/>
     <text name="CP_editor_change_lane_offset" text="Change selected lane offset(%s)"/>
     <text name="CP_editor_delete_title" text="Ta bort vägpunkt"/>
     <text name="CP_editor_delete_primary_text" text="primär"/>

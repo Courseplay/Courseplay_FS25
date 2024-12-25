@@ -449,6 +449,7 @@ La course est automatiquement sauvegardée à la fermeture de l'éditeur et remp
     <!--Course editor-->
     <!---->
     <text name="CP_editor_course_title" text="Editeur de course"/>
+    <text name="CP_editor_custom_field_title" text="Custom field editor : %s"/>
     <text name="CP_editor_change_lane_offset" text="Modifie le décalage de la ligne sélectionnée(%s)"/>
     <text name="CP_editor_delete_title" text="Supprimer les points"/>
     <text name="CP_editor_delete_primary_text" text="principal"/>

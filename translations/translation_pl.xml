@@ -449,6 +449,7 @@ Kurs jest automatycznie zapisywany po zamknięciu edytora i nadpisuje wybrany ku
     <!--Course editor-->
     <!---->
     <text name="CP_editor_course_title" text="Edytor kursu"/>
+    <text name="CP_editor_custom_field_title" text="Custom field editor : %s"/>
     <text name="CP_editor_change_lane_offset" text="Zmień przes. wybranego pasa(%s)"/>
     <text name="CP_editor_delete_title" text="Usuń punkt trasy"/>
     <text name="CP_editor_delete_primary_text" text="główny"/>
