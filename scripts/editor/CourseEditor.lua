@@ -110,6 +110,15 @@ function CourseEditor:onClickLaneOffsetSetting(closure, ignoreDialog)
 	end
 end
 
+function CourseEditor:onClickExit(callbackFunc)
+	YesNoDialog.show(
+		function (self, clickOk)
+			self:deactivate(clickOk)
+			callbackFunc()
+		end,
+		self, string.format(g_i18n:getText("CP_editor_save_changes"), self.file:getName()))
+end
+
 --- Activates the editor with a given course file.
 --- Also open the custom build menu only for CP.
 function CourseEditor:activate(file)
@@ -147,17 +156,19 @@ end
 
 
 --- Deactivates the editor and saves the course.
-function CourseEditor:deactivate()
+function CourseEditor:deactivate(needsSaving)
 	if not self:getIsActive() then 
 		return
 	end
 	self.isActive = false
 	self.courseDisplay:deleteSigns()
-	if self.field then 
-		self.field:setVertices(self.courseWrapper:getAllWaypoints())
-		g_customFieldManager:saveField(self.file, self.field, true)
-	else 
-		self:saveCourse()
+	if needsSaving then
+		if self.field then 
+			self.field:setVertices(self.courseWrapper:getAllWaypoints())
+			g_customFieldManager:saveField(self.file, self.field, true)
+		else 
+			self:saveCourse()
+		end
 	end
 	self.file = nil 
 	self.field = nil

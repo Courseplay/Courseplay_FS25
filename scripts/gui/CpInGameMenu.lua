@@ -281,6 +281,21 @@ function CpInGameMenu:onButtonBack()
 	end
 end
 
+function CpInGameMenu:onPageNext()
+	if self.currentPage:requestClose(function ()
+			TabbedMenu:superClass().onPageNext(self)
+		end) then
+		TabbedMenu:superClass().onPageNext(self)
+	end
+end
+function CpInGameMenu:onPagePrevious()
+	if self.currentPage:requestClose(function ()
+			TabbedMenu:superClass().onPagePrevious(self)
+		end) then
+		TabbedMenu:superClass().onPagePrevious(self)
+	end
+end
+
 function CpInGameMenu:onClose(element)
 	CpInGameMenu:superClass().onClose(self)
 	self:unlockCurrentVehicle()

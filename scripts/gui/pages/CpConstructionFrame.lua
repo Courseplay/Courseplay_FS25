@@ -115,6 +115,16 @@ function CpConstructionFrame:initialize(menu)
 
 	self.subCategoryDotPrefab:unlinkElement()
 	FocusManager:removeElement(self.subCategoryDotPrefab)
+
+	self.menuButtonInfo = {
+		table.clone(self.cpMenu.backButtonInfo),
+		table.clone(self.cpMenu.nextPageButtonInfo),
+		table.clone(self.cpMenu.prevPageButtonInfo)}
+	self.menuButtonInfoByActions = {
+		[InputAction.MENU_BACK] = self.menuButtonInfo[1],
+		[InputAction.MENU_PAGE_NEXT] = self.menuButtonInfo[2],
+		[InputAction.MENU_PAGE_PREV] = self.menuButtonInfo[3],
+	}
 end
 
 function CpConstructionFrame:onFrameOpen()
@@ -203,14 +213,20 @@ function CpConstructionFrame:onFrameClose()
 	self.brushEvents = {}
 	self.brushEventsByType = {}
 	self:toggleCustomInputContext(false, self.INPUT_CONTEXT)
-	-- g_inputBinding:setShowMouseCursor(true)
+	if self.isMouseMode then
+		g_inputBinding:setShowMouseCursor(true)
+	end
 	g_messageCenter:unsubscribeAll(self)
 	CpConstructionFrame:superClass().onFrameClose(self)
 end
 
 function CpConstructionFrame:requestClose(callback)
-	g_courseEditor:deactivate()
-	return true
+	CpConstructionFrame:superClass().requestClose(self, callback)
+	g_courseEditor:onClickExit(function ()
+		self.requestCloseCallback()
+		self.requestCloseCallback = function () end
+	end)
+	return false
 end
 
 function CpConstructionFrame:onClickBack()
@@ -276,11 +292,15 @@ function CpConstructionFrame:updateActionEvents(brush)
 	end
 	self.brushEvents = {}
 	self.brushEventsByType = {}
-	g_inputBinding:setContextEventsActive(self.INPUT_CONTEXT_NAME, InputAction.MENU_ACCEPT, self.brush == nil)
-	g_inputBinding:setContextEventsActive(self.INPUT_CONTEXT_NAME, InputAction.MENU_AXIS_UP_DOWN, self.brush == nil)
-	g_inputBinding:setContextEventsActive(self.INPUT_CONTEXT_NAME, InputAction.MENU_AXIS_LEFT_RIGHT, self.brush == nil)
-	g_inputBinding:setContextEventsActive(self.INPUT_CONTEXT_NAME, InputAction.MENU_PAGE_PREV, self.brush == nil)
-	g_inputBinding:setContextEventsActive(self.INPUT_CONTEXT_NAME, InputAction.MENU_PAGE_NEXT, self.brush == nil)
+	g_inputBinding:setContextEventsActive(self.INPUT_CONTEXT, InputAction.MENU_ACCEPT, self.brush == nil)
+	g_inputBinding:setContextEventsActive(self.INPUT_CONTEXT, InputAction.MENU_AXIS_UP_DOWN, self.brush == nil)
+	g_inputBinding:setContextEventsActive(self.INPUT_CONTEXT, InputAction.MENU_AXIS_LEFT_RIGHT, self.brush == nil)
+	g_inputBinding:setContextEventsActive(self.INPUT_CONTEXT, InputAction.MENU_PAGE_PREV, self.brush == nil)
+	g_inputBinding:setContextEventsActive(self.INPUT_CONTEXT, InputAction.MENU_PAGE_NEXT, self.brush == nil)
+
+	self.menuButtonInfoByActions[InputAction.MENU_PAGE_PREV].disabled = self.brush ~= nil
+	self.menuButtonInfoByActions[InputAction.MENU_PAGE_NEXT].disabled = self.brush ~= nil
+	self:setMenuButtonInfoDirty()
 	if brush then
 		if brush.supportsPrimaryButton then
 			local _, id
@@ -404,13 +424,13 @@ function CpConstructionFrame:updateActionEventTexts(brush)
 				g_inputBinding:setActionEventTextVisibility(event, text ~= nil)
 			end
 		end
-		updateText(brush.primaryBrushEvent, brush.getButtonPrimaryText)
-		updateText(brush.secondaryBrushEvent, brush.getButtonSecondaryText)
-		updateText(brush.tertiaryBrushEvent, brush.getButtonTertiaryText)
-		updateText(brush.fourthBrushEvent, brush.getButtonFourthText)
-		updateText(brush.primaryBrushAxisEvent, brush.getAxisPrimaryText)
-		updateText(brush.secondaryBrushAxisEvent, brush.getAxisSecondaryText)
-		updateText(brush.snappingBrushEvent, brush.getButtonSnappingText)
+		updateText(self.brushEventsByType[self.BRUSH_EVENT_TYPES.PRIMARY_BUTTON], brush.getButtonPrimaryText)
+		updateText(self.brushEventsByType[self.BRUSH_EVENT_TYPES.SECONDARY_BUTTON], brush.getButtonSecondaryText)
+		updateText(self.brushEventsByType[self.BRUSH_EVENT_TYPES.TERTIARY_BUTTON], brush.getButtonTertiaryText)
+		updateText(self.brushEventsByType[self.BRUSH_EVENT_TYPES.FOURTH_BUTTON], brush.getButtonFourthText)
+		updateText(self.brushEventsByType[self.BRUSH_EVENT_TYPES.AXIS_PRIMARY], brush.getAxisPrimaryText)
+		updateText(self.brushEventsByType[self.BRUSH_EVENT_TYPES.AXIS_SECONDARY], brush.getAxisSecondaryText)
+		updateText(self.brushEventsByType[self.BRUSH_EVENT_TYPES.SNAPPING_BUTTON], brush.getButtonSnappingText)
 	else 
 
 	end
