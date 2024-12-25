@@ -1,12 +1,10 @@
 
 --- Moves a new waypoint at the mouse position.
 ---@class CpBrushAdvancedMoveWP : CpBrush
-CpBrushAdvancedMoveWP = {
-	DELAY = 100
-}
-local CpBrushMoveWP_mt = Class(CpBrushAdvancedMoveWP, CpBrush)
-function CpBrushAdvancedMoveWP.new(customMt, cursor)
-	local self =  CpBrush.new(customMt or CpBrushMoveWP_mt, cursor)
+CpBrushAdvancedMoveWP = CpObject(CpBrush)
+CpBrushAdvancedMoveWP.DELAY = 100
+function CpBrushAdvancedMoveWP:init(cursor, editor)
+	CpBrush.init(self, cursor, editor)
 	self.supportsPrimaryButton = true
 	self.supportsPrimaryDragging = true
 	self.supportsSecondaryButton = true
@@ -14,7 +12,6 @@ function CpBrushAdvancedMoveWP.new(customMt, cursor)
 
 	self.selectedFirstIx = nil
 	self.selectedSecondIx = nil
-	return self
 end
 
 function CpBrushAdvancedMoveWP:onButtonPrimary(isDown, isDrag, isUp)

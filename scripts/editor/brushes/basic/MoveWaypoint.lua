@@ -1,16 +1,13 @@
 
 --- Moves a new waypoint at the mouse position.
 ---@class CpBrushMoveWP : CpBrush
-CpBrushMoveWP = {
-	DELAY = 100
-}
-local CpBrushMoveWP_mt = Class(CpBrushMoveWP, CpBrush)
-function CpBrushMoveWP.new(customMt, cursor)
-	local self =  CpBrush.new(customMt or CpBrushMoveWP_mt, cursor)
+CpBrushMoveWP = CpObject(CpBrush)
+CpBrushMoveWP.DELAY = 100
+function CpBrushMoveWP:init(cursor, editor)
+	CpBrush.init(self, cursor, editor)
 	self.supportsPrimaryButton = true
 	self.supportsPrimaryDragging = true
 	self.delay = g_time
-	return self
 end
 
 function CpBrushMoveWP:onButtonPrimary(isDown, isDrag, isUp)

@@ -1,15 +1,13 @@
 
 --- Changes a new waypoint at the mouse position.
 ---@class CpBrushChangeConnectingPathWP : CpBrush
-CpBrushChangeConnectingPathWP = {}
-local CpBrushChangeWP_mt = Class(CpBrushChangeConnectingPathWP, CpBrush)
-function CpBrushChangeConnectingPathWP.new(customMt, cursor)
-	local self =  CpBrush.new(customMt or CpBrushChangeWP_mt, cursor)
+CpBrushChangeConnectingPathWP = CpObject(CpBrush)
+function CpBrushChangeConnectingPathWP:init(cursor, editor)
+	CpBrush.init(self, cursor, editor)
 	self.supportsPrimaryButton = true
 	self.supportsPrimaryDragging = true
 	self.supportsSecondaryButton = true
 	self.supportsSecondaryDragging = true
-	return self
 end
 
 function CpBrushChangeConnectingPathWP:onButtonPrimary()

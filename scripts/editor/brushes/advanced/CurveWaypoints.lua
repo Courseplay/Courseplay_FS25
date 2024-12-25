@@ -1,12 +1,10 @@
 
 --- Moves a new waypoint at the mouse position.
 ---@class CpBrushCurveInsertWP : CpBrush
-CpBrushCurveInsertWP = {
-	DELAY = 100,
-}
-local CpBrushMoveWP_mt = Class(CpBrushCurveInsertWP, CpBrush)
-function CpBrushCurveInsertWP.new(customMt, cursor)
-	local self =  CpBrush.new(customMt or CpBrushMoveWP_mt, cursor)
+CpBrushCurveInsertWP = CpObject(CpBrush)
+CpBrushCurveInsertWP.DELAY = 100
+function CpBrushCurveInsertWP:init(cursor, editor)
+	CpBrush.init(self, cursor, editor)
 	self.supportsPrimaryButton = true
 	self.supportsPrimaryDragging = true
 	self.supportsSecondaryButton = true
@@ -14,7 +12,6 @@ function CpBrushCurveInsertWP.new(customMt, cursor)
 
 	self.selectedFirstIx = nil
 	self.selectedSecondIx = nil
-	return self
 end
 
 function CpBrushCurveInsertWP:onButtonPrimary(isDown, isDrag, isUp)

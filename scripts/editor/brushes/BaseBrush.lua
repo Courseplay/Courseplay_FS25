@@ -1,28 +1,40 @@
 --[[
 	Basic brush, that manipulates waypoints.
 ]]
----@class CpBrush : ConstructionBrush
-CpBrush = {
-	TRANSLATION_PREFIX = "CP_editor_",
-	radius = 0.5,
-	primaryButtonText = "primary_text",
-	primaryAxisText = "primary_axis_text",
-	secondaryButtonText = "secondary_text",
-	secondaryAxisText = "secondary_axis_text",
-	tertiaryButtonText = "tertiary_text",
-	inputTitle = "input_title",
-	yesNoTitle = "yesNo_title",
-	errMessage = "err",
-	ERR_MESSAGE_DURATION = 15 * 1000 -- 15 sec
-}
-local CpBrush_mt = Class(CpBrush, ConstructionBrush)
-function CpBrush.new(customMt, cursor)
-	local self =  ConstructionBrush.new(customMt or CpBrush_mt, cursor)
+---@class CpBrush
+CpBrush = CpObject(ConstructionBrush)
+CpBrush.TRANSLATION_PREFIX = "CP_editor_"
+CpBrush.radius = 2
+CpBrush.primaryButtonText = "primary_text"
+CpBrush.primaryAxisText = "primary_axis_text"
+CpBrush.secondaryButtonText = "secondary_text"
+CpBrush.secondaryAxisText = "secondary_axis_text"
+CpBrush.tertiaryButtonText = "tertiary_text"
+CpBrush.inputTitle = "input_title"
+CpBrush.yesNoTitle = "yesNo_title"
+CpBrush.errMessage = "err"
+CpBrush.ERR_MESSAGE_DURATION = 15 * 1000 -- 15 sec
+function CpBrush:init(cursor, editor)
+	self.isActive = false
+	self.cursor = cursor
+	self.supportsPrimaryButton = false
+	self.supportsPrimaryDragging = false
+	self.supportsSecondaryButton = false
+	self.supportsSecondaryDragging = false
+	self.supportsTertiaryButton = false
+	self.supportsPrimaryAxis = false
+	self.supportsSecondaryAxis = false
+	self.primaryAxisIsContinuous = false
+	self.secondaryAxisIsContinuous = false
+	self.inputTextDirty = true
+	self.activeSoundId = ConstructionSound.ID.NONE
+	self.activeSoundPitchModifier = nil
 	self.cursor:setShapeSize(self.radius)
 	self.cursor:setShape(GuiTopDownCursor.SHAPES.CIRCLE)
 	self.lastHoveredIx = nil
 	self.errorMsgTimer = CpTemporaryObject(false)
-	return self
+	self.editor = editor
+	self.courseWrapper = editor:getCourseWrapper()
 end
 
 function CpBrush:isAtPos(position, x, y, z)
@@ -43,10 +55,8 @@ function CpBrush:getHoveredWaypointIx()
 	end
 end
 
-function CpBrush:setParameters(editor, translation)
-	self.editor = editor
+function CpBrush:setParameters(translation)
 	self.translation = translation
-	self.courseWrapper = editor:getCourseWrapper()
 end
 
 function CpBrush:update(dt)

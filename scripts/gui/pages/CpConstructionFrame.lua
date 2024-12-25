@@ -79,7 +79,6 @@ function CpConstructionFrame:loadBrushCategory()
 				iconSliceId = xmlFile:getValue(brushKey .. "#iconSliceId"),
 				isCourseOnly = xmlFile:getValue(brushKey .. "#isCourseOnly"),
 				brushParameters = {
-					g_courseEditor,
 					CourseEditor.TRANSLATION_PREFIX .. tab.name .. "_" .. name 
 				}
 			}
@@ -484,7 +483,7 @@ end
 function CpConstructionFrame:onClickItem(list, section, index, cell)
 	local item = self.brushCategory[self.subCategorySelector:getState()].brushes[index]
 	local class = CpUtil.getClassObject(item.class)
-	local brush = class.new(nil, self.cursor)
+	local brush = class(self.cursor, g_courseEditor)
 	if item.brushParameters ~= nil then
 		brush:setStoreItem(item.storeItem)
 		brush:setParameters(unpack(item.brushParameters))

@@ -1,21 +1,17 @@
 
 --- Changes a new waypoint at the mouse position.
 ---@class CpBrushChangeRowNumberWP : CpBrush
-CpBrushChangeRowNumberWP = {
-	NO_ROW = 0,
-	TRANSLATIONS = {
-		NO_ROW = "noRow"
-	}
-}
-local CpBrushChangeWP_mt = Class(CpBrushChangeRowNumberWP, CpBrush)
-function CpBrushChangeRowNumberWP.new(customMt, cursor)
-	local self =  CpBrush.new(customMt or CpBrushChangeWP_mt, cursor)
+CpBrushChangeRowNumberWP = CpObject(CpBrush)
+CpBrushChangeRowNumberWP.NO_ROW = 0
+CpBrushChangeRowNumberWP.TRANSLATIONS = {
+	NO_ROW = "noRow"}
+function CpBrushChangeRowNumberWP:init(cursor, editor)
+	CpBrush.init(self, cursor, editor)
 	self.supportsPrimaryButton = true
 	self.supportsPrimaryDragging = true
 	self.supportsSecondaryButton = true
 	self.supportsPrimaryAxis = true
 	self.mode = 0
-	return self
 end
 
 function CpBrushChangeRowNumberWP:onButtonPrimary()
