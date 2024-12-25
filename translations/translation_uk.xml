@@ -1,0 +1,1073 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<l10n>
+  <texts>
+    <!--English translation-->
+    <!---->
+    <!--These translations are automatically reformated on a github push.-->
+    <!---->
+    <!---->
+    <!--basic-->
+    <!---->
+    <text name="CP_activated" text="увімк."/>
+    <text name="CP_deactivated" text="вимк."/>
+    <text name="CP_automatic" text="авто"/>
+    <text name="CP_unit_meter" text="m"/>
+    <text name="CP_unit_foot" text="ft"/>
+    <text name="CP_copy" text="Copy course:"/>
+    <text name="CP_infoText" text="Courseplay(%s): Щоб отримати довідку, звітувати про помилки чи дізнатися інформацію про виправлення, відвідайте: https://github.com/Courseplay/Courseplay_FS25."/>
+    <text name="CP_error_no_course" text="Перед початком роботи створіть курс."/>
+    <text name="CP_error_could_not_generate_course" text="Не вдалося згенерувати курс. У журналі логу може бути додаткова інформація."/>
+    <text name="CP_error_not_on_field" text="Ціль не на полі."/>
+    <text name="CP_error_unloader_to_far_away_from_field" text="Розвантажувач занадто далеко від поля."/>
+    <text name="CP_error_start_position_to_far_away_from_field" text="Початкова позиція надто далеко від поля."/>
+    <text name="CP_error_giants_unloader_not_available" text="Розвантажувач Giants недоступний."/>
+    <text name="CP_error_fieldUnloadPosition_too_far_away_from_field" text="Позиція для розвантаження занадто далеко від поля."/>
+    <text name="CP_error_vehicle_too_far_away_from_field" text="Транспортний засіб занадто далеко від поля."/>
+    <text name="CP_error_no_bunkerSilo_found" text="Силос не знайдено."/>
+    <text name="CP_error_no_heap_found" text="Купи не знайдено."/>
+    <text name="CP_error_no_unload_trigger_found" text="Пункт розвантаження не знайдено."/>
+    <text name="CP_error_unload_target_to_far_away_from_silo" text="Обрана точка розвантаження знаходиться занадто далеко від силосу."/>
+    <!---->
+    <!--AI job parameters-->
+    <!---->
+    <text name="CP_fieldWorkJobParameters_fieldPosition_title" text="Положення поля:"/>
+	<text name="CP_fieldWorkJobParameters_bunkerSiloPosition_title" text="Положення силосу:"/>
+	<text name="CP_fieldWorkJobParameters_parkPosition_title" text="Місце паркування:"/>
+	<text name="CP_fieldWorkJobParameters_subTitle_startAt" text="Почати з:"/>
+	<text name="CP_fieldWorkJobParameters_startAt_title" text="Почати з:"/>
+	<text name="CP_fieldWorkJobParameters_startAt_tooltip" text="Де починати роботу на полі."/>
+	<text name="CP_fieldWorkJobParameters_startAt_nearest" text="найближча точка маршруту"/>
+	<text name="CP_fieldWorkJobParameters_startAt_first" text="перша точка маршруту"/>
+	<text name="CP_fieldWorkJobParameters_startAt_last" text="остання точка маршруту"/>
+	<text name="CP_fieldWorkJobParameters_startAt_bunkerSilo" text="Режим силосу"/>
+	<text name="CP_fieldWorkJobParameters_startAt_siloLoader" text="Режим завантаження силосу"/>
+	<text name="CP_fieldWorkJobParameters_startAt_unload" text="розвантаження комбайна"/>
+	<text name="CP_fieldWorkJobParameters_startAt_unload_siloLoader" text="Розвантаження завантажувача силосу"/>
+	<text name="CP_fieldWorkJobParameters_startAt_bales" text="збирання/обгортання тюків"/>
+	<text name="CP_fieldWorkJobParameters_subTitle_laneOffset" text="Зміщення лінії:"/>
+	<text name="CP_fieldWorkJobParameters_laneOffset_title" text="Зміщення лінії:"/>
+	<text name="CP_fieldWorkJobParameters_laneOffset_tooltip" text="Зміщення лінії, якщо було створено або завантажено багатознарядний маршрут."/>
+	<text name="CP_fieldWorkJobParameters_laneOffset_center" text="центр"/>
+	<text name="CP_fieldWorkJobParameters_laneOffset_left" text="ліворуч(1)"/>
+	<text name="CP_fieldWorkJobParameters_laneOffset_right" text="праворуч(1)"/>
+	<text name="CP_fieldWorkJobParameters_laneOffset_left_2" text="ліворуч(2)"/>
+	<text name="CP_fieldWorkJobParameters_laneOffset_right_2" text="праворуч(2)"/>
+    <!---->
+    <!--AI bale finder job parameters-->
+    <!---->
+    <text name="CP_baleFinderJobParameters_subTitle_baleWrapType" text="Тип тюків:"/>
+	<text name="CP_baleFinderJobParameters_baleWrapType_title" text="Тип тюків:"/>
+	<text name="CP_baleFinderJobParameters_baleWrapType_all_bales" text="усі тюки"/>
+	<text name="CP_baleFinderJobParameters_baleWrapType_only_wrapped_bales" text="лише обгорнуті"/>
+	<text name="CP_baleFinderJobParameters_baleWrapType_only_not_wrapped_bales" text="лише необгорнуті"/>
+	<text name="CP_baleFinder_balesLeftover" text="Залишилось тюків:"/>
+    <!---->
+    <!--AI combine unloader job parameters-->
+    <!---->
+    <text name="CP_combineUnloaderJobParameters_subTitle_unloadTarget" text="Розвантаження:"/>
+	<text name="CP_combineUnloaderJobParameters_unloadTarget_title" text="Розвантаження:"/>
+	<text name="CP_combineUnloaderJobParameters_unloadTarget_combine" text="Комбайн"/>
+	<text name="CP_combineUnloaderJobParameters_unloadTarget_siloLoader" text="Завантажувач"/>
+	<text name="CP_combineUnloaderJobParameters_subTitle_giantsUnloader" text="Розвантажувач Giants:"/>
+	<text name="CP_combineUnloaderJobParameters_useGiantsUnload_title" text="Використовувати розвантажувач Giants:"/>
+	<text name="CP_combineUnloaderJobParameters_unloadingStation_title" text="Станція розвантаження:"/>
+	<text name="CP_combineUnloaderJobParameters_subTitle_fieldUnload" text="Розвантаження на полі:"/>
+	<text name="CP_combineUnloaderJobParameters_useFieldUnload_title" text="Використовувати розвантаження на полі:"/>
+	<text name="CP_combineUnloaderJobParameters_fieldUnloadPosition_title" text="Позиція розвантаження на полі:"/>
+	<text name="CP_combineUnloaderJobParameters_unloadingTipSide_title" text="Сторона розвантаження причепа:"/>
+    <!---->
+    <!--AI bunker silo worker job parameters-->
+    <!---->
+    <text name="CP_bunkerSiloJobParameters_subTitle_drivingForwardsIntoSilo" text="Напрямок у силос:"/>
+	<text name="CP_bunkerSiloJobParameters_drivingForwardsIntoSilo_title" text="Напрямок у силос:"/>
+	<text name="CP_bunkerSiloJobParameters_drivingForwardsIntoSilo_forwards" text="Вперед"/>
+	<text name="CP_bunkerSiloJobParameters_drivingForwardsIntoSilo_reverse" text="Назад"/>
+	<text name="CP_bunkerSiloJobParameters_subTitle_waitAtParkPosition" text="Очікування розвантажувача:"/>
+	<text name="CP_bunkerSiloJobParameters_waitAtParkPosition_title" text="Очікування розвантажувача:"/>
+	<text name="CP_bunkerSiloJobParameters_waitAtParkPosition_silo" text="в силосі"/>
+	<text name="CP_bunkerSiloJobParameters_waitAtParkPosition_parkPosition" text="на місці паркування"/>
+	<text name="CP_bunkerSiloJobParameters_stopWithCompactedSilo_title" text="Зупинитися на 99% ущільнення"/>
+	<text name="CP_bunkerSiloJobParameters_subTitle_stopWithCompactedSilo" text="Зупинитися на 99% ущільнення"/>
+	<text name="CP_bunkerSilo_compactionPercentage" text="Ущільнення силосу:"/>
+    <!---->
+    <!--AI silo lader worker job parameters-->
+    <!---->
+    <text name="CP_siloLoaderJobParameters_subTitle_loadPosition" text="Позиція завантаження"/>
+	<text name="CP_siloLoaderJobParameters_loadPosition_title" text="Позиція завантаження"/>
+	<text name="CP_siloLoader_fillLevelProgress" text="Залишок літрів:"/>
+	<text name="CP_siloLoaderJobParameters_subTitle_unloading" text="Розвантаження в:"/>
+	<text name="CP_siloLoaderJobParameters_unloadAt_trailer" text="Причіп"/>
+	<text name="CP_siloLoaderJobParameters_unloadAt_unloadTrigger" text="Станція розвантаження"/>
+    <!---->
+    <!--AI jobs-->
+    <!---->
+    <text name="CP_job_fieldWork" text="CP: Робота на полі"/>
+	<text name="CP_job_baleCollect" text="CP: Збирання/обгортання тюків"/>
+	<text name="CP_job_combineUnload" text="CP: Розвантаження комбайна"/>
+	<text name="CP_job_bunkerSilo" text="CP: Робота з силосом"/>
+	<text name="CP_job_siloLoader" text="CP: Завантаження силосу"/>
+	<text name="CP_ai_page_generate_course" text="CP: Генерація маршруту для роботи на полі"/>
+	<text name="CP_ai_page_open_course_generator" text="CP: Відкрити/закрити генератор маршруту"/>
+    <!---->
+    <!--AI error messages-->
+    <!---->
+	<text name="CP_ai_messageErrorIsFull" text="AI працівник %s несподівано зупинив роботу - бункер заповнений!"/>
+	<text name="CP_ai_messageError" text="AI працівник %s несподівано зупинив роботу - залишив маршрут!"/>
+	<text name="CP_ai_messageErrorWrongBaleWrapType" text="AI працівник %s несподівано зупинив роботу - не знайдено тюків обраного типу!"/>
+	<text name="CP_ai_messageErrorNoPathFound" text="AI працівник %s несподівано зупинив роботу - маршрут не знайдено!"/>
+	<text name="CP_ai_messageErrorGroundUnloadNotSupported" text="AI працівник %s несподівано зупинив роботу - розвантаження на полі неможливе!"/>
+	<text name="CP_ai_messageErrorCutterNotSupported" text="AI працівник %s несподівано зупинив роботу - приєднання жатки неможливе!"/>
+	<text name="CP_ai_messageErrorAutomaticCutterAttachNotActive" text="AI працівник %s несподівано зупинив роботу - автоматичне приєднання жатки вимкнено!"/>
+	<text name="CP_ai_messageErrorWrongMissionFruitType" text="AI працівник %s несподівано зупинив роботу - обрано неправильний тип наповнення для місії!"/>
+    <!---->
+    <!--AI fieldwork task descriptions-->
+    <!---->
+    <text name="CP_ai_taskDescriptionAttachHeader" text="Підбирати жатку"/>
+    <!---->
+    <!--AI bale finder task descriptions-->
+    <!---->
+    <text name="CP_ai_taskDescriptionCollectsBales" text="Збирати тюки на полі"/>
+	<text name="CP_ai_taskDescriptionWrapsBales" text="Обгортати тюки на полі"/>
+    <!---->
+    <!--AI combine unloader task descriptions-->
+    <!---->
+    <text name="CP_ai_taskDescriptionUnloadCombine" text="Розвантажує комбайн"/>
+	<text name="CP_ai_taskDescriptionWaitsForTargetCombine" text="Чекає на комбайн"/>
+	<text name="CP_ai_taskDescriptionUnloadSiloLoader" text="Розвантажує завантажувач"/>
+	<text name="CP_ai_taskDescriptionWaitsForTargetSiloLoader" text="Чекає на завантажувач"/>
+	<text name="CP_ai_taskDescriptionUnloadingToHeap" text="Розвантажує в купу"/>
+	<text name="CP_ai_taskDescriptionUnloadingToTrailer" text="Розвантажує в причіп"/>
+	<text name="CP_ai_taskDescriptionUnloadingWithGiants" text="Розвантажує з допомогою робітника Giants"/>
+    <!---->
+    <!--AI silo worker task descriptions-->
+    <!---->
+    <text name="CP_ai_taskDescriptionWorksInTheSilo" text="Працювати в силосі"/>
+	<text name="CP_ai_taskDescriptionWaitsForUnloaders" text="Чекати на розвантажувач"/>
+    <!---->
+    <!--AI silo loader task descriptions-->
+    <!---->
+    <text name="CP_ai_taskDescriptionWaitsForTrailer" text="Чекати на причіп"/>
+	<text name="CP_ai_taskDescriptionUnloadingToTrigger" text="Розвантажити в тригер для розвантаження"/>
+    <!---->
+    <!--Hud settings-->
+    <!---->
+    <text name="CP_hud_settings_selectedJob_title" text="TODO: Вибрана Задача:"/>
+    <!---->
+    <!--Vehicle settings-->
+    <!---->
+    <text name="CP_vehicle_setting_title" text="Налаштування транспортного засобу для (%s)"/>
+	<text name="CP_vehicle_setting_subTitle_vehicle" text="Налаштування транспортного засобу"/>
+	<text name="CP_vehicle_setting_subTitle_basic" text="Основні налаштування"/>
+	<text name="CP_vehicle_setting_subTitle_implement" text="Налаштування знарядь"/>
+	<text name="CP_vehicle_setting_subTitle_combine" text="Налаштування комбайна"/>
+	<text name="CP_vehicle_setting_subTitle_seeder" text="Налаштування сівалки"/>
+	<text name="CP_vehicle_setting_subTitle_multitool" text="Налаштування мультитулів"/>
+	<text name="CP_vehicle_setting_subTitle_speed" text="Швидкість"/>
+	<text name="CP_vehicle_setting_subTitle_debug" text="Налаштування відладки"/>
+	<text name="CP_vehicle_setting_showCourse_title" text="Показати маршрут"/>
+	<text name="CP_vehicle_setting_showCourse_tooltip" text="Показує поточний маршрут транспортного засобу."/>
+	<text name="CP_vehicle_setting_showCourse_startStop" text="Тільки початок/зупинка"/>
+	<text name="CP_vehicle_setting_showCourse_currentWaypoint" text="Поточні точки маршруту"/>
+	<text name="CP_vehicle_setting_showCourse_all" text="Усі точки маршруту"/>
+	<text name="CP_vehicle_setting_openHudWithMouse_title" text="Відкрити HUD за допомогою миші"/>
+	<text name="CP_vehicle_setting_openHudWithMouse_tooltip" text="Коли вимкнено, HUD можна відкривати тільки за допомогою клавіші."/>
+	<text name="CP_vehicle_setting_fuelSave_title" text="Економія пального"/>
+	<text name="CP_vehicle_setting_fuelSave_tooltip" text="Вимикає транспортний засіб під час очікування."/>
+	<text name="CP_vehicle_setting_stopAtEnd_title" text="Зупинка в кінці"/>
+	<text name="CP_vehicle_setting_stopAtEnd_tooltip" text="Транспортний засіб зупиняється в кінці маршруту після роботи."/>
+	<text name="CP_vehicle_setting_allowReversePathfinding_title" text="Дозволити рух заднім ходом для прокладання маршруту"/>
+	<text name="CP_vehicle_setting_allowReversePathfinding_tooltip" text="Коли це можливо, дозволяє прокладати маршрути, що містять рух заднім ходом."/>
+	<text name="CP_vehicle_setting_allowPathfinderTurns_title" text="Дозволити використання навігатора в поворотах"/>
+	<text name="CP_vehicle_setting_allowPathfinderTurns_tooltip" text="Дозволяє використовувати навігатор в поворотах, наприклад, для уникнення перешкод і плодових культур."/>
+	<text name="CP_vehicle_setting_foldImplementAtEnd_title" text="Згортати знаряддя в кінці маршруту"/>
+	<text name="CP_vehicle_setting_foldImplementAtEnd_tooltip" text="Увімкнення/вимкнення автоматичного складання знарядь в кінці маршруту."/>
+	<text name="CP_vehicle_setting_returnToStart_title" text="Повернутися до початкової точки"/>
+	<text name="CP_vehicle_setting_returnToStart_tooltip" text="Повернутися до початкової точки після завершення роботи на полі."/>
+	<text name="CP_vehicle_setting_raiseImplementLate_title" text="Підняти знаряддя"/>
+	<text name="CP_vehicle_setting_raiseImplementLate_tooltip" text="Підняти знаряддя до чи після на початку повороту."/>
+	<text name="CP_vehicle_setting_raiseImplementLate_early" text="до"/>
+	<text name="CP_vehicle_setting_raiseImplementLate_late" text="після"/>
+	<text name="CP_vehicle_setting_lowerImplementEarly_title" text="Опустити знаряддя"/>
+	<text name="CP_vehicle_setting_lowerImplementEarly_tooltip" text="Опустити знаряддя до чи після в кінці повороту."/>
+	<text name="CP_vehicle_setting_lowerImplementEarly_early" text="до"/>
+	<text name="CP_vehicle_setting_lowerImplementEarly_late" text="після"/>
+	<text name="CP_vehicle_setting_turnOnField_title" text="Тільки включення на полі"/>
+	<text name="CP_vehicle_setting_turnOnField_tooltip" text="Тільки включення на полі. Не можливо з усіма знаряддями. Якщо вимкнено, знаряддя не рухатиметься заднім ходом."/>
+	<text name="CP_vehicle_setting_avoidFruit_title" text="Уникати їзди по плодах"/>
+	<text name="CP_vehicle_setting_avoidFruit_tooltip" text="AI намагатиметься уникати руху по плодах."/>
+	<text name="CP_vehicle_setting_toolOffsetX_title" text="Горизонтальний зсув знаряддя"/>
+	<text name="CP_vehicle_setting_toolOffsetX_tooltip" text="Горизонтальний зсув знаряддя"/>
+	<text name="CP_vehicle_setting_baleCollectorOffset_title" text="Зсув для підбирання тюків"/>
+	<text name="CP_vehicle_setting_baleCollectorOffset_tooltip" text="Зсув для колектора тюків"/>
+	<text name="CP_vehicle_setting_combineOffsetX_title" text="Зсув вліво/вправо"/>
+	<text name="CP_vehicle_setting_combineOffsetX_tooltip" text="Зсув для труб комбайна вправо(+) і вліво(-)"/>
+	<text name="CP_vehicle_setting_combineOffsetZ_title" text="Зсув вперед/назад"/>
+	<text name="CP_vehicle_setting_combineOffsetZ_tooltip" text="Зсув для труб комбайна вперед(+) і назад(-)"/>
+	<text name="CP_vehicle_setting_fullThreshold_title" text="Порожній при перевищенні:"/>
+	<text name="CP_vehicle_setting_fullThreshold_tooltip" text="Якщо рівень заповнення розвантажувача перевищує це значення, він не чекатиме на комбайн."/>
+	<text name="CP_vehicle_setting_useAdditiveFillUnit_title" text="Перевірка на добавку для силосу"/>
+	<text name="CP_vehicle_setting_useAdditiveFillUnit_tooltip" text="Якщо активовано і добавка для силосу відсутня, водій зупиниться."/>
+	<text name="CP_vehicle_setting_symmetricLaneChange_title" text="Симетричний поворот"/>
+	<text name="CP_vehicle_setting_symmetricLaneChange_tooltip" text="Симетричний поворот"/>
+	<text name="CP_vehicle_setting_convoyDistance_title" text="Відстань у конвої"/>
+	<text name="CP_vehicle_setting_convoyDistance_tooltip" text="Відстань між транспортними засобами. Значення: 40 - 400"/>
+	<text name="CP_vehicle_setting_debugActive_title" text="Відладка транспортного засобу"/>
+	<text name="CP_vehicle_setting_debugActive_tooltip" text="Увімкнення/вимкнення відладки для цього транспортного засобу."/>
+	<text name="CP_vehicle_setting_refillOnTheField_title" text="Перезаправка знаряддя"/>
+	<text name="CP_vehicle_setting_refillOnTheField_tooltip" text="Знаряддя чекає на полі для дозаправки."/>
+	<text name="CP_vehicle_setting_refillOnTheField_waiting" text="Чекати"/>
+	<text name="CP_vehicle_setting_refillOnTheField_active" text="Активно"/>
+    <!---->
+    <!--Vehicle bunker silo settings-->
+    <!---->
+    <text name="CP_vehicle_setting_subTitle_bunkerSilo" text="Налаштування силосної роботи"/>
+	<text name="CP_vehicle_setting_bunkerSiloWorkWidth_title" text="Ширина роботи"/>
+	<text name="CP_vehicle_setting_bunkerSiloWorkWidth_tooltip" text="Ширина роботи. Значення: 0 - 50"/>
+	<text name="CP_vehicle_setting_levelerHeightOffset_title" text="Зсув висоти щита"/>
+	<text name="CP_vehicle_setting_levelerHeightOffset_tooltip" text="Зсув висоти від щита до землі. Значення: 0 - 1"/>
+	<text name="CP_vehicle_setting_loadingShovelHeightOffset_title" text="Зсув висоти лопаті"/>
+	<text name="CP_vehicle_setting_loadingShovelHeightOffset_tooltip" text="Зсув висоти для положення лопаті під час навантаження. Значення: -1 - 1"/>
+    <!---->
+    <!--Vehicle settings speed-->
+    <!---->
+    <text name="CP_vehicle_setting_fieldWorkSpeed_title" text="Польові роботи"/>
+	<text name="CP_vehicle_setting_fieldWorkSpeed_tooltip" text="Максимальна швидкість під час роботи на полі. Значення: 5 - 50"/>
+	<text name="CP_vehicle_setting_fieldSpeed_title" text="Поле"/>
+	<text name="CP_vehicle_setting_fieldSpeed_tooltip" text="Максимальна швидкість під час їзди по полю. Значення: 5 - 50"/>
+	<text name="CP_vehicle_setting_turnSpeed_title" text="Поворот"/>
+	<text name="CP_vehicle_setting_turnSpeed_tooltip" text="Максимальна швидкість під час маневрів повороту. Значення: 2 - 25"/>
+	<text name="CP_vehicle_setting_reverseSpeed_title" text="Реверс"/>
+	<text name="CP_vehicle_setting_reverseSpeed_tooltip" text="Максимальна швидкість під час руху назад. Значення: 2 - 25"/>
+	<text name="CP_vehicle_setting_bunkerSiloSpeed_title" text="Силос"/>
+	<text name="CP_vehicle_setting_bunkerSiloSpeed_tooltip" text="Максимальна швидкість під час руху в силосі. Значення: 2 - 25"/>
+    <!---->
+    <!--Vehicle settings sowing-->
+    <!---->
+    <text name="CP_vehicle_setting_ridgeMarkersAutomatic_title" text="Маркерні гребені"/>
+	<text name="CP_vehicle_setting_ridgeMarkersAutomatic_tooltip" text="Включення/вимкнення гребенів маркерів."/>
+	<text name="CP_vehicle_setting_sowingMachineFertilizerEnabled_title" text="Сіялки використовують добрива"/>
+	<text name="CP_vehicle_setting_sowingMachineFertilizerEnabled_tooltip" text="Увімкнення/вимкнення використання добрив сіялками."/>
+	<text name="CP_vehicle_setting_optionalSowingMachineEnabled_title" text="Опції сіялки"/>
+	<text name="CP_vehicle_setting_optionalSowingMachineEnabled_tooltip" text="Увімкнення або вимкнення додаткової функції сіялки."/>
+    <!---->
+    <!--Vehicle settings combine-->
+    <!---->
+    <text name="CP_vehicle_setting_automaticCutterAttach_title" text="Автоматичне приєднання жатки"/>
+	<text name="CP_vehicle_setting_automaticCutterAttach_tooltip" text="Дозволяє автоматичне приєднання жатки, яка повинна бути приєднана як причіп або на окремому причіпі для жатки."/>
+	<text name="CP_vehicle_setting_pipeAlwaysUnfold_title" text="Завжди розгортати трубу"/>
+	<text name="CP_vehicle_setting_pipeAlwaysUnfold_tooltip" text="Завжди розгортати трубу, коли комбайн повний і чекає на розвантажувач."/>
+	<text name="CP_vehicle_setting_stopForUnload_title" text="Зупинятися під час розвантаження"/>
+	<text name="CP_vehicle_setting_stopForUnload_tooltip" text="Завжди зупиняти рух під час розвантаження."/>
+	<text name="CP_vehicle_setting_selfUnload_title" text="Самостійне розвантаження комбайна"/>
+	<text name="CP_vehicle_setting_selfUnload_tooltip" text="Комбайн їде до причепа на або біля поля для розвантаження. Не підтримується в багатознарядних або конвоїрних режимах."/>
+	<text name="CP_vehicle_setting_unloadOnFirstHeadland_title" text="Розвантажувати на першій смузі"/>
+	<text name="CP_vehicle_setting_unloadOnFirstHeadland_tooltip" text="Комбайн викликає розвантажувач на першій смузі, навіть якщо йому доводиться виїхати за межі поля. Якщо вимкнено, комбайн спочатку створює кишеню перед тим, як викликати розвантажувача."/>
+	<text name="CP_vehicle_setting_strawSwath_title" text="Солом'яна смуга"/>
+	<text name="CP_vehicle_setting_strawSwath_tooltip" text="Увімкнення/вимкнення солом'яної смуги або лише її вимкнення на крайніх смугах."/>
+	<text name="CP_vehicle_setting_callUnloaderPercent_title" text="Викликати розвантажувача при"/>
+	<text name="CP_vehicle_setting_callUnloaderPercent_tooltip" text="Викликати розвантажувач, коли рівень заповнення комбайна перевищує це значення."/>
+	<text name="CP_vehicle_setting_strawSwath_onlyCenter" text="Поворотні смуги вимкнено"/>
+    <!---->
+    <!--Course generator settings-->
+    <!---->
+    <text name="CP_vehicle_courseGeneratorSetting_title" text="Налаштування допоміжного (%s)"/>
+	<text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="Основні налаштування"/>
+	<text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Налаштування виноградника"/>
+	<text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Налаштування польових робіт"/>
+	<text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="Налаштування поворотних смуг"/>
+	<text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="Налаштування центру"/>
+	<text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Налаштування островів"/>
+	<text name="CP_vehicle_courseGeneratorSetting_workWidth_title" text="Ширина роботи"/>
+	<text name="CP_vehicle_courseGeneratorSetting_workWidth_tooltip" text="Ширина роботи. Значення: 0 - 55"/>
+	<text name="CP_vehicle_courseGeneratorSetting_numberOfHeadlands_title" text="Кількість поворотних смуг"/>
+	<text name="CP_vehicle_courseGeneratorSetting_numberOfHeadlands_tooltip" text="Кількість поворотних смуг. Значення: 0 - 40"/>
+	<text name="CP_vehicle_courseGeneratorSetting_headlandOverlapPercent_title" text="Перекриття поворотних смуг"/>
+	<text name="CP_vehicle_courseGeneratorSetting_headlandOverlapPercent_tooltip" text="Перекриття доріжок на поворотних смугах як відсоток від ширини роботи. Значення: 0 - 25"/>
+	<text name="CP_vehicle_courseGeneratorSetting_fieldMargin_title" text="Відступ поля"/>
+	<text name="CP_vehicle_courseGeneratorSetting_fieldMargin_tooltip" text="Позитивні значення зменшують розмір поля, негативні збільшують. Значення: -2 - 5.8"/>
+	<text name="CP_vehicle_courseGeneratorSetting_rowsToSkip_title" text="Пропущені ряди"/>
+	<text name="CP_vehicle_courseGeneratorSetting_rowsToSkip_tooltip" text="Пропущені ряди при зміні напрямку на наступний ряд. Значення: 0 - 6"/>
+	<text name="CP_vehicle_courseGeneratorSetting_numberOfCircles_title" text="Кількість кіл"/>
+	<text name="CP_vehicle_courseGeneratorSetting_numberOfCircles_tooltip" text="Кількість кіл для кругових проходів. Значення: 1 - 12"/>
+	<text name="CP_vehicle_courseGeneratorSetting_rowsPerLand_title" text="Ряди на кожній ділянці"/>
+	<text name="CP_vehicle_courseGeneratorSetting_rowsPerLand_tooltip" text="Кількість рядів на кожній ділянці в центрі, якщо вибрано режим 'ділянки'. Значення: 0 - 24"/>
+	<text name="CP_vehicle_courseGeneratorSetting_headlandClockwise_title" text="Напрямок поворотних смуг"/>
+	<text name="CP_vehicle_courseGeneratorSetting_headlandClockwise_tooltip" text="Їхати за годинниковою стрілкою чи проти на поворотних смугах."/>
+	<text name="CP_vehicle_courseGeneratorSetting_centerClockwise_title" text="Напрямок центру"/>
+	<text name="CP_vehicle_courseGeneratorSetting_centerClockwise_tooltip" text="Їхати в центрі поля за годинниковою стрілкою чи проти."/>
+	<text name="CP_vehicle_courseGeneratorSetting_islandHeadlandClockwise_title" text="Напрямок острова поворотних смуг"/>
+	<text name="CP_vehicle_courseGeneratorSetting_islandHeadlandClockwise_tooltip" text="Їхати навколо островів за годинниковою стрілкою чи проти."/>
+	<text name="CP_vehicle_courseGeneratorSetting_headlandClockwise_clockwise" text="за годинниковою стрілкою"/>
+	<text name="CP_vehicle_courseGeneratorSetting_headlandClockwise_counterclockwise" text="проти годинникової стрілки"/>
+	<text name="CP_vehicle_courseGeneratorSetting_centerClockwise_clockwise" text="за годинниковою стрілкою"/>
+	<text name="CP_vehicle_courseGeneratorSetting_centerClockwise_counterclockwise" text="проти годинникової стрілки"/>
+	<text name="CP_vehicle_courseGeneratorSetting_islandHeadlandClockwise_clockwise" text="за годинниковою стрілкою"/>
+	<text name="CP_vehicle_courseGeneratorSetting_islandHeadlandClockwise_counterclockwise" text="проти годинникової стрілки"/>
+	<text name="CP_vehicle_courseGeneratorSetting_centerMode_title" text="Метод руху"/>
+	<text name="CP_vehicle_courseGeneratorSetting_centerMode_tooltip" text="Виберіть, як має бути пройдено поле. Вгору/вниз, спіраль, ділянки або в кругову."/>
+	<text name="CP_vehicle_courseGeneratorSetting_centerMode_up_down" text="вгору/вниз"/>
+	<text name="CP_vehicle_courseGeneratorSetting_centerMode_spiral" text="спіраль"/>
+	<text name="CP_vehicle_courseGeneratorSetting_centerMode_circular" text="круговий"/>
+	<text name="CP_vehicle_courseGeneratorSetting_centerMode_lands" text="ділянки"/>
+	<text name="CP_vehicle_courseGeneratorSetting_spiralFromInside_title" text="Спіраль зсередини"/>
+	<text name="CP_vehicle_courseGeneratorSetting_spiralFromInside_tooltip" text="Починає спіраль зсередини."/>
+	<text name="CP_vehicle_courseGeneratorSetting_evenRowWidth_title" text="Рівна ширина рядів"/>
+	<text name="CP_vehicle_courseGeneratorSetting_evenRowWidth_tooltip" text="Зменшує ширину роботи для досягнення рівного розподілу по всіх лініях."/>
+	<text name="CP_vehicle_courseGeneratorSetting_sharpenCorners_title" text="Загострити кути поворотних смуг"/>
+	<text name="CP_vehicle_courseGeneratorSetting_sharpenCorners_tooltip" text="На нерівних поворотних смугах додає маневр повороту, де напрямок поворотних смуг змінюється різко."/>
+	<text name="CP_vehicle_courseGeneratorSetting_headlandsWithRoundCorners_title" text="Кількість круглих кутів"/>
+	<text name="CP_vehicle_courseGeneratorSetting_headlandsWithRoundCorners_tooltip" text="Кількість поворотних смуг з круглими кутами, починаючи з найзовнішнього поворотних смуг."/>
+	<text name="CP_vehicle_courseGeneratorSetting_turningRadius_title" text="Радіус кута"/>
+	<text name="CP_vehicle_courseGeneratorSetting_turningRadius_tooltip" text="Радіус круглих кутів, на основі радіусу повороту транспортного засобу. Значення: 5 - 15"/>
+	<text name="CP_vehicle_courseGeneratorSetting_autoRowAngle_title" text="Напрямок рядів"/>
+	<text name="CP_vehicle_courseGeneratorSetting_autoRowAngle_tooltip" text="Напрямок рядів у центрі поля."/>
+	<text name="CP_vehicle_courseGeneratorSetting_autoRowAngle_automatic" text="автоматично"/>
+	<text name="CP_vehicle_courseGeneratorSetting_autoRowAngle_manual" text="вручну"/>
+	<text name="CP_vehicle_courseGeneratorSetting_manualRowAngleDeg_title" text="Напрямок центральних рядів"/>
+	<text name="CP_vehicle_courseGeneratorSetting_manualRowAngleDeg_tooltip" text="Напрямок центральних рядів (0° — північ) при ручному налаштуванні. Значення: 0 - 175 Кроки: 5"/>
+	<text name="CP_vehicle_courseGeneratorSetting_bypassIslands_title" text="Обхід островів"/>
+	<text name="CP_vehicle_courseGeneratorSetting_bypassIslands_tooltip" text="Обхід островів на полі або ігнорування їх."/>
+	<text name="CP_vehicle_courseGeneratorSetting_nIslandHeadlands_title" text="Поворотні смуги"/>
+	<text name="CP_vehicle_courseGeneratorSetting_nIslandHeadlands_tooltip" text="Кількість поворотних смуг навколо островів. Значення: 1 - 10"/>
+	<text name="CP_vehicle_courseGeneratorSetting_startOnHeadland_title" text="Почати роботу на"/>
+	<text name="CP_vehicle_courseGeneratorSetting_startOnHeadland_tooltip" text="Почати роботу на поворотній смузі чи в центрі поля"/>
+	<text name="CP_vehicle_courseGeneratorSetting_startOnHeadland_on_headland" text="пов. смуга"/>
+	<text name="CP_vehicle_courseGeneratorSetting_startOnHeadland_up_down_rows" text="центр"/>
+	<text name="CP_vehicle_courseGeneratorSetting_multiTools_title" text="Багато інструментів"/>
+	<text name="CP_vehicle_courseGeneratorSetting_multiTools_tooltip" text="Кількість транспортних засобів на тому ж курсі."/>
+	<text name="CP_vehicle_courseGeneratorSetting_useSameTurnWidth_title" text="Перехід між лініями"/>
+	<text name="CP_vehicle_courseGeneratorSetting_useSameTurnWidth_tooltip" text="Встановлює постійну ширину для всіх ліній. Це призводить до схожих поворотів. Для деталей дивіться меню допомоги."/>
+	<text name="CP_vehicle_courseGeneratorSetting_useBaseLineEdge_title" text="Ряди за кривою поля"/>
+	<text name="CP_vehicle_courseGeneratorSetting_useBaseLineEdge_tooltip" text="Ряди слідують за кривизною поля, найближчою до маркера поля."/>
+	<text name="CP_vehicle_courseGeneratorSetting_narrowField_title" text="Вузьке поле"/>
+	<text name="CP_vehicle_courseGeneratorSetting_narrowField_tooltip" text="Генерує поворотну смугу лише на коротких краях поля."/>
+    <!---->
+    <!--Vine course generator settings-->
+    <!---->
+    <text name="CP_vehicle_vineCourseGeneratorSetting_title" text="Генератор курсу для винограду"/>
+	<text name="CP_vehicle_vineCourseGeneratorSetting_subTitle_basic" text="Основні налаштування"/>
+	<text name="CP_vehicle_vineCourseGeneratorSetting_vineCenterOffset_title" text="Позиція курсу"/>
+	<text name="CP_vehicle_vineCourseGeneratorSetting_vineCenterOffset_tooltip" text="Курс повинен бути пройдений по винограду або поруч з ним. Це залежить від інструменту. Детальнішу інформацію можна знайти в меню допомоги."/>
+	<text name="CP_vehicle_vineCourseGeneratorSetting_vineCenterOffset_left" text="Ліва сторона"/>
+	<text name="CP_vehicle_vineCourseGeneratorSetting_vineCenterOffset_center" text="По винограднику"/>
+	<text name="CP_vehicle_vineCourseGeneratorSetting_vineCenterOffset_right" text="Права сторона"/>
+	<text name="CP_vehicle_vineCourseGeneratorSetting_vineMultiTools_title" text="Інструменти на курс"/>
+	<text name="CP_vehicle_vineCourseGeneratorSetting_vineMultiTools_tooltip" text="Скільки інструментів можуть працювати разом. Детальнішу інформацію можна знайти в меню допомоги."/>
+	<text name="CP_vehicle_vineCourseGeneratorSetting_vineRowsToSkip_title" text="Виногради для пропуску"/>
+	<text name="CP_vehicle_vineCourseGeneratorSetting_vineRowsToSkip_tooltip" text="Пропуск виноградників слід використовувати лише тоді, коли інструмент працює на обох виноградниках (ліво і право)."/>
+    <!---->
+    <!--Global settings-->
+    <!---->
+    <text name="CP_global_setting_title" text="Глобальні налаштування"/>
+	<text name="CP_global_setting_subTitle_general" text="Основні налаштування"/>
+	<text name="CP_global_setting_wageModifier_title" text="Зарплата водіїв CP"/>
+	<text name="CP_global_setting_wageModifier_tooltip" text="Зарплата водіїв CP як відсоток від звичайної зарплати працівника."/>
+	<text name="CP_global_setting_autoRepair_title" text="Автоматичний ремонт"/>
+	<text name="CP_global_setting_autoRepair_tooltip" text="Водії CP автоматично ремонтують техніку під час руху."/>
+	<text name="CP_global_setting_autoRepair_off" text="Не ремонтувати"/>
+	<text name="CP_global_setting_autoRepair_less_than_25" text="&lt; 25%"/>
+	<text name="CP_global_setting_autoRepair_less_than_70" text="&lt; 70%"/>
+	<text name="CP_global_setting_autoRepair_always" text="Підтримувати в хорошому стані"/>
+	<text name="CP_global_setting_fuelThreshold_title" text="Поріг пального"/>
+	<text name="CP_global_setting_fuelThreshold_tooltip" text="Водій буде звільнений, якщо рівень пального буде меншим за цей відсоток."/>
+	<text name="CP_global_setting_waitForRefueling_title" text="Чекати на дозаправку"/>
+	<text name="CP_global_setting_waitForRefueling_tooltip" text="Техніка чекає, поки її не заправлять."/>
+	<text name="CP_global_setting_brokenThreshold_title" text="Поріг поломки"/>
+	<text name="CP_global_setting_brokenThreshold_tooltip" text="Водій буде звільнений, якщо техніка або знаряддя більше пошкоджені. 100% — вимкнено."/>
+	<text name="CP_global_setting_stopThreshingDuringRain_title" text="Зупиняти жатки під час дощу"/>
+	<text name="CP_global_setting_stopThreshingDuringRain_tooltip" text="Якщо налаштування активне, всі жатки чекають, поки дощ припиниться."/>
+	<text name="CP_global_setting_fruitDestruction_title" text="Знищення врожаю AI помічниками"/>
+	<text name="CP_global_setting_fruitDestruction_tooltip" text="Увімкнути/вимкнути знищення врожаю для помічників."/>
+	<text name="CP_global_setting_fruitDestruction_only_cp" text="Активовано для помічників Courseplay"/>
+	<text name="CP_global_setting_fruitDestruction_all_helpers" text="Активовано для всіх помічників"/>
+    <!---->
+    <!--Global settings user settings-->
+    <!---->
+    <text name="CP_global_setting_subTitle_userSettings" text="Налаштування користувача"/>
+	<text name="CP_global_setting_expertModeActive_title" text="Режим експерта"/>
+	<text name="CP_global_setting_expertModeActive_tooltip" text="Увімкнення/вимкнення режиму експерта з додатковими функціями."/>
+	<text name="CP_global_setting_controllerHudSelected_title" text="HUD, дружній до геймпада"/>
+	<text name="CP_global_setting_controllerHudSelected_tooltip" text="Використовувати HUD, яким можна керувати за допомогою геймпада."/>
+	<text name="CP_global_setting_showActionEventHelp_title" text="Допомога по подіям"/>
+	<text name="CP_global_setting_showActionEventHelp_tooltip" text="Показує текстову допомогу для подій."/>
+	<text name="CP_global_setting_showsAllActiveCourses_title" text="Показати всі активні курси"/>
+	<text name="CP_global_setting_showsAllActiveCourses_tooltip" text="Показує всі активні курси на карті гри."/>
+	<text name="CP_global_setting_drawOntoTheHudMap_title" text="Показати курси на мінікарті"/>
+	<text name="CP_global_setting_drawOntoTheHudMap_tooltip" text="Увімкнення малювання курсу на мінікарті."/>
+	<text name="CP_global_setting_infoTextHudActive_title" text="Показати вікно інформаційних текстів"/>
+	<text name="CP_global_setting_infoTextHudActive_tooltip" text="Відображає вікно інформаційних текстів."/>
+	<text name="CP_global_setting_infoTextHudActive_active_hide_without_message" text="Активно з повідомленням"/>
+	<text name="CP_global_setting_infoTextHudPlayerMouseActive_title" text="Подія миші гравця"/>
+	<text name="CP_global_setting_infoTextHudPlayerMouseActive_tooltip" text="Увімкнення/вимкнення події миші гравця для відображення інформаційного тексту поза технікою."/>
+	<text name="CP_global_setting_preferCustomFields_title" text="Віддавати перевагу кастомним полям"/>
+	<text name="CP_global_setting_preferCustomFields_tooltip" text="Віддавати перевагу кастомному полю, якщо на вибраній позиції є також звичайне поле."/>
+	<text name="CP_global_setting_distanceUnit_title" text="Одиниця вимірювання відстані"/>
+	<text name="CP_global_setting_distanceUnit_tooltip" text="Одиниця вимірювання відстані: метри або фути."/>
+	<text name="CP_global_setting_distanceUnit_meter" text="Метри"/>
+	<text name="CP_global_setting_distanceUnit_imperial" text="Фути"/>
+    <!---->
+    <!--Global settings pathfinder-->
+    <!---->
+    <text name="CP_global_setting_subTitle_pathfinder" text="Налаштування маршрутизатора"/>
+	<text name="CP_global_setting_maxDeltaAngleAtGoalDeg_title" text="Різниця кутів на меті"/>
+	<text name="CP_global_setting_maxDeltaAngleAtGoalDeg_tooltip" text="Максимальна дозволена різниця кутів на меті, більші значення швидші, але менш точні."/>
+	<text name="CP_global_setting_deltaAngleRelaxFactorDeg_title" text="Коефіцієнт ослаблення різниці кутів"/>
+	<text name="CP_global_setting_deltaAngleRelaxFactorDeg_tooltip" text="Коефіцієнт для зменшення точності маршрутизатора після невдалих ітерацій, більші значення швидші."/>
+    <!---->
+    <!--Course manager-->
+    <!---->
+    <text name="CP_courseManager_title" text="Управління курсами (%s) %s"/>
+	<text name="CP_courseManager_no_current_course" text="немає курсу"/>
+	<text name="CP_courseManager_temporary_course" text="тимчасовий курс"/>
+	<text name="CP_courseManager_change_mode" text="Змінити режим"/>
+	<text name="CP_courseManager_load_courses" text="Завантажити курс"/>
+	<text name="CP_courseManager_save_courses" text="Зберегти курс"/>
+	<text name="CP_courseManager_edit_course" text="Відкрити редактор курсу"/>
+	<text name="CP_courseManager_clear_current_courses" text="Очистити поточний курс"/>
+	<text name="CP_courseManager_create_directory" text="Створити нову папку"/>
+	<text name="CP_courseManager_move_entry" text="Перемістити запис"/>
+	<text name="CP_courseManager_delete_entry" text="Видалити запис"/>
+	<text name="CP_courseManager_rename_entry" text="Перейменувати запис"/>
+	<text name="CP_courseManager_copy_entry" text="Копіювати запис"/>
+	<text name="CP_courseManager_folder_dialog" text="Назва папки:"/>
+	<text name="CP_courseManager_course_dialog" text="Назва курсу:"/>
+	<text name="CP_courseManager_deleteWarning" text="Ви впевнені, що хочете видалити (%s)?"/>
+	<text name="CP_courseManager_editCourseWarning" text="Редагування курсу може створити проблеми для помічника.
+	Цей інструмент слід використовувати тільки тоді, коли виникають проблеми з створеним курсом.
+	Курс зберігається автоматично при закритті редактора і перезаписує вибраний курс."
+	/>
+	<text name="CP_courseManager_deleteError" text="Папка не порожня (%s)!"/>
+	<text name="CP_courseManager_entryExistAlreadyError" text="Файл вже існує в цільовій папці (%s)!"/>
+	<text name="CP_courseManager_noAccessError" text="Немає доступу до папки (%s)!"/>
+	<text name="CP_courseManager_targetIsNoFolderError" text="Цільове місце не є папкою (%s)!"/>
+	<text name="CP_courseManager_targetIsNoCourseError" text="Цільове місце не є курсом (%s)!"/>
+	<text name="CP_courseManager_invalidNameError" text="Назва курсу (%s) недійсна!"/>
+	<text name="CP_courseManager_basicSettings" text="Взаємодія курсів"/>
+	<text name="CP_courseManager_advancedSettings" text="Редагувати файли"/>
+	<text name="CP_courseManager_activate" text="Активувати"/>
+    <!---->
+    <!--Course editor-->
+    <!---->
+    <text name="CP_editor_course_title" text="Редактор курсу"/>
+	<text name="CP_editor_change_lane_offset" text="Змінити відступ вибраної смуги (%s)"/>
+	<text name="CP_editor_delete_title" text="Видалити контрольну точку"/>
+	<text name="CP_editor_delete_primary_text" text="Видаляє вибрану контрольну точку."/>
+	<text name="CP_editor_delete_secondary_text" text="Продовжує видалення контрольних точок, на яких наведено курсор."/>
+	<text name="CP_editor_delete_tertiary_text" text="Видаляє всі контрольні точки до останньої."/>
+	<text name="CP_editor_delete_yesNo_deleteToLastWp_title" text="Ви впевнені, що хочете видалити всі контрольні точки до останньої?"/>
+	<text name="CP_editor_delete_err" text="Залишилося занадто мало контрольних точок."/>
+	<text name="CP_editor_course_basic_title" text="Основне"/>
+	<text name="CP_editor_course_basic_move_title" text="Переміщає контрольну точку"/>
+	<text name="CP_editor_course_basic_move_primary_text" text="Перетягніть контрольну точку мишею."/>
+	<text name="CP_editor_course_basic_insert_title" text="Вставити контрольну точку"/>
+	<text name="CP_editor_course_basic_insert_primary_text" text="Вставляє контрольну точку після вибраної."/>
+	<text name="CP_editor_course_basic_insert_secondary_text" text="Вставляє контрольну точку перед вибраною."/>
+	<text name="CP_editor_course_basic_insert_err" text="Вставка між поворотними точками не дозволяється."/>
+	<text name="CP_editor_course_advanced_title" text="Розширене"/>
+	<text name="CP_editor_course_advanced_changeTurn_title" text="Позначає контрольну точку як поворот."/>
+	<text name="CP_editor_course_advanced_changeTurn_primary_text" text="Додає або видаляє поворотну точку. (Вибрана контрольна точка буде початком повороту.)"/>
+	<text name="CP_editor_course_advanced_changeTurn_err" text="Занадто близько до іншої поворотної точки."/>
+	<text name="CP_editor_course_advanced_moveExtended_title" text="Переміщає кілька контрольних точок"/>
+	<text name="CP_editor_course_advanced_moveExtended_primary_text" text="Вибирає дві контрольні точки та переміщає їх разом з усіма контрольними точками між ними."/>
+	<text name="CP_editor_course_advanced_moveExtended_secondary_text" text="Скидає вибрані контрольні точки."/>
+	<text name="CP_editor_course_advanced_curveInsert_title" text="Вставка контрольних точок як кривої"/>
+	<text name="CP_editor_course_advanced_curveInsert_primary_text" text="Вибирає дві контрольні точки і додає кілька точок між ними як криву."/>
+	<text name="CP_editor_course_advanced_curveInsert_secondary_text" text="Скидає вибрані контрольні точки."/>
+	<text name="CP_editor_course_advanced_curveInsert_err" text="Вибір поворотної точки не дозволяється."/>
+    <!---->
+    <!--Info texts-->
+    <!---->
+    <text name="CP_infoTexts_isStuck" text="Допоміжний засіб застряг"/>
+	<text name="CP_infoTexts_blockedByObject" text="Заблоковано об'єктом"/>
+	<text name="CP_infoTexts_shouldRefuel" text="Потрібно заправити"/>
+	<text name="CP_infoTexts_needsFuel" text="Потрібує палива"/>
+	<text name="CP_infoTexts_needsRepair" text="Потрібно відремонтувати"/>
+	<text name="CP_infoTexts_needsFilling" text="Потрібно заповнити"/>
+	<text name="CP_infoTexts_needsUnloading" text="Потрібно розвантажити"/>
+	<text name="CP_infoTexts_workFinished" text="Роботу завершено"/>
+	<text name="CP_infoTexts_drivingToCombine" text="Їде до комбайна"/>
+	<text name="CP_infoTexts_drivingToSelfUnload" text="Їде до причепа"/>
+	<text name="CP_infoTexts_outOfMoney" text="Немає грошей"/>
+	<text name="CP_infoTexts_waitForRainToFinish" text="Чекає, поки дощ припиниться"/>
+	<text name="CP_infoTexts_waitForSnowToClear" text="Чекає, поки сніг зійде"/>
+	<text name="CP_infoTexts_waitForUnloader" text="Чекає на розвантажувач"/>
+	<text name="CP_infoTexts_errorStopped" text="Залишив курс, зупинено"/>
+	<text name="CP_infoTexts_wrongBaleWrapType" text="Невірний тип упаковки тюка"/>
+	<text name="CP_infoTexts_errorNoPathFound" text="Шлях не знайдено"/>
+	<text name="CP_infoTexts_errorGroundUnloadNotSupported" text="Розвантаження на землю неможливе"/>
+	<text name="CP_infoTexts_errorCutterNotSupported" text="Ріжучий пристрій не підтримується"/>
+	<text name="CP_infoTexts_errorAutomaticCutterAttachNotActive" text="Автоматичне приєднання ріжучого пристрою вимкнено"/>
+	<text name="CP_infoTexts_errorWrongSeason" text="Невірний сезон для плодів"/>
+	<text name="CP_infoTexts_errorWrongMissionFruitType" text="Невірний тип плоду для місії"/>
+	<text name="CP_infoTexts_errorPalletsAreFull" text="Палети повні"/>
+	<text name="CP_infoTexts_errorPalletsAreEmpty" text="Немає палет"/>
+    <!---->
+    <!--Custom field manager-->
+    <!---->
+    <text name="CP_customFieldManager_hotspotName" text="Користувацьке поле"/>
+	<text name="CP_customFieldManager_confirm_save" text="Бажаєте зберегти записаний курс як користувацьке поле %s?"/>
+	<text name="CP_customFieldManager_confirm_delete" text="Бажаєте видалити користувацьке поле %s?"/>
+	<text name="CP_customFieldManager_delete" text="Видалити користувацьке поле"/>
+	<text name="CP_customFieldManager_rename" text="Перейменувати користувацьке поле"/>
+	<text name="CP_customFieldManager_rename_error" text="Користувацьке поле з ім'ям %s вже існує."/>
+	<text name="CP_customFieldManager_edit" text="Редагувати користувацьке поле"/>
+	<text name="CP_customFieldManager_draw" text="Малювати користувацьке поле"/>
+	<text name="CP_customFieldManager_draw_header" text="Малюйте лінії користувацького поля правою кнопкою миші."/>
+	<text name="CP_customFieldManager_draw_sub_header" text="Утримуйте клавішу лівого Shift для прямої лінії."/>
+	<text name="CP_customFieldManager_save" text="Зберегти користувацьке поле"/>
+	<text name="CP_controllerGui_startRecording" text="Почати запис користувацького поля"/>
+	<text name="CP_controllerGui_stopRecording" text="Зупинити запис користувацького поля"/>
+	<text name="CP_controllerGui_pauseRecording" text="Поставити на паузу запис користувацького поля"/>
+	<text name="CP_controllerGui_unpauseRecording" text="Продовжити запис користувацького поля"/>
+    <!---->
+    <!--CP ingame menu-->
+    <!---->
+    <text name="CP_ingameMenu_map_title" text="Мапа"/>
+    <!---->
+    <!--Help menu-->
+    <!---->
+    <text name="CP_help_title" text="Courseplay"/>
+	<text name="CP_help_subTitle" text="Модифікація для Farming Simulator 25"/>
+	<text name="CP_help_page_blank" text=""/>
+	<text name="CP_help_page_General_title" text="Загальна інформація"/>
+	<text name="CP_help_page_GeneralBase_text" text="
+Courseplay дозволяє генерувати курси для полів з додатковими функціями, наприклад: розворотні смуги.
+Він також дозволяє використовувати прес-підбирачі та кормозбиральники, які можна відправити на той самий курс, як сінокосарку або комбайн до цього.
+Ще одна велика функція — це збирання або обгортання тюків на полі.
+Courseplay також може працювати на рисових полях і виноградниках.
+Курси для роботи на полях можна налаштовувати в режимі мультиінструментів, що дозволяє використовувати до 5 водіїв, які працюють у конвої на одному полі.
+Також можна автоматично розвантажити комбайн у причіп на/біля поля.
+Користувацькі межі полів можуть бути призначені для використання Courseplay, наприклад: у разі лугу, який не розпізнається як звичайне поле.
+Зрештою, CP має інтерфейс для AutoDrive, що дозволяє заправляти сіялку на найближчому силосі або розвантажувати кормозбиральник і так далі.
+Комбайни-розвантажувачі можуть створювати купу біля поля з їх завантаженим врожаєм.
+У Farming Simulator 25 Courseplay отримав власне меню, яке можна відкрити за допомогою різних кнопок на HUD.
+
+Для додаткової інформації відвідайте наш GitHub: https://github.com/Courseplay/Courseplay_FS25 .
+Там ви можете отримати допомогу або повідомити про проблеми, з якими ви стикалися.
+Нарешті, ми дякуємо кожному перекладачу та нашій спільноті за повідомлення про помилки, надані відгуки та нові ідеї.
+
+Що таке експертний режим:
+Коли експертний режим вимкнений, доступні лише деякі налаштування.
+Інші налаштування приховані та встановлені на стандартні значення, які працюють у більшості ситуацій.
+Таким чином, ми намагаємось зробити початок роботи з Courseplay легшим для нових користувачів, не перевантажуючи їх численними налаштуваннями.
+"/>
+	<text name="CP_help_page_extendedJobMenu_title" text="Розширене меню AI"/>
+	<text name="CP_help_page_startJobMenuBase_text" text="
+Налаштування помічників тепер знаходяться в нашому новому меню &quot;Налаштування помічників&quot;.
+Воно працює подібно до старого меню AI.
+Виберіть транспортний засіб в меню AI для створення роботи, виходячи з прикріплених інструментів або вибраного транспортного засобу.
+Окрім карти та налаштувань роботи, вгорі ви знайдете налаштування генератора курсів та генератора курсів для виноградників. Вони доступні лише з дійсним інструментом під час створення роботи.
+Для генерації курсу та початку роботи Courseplay вам потрібно створити роботу CP: Fieldwork з дійсним інструментом або транспортним засобом.
+Порада: щоб швидше отримати доступ, можна натискати на &quot;немає курсу&quot; на HUD. Це перенесе вас до меню з уже створеною роботою для транспортного засобу.
+"/>
+	<text name="CP_help_page_startJobMenuFunctions_text" text="
+Щоб розпочати першу роботу CP, вам потрібно вибрати транспортний засіб та можливий дійсний інструмент, який підтримується для роботи.
+Потім, натиснувши створити роботу, ви можете вибрати роботу CP для вашого вибраного інструмента або транспортного засобу.
+"/>
+	<text name="CP_help_page_readyJobMenuBase_text" text="
+Після вибору роботи CP потрібно визначити позицію поля для генерації курсу або використання пошуковика тюків.
+Ця позиція також приблизно визначає початкову точку вашого курсу.
+Якщо ви хочете використовувати помічника Giants для поїздки до поля, вам потрібно також встановити цільову точку поблизу початкової точки курсу.
+Налаштування зміщення лінії використовується лише якщо ви хочете, щоб кілька помічників працювали на одному полі. Для цього перегляньте окрему сторінку допомоги нижче.
+Порада: якщо ви вже стоїте на полі, коли натискаєте на &quot;немає курсу&quot; для входу в меню, маркери вже будуть розміщені.
+"/>
+	<text name="CP_help_page_readyJobMenuFunctions_text" text="
+Коли позиція поля правильно розміщена, ви побачите межі поля на карті.
+Якщо ви створюєте роботу CP: Fieldwork, ви отримаєте доступ до налаштувань генератора курсів.
+"/>
+	<text name="CP_help_page_JobMenuExtras_text" text="
+Тепер можна безпосередньо з меню почати роботу водія. Помічник Giants поїде до цільової точки, а потім робота CP автоматично візьме на себе керування.
+Також можна почати роботу водія з HUD, якщо ви знаходитеся поруч з полем з транспортним засобом або використовуєте мод AutoDrive для доставки роботи CP поблизу поля.
+"/>
+	<text name="CP_help_page_courseGeneratorBasic_title" text="Основи генератора курсів"/>
+	<text name="CP_help_page_courseGeneratorBase_text" text="
+Генератор курсів Courseplay — це складний інструмент, який може генерувати курси для полів, налаштовані для кожної можливої роботи.
+Він має багато налаштувань, і може знадобитися деякий час, щоб ознайомитися з ним. Якщо ви новачок у Courseplay, вам, ймовірно, варто почати з гри з кількістю головок полів, а потім перейти до більш складних налаштувань.
+Після зміни параметра натискайте «Згенерувати», щоб побачити, який вплив має це налаштування. Найкращий спосіб дослідити всі можливості генератора — це експериментувати з ним.
+"/>
+    <text name="CP_help_page_courseGeneratorBaseFunctions_text" text="
+Основи:
+Перші кілька значень, які ви тут побачите, — це основні параметри.
+- Ширина роботи: Courseplay автоматично визначає ширину роботи для більшості інструментів, тому вам не потрібно турбуватися про це,
+але якщо автоматичне виявлення не спрацювало, ви можете встановити її вручну. Це налаштування впливає на загальний курс.
+- Кількість головок: Найкращий спосіб утримати ваші транспортні засоби на полі під час повороту в кінці кожного ряду — це додати коло.
+Кількість головок, помножена на ширину роботи, повинна бути хоча б довжиною вашого транспортного засобу плюс прикріплений інструмент.
+- Початок роботи: Як зазначено в розширеному меню AI, позиція поля використовується для визначення початкової або кінцевої точки для
+курсу роботи на полі. Ви хочете почати роботу на головці при збиранні врожаю і працювати до середини поля.
+Оранка, сівба та культивація повинні починатися в центрі поля і працювати до коло.
+"/>
+	<text name="CP_help_page_courseGeneratorHeadland_text" text="
+Налаштування головок з'являться лише тоді, коли ви встановите хоча б одну головку.
+У вас будуть варіанти для вибору, з якого боку почати, налаштування кутів, напрямку і перекриття.
+коло дуже рекомендуються, щоб запобігти виходу інструментів за межі поля під час повороту.
+"/>
+	<text name="CP_help_page_courseGeneratorHeadlandFunctions_text" text="
+- Загострити кути головок: Загострити кути головок, які не є округлими. Це змусить транспортний засіб робити
+поворот коло, коли її кривизна буде меншою за радіус повороту транспортного засобу.
+- Кількість округлих кутів: Кількість головок, починаючи з найбільш віддаленої, які матимуть округлі кути. Округлі
+кути залежать від радіусу повороту транспортного засобу, тому для цих головок транспортний засіб не буде виконувати маневр повороту на кутах.
+- Радіус кута: Встановлює радіус для округлих кутів. Якщо ви знаєте, що наступний робочий інструмент має мінімальний радіус 10, ви можете встановити це значення на 10 для курсу.
+- Напрямок коло: за годинниковою стрілкою або проти. Це може бути важливим для комбайнів і збирачів врожаю, в залежності від того,
+з якого боку знаходиться труба або конвеєр.
+- Перекриття коло: Наскільки одна головка перекривається з наступною. Це дозволяє уникнути пропуску плодів у деяких випадках.
+- Поле краю: Позитивні значення зменшують розмір поля, додаючи буфер навколо обробленої ділянки на випадок, якщо є перешкоди біля межі поля.
+Негативні значення збільшують оброблену площу за межі поля, щоб покрити межі полів, які не були точно виявлені.
+"/>
+	<text name="CP_help_page_courseGeneratorCenter_text" text="
+Генератор пропонує кілька різних шаблонів для генерації курсу для центру поля. Найкращий шаблон зазвичай
+визначається роботою та вибраними інструментами. Шаблони були створені на основі відгуків та інформації з
+нашої спільноти.
+Простий шаблон вгору/вниз працює майже завжди для будь-якого інструмента. Інші шаблони можуть покращити ефективність, наприклад використання шаблону
+Lands при збиранні з комбайном дозволяє утримати трубу поза плодами для швидшого розвантаження.
+Для подрібнювачів кращим вибором може бути шаблон траси для ширших поворотів, щоб полегшити роботу розвантажувача.
+Спіраль найкраще підходить для приєднаних комбайнів з відступом, щоб інструмент залишався в плодах, а трактор — зовні.
+"/>
+	<text name="CP_help_page_courseGeneratorCenterFunctions_text" text="
+- Центр поля: Існують різні режими для того, як ваш шаблон для центру поля має виглядати. Класичний і найбільш використовуваний — вгору/вниз.
+Спіраль, В кругову та Lands мають свої специфічні переваги порівняно з іншими. Наприклад, Lands дозволить трубі комбайна в більшості випадків бути поза плодами для легшого розвантаження.
+- Напрямок центру: Для шаблонів спіралі та lands ви можете встановити напрямок, подібно до напрямку головок.
+- Рівна ширина рядів: Якщо центр поля має загальну ширину, яку неможливо рівномірно розділити на ширину роботи інструмента, перший або останній ряд буде вужчим. Ви можете використати це налаштування, щоб уникнути цього і зробити кожен ряд однакової ширини (що буде менше за ширину роботи).
+- Напрямок ряду: Автоматичний режим здебільшого знаходить найкращий напрямок, але іноді найкраще підходить найдовший край. Якщо ви не задоволені жодним з варіантів, виберіть вручну і встановіть напрямок вручну.
+- Кут ряду: Коли напрямок ряду встановлено вручну, з'являється це налаштування, яке визначить напрямок рядів для генератора.
+
+Ці налаштування з'являються тільки при певних налаштуваннях, які ви зробили раніше:
+- Пропускати ряди: З'являється, коли центр поля встановлений на &quot;вгору/вниз&quot;. Це дуже корисна опція для пришвидшення роботи, оскільки транспортні засоби можуть робити ширші повороти і не потрібно буде назад, коли вони повертаються на наступний ряд.
+- Ряди на Землі: З'являється, коли центр поля встановлений на &quot;lands&quot;. Це впливає тільки тоді, коли центр поля встановлений на &quot;lands&quot; і визначатиме, скільки рядів має бути на кожному земельному масиві. Чим більше рядів, тим менше масивів буде згенеровано.
+- Спіраль зсередини: З'являється, коли центр поля встановлений на &quot;спіраль&quot;.
+- Кількість кіл: З'являється, коли центр поля встановлений на &quot;в кругову&quot;.
+"/>
+	<text name="CP_help_page_courseGeneratorCenterExampleUpdown_text" text="
+вгору/вниз
+"/>
+    <text name="CP_help_page_courseGeneratorCenterExampleLands_text" text="
+земля
+"/>
+	<text name="CP_help_page_courseGeneratorCenterExampleSpiral_text" text="
+спіраль
+"/>
+	<text name="CP_help_page_courseGeneratorCenterExampleRacetrack_text" text="
+в кругову
+"/>
+	<text name="CP_help_page_courseGeneratorIsland_text" text="
+Courseplay створюватиме коло навколо островів, коли обхід острова увімкнено. Тому, коли курс вперше стикається з островом,
+він зробить хоча б один повний круг навколо нього. Ви можете встановити кількість головок (тобто кількість кіл) навколо острова,
+якщо вам потрібно більше місця для поворотів транспортних засобів біля острова. Майте на увазі, що генератор може вирішити створити менше
+головок, якщо острів занадто близько до межі поля.
+"/>
+	<text name="CP_help_page_courseGeneratorIslandFunctions_text" text="
+- Обхід острова: Включає або вимикає обхід острова, якщо він знайдений. Це не працює для користувацьких полів!
+- Коло острова: Кількість кіл навколо острова можна встановити незалежно від налаштування обходу.
+- Напрямок кола острова: У якому напрямку водій рухається навколо острова, наприклад, щоб переконатися, що труба комбайна не потрапляє в плоди або щоб уникнути дивних змін напрямку.
+"/>
+    <text name="CP_help_page_courseGeneratorExpert_text" text="
+Деякі налаштування доступні лише, якщо ви активуєте експертний режим у глобальних налаштуваннях Courseplay.
+Перед тим як експериментувати з цими налаштуваннями, вам слід переконатися, що ви розумієте, що роблять основні налаштування.
+Деякі експертні налаштування працюють правильно лише за певних умов.
+
+- Багато інструментів: Це налаштування використовується, коли ви хочете, щоб більше ніж один транспортний засіб працював на вашому курсі. Оскільки це стає складніше, для цього є окрема тема допомоги.
+- Перемикання смуг: З цією опцією активною, транспортні засоби перемикають смуги на кожному повороті, тому поворот кожного транспортного засобу має однакову ширину. Дивіться додаткове меню допомоги «Перемикання смуг» для більш детальної інформації.
+- Вузьке поле: Створює головку тільки на двох коротких краях поля. У такому випадку неможливо тримати транспортний засіб на полі на найдовших краях головки.
+- Перекриття головки: За замовчуванням, проходи головки перекривають один одного (але не край поля) на кілька відсотків, щоб уникнути пропуску урожаю в деяких крайових випадках. Ви можете змінити це перекриття тут.
+- Поле меж: Це налаштування дозволяє переміщувати межу поля в середині або назовні від початкової межі.
+- Використовувати край базової лінії: З цим налаштуванням ви можете генерувати вигнуті рядки вгору/вниз, що йдуть паралельно з краєм поля біля маркера поля. Це має сенс, коли край поля не є прямим, вигнуті рядки будуть слідувати за кривою цього краю.
+ВАЖЛИВЕ ЗАУВАЖЕННЯ: Це експериментальне налаштування, яке може не працювати для всіх форм поля. Якщо воно не працює, спробуйте інше налаштування.
+"/>
+	<text name="CP_help_page_courseGeneratorHeadland_title" text="Генератор курсів: головка"/>
+	<text name="CP_help_page_courseGeneratorCenter_title" text="Генератор курсів: центр"/>
+	<text name="CP_help_page_courseGeneratorIsland_title" text="Генератор курсів: острови"/>
+	<text name="CP_help_page_courseGeneratorExpert_title" text="Генератор курсів: експертні налаштування"/>
+	<text name="CP_help_page_courseManager_title" text="Менеджер курсів"/>
+    <text name="CP_help_page_courseManagerBase_text" text="
+Менеджер курсів дозволяє зберігати курси та дає змогу завантажити збережений курс пізніше.
+Це дуже важливо, коли ви хочете, щоб кілька працівників їхали по одному й тому ж курсу для конвою (багатофункціональні інструменти).
+Ця функція також дозволяє збирати залишки скошеної трави, залишені комбайном або грядовим комбайном, за допомогою кормового вагону або прес-підбирача.
+
+Місце збереження файлів курсів: ..\My Games\FarmingSimulator2025\modSettings\FS25_Courseplay\Courses\Mapname.SampleModMap (або для ванільної карти, наприклад, MapUS).
+Менеджер курсів працює інакше, ніж ви звикли в FS19.
+Курси зберігаються в папках, які будуть відображатися зліва. Це означає, що для початку збереження курсів вам потрібно створити хоча б одну папку.
+Папки можна створювати простим натисканням кнопки в нижній частині екрана і введенням імені.
+Курси наразі зберігаються тільки локально.
+"/>
+	<text name="CP_help_page_courseManagerBaseFunctions_text" text="
+Коли курс завантажено, ви можете зберегти його, вибравши папку і натиснувши кнопку 'Зберегти курс'. Потім з'явиться вікно, в якому ви можете ввести назву вашого курсу.
+Назву та місце збереження можна змінити пізніше.
+Щоб видалити курс з вашого транспортного засобу, натисніть на кнопку 'Очистити поточний курс'.
+Щоб завантажити курс, потрібно спочатку вибрати папку, потім вибрати курс і натиснути кнопку 'Завантажити курс'.
+Натискання на кнопку зміни режиму активує режим редагування менеджера курсів.
+"/>
+	<text name="CP_help_page_courseManagerEdit_text" text="
+Коли режим редагування активований, у вас є такі можливості:
+- Переміщення курсу в іншу директорію.
+- Видалення курсів або директорій.
+- Перейменування курсів або директорій.
+"/>
+	<text name="CP_help_page_courseManagerEditFunctions_text" text="
+Для переміщення курсу: 
+  1) Натисніть кнопку переміщення в нижній частині екрана.
+  2) Натисніть на курс, який ви хочете перемістити.
+  3) Натисніть на директорію, в яку ви хочете перемістити курс.
+Для перейменування просто натискайте кнопку перейменування, а потім на директорію або курс. Після цього введіть нову назву.
+Щоб видалити курс або директорію, натисніть на кнопку видалення, а потім на папку або курс, який ви хочете видалити.
+Директорії повинні бути порожніми, якщо ви хочете їх видалити.
+"/>
+	<text name="CP_help_page_minihud_title" text="Міні HUD"/>
+	<text name="CP_help_page_minihud_general_title" text="Загальні функції"/>
+	<text name="CP_help_page_minihud_general_text" text="
+А: Утримуйте ліву кнопку миші на заголовку, щоб перемістити HUD у бажану позицію. Справа показується встановлена версія, а X закриває HUD за допомогою кліка миші.
+Б: Натисніть на іконку Courseplay, щоб отримати доступ до глобальних налаштувань.
+В: У цій позиції відображається назва вашого транспортного засобу. Натискання на неї відкриває меню налаштувань транспортного засобу.
+Г: Ці символи для: (1) видалити поточний завантажений курс, (2a) перемикати спосіб відображення курсу, (2b) якщо курс не завантажений, з'являється кнопка запису для запису меж поля, (3) для початку або зупинки допоміжної роботи.
+Д: Ця іконка цілі має різні опції в залежності від обраного режиму, відкриває меню AI з роботою і дозволяє встановлювати маркери та додаткові налаштування для роботи. Зліва від іконки, коли працює польова робота, відображається залишковий час курсу.
+Е: Натискання на текст перемикає доступні режими для поточних інструментів.
+Є: Налаштування, що відображаються під цим рядком, залежать від поточної роботи. Вони будуть пояснені за допомогою наступних зображень.
+"/>
+    <text name="CP_help_page_minihud_fieldwork_title" text="Польові роботи"/>
+<text name="CP_help_page_minihud_fieldwork_text" text="
+А: Натисніть, щоб вибрати місце для початку роботи. Якщо завантажено курс багатофункціональних інструментів, ви можете вибрати смугу з правої сторони.
+Б: Відображає назву завантаженого курсу. Якщо ви щойно створили курс, він відображається як 'тимчасовий курс'. Справа ви побачите поточні/загальні точки маршруту після початку роботи.
+В: Натискання на текст перерахує робочу ширину, або ви можете вручну змінити її праворуч, натискаючи +/-, або прокручуючи колесо миші над числом.
+Г: Деяким інструментам потрібно відступити вбік. Courseplay автоматично обчислить це при натисканні на текст, або ви можете змінити це вручну так само, як робочу ширину.
+Д: Використовуйте символ праворуч, щоб скопіювати поточний курс в буфер обміну. Назва скопійованого курсу буде показана зліва. Ви можете завантажити скопійований курс в інший транспортний засіб, який ще не має курсу. Щоб видалити курс з буфера обміну, натисніть символ видалення.
+"/>
+<text name="CP_help_page_minihud_combineunload_title" text="Розвантажувач комбайна"/>
+<text name="CP_help_page_minihud_combineunload_text" text="
+А: Виберіть, який тип транспортного засобу має розвантажити працівник. Це корисно, якщо на полі працюють різні типи техніки, наприклад, комбайн і навантажувач, як ROPA Maus.
+Б: Встановіть рівень заповнення (40% - 100%), до якого працівник має доїхати до місця розвантаження. Клікніть на +/- або використовуйте колесо миші над числом для зміни.
+В: Іноді положення розвантажувача під трубою може бути менш ідеальним. Це може бути через причіп або трубу комбайна, іноді через схил поля. Ви можете вручну коригувати відстань до комбайна тут.
+Г: Те ж саме, що і вище, але тут ви можете налаштувати позицію розвантажувача відносно труби, вперед або назад.
+Д: Подібно до копіювання курсу, тут ви можете скопіювати позиції маркерів в інший транспортний засіб.
+"/>
+<text name="CP_help_page_minihud_balecollect_title" text="Збір/обгортка тюків"/>
+<text name="CP_help_page_minihud_balecollect_text" text="
+А: Залишкові тюки на полі.
+Б: Тип тюків для збору/обгортки.
+В: Відступ між центральною лінією трактора та центральною лінією руки навантажувача. Можливо, вам потрібно буде відрегулювати це для більших тракторів (наприклад, з ширшими шинами).
+"/>
+<text name="CP_help_page_minihud_siloloader_title" text="Навантажувач силосу"/>
+<text name="CP_help_page_minihud_siloloader_text" text="
+А: Залишковий розмір купи в літрах.
+Б: Робоча ширина, те ж саме, що й для польової роботи.
+В: Для правильного використання Courseplay потрібна точна висота ковша над землею. Оскільки ця висота може відрізнятися для кожного інструмента, ви можете перевірити та налаштувати її за допомогою цієї настройки.
+Г: Так само, як і з розвантажувачем, ви можете скопіювати позиції маркерів в інший транспортний засіб.
+"/>
+    <text name="CP_help_page_minihud_siloworker_title" text="Працівник силосу"/>
+	<text name="CP_help_page_minihud_siloworker_text" text="
+А: Подібно до навантажувача силосу, висота рівня є критичною. Ви можете відрегулювати її тут.
+Б: Показує прогрес ущільнення. Клікнувши на нього, ви перемикаєте опцію зупинки водія після досягнення повного ущільнення.
+В: Ви можете змінити робочу ширину, якщо це необхідно.
+Г: Це налаштування повідомляє працівнику чекати в силосі або на обраній парковці, коли під'їжджає розвантажувач.
+"/>
+<text name="CP_help_page_customField_title" text="Індивідуальні поля"/>
+	<text name="CP_help_page_customFieldRecord_text" text="
+Є два способи створення індивідуальних полів.
+Перший — це використання функції запису на HUD.
+Спочатку натисніть кнопку запису курсу, а потім об'їдьте межі поля, яке хочете записати.
+Після завершення просто натисніть кнопку ще раз, і вам буде запропоновано зберегти його.
+Початок та кінець не повинні перетинатися!
+"/>
+	<text name="CP_help_page_customFieldDone_text" text="
+Межі індивідуального поля будуть відображатися в меню AI.
+Клікнувши на ім'я, ви отримаєте можливість або видалити, перейменувати, або редагувати його за допомогою редактора.
+"/>
+	<text name="CP_help_page_customFieldDraw_text" text="
+Другий варіант — це намалювати індивідуальне поле на карті в меню AI.
+Якщо не вибрано точку доступу, натисніть кнопку малювання індивідуального поля внизу.
+Після цього з'явиться текст у верхній частині екрана.
+Почніть, натискаючи праву кнопку миші для встановлення початкової позиції.
+Наступні кліки будуть створювати лінії до попереднього кліку.
+Натисніть кнопку збереження внизу, щоб завершити малювання поля.
+"/>
+	<text name="CP_help_page_multiConvoy_title" text="Багатофункціональний інструмент і конвой"/>
+	<text name="CP_help_page_multitoolBasic_text" text="
+Можливо, до 5 транспортних засобів працюватимуть разом на одному полі в групі (також називається курс багатофункціональних інструментів).
+Ви можете змінити позицію (смугу) транспортного засобу в групі на HUD (ліво-центр-право).
+"/>
+	<text name="CP_help_page_multitoolFunction_text" text="
+Після завантаження курсу багатофункціонального інструменту потрібно вибрати позицію (смугу) для водія.
+Ці смуги завжди мають однакові назви:
+ліво(2), ліво(1), центр, право(1), право(2).
+2 транспортні засоби мають ліво(1) та право(1), 4 мають ліво(2) та право(2).
+При 3 або 5 транспортних засобах є також опція центру.
+Вибір іншої смуги також оновлює відображення курсу, щоб показати фактичний курс для цього транспортного засобу.
+"/>
+    <text name="CP_help_page_convoyBasic_text" text="
+Конвой працює лише в тому випадку, якщо транспортні засоби мають завантажений однаковий багатофункціональний курс з однаковим ім'ям.
+Вони автоматично зберігають невелику відстань від транспортного засобу попереду.
+Крім того, функція конвою також застосовується, коли, наприклад, прес-підбирач їде за комбайном на тому ж курсі.
+"/>
+	<text name="CP_help_page_convoyFunction_text" text="
+Налаштування відстані між транспортними засобами змінює відстань між ними.
+Відстань усіх транспортних засобів з однаковим ім'ям курсу буде автоматично встановлена на найбільше значення серед усіх транспортних засобів у конвої.
+"/>
+	<text name="CP_help_page_wrapCollect_title" text="Обгортання та збір тюків"/>
+	<text name="CP_help_page_wrapCollectBasic_text" text="
+Обгортання та збір тюків можна виконувати двома різними способами.
+Перший спосіб — це завантажити той самий курс, який ви використовували для свого прес-підбирача, і дозволити обгортальнику або збирачу виконати цей курс.
+Однак це може бути складно, оскільки деякі тюки люблять котитися або відлітати з шляху.
+На цьому етапі наш тип роботи з обгортанням та збором може допомогти, оскільки він не потребує курсу.
+За допомогою іконки-мішені на HUD ви повинні вибрати поле, на якому хочете збирати або обгортати тюки. Після цього ви можете почати водія біля поля.
+Також можна використовувати карту AI, щоб надіслати його на поле для початку роботи.
+Лічильник на HUD показує залишкові тюки на полі з моменту останнього сканування. CP буде сканувати поле на наявність тюків лише тоді, коли це дійсно потрібно для збереження продуктивності.
+"/>
+	<text name="CP_help_page_wrapBasic_text" text="
+Обгортання тюків дуже просте. Завантажте курс для вашого прес-підбирача та почніть, як будь-яку іншу роботу на полі, або без курсу,
+почніть обгортати/збирати тюки з HUD або з меню AI.
+"/>
+	<text name="CP_help_page_wrapFunction_text" text="
+Коли використовується курс, помічник рухається з встановленим відступом, щоб підбірник обгортальника знаходився посередині курсу.
+Без курсу Courseplay сканує поле на наявність необгорнених тюків і використовує пошуковик шляхів, щоб знайти найближчий тюк для обгортання.
+Автоматичне відступання, якщо тюк знаходиться перед транспортним засобом або якщо ми занадто близько до межі поля, повинно запобігти аваріям.
+"/>
+	<text name="CP_help_page_collectBasic_text" text="
+Збір тюків працює майже так само, з курсом або без.
+Коли збирач заповниться, він зупинить роботу і повідомить користувачеві, що його потрібно розвантажити. Якщо у вас встановлений AutoDrive,
+ви можете використовувати його для автоматичного розвантаження збирача тюків.
+"/>
+    <text name="CP_help_page_symetricLaneChange_title" text="Перемикання смуг"/>
+	<text name="CP_help_page_symetricLaneChangeBasic_text" text="
+Перемикання смуг використовується на курсах з кількома інструментами і вказує помічнику, в якій смузі він повинен їхати після повороту.
+Коли перемикання смуг активоване, транспортний засіб змінює сторону після кожного повороту.
+Це може бути складно для розуміння, тому давайте розглянемо два приклади.
+"/>
+	<text name="CP_help_page_symetricLaneChangeExampleOff_text" text="
+Якщо перемикання смуг вимкнене, транспортний засіб залишатиметься на тій самій стороні протягом всього курсу, де він був початий.
+Якщо він почав рух в найлівішій смузі, він завжди залишатиметься в найлівішій смузі. Це дозволяє уникнути конфліктів з іншими водіями,
+але транспортні засоби, що знаходяться всередині повороту (найлівіша для лівих поворотів, найправіша для правих поворотів), будуть змушені виконувати більш різкі
+повороти, оскільки вони продовжать рух по сусідній смузі.
+"/>
+	<text name="CP_help_page_symetricLaneChangeExampleOn_text" text="
+Якщо перемикання смуг активне, наприклад для двох транспортних засобів, транспортний засіб A ліворуч і транспортний засіб B праворуч, після повороту смуги змінюються місцями.
+Це означає, що A буде праворуч, а B буде ліворуч.
+Перевага полягає в тому, що всі транспортні засоби мають однакову ширину повороту і, отже, однакову відстань для руху.
+Для комбайнів ця настройка важлива, оскільки вона гарантує, що труба не потрапляє в плоди і не виходить на іншу смугу.
+Недолік полягає в тому, що транспортні засоби можуть зіткнутися, коли рухаються один до одного по сусідніх смугах.
+
+Якщо подивитися на порядок смуг зліва направо, стане зрозуміло:
+Без симетричної зміни: ліворуч, праворуч, ліворуч, праворуч - це майже як пропускати смугу.
+З симетричною зміною: ліворуч, праворуч, праворуч, ліворуч - зліва направо, по одній смузі за раз.
+В прикладі з комбайном це означає, що жоден комбайн не матиме плодів ліворуч і праворуч від його смуги.
+"/>
+	<text name="CP_help_page_infoPanel_title" text="Інформаційна панель"/>
+	<text name="CP_help_page_infoPanelBasic_text" text="
+Це наша інформаційна панель, її можна переміщати мишкою, як і нашу міні HUD.
+Окрім назви та версії нашого мода, вона також показує статусну інформацію про водіїв Courseplay.
+Під час наведення на повідомлення статусу відображатиметься назва транспортного засобу.
+Клацнувши на ньому, ви зможете миттєво переміститися в транспортний засіб.
+"/>
+    <text name="CP_help_page_infoPanelMsg_text" text="
+Повідомлення статусу:
+- Допоміжний засіб застряг
+- Заблоковано об'єкт
+- Потрібно заправити
+- Потрібно заправити пальним
+- Потрібно відремонтувати
+- Потрібно заповнити
+- Потрібно розвантажити
+- Робота завершена
+- Їде до комбайна
+- Їде до трейлера
+- Немає грошей
+- Чекає на закінчення дощу
+- Чекає на танення снігу
+- Чекає на розвантажувач
+- Покинув курс, зупинено
+- Невірний тип тюка
+- Шлях не знайдений
+- Підкидання на землю неможливе
+- Ріжучий пристрій не підтримується
+- Прикріплення ріжучого пристрою вимкнено
+- Невірний сезон для фруктів
+- Невірний фрукт для місії
+- Піддони заповнені
+- Немає піддонів
+"/>
+    <text name="CP_help_page_vineWork_title" text="Робота з виноградниками"/>
+	<text name="CP_help_page_vineWorkConditions_text" text="
+Робота з виноградниками дещо складніша, ніж робота на звичайному полі.
+Для найкращого результату, виноградники повинні бути розташовані один біля одного в межах стандартної сітки.
+Кінець і початок кожного виноградника також повинні бути приблизно однакової довжини.
+Якщо виноградники знаходяться на існуючому полі, ви можете відкрити генератор безпосередньо, як зазвичай.
+Якщо вони не на полі, вам потрібно скористатися меню AI та поставити маркер поля на виноградниках.
+"/>
+	<text name="CP_help_page_vineWorkGenerator_text" text="
+Генератор для виноградників має менше параметрів.
+Залежно від інструмента, вам потрібно вибрати працювати на виноградниках або поруч з ними.
+Наприклад, стандартний комбайн має їхати і працювати на виноградниках.
+     Попередній обрізувач має їхати ліворуч від виноградників, але працює на виноградниках, тому потрібно вибрати працювати на виноградниках, але з відступом.
+     Обприскувачі повинні їхати поруч з виноградниками і пропускати один рядок, оскільки обприскують і ліворуч, і праворуч.
+"/>
+	<text name="CP_help_page_vineWorkHarvester_text" text="
+Курс для виноградників має бути створений на самих виноградниках, оскільки комбайн має їхати і працювати безпосередньо на виноградниках.
+"/>
+    <text name="CP_help_page_vineWorkPruner_text" text="
+Попередній обрізувач працює на виноградниках, тому курс потрібно створювати на виноградниках.
+Інструмент має відступ для трактора, тому трактор їде між виноградниками.
+"/>
+	<text name="CP_help_page_vineWorkSprayer_text" text="
+Обприскувач працює поруч з виноградниками, тому він має їхати ліворуч або праворуч від виноградників.
+Оскільки обприскувач може працювати одночасно з лівими та правими виноградниками, можна пропустити ряд.
+"/>
+	<text name="CP_help_page_editor_title" text="Редактор курсів"/>
+	<text name="CP_help_page_editorGeneral_text" text="
+Редактор курсів можна використовувати для редагування курсів та користувацьких полів.
+Завантажені курси будуть автоматично збережені/перезаписані після закриття редактора.
+
+1) Редагування користувацького поля здійснюється шляхом вибору одного в меню AI та натисканням на редагування користувацького поля.
+2) Редагування курсу можна виконати в менеджері курсів, вибравши курс та натиснувши на відкриття редактора курсу.
+   Це працює тільки з збереженими курсами. Переконайтесь, що жоден курс не завантажений в транспортний засіб.
+
+Редагування курсів слід виконувати лише тоді, коли генератор курсів не зміг створити достатньо хороший курс.
+Невірне редагування може призвести до проблем для водія, оскільки точки шляху мають приховані атрибути.
+"/>
+	<text name="CP_help_page_editorBasic_text" text="
+У базовій категорії:
+1) Переміщення захопленої точки шляху.
+2) Вставка точок шляху перед або після точки, на яку ви натискаєте.
+
+Видалення точок шляху можна здійснити за допомогою червоної кнопки видалення.
+"/>
+	<text name="CP_help_page_editorAdvanced_text" text="
+У розширеній категорії:
+1) Інструмент для встановлення атрибута повороту для точки шляху (тільки з курсом, а не користувацьким полем).
+Кілька разів натискаючи на точку шляху, ви можете переключатися між «нормальною» (помаранчева), «початком повороту» (зелена) і «кінцем повороту» (червона).
+
+2) Інструмент для переміщення кількох точок шляху між двома вибраними точками шляху.
+Для цього виберіть 2 точки шляху лівою кнопкою миші, потім, утримуючи ліву кнопку, переміщайте всі точки шляху між ними, включаючи вибрані.
+Щоб зняти позначку з точок шляху, натисніть праву кнопку миші.
+
+3) Інструмент для вставки кривої точок шляху між двома вибраними точками шляху.
+Так само, як і при переміщенні точок шляху, виберіть 2 точки шляху, потім, утримуючи ліву кнопку миші, переміщуйте мишу.
+Увага: Як тільки ви відпустите кнопку миші, точки шляху будуть встановлені, це не можна скасувати! (Звісно, ви можете видалити ці точки шляху.)
+"/>
+    <text name="CP_help_page_unloader_title" text="Розвантажувач комбайнів"/>
+	<text name="CP_help_page_unloaderGeneral_text" text="
+Режим розвантажувача Courseplay працює з комбайнами, збиральними машинами, подрібнювачами та зібраними машинами з причепами, які керуються Courseplay.
+Ви можете використовувати звичайний причіп або візок з шнеком для розвантаження комбайна.
+Для спорожнення причепів можна використовувати допомогу Giants або AutoDrive.
+Для запуску розвантажувача необхідно виконати кілька умов:
+- Потрібно приєднати один причіп або візок з шнеком. Кілька причепів не підтримуються.
+- Використовуйте іконку мішені на HUD, щоб вибрати поле, що збирається. Розвантажувач розвантажить всі комбайни, які працюють на цьому полі і керуються Courseplay.
+- Ви повинні бути на полі або в межах 20 метрів від поля, щоб почати роботу розвантажувача.
+
+У розвантажувача є лише кілька налаштувань, які можна налаштувати:
+- Ви можете встановити рівень заповнення, при якому розвантажувач буде вважати себе повним. Це дозволить уникнути очікування комбайна з майже повним причепом.
+- Ви можете використовувати зміщення на HUD для налаштування позиції розвантажувача під трубою комбайна.
+"/>
+	<text name="CP_help_page_unloaderTrailer_title" text="Використання причепів"/>
+	<text name="CP_help_page_unloaderTrailer_text" text="
+Якщо ви використовуєте причіп для розвантаження, є два способи транспортування вашого врожаю до силосу або до пункту продажу: допомога Giants
+або AutoDrive.
+Ви можете або використовувати меню AI та створити завдання, потім активувати функцію допомоги Giants і вибір місця розвантаження внизу списку, або активувати значок колеса на HUD.
+У другому випадку, після того як значок колеса стане синім, потрібно вибрати місце розвантаження.
+
+Спорожнення причепа за допомогою AutoDrive працює так само, як і при використанні навантажувального візка, перегляньте навчальні посібники AutoDrive в Інтернеті.
+"/>
+	<text name="CP_help_page_unloaderAuger_title" text="Використання візків з шнеком"/>
+	<text name="CP_help_page_unloaderAuger_text" text="
+Візки з шнеком дуже прості у використанні.
+Так само, як і з причепами, використовуйте іконку мішені, щоб вибрати поле, на якому ви хочете розвантажити комбайн або збиральну машину.
+Щоб почати роботу розвантажувача, розмістіть його знову на полі або в межах 20 метрів від поля.
+Якщо візок з шнеком повний, він автоматично шукає причіп на полі або поблизу, щоб перевантажити його.
+У разі, якщо причіп повний, а візок з шнеком все ще не спорожнений, він буде шукати інший причіп для розвантаження.
+Якщо причіпів немає, він продовжить розвантаження комбайна.
+"/>
+    <text name="CP_help_page_unloaderFieldUnload_title" text="Розвантаження на полі"/>
+	<text name="CP_help_page_unloaderFieldUnload_text" text="
+Позицію для розвантаження можна вибрати за допомогою маркера розвантаження.
+Розвантаження на полі повинно бути активоване.
+Позиція повинна знаходитися на тому ж полі або поблизу його краю.
+Якщо маркер вказує на вже існуючу купу,
+ця купа буде використана для розвантаження.
+Напрямок маркера використовується для визначення напрямку розвантаження.
+З деякими причепами можна переключати боки вивантаження між задньою частиною і зерновими дверцятами.
+"/>
+	<text name="CP_help_page_bunker_title" text="Працівник бункерного силосу"/>
+	<text name="CP_help_page_bunkerGeneral_text" text="
+Courseplay здатний ущільнювати або рівномірно розподіляти силос у бункерному силосі або штовхати силос у клиновидний силос.
+Ущільнення можливе без будь-якого спеціального інструменту, з котком, вагою або просто транспортним засобом.
+Для розподілення є спеціальні інструменти (наприклад, Fliegl DUO).
+Для клиновидних силосів використовується щит для штовхання силосу до задньої частини силосу.
+"/>
+    <text name="CP_help_page_bunkerBasic_text" text="
+Якщо до транспортного засобу прикріплений розподілювач або щит, режим силосу вибраний за замовчуванням. Якщо прикріплений лише вага або коток,
+ви перемикаєте початкову точку, поки режим не з'явиться.
+Окрім робочої ширини, ви також можете вибрати напрямок, в який водій повинен заїхати в силос. Якщо прикріплений щит,
+напрямок вибирається автоматично.
+Використовуйте іконку цілі на HUD для вибору силосу на карті AI. Він буде показаний синіми лініями та підсвічений білим, якщо він вибраний.
+Місце для паркування встановлюється маркером &quot;місце для паркування&quot;, який також можна використовувати для того, щоб поїхати туди за допомогою помічника Giants
+перед початком фактичної роботи.
+"/>
+	<text name="CP_help_page_siloLoader_title" text="Завантаження силосу"/>
+	<text name="CP_help_page_siloLoaderGeneral_text" text="
+Цей режим можна використовувати з Ropa Maus або подібними машинами для підбирання куп з поля або поблизу поля та розвантаження у розвантажувач Courseplay.
+Додатково можна завантажувати з бункерного силосу.
+
+Якщо ви дозволяєте Courseplay прямувати безпосередньо до купи, він розгортається в стандартну позицію для завантаження купи.
+Якщо ця позиція не підходить для вашого оточення, ви можете зупинити водія, змінити позицію руки як зазвичай і знову запустити водія.
+Не забувайте, що автоматичне розвантаження за допомогою CP йде в тому ж напрямку, що й навантажувач. Залиште трохи місця для розвантажувача, щоб він міг об'їхати навантажувач з боку.
+"/>
+	<text name="CP_help_page_siloLoaderBasic_text" text="
+Для початку потрібно встановити маркер для завантаження на меню AI.
+Маркери виявляють купи або силоси та підсвічують їх на карті.
+Тепер можна запустити помічника.
+"/>
+    <text name="CP_help_page_shovelLoader_title" text="Колісний навантажувач / фронтальний навантажувач"/>
+	<text name="CP_help_page_shovelLoaderGeneral_text" text="
+Цей режим дозволяє використовувати колісні навантажувачі та трактори з фронтальним навантажувачем. 
+З прикріпленим ковшем можна підняти купу з землі або здійснити навантаження з бункерного силосу.
+Піднятий рівень заповнення можна автоматично розвантажити в найближчий причіп або на вибрану станцію розвантаження, як, наприклад, БГА.
+Ковш буде автоматично переміщатися в правильні позиції для навантаження, розвантаження та інше.
+Якщо режим не відображається безпосередньо на HUD, ви можете перемикати &quot;стартову позицію&quot;, поки режим ковша не з'явиться.
+
+Іконка цілі на HUD може бути використана для відкриття карти AI для вибору цілей навантаження та розвантаження.
+HUD також показує залишковий рівень заповнення купи або силосу, поки помічник працює.
+Якщо ціль навантаження - бункерний силос, то ширина робочої зони може знадобитися коригування, щоб уникнути зіткнення зі стінами силосу.
+
+Налаштування висоти зміщення використовується для коригування висоти ковша над землею, оскільки не всі ковші можна правильно розрахувати. 
+Це слід перевірити, якщо ковш занадто низький для навантаження і водій більше не може повернути, або ковш занадто високий, і рівень заповнення не потрапляє на землю.
+Якщо значення змінюється, ковш автоматично переміститься в позицію навантаження, щоб показати вплив зміщення.
+Щоб скинути зміщення, потрібно натискати на текст налаштувань в HUD. Значення можна налаштувати від +1 до -1 з кроком 0,1.
+
+Ковші з силосними захватами будуть відкриватися та закриватися автоматично для навантаження та розвантаження.
+Ковш для подрібнення цукрових буряків також повністю функціональний.
+"/>
+	<text name="CP_help_page_shovelLoaderBasic_text" text="
+Щоб запустити помічника для колісного навантажувача, потрібно встановити позиції для навантаження та розвантаження, натиснувши на іконку цілі на HUD.
+Позиція навантаження працює так само, як і в режимі навантажувача. Навколо купи буде створено синій квадрат.
+
+Позиція розвантаження залежить від того, чи хочете ви розвантажити в причіп або в станцію розвантаження.
+Якщо вибрано розвантаження в причіп, потрібно вибрати область, де буде припаркований причіп, на меню AI.
+Помічник приїде до будь-якого припаркованого причепа в цій зоні. Напрямок маркера не має великого значення.
+Якщо ви хочете розвантажити в станцію розвантаження, потрібно перемкнути ціль і потім позначити тригер розвантаження.
+"/>
+	<text name="CP_help_page_shovelLoaderTrigger_text" text="
+Вибір тригера може здатися складним спочатку, але насправді це дуже просто.
+Кожна будівля може мати більше одного тригера, тому потрібно вибрати той, в який ви хочете розвантажити.
+Всі доступні тригери будуть показані з оранжевим хрестом на карті AI.
+Щоб вибрати, поставте середину круглого маркера на середину хреста.
+Напрямок стрілки вказує помічнику, з якого боку він під'їде до тригера для розвантаження.
+Тепер ваш вибір має виглядати подібно до зображення.
+"/>
+    <!---->
+    <!--Input bindings-->
+    <!---->
+    <text name="input_CP_DBG_CHANNEL_SELECT_PREVIOUS" text="CP: Вибрати попередній канал налагодження"/>
+    <text name="input_CP_DBG_CHANNEL_SELECT_NEXT" text="CP: Вибрати наступний канал налагодження"/>
+    <text name="input_CP_DBG_CHANNEL_TOGGLE_CURRENT" text="CP: Змінити поточний канал налагодження"/>
+    <text name="input_CP_DBG_CHANNEL_MENU_VISIBILITY" text="CP: Показати/сховати меню каналу налагодження"/>
+    <text name="input_CP_OPEN_CLOSE_VEHICLE_SETTING_DISPLAY" text="CP: Відкрити зменшений GUI"/>
+    <text name="input_CP_START_STOP" text="CP: Запустити/зупинити водія"/>
+    <text name="input_CP_GENERATE_COURSE" text="CP: Згенерувати курс"/>
+    <text name="input_CP_CHANGE_SELECTED_JOB" text="CP: Змінити поточну вибрану роботу"/>
+    <text name="input_CP_CHANGE_STARTING_POINT" text="CP: Змінити точку початку"/>
+    <text name="input_CP_CLEAR_COURSE" text="CP: Очистити поточний завантажений курс"/>
+    <text name="input_CP_CHANGE_COURSE_VISIBILITY" text="CP: Перемкнути видимість курсу"/>
+    <text name="input_CP_TOGGLE_MOUSE" text="CP: Курсор миші on/off"/>
+    <text name="input_CP_OPEN_CLOSE_HUD" text="CP: Відкрити/закрити HUD"/>
+    <text name="input_CP_OPEN_VEHICLE_SETTINGS" text="CP: Відкрити налаштування транспорту"/>
+    <text name="input_CP_OPEN_GLOBAL_SETTINGS" text="CP: Відкрити глобальні налаштування"/>
+    <text name="input_CP_OPEN_COURSEGENERATOR_SETTINGS" text="CP: Відкрити генератор курсів/меню робіт"/>
+    <text name="input_CP_OPEN_COURSEMANAGER" text="CP: Відкрити менеджер курсів"/>
+    <text name="input_CP_OPEN_INGAME_MENU" text="CP: Відкрити меню"/>
+  </texts>
+</l10n>
