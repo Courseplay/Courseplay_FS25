@@ -12,8 +12,8 @@
 	</Tab>
 -->
 	<Tab name="advanced" iconSliceId="cpIconSprite.circle">
-		<Brush name="changeTurn" class="CpBrushChangeTurnWP" iconSliceId="editorChangeTurn" isCourseOnly="true"/>
-		<Brush name="moveExtended" class="CpBrushAdvancedMoveWP" iconSliceId="editorAdvancedMove"/>
-		<Brush name="curveInsert" class="CpBrushCurveInsertWP" iconSliceId="editorAdvancedInsert"/>
+		<Brush name="changeTurn" class="CpBrushChangeTurnWP" iconSliceId="cpUi.editorChangeTurn" isCourseOnly="true"/>
+		<Brush name="moveExtended" class="CpBrushAdvancedMoveWP" iconSliceId="cpUi.editorAdvancedMove"/>
+		<Brush name="curveInsert" class="CpBrushCurveInsertWP" iconSliceId="cpUi.editorAdvancedInsert"/>
 	</Tab>
 </Category>

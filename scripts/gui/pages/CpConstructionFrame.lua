@@ -19,7 +19,6 @@ function CpConstructionFrame.new(target, custom_mt)
 	self.categorySchema:register(XMLValueType.BOOL, "Category.Tab(?).Brush(?)#isCourseOnly", "Is course only?", false)
 
 	self:loadBrushCategory()
-
 	return self
 end
 
@@ -119,6 +118,7 @@ function CpConstructionFrame:onFrameOpen()
 		self.subCategoryDotBox:invalidateLayout()
 		self.wasOpened = true
 	end
+	self.categoryHeaderText:setText(g_courseEditor:getTitle())
 
 	-- g_inputBinding:setContext(CpConstructionFrame.INPUT_CONTEXT)
 	local lOffset = self.menuBox.absPosition[1] + self.menuBox.size[1]
@@ -180,6 +180,16 @@ function CpConstructionFrame:onFrameClose()
 	-- g_inputBinding:revertContext()
 	g_messageCenter:unsubscribeAll(self)
 	CpConstructionFrame:superClass().onFrameClose(self)
+end
+
+function CpConstructionFrame:requestClose(callback)
+	g_courseEditor:deactivate()
+	return true
+end
+
+function CpConstructionFrame:onClickBack()
+	
+	return true
 end
 
 function CpConstructionFrame:update(dt)

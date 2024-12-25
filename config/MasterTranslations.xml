@@ -1516,8 +1516,12 @@ The course is saved automatically on closing of the editor and overrides the sel
 	</Category>
 	<Category name="Course editor">	
 		<Translation name="CP_editor_course_title">
-			<Text language="de"><![CDATA[Kurseditor]]></Text>
-			<Text language="en"><![CDATA[Course editor]]></Text>
+			<Text language="de"><![CDATA[Kurseditor : %s]]></Text>
+			<Text language="en"><![CDATA[Course editor : %s]]></Text>
+		</Translation>
+		<Translation name="CP_editor_custom_field_title">
+			<Text language="de"><![CDATA[Randkurseditor : %s]]></Text>
+			<Text language="en"><![CDATA[Custom field editor : %s]]></Text>
 		</Translation>
 		<Translation name="CP_editor_change_lane_offset">
 			<Text language="de"><![CDATA[Ausgewählten Bahnenversatz(%s) ändern]]></Text>

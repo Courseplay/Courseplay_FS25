@@ -56,6 +56,13 @@ function CpInGameMenu.new(target, customMt, messageCenter, l10n, inputManager, c
 		local index = self.pagingElement:getPageMappingIndexByElement(self.pageHelpLine)
 		self.pageSelector:setState(index, true)
 	end, self)
+	self.messageCenter:subscribe(MessageType.GUI_CP_INGAME_OPEN_CONSTRUCTION_MENU, function (menu)
+		g_gui:showGui("CpInGameMenu")
+		self:changeScreen(CpInGameMenu)
+		self:updatePages()
+		local index = self.pagingElement:getPageMappingIndexByElement(self.pageConstruction)
+		self.pageSelector:setState(index, true)
+	end, self)
 
 	self.messageCenter:subscribe(MessageType.GUI_CP_INGAME_CURRENT_VEHICLE_CHANGED, 
 		self.onCurrentVehicleChanged, self)
@@ -94,6 +101,7 @@ function CpInGameMenu.setupGui(courseStorage)
 	MessageType.GUI_CP_INGAME_OPEN_COURSE_MANAGER = nextMessageTypeId()
 	MessageType.GUI_CP_INGAME_OPEN_HELP_MENU = nextMessageTypeId()
 	MessageType.GUI_CP_INGAME_CURRENT_VEHICLE_CHANGED = nextMessageTypeId()
+	MessageType.GUI_CP_INGAME_OPEN_CONSTRUCTION_MENU = nextMessageTypeId()
 
 	CpCourseGeneratorFrame.setupGui()
 	CpGlobalSettingsFrame.setupGui()
@@ -191,7 +199,7 @@ function CpInGameMenu:setupMenuPages()
 		{
 			self.pageConstruction,
 			function ()
-				return true
+				return g_courseEditor:getIsActive()
 			end,
 			"gui.icon_others_construction"
 		},
@@ -268,7 +276,9 @@ function CpInGameMenu:onButtonBack()
 			return
 		end
 	end
-	CpInGameMenu:superClass().onButtonBack(self)
+	if self.currentPage:requestClose(self.clickBackCallback) then
+		CpInGameMenu:superClass().onButtonBack(self)
+	end
 end
 
 function CpInGameMenu:onClose(element)
