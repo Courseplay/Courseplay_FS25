@@ -47,11 +47,11 @@
         <slice id="trailer" uvs="0px 640px 128px 128px"/>
         <slice id="copy" uvs="128px 640px 128px 128px"/>
         <slice id="paste" uvs="256px 640px 128px 128px"/>
-        <!-- <slice id="todo" uvs="384px 256px 128px 128px"/> -->
-        <!-- <slice id="todo" uvs="512px 256px 128px 128px"/> -->
-        <!-- <slice id="todo" uvs="640px 256px 128px 128px"/> -->
-        <!-- <slice id="todo" uvs="768px 256px 128px 128px"/> -->
-        <!-- <slice id="todo" uvs="896px 256px 128px 128px"/> -->
+        <slice id="editorMove" uvs="384px 640px 128px 128px"/>
+        <slice id="editorChangeTurn" uvs="512px 640px 128px 128px"/>
+        <slice id="editorInsert" uvs="640px 640px 128px 128px"/>
+        <slice id="editorAdvancedMove" uvs="768px 640px 128px 128px"/>
+        <slice id="editorAdvancedInsert" uvs="896px 640px 128px 128px"/>
         <slice id="skip" uvs="0px 768px 128px 128px"/>
     </slices>
 </texture>

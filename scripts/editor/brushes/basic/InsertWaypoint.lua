@@ -1,13 +1,11 @@
 
 --- Inserts a new waypoint at the mouse position.
 ---@class CpBrushInsertWP : CpBrush
-CpBrushInsertWP = {}
-local CpBrushInsertWP_mt = Class(CpBrushInsertWP, CpBrush)
-function CpBrushInsertWP.new(customMt, cursor)
-	local self =  CpBrush.new(customMt or CpBrushInsertWP_mt, cursor)
+CpBrushInsertWP = CpObject(CpBrush)
+function CpBrushInsertWP:init(cursor, editor)
+	CpBrush.init(self, cursor, editor)
 	self.supportsPrimaryButton = true
 	self.supportsSecondaryButton = true
-	return self
 end
 
 function CpBrushInsertWP:onButtonPrimary()

@@ -7,6 +7,7 @@
         <FrameReference ref="cpInGameMenuVehicleSettings" name="cpInGameMenuVehicleSettings" id="pageVehicleSettings" />
         <FrameReference ref="cpInGameMenuCourseGenerator" name="cpInGameMenuCourseGenerator" id="pageCourseGenerator" />
         <FrameReference ref="cpInGameMenuCourseManager" name="cpInGameMenuCourseManager" id="pageCourseManager"/>
+        <FrameReference ref="cpInGameMenuConstruction" name="cpInGameMenuConstruction" id="pageConstruction"/>
         <FrameReference ref="cpInGameMenuHelpLine" name="cpInGameMenuHelpLine" id="pageHelpLine"/>
     </Paging>
     <Bitmap profile="fs25_tabListContainer" id="header">

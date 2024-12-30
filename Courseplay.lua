@@ -118,8 +118,6 @@ function Courseplay:loadMap(filename)
 	--- Ugly hack to get access to the global AutoDrive table, as this global is dependent on the auto drive folder name.
 	self.autoDrive = FS25_AutoDrive and FS25_AutoDrive.AutoDrive
 	CpUtil.info("Auto drive found: %s", tostring(self.autoDrive~=nil))
-
-	g_courseEditor:load()
 end
 
 function Courseplay:deleteMap()

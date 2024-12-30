@@ -1364,7 +1364,7 @@ function CpCourseGeneratorFrame:updateContextActions()
 	self.contextActions[self.CONTEXT_ACTIONS.GENERATE_COURSE].isActive = self:getCanGenerateFieldWorkCourse() 
 	self.contextActions[self.CONTEXT_ACTIONS.DELETE_CUSTOM_FIELD].isActive = self.currentHotspot and self.currentHotspot:isa(CustomFieldHotspot)
 	self.contextActions[self.CONTEXT_ACTIONS.RENAME_CUSTOM_FIELD].isActive = self.currentHotspot and self.currentHotspot:isa(CustomFieldHotspot)
-	self.contextActions[self.CONTEXT_ACTIONS.EDIT_CUSTOM_FIELD].isActive = false--self.currentHotspot and self.currentHotspot:isa(CustomFieldHotspot)
+	self.contextActions[self.CONTEXT_ACTIONS.EDIT_CUSTOM_FIELD].isActive = self.currentHotspot and self.currentHotspot:isa(CustomFieldHotspot)
 	for _, action in ipairs(self.contextActions) do 
 		if action.action then 
 			g_inputBinding:removeActionEventsByActionName(action.action)
