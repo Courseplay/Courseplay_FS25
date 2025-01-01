@@ -1,4 +1,5 @@
-
+--- Specialization implementing the course generator related functionality
+---
 ---@class CpCourseGenerator
 CpCourseGenerator = {}
 
@@ -32,6 +33,9 @@ function CpCourseGenerator:onLoad(savegame)
     self.spec_cpCourseGenerator = self["spec_" .. CpCourseGenerator.SPEC_NAME]
 end
 
+---@param x number world X coordinate to start the detection at
+---@param z number world Z coordinate to start the detection at
+---@param object table|nil optional object
 function CpCourseGenerator:cpDetectFieldBoundary(x, z, object, onFinishedFunc)
     local spec = self.spec_cpCourseGenerator
     spec.fieldBoundaryDetector = FieldBoundaryDetector(x, z, self)
@@ -59,6 +63,7 @@ function CpCourseGenerator:cpGetFieldPolygon()
     return self.spec_cpCourseGenerator.fieldPolygon
 end
 
+-- For debug, if there is a field polygon, draw it
 function CpCourseGenerator:cpDrawFieldPolygon()
     local spec = self.spec_cpCourseGenerator
     if spec.fieldPolygon then

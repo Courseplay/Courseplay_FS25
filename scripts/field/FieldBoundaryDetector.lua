@@ -1,4 +1,6 @@
+--- Wrapper around the Giants field boundary detection
 
+---@class FieldBoundaryDetector
 FieldBoundaryDetector = CpObject()
 
 function FieldBoundaryDetector:debug(...)
@@ -9,6 +11,13 @@ function FieldBoundaryDetector:info(...)
     CpUtil.infoVehicle(self.vehicle, ...)
 end
 
+--- Create a FieldBoundaryDetector instance and start the detection immediately. The detection is an asynchronous
+--- process and FieldBoundaryDetector:update() must be called until it returns false to get the result.
+--- The result is available through getFieldPolygon(), which is a polygon representing the field boundary around
+--- x, z.
+---@param x number world X coordinate to start the detection at
+---@param z number world Z coordinate to start the detection at
+---@param vehicle table vehicle, this is used to generate the field course settings the Giants detection needs.
 function FieldBoundaryDetector:init(x, z, vehicle)
     self.vehicle = vehicle
     self.updates = 0

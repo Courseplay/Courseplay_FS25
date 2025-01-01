@@ -192,17 +192,10 @@ end
 function CpFieldUtil.detectFieldBoundary(x, z, detect, useGiantsDetector, vehicle)
     if detect then
         if useGiantsDetector then
+            -- implemented in FieldBoundaryDetector
         else
-            local y = getTerrainHeightAtWorldPos(g_terrainNode, x, 0, z)
-            local _, _, _, riceField = PlaceableRiceField.getRiceFieldAtPosition(x, y, z)
-            if false and riceField then
-                -- rice fields are somewhat special, so always use the Giants method
-                CpUtil.info('Rice field found')
-                return CpFieldUtil.getRiceFieldPolygon(riceField)
-            else
-                local valid, points = g_fieldScanner:findContour(x, z)
-                return valid and points or nil
-            end
+            local valid, points = g_fieldScanner:findContour(x, z)
+            return valid and points or nil
         end
     else
         local field = CpFieldUtil.getFieldAtWorldPosition(x, z)
