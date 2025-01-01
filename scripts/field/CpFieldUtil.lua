@@ -187,12 +187,11 @@ end
 ---@param z number
 ---@param detect boolean use one of the field boundary detectors. If false, only the static map field boundaries are used.
 ---@param useGiantsDetector boolean use the Giants field boundary detector. If false, the CP field scanner is used.
+---@param vehicle table the vehicle to use for the Giants detector
 ---@return [{x, z]|nil the field boundary, nil if not on field
-function CpFieldUtil.detectFieldBoundary(x, z, detect, useGiantsDetector)
+function CpFieldUtil.detectFieldBoundary(x, z, detect, useGiantsDetector, vehicle)
     if detect then
         if useGiantsDetector then
-            -- not implemented
-            return nil
         else
             local y = getTerrainHeightAtWorldPos(g_terrainNode, x, 0, z)
             local _, _, _, riceField = PlaceableRiceField.getRiceFieldAtPosition(x, y, z)
@@ -210,3 +209,4 @@ function CpFieldUtil.detectFieldBoundary(x, z, detect, useGiantsDetector)
         return field and CpFieldUtil.getFieldPolygon(field) or nil
     end
 end
+

@@ -166,6 +166,8 @@ function DevHelper:keyEvent(unicode, sym, modifier, isDown)
         DevHelper.restoreVehiclePosition(CpUtil.getCurrentVehicle())
     elseif bitAND(modifier, Input.MOD_LALT) ~= 0 and isDown and sym == Input.KEY_c then
         CpFieldUtil.detectFieldBoundary(self.data.x, self.data.z, true)
+    elseif bitAND(modifier, Input.MOD_LALT) ~= 0 and isDown and sym == Input.KEY_d then
+        self.vehicle:cpDetectFieldBoundary(self.data.x, self.data.z)
     elseif bitAND(modifier, Input.MOD_LALT) ~= 0 and isDown and sym == Input.KEY_g then
         local points = CpFieldUtil.detectFieldBoundary(self.data.x, self.data.z, true)
         self:debug('Generate course')
@@ -246,6 +248,9 @@ function DevHelper:draw()
             0, 100, 0)
     PathfinderUtil.showOverlapBoxes()
     g_fieldScanner:draw()
+    if self.vehicle then
+        self.vehicle:cpDrawFieldPolygon()
+    end
 end
 
 function DevHelper:showFillNodes()

@@ -190,12 +190,15 @@ end
 ---------------------------------------------
 
 --- Generate a course with the current course generator settings
----@param nHeadlands number|nil override number of headlands
-function CourseGeneratorInterface.generateDefaultCourse(nHeadlands)
+function CourseGeneratorInterface.generateDefaultCourse()
     local vehicle = CpUtil.getCurrentVehicle()
     local x, _, z = getWorldTranslation(vehicle.rootNode)
-    local points = CpFieldUtil.detectFieldBoundary(x, z, true)
-    if points == nil then
+
+    vehicle:cpDetectFieldBoundary(x, z, nil, CourseGeneratorInterface.onFieldDetectionFinished)
+end
+
+function CourseGeneratorInterface.onFieldDetectionFinished(vehicle, fieldPolygon)
+    if fieldPolygon == nil then
         CpUtil.infoVehicle(vehicle, "Not on a field, can't generate")
         return
     end
@@ -204,12 +207,10 @@ function CourseGeneratorInterface.generateDefaultCourse(nHeadlands)
     settings.workWidth:refresh()
     settings.workWidth:setFloatValue(width)
     vehicle:getCpSettings().toolOffsetX:setFloatValue(offset)
-    if nHeadlands then
-        settings.numberOfHeadlands:setFloatValue(nHeadlands)
-    end
     settings.sharpenCorners:setValue(true)
     CpUtil.infoVehicle(vehicle, "Generating default course with %d headlands", settings.numberOfHeadlands:getValue())
-    local ok, course = CourseGeneratorInterface.generate(points, {x = x, z = z}, vehicle, settings)
+    local x, _, z = getWorldTranslation(vehicle.rootNode)
+    local ok, course = CourseGeneratorInterface.generate(fieldPolygon, {x = x, z = z}, vehicle, settings)
     if ok then
         CourseGeneratorInterface.setCourse(vehicle, course)
     end
