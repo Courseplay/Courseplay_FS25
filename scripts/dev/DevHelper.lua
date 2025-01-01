@@ -168,7 +168,7 @@ function DevHelper:keyEvent(unicode, sym, modifier, isDown)
         CpFieldUtil.detectFieldBoundary(self.data.x, self.data.z, true)
     elseif bitAND(modifier, Input.MOD_LALT) ~= 0 and isDown and sym == Input.KEY_d then
         -- use the Giants field boundary detector
-        self.vehicle:cpDetectFieldBoundary(self.data.x, self.data.z)
+        self.vehicle:cpDetectFieldBoundary(self.data.x, self.data.z, nil, function()  end)
     elseif bitAND(modifier, Input.MOD_LALT) ~= 0 and isDown and sym == Input.KEY_g then
         local points = CpFieldUtil.detectFieldBoundary(self.data.x, self.data.z, true)
         self:debug('Generate course')
