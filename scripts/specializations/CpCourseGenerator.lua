@@ -35,7 +35,8 @@ end
 
 ---@param x number world X coordinate to start the detection at
 ---@param z number world Z coordinate to start the detection at
----@param object table|nil optional object
+---@param object table|nil optional object with callback
+---@param onFinishedFunc function callback function to call when finished: onFinishedFunc([object,] fieldPolygon, islandPolygons)
 function CpCourseGenerator:cpDetectFieldBoundary(x, z, object, onFinishedFunc)
     local spec = self.spec_cpCourseGenerator
     spec.fieldBoundaryDetector = FieldBoundaryDetector(x, z, self)
@@ -49,11 +50,12 @@ function CpCourseGenerator:onUpdate(dt)
         if not spec.fieldBoundaryDetector:update(dt) then
             -- done
             spec.fieldPolygon = spec.fieldBoundaryDetector:getFieldPolygon()
+            spec.islandPolygons = spec.fieldBoundaryDetector:getIslandPolygons()
             spec.fieldBoundaryDetector = nil
             if spec.object then
-                spec.onFinishedFunc(spec.object, self, spec.fieldPolygon)
+                spec.onFinishedFunc(spec.object, self, spec.fieldPolygon, spec.islandPolygons)
             else
-                spec.onFinishedFunc(self, spec.fieldPolygon)
+                spec.onFinishedFunc(self, spec.fieldPolygon, spec.islandPolygons)
             end
         end
     end
@@ -63,14 +65,22 @@ function CpCourseGenerator:cpGetFieldPolygon()
     return self.spec_cpCourseGenerator.fieldPolygon
 end
 
--- For debug, if there is a field polygon, draw it
+-- For debug, if there is a field polygon or island polygons, draw them
 function CpCourseGenerator:cpDrawFieldPolygon()
     local spec = self.spec_cpCourseGenerator
-    if spec.fieldPolygon then
-        for i = 2, #spec.fieldPolygon do
-            local p, n = spec.fieldPolygon[i - 1], spec.fieldPolygon[i]
+    local function drawPolygon(polygon)
+        for i = 2, #polygon do
+            local p, n = polygon[i - 1], polygon[i]
             Utils.renderTextAtWorldPosition(p.x, p.y + 1.2, p.z, tostring(i - 1), getCorrectTextSize(0.012), 0)
             DebugUtil.drawDebugLine(p.x, p.y + 1, p.z, n.x, n.y + 1, n.z, 0, 1, 0)
+        end
+    end
+    if spec.fieldPolygon then
+        drawPolygon(spec.fieldPolygon)
+    end
+    if spec.islandPolygons then
+        for _, p in ipairs(spec.islandPolygons) do
+            drawPolygon(p)
         end
     end
 end

@@ -11,10 +11,12 @@ CourseGeneratorInterface.generatedCourse = nil
 ---@param startPosition table {x, z}
 ---@param vehicle table
 ---@param settings CpCourseGeneratorSettings
+---@param islandPolygons|nil table [[{x, z}]] island polygons, if not given, we'll attempt to find islands
 function CourseGeneratorInterface.generate(fieldPolygon,
                                            startPosition,
                                            vehicle,
-                                           settings
+                                           settings,
+                                           islandPolygons
 )
     CourseGenerator.clearDebugObjects()
     local field = CourseGenerator.Field('', 0, CpMathUtil.pointsFromGame(fieldPolygon))
@@ -54,8 +56,17 @@ function CourseGeneratorInterface.generate(fieldPolygon,
     context:setIslandHeadlands(settings.nIslandHeadlands:getValue())
     context:setIslandHeadlandClockwise(settings.islandHeadlandClockwise:getValue())
     if settings.bypassIslands:getValue() then
-        context.field:findIslands()
-        context.field:setupIslands()
+        if islandPolygons then
+            -- islands were detected already, create them from the polygons and add to the field
+            for i, islandPolygon in ipairs(islandPolygons) do
+                context.field:addIsland(CourseGenerator.Island.createFromBoundary(i,
+                        Polygon(CpMathUtil.pointsFromGame(islandPolygon))))
+            end
+        else
+            -- detect islands ourselves
+            context.field:findIslands()
+            context.field:setupIslands()
+        end
     end
 
     local status
@@ -197,7 +208,7 @@ function CourseGeneratorInterface.generateDefaultCourse()
     vehicle:cpDetectFieldBoundary(x, z, nil, CourseGeneratorInterface.onFieldDetectionFinished)
 end
 
-function CourseGeneratorInterface.onFieldDetectionFinished(vehicle, fieldPolygon)
+function CourseGeneratorInterface.onFieldDetectionFinished(vehicle, fieldPolygon, islandPolygons)
     if fieldPolygon == nil then
         CpUtil.infoVehicle(vehicle, "Not on a field, can't generate")
         return
@@ -210,7 +221,7 @@ function CourseGeneratorInterface.onFieldDetectionFinished(vehicle, fieldPolygon
     settings.sharpenCorners:setValue(true)
     CpUtil.infoVehicle(vehicle, "Generating default course with %d headlands", settings.numberOfHeadlands:getValue())
     local x, _, z = getWorldTranslation(vehicle.rootNode)
-    local ok, course = CourseGeneratorInterface.generate(fieldPolygon, {x = x, z = z}, vehicle, settings)
+    local ok, course = CourseGeneratorInterface.generate(fieldPolygon, {x = x, z = z}, vehicle, settings, islandPolygons)
     if ok then
         CourseGeneratorInterface.setCourse(vehicle, course)
     end

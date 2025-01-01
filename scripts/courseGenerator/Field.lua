@@ -111,6 +111,11 @@ function Field:getUnpackedVertices()
     return self.unpackedVertices
 end
 
+---@param island CourseGenerator.Island
+function Field:addIsland(island)
+    table.insert(self.islands, island)
+end
+
 -- Find islands (when running in the game)
 function Field:findIslands()
     if self.islandPoints == nil then

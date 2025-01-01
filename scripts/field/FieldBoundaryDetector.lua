@@ -25,7 +25,8 @@ function FieldBoundaryDetector:init(x, z, vehicle)
     local fieldCourseSettings, implementData = FieldCourseSettings.generate(vehicle)
     self.courseField = FieldCourseField.generateAtPosition(x, z, fieldCourseSettings, function(courseField, success)
         if success then
-            self:info('Field boundary detection successful')
+            self:info('Field boundary detection successful, %d boundary points and %d islands',
+                    #courseField.fieldRootBoundary.boundaryLine, #courseField.islands)
         else
             self:info('Field boundary detection failed')
         end
@@ -43,14 +44,32 @@ function FieldBoundaryDetector:update(dt)
     end
 end
 
----@return table|nil [{x, y, z}] field polygon vertices
+---@return table|nil [{x, y, z}] field polygon with game vertices
 function FieldBoundaryDetector:getFieldPolygon()
-    local vertices = {}
     if self.success then
-        for _, point in ipairs(self.result.fieldRootBoundary.boundaryLine) do
-            local x, z = point[1], point[2]
-            table.insert(vertices, { x = x, y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, x, 1, z), z = z })
+        return self:getAsVertices(self.result.fieldRootBoundary.boundaryLine)
+    end
+end
+
+---@return table|nil [[{x, y, z}]] array of island polygons with game vertices (x, y, z)
+function FieldBoundaryDetector:getIslandPolygons()
+    local islandPolygons = {}
+    if self.success then
+        for i, island in ipairs(self.result.islands) do
+            local islandBoundary = self:getAsVertices(island.rootBoundary.boundaryLine)
+            table.insert(islandPolygons, islandBoundary)
         end
+    end
+    return islandPolygons
+end
+
+---@param boundaryLine table [[x, z]] array of arrays as the Giants functions return the field boundary
+---@return table [{x, z}] array of vertices as the course generator needs it
+function FieldBoundaryDetector:getAsVertices(boundaryLine)
+    local vertices = {}
+    for _, point in ipairs(boundaryLine) do
+        local x, z = point[1], point[2]
+        table.insert(vertices, { x = x, y = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, x, 1, z), z = z })
     end
     return vertices
 end
