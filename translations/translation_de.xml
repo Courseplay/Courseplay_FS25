@@ -16,7 +16,7 @@
     <text name="CP_copy" text="Kurs kopieren:"/>
     <text name="CP_infoText" text="Courseplay(%s): Für Hilfe, Fehler oder Patch Notes, bitte hier vorbei schauen: https://github.com/Courseplay/Courseplay_FS25."/>
     <text name="CP_error_no_course" text="Erstelle einen Kurs vor dem Starten des Jobs."/>
-    <text name="CP_error_could_not_generate_course" text="Konnte keinen Kurs generieren. Das Logfile könnte weitere Informationen enthalten."/>
+    <text name="CP_error_could_not_generate_course" text="Konnte keinen Kurs generieren. Bitte versuchen es mit anderen Einstellungen."/>
     <text name="CP_error_not_on_field" text="Ziel ist nicht auf einem Feld."/>
     <text name="CP_error_unloader_to_far_away_from_field" text="Abfahrer ist zu weit vom Feld entfernt."/>
     <text name="CP_error_start_position_to_far_away_from_field" text="Startposition ist zu weit vom Feld entfernt."/>
