@@ -44,8 +44,8 @@
 			<Text language="en"><![CDATA[Generate a course before starting the job.]]></Text>
 		</Translation>
 		<Translation name="CP_error_could_not_generate_course">
-			<Text language="de"><![CDATA[Konnte keinen Kurs generieren. Das Logfile könnte weitere Informationen enthalten.]]></Text>
-			<Text language="en"><![CDATA[Could not generate course. The log may have more information.]]></Text>
+			<Text language="de"><![CDATA[Konnte keinen Kurs generieren. Bitte versuchen es mit anderen Einstellungen.]]></Text>
+			<Text language="en"><![CDATA[Could not generate course. Please try other settings.]]></Text>
 		</Translation>
 		<Translation name="CP_error_not_on_field">
 			<Text language="de"><![CDATA[Ziel ist nicht auf einem Feld.]]></Text>
