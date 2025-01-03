@@ -251,7 +251,7 @@
         <Profile name="cpSettingsMultiOptionTitle" extends="fs25_settingsMultiTextOptionTitle">
             <position value="-500px 0px" />
         </Profile>
-        <Profile name="cpLeftSideBackground" extends="fs25_fullScreenBackground" with="pivotMiddleLeft">
+        <Profile name="cpLeftSideBackground" extends="fs25_fullScreenBackground" with="anchorStretchingX pivotMiddleLeft">
             <height value="100%"/>
             <width value="250px" />
         </Profile>
