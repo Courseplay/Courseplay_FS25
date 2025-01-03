@@ -21,7 +21,6 @@ CpConsoleCommands.commands = {
 	{ 'cpFreeze', 'Freeze the CP driver', 'cpFreeze' },
 	{ 'cpUnfreeze', 'Unfreeze the CP driver', 'cpUnfreeze' },
 	{ 'cpStopAll', 'Stops all cp drivers', 'cpStopAll' },
-	{ 'cpGenerateDefaultCourse', '[number of headlands ] Generate a default course', 'cpGenerateDefaultCourse' },
 	{ 'cpRaiseAIEvent', 'vehicle/fieldworkerEvent AIImplementEvent', 'cpRaiseAIEvent'},
 	{ 'cpRaiseStateChange', 'VehicleStateChange.*', 'cpRaiseStateChange'}
 }
@@ -247,11 +246,6 @@ end
 
 function CpConsoleCommands:cpUnfreeze()
 	CpUtil.getCurrentVehicle():unfreezeCp()
-end
-
-function CpConsoleCommands:cpGenerateDefaultCourse(nHeadlands)
-	CpUtil.info('Generating default course with %s headlands', nHeadlands)
-	CourseGeneratorInterface.generateDefaultCourse(nHeadlands)
 end
 
 function CpConsoleCommands:cpStopAll()

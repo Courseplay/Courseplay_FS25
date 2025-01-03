@@ -26,12 +26,13 @@ function Logger.setLogfile(filename)
     end
 end
 
-
 ---@param debugPrefix string|nil to prefix each debug line with, default empty
 ---@param level number|nil one of Logger.levels, default Logger.level.debug.
-function Logger:init(debugPrefix, level)
+---@param channel number|nil the CP debug channel as defined in DebugChannels.xml to use, optional
+function Logger:init(debugPrefix, level, channel)
     self.debugPrefix = debugPrefix or ''
     self.logLevel = level or Logger.level.debug
+    self.channel = channel
 end
 
 ---@param level number one of Logger.levels
@@ -39,37 +40,74 @@ function Logger:setLevel(level)
     self.logLevel = math.max(Logger.level.error, math.min(Logger.level.trace, level))
 end
 
+
 function Logger:error(...)
     if self.logLevel >= Logger.level.error then
-        self:log('[ERROR] ' .. self.debugPrefix .. ': ' .. string.format(...))
+        self:log('ERROR', ...)
     end
 end
 
 function Logger:warning(...)
     if self.logLevel >= Logger.level.warning then
-        self:log('[WARNING] ' .. self.debugPrefix .. ': ' .. string.format(...))
+        self:log('WARNING', ...)
     end
 end
 
 function Logger:debug(...)
     if self.logLevel >= Logger.level.debug then
-        self:log('[DEBUG] ' .. self.debugPrefix .. ': ' .. string.format(...))
+        self:log('DEBUG', ...)
     end
 end
 
 function Logger:trace(...)
     if self.logLevel >= Logger.level.trace then
-        self:log('[TRACE] ' .. self.debugPrefix .. ': ' .. string.format(...))
+        self:log('TRACE', ...)
+    end
+end
+
+function Logger:info(...)
+    self:log('INFO', ...)
+end
+
+---@return boolean logging is enabled for the vehicle, or the parameter isn't a vehicle
+---@return boolean true if the parameter is a vehicle
+function Logger:isEnabled(vehicle)
+    if self.channel then
+        -- channel set, then likely running in the game, and probably there's a vehicle too as the first parameter
+        if type(vehicle) == 'table' then
+            -- first parameter is a table, assume it is a vehicle (not a string)
+            if CpDebug and CpDebug:isChannelActive(self.channel) and CpUtil.debugEnabledForVehicle()  then
+                -- debug channel for vehicle active
+                return true, true
+            else
+                -- debug channel for vehicle not active
+                return false
+            end
+        else
+            -- first parameter is not a table, assume it is a string, enable logging
+            return true
+        end
+    else
+        -- no channel set, likely running outside of the game, always log
+        return true
     end
 end
 
 --- Debug print, will either just call print when running standalone
 --  or use the CP debug channel when running in the game.
-function Logger:log(...)
+function Logger:log(levelPrefix, maybeVehicle, ...)
     if CourseGenerator.isRunningInGame() then
-        CpUtil.debugVehicle(CpDebug.DBG_COURSES, CpUtil.getCurrentVehicle(), ...)
+        local tag = CpDebug:getText(self.channel) .. ' [' .. levelPrefix .. '] ' .. self.debugPrefix .. ': '
+        local enabled, isVehicle = self:isEnabled(maybeVehicle)
+        if enabled then
+            if isVehicle then
+                CpUtil.internalPrintVehicle(maybeVehicle, tag, ...)
+            else
+                CpUtil.internalPrint(tag, maybeVehicle, ...)
+            end
+        end
     else
-        local message = self:_getCurrentTimeStr() .. ' ' .. string.format(...)
+        local message = self:_getCurrentTimeStr() .. ' [' .. levelPrefix .. '] ' .. self.debugPrefix .. ': ' .. string.format(...)
         print(message)
         io.stdout:flush()
         if Logger.logfile then

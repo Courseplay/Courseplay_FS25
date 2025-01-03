@@ -31,6 +31,7 @@ DevHelper.overlapBoxLength = 5
 
 function DevHelper:init()
     self.data = {}
+    self.courseGeneratorInterface = CourseGeneratorInterface()
     self.isEnabled = false
 end
 
@@ -170,22 +171,10 @@ function DevHelper:keyEvent(unicode, sym, modifier, isDown)
         -- use the Giants field boundary detector
         self.vehicle:cpDetectFieldBoundary(self.data.x, self.data.z, nil, function()  end)
     elseif bitAND(modifier, Input.MOD_LALT) ~= 0 and isDown and sym == Input.KEY_g then
-        local points = CpFieldUtil.detectFieldBoundary(self.data.x, self.data.z, true)
         self:debug('Generate course')
-
         local vehicle = CpUtil.getCurrentVehicle()
         local settings = CpUtil.getCurrentVehicle():getCourseGeneratorSettings()
-        local width, offset, _, _ = WorkWidthUtil.getAutomaticWorkWidthAndOffset(vehicle)
-        settings.workWidth:refresh()
-        settings.workWidth:setFloatValue(width)
-        vehicle:getCpSettings().toolOffsetX:setFloatValue(offset)
-
-        local status, ok, course = CourseGeneratorInterface.generate(points,
-                {x = self.data.x, z = self.data.z},
-                vehicle, settings)
-        if ok then
-            self.course = course
-        end
+        self.courseGeneratorInterface:startGeneration({x = self.data.x, z = self.data.z}, vehicle, settings, nil, function() end)
     elseif bitAND(modifier, Input.MOD_LALT) ~= 0 and isDown and sym == Input.KEY_n then
         self:togglePpcControlledNode()
     end

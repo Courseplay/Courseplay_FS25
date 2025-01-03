@@ -87,7 +87,6 @@ Changelog 8.0.0.0:
 		<sourceFile filename="scripts/debug/CpDebug.lua"/>
 		<sourceFile filename="scripts/debug/CourseRecorder.lua"/>
 		<sourceFile filename="scripts/dev/ConsoleCommands.lua"/>
-		<sourceFile filename="scripts/dev/DevHelper.lua"/>
 		<sourceFile filename="scripts/config/VehicleConfigurations.lua"/>
 
 		<sourceFile filename="scripts/util/CpMathUtil.lua"/>
@@ -315,6 +314,9 @@ Changelog 8.0.0.0:
 		<sourceFile filename="scripts/events/CpJobSyncOnLeaveEvent.lua"/>
 		<sourceFile filename="scripts/events/DriveNowRequestEvent.lua"/>
 		<sourceFile filename="scripts/events/PlowCenterTurnEvent.lua"/>
+
+		<sourceFile filename="scripts/dev/DevHelper.lua"/>
+
 	</extraSourceFiles>
 
 	<specializations>

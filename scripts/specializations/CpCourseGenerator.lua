@@ -36,7 +36,7 @@ end
 ---@param x number world X coordinate to start the detection at
 ---@param z number world Z coordinate to start the detection at
 ---@param object table|nil optional object with callback
----@param onFinishedFunc function callback function to call when finished: onFinishedFunc([object,] fieldPolygon, islandPolygons)
+---@param onFinishedFunc function callback function to call when finished: onFinishedFunc([object,] vehicle, fieldPolygon, islandPolygons)
 function CpCourseGenerator:cpDetectFieldBoundary(x, z, object, onFinishedFunc)
     local spec = self.spec_cpCourseGenerator
     spec.fieldBoundaryDetector = FieldBoundaryDetector(x, z, self)
