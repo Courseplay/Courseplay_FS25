@@ -22,7 +22,7 @@ local Block = CpObject()
 ---@param context CourseGenerator.FieldworkContext
 function Block:init(context, id)
     self.id = id or 0
-    self.logger = Logger('Block ' .. self.id)
+    self.logger = Logger('Block ' .. self.id, nil, CpDebug.DBG_COURSES)
     -- rows in the order they were added, first vertex of each row is on the same side
     self.rows = {}
     -- rows in the order they will be worked on, every second row in this sequence is reversed

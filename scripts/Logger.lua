@@ -40,7 +40,6 @@ function Logger:setLevel(level)
     self.logLevel = math.max(Logger.level.error, math.min(Logger.level.trace, level))
 end
 
-
 function Logger:error(...)
     if self.logLevel >= Logger.level.error then
         self:log('ERROR', ...)
@@ -76,7 +75,7 @@ function Logger:isEnabled(vehicle)
         -- channel set, then likely running in the game, and probably there's a vehicle too as the first parameter
         if type(vehicle) == 'table' then
             -- first parameter is a table, assume it is a vehicle (not a string)
-            if CpDebug and CpDebug:isChannelActive(self.channel) and CpUtil.debugEnabledForVehicle()  then
+            if CpDebug and CpDebug:isChannelActive(self.channel) and CpUtil.debugEnabledForVehicle() then
                 -- debug channel for vehicle active
                 return true, true
             else
@@ -97,13 +96,12 @@ end
 --  or use the CP debug channel when running in the game.
 function Logger:log(levelPrefix, maybeVehicle, ...)
     if CourseGenerator.isRunningInGame() then
-        local tag = CpDebug:getText(self.channel) .. ' [' .. levelPrefix .. '] ' .. self.debugPrefix .. ': '
         local enabled, isVehicle = self:isEnabled(maybeVehicle)
         if enabled then
             if isVehicle then
-                CpUtil.internalPrintVehicle(maybeVehicle, tag, ...)
+                self:_writeGameLog(levelPrefix, maybeVehicle, ...)
             else
-                CpUtil.internalPrint(tag, maybeVehicle, ...)
+                self:_writeGameLog(levelPrefix, nil, maybeVehicle, ...)
             end
         end
     else
@@ -115,6 +113,20 @@ function Logger:log(levelPrefix, maybeVehicle, ...)
             Logger.logfile:flush()
         end
     end
+end
+
+function Logger:_writeGameLog(levelPrefix, vehicle, ...)
+    CpUtil.try(
+            function(...)
+                local timestamp = getTimeSec()
+                local updateLoopIndex = g_updateLoopIndex and (g_updateLoopIndex % 100) or 0
+                local prefix = string.format('%.3f [%s %02d] [%s]',
+                        timestamp, CpDebug:getText(self.channel), updateLoopIndex, levelPrefix)
+                if vehicle then
+                    prefix = prefix .. ' [' .. CpUtil.getName(vehicle) .. ']'
+                end
+                print(string.format('%s %s: %s', prefix, self.debugPrefix, string.format(...)))
+            end, ...)
 end
 
 function Logger:_getCurrentTimeStr()

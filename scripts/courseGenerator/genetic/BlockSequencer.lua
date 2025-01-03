@@ -139,7 +139,7 @@ local BlockSequencer = CpObject()
 ---@param blocks CourseGenerator.Block[]
 function BlockSequencer:init(blocks)
     self.blocks = blocks
-    self.logger = Logger('BlockSequencer')
+    self.logger = Logger('BlockSequencer', nil, CpDebug.DBG_COURSES)
 end
 
 --- Find the (near) optimum sequence of blocks and entry/exit points.

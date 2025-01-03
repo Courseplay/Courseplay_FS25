@@ -14,7 +14,7 @@ local Center = CpObject()
 ---@param bigIslands CourseGenerator.Island[] islands too big to circle
 ---@param noVirtualHeadland boolean if true, do not generate a virtual headland, just use the boundary as is
 function Center:init(context, boundary, headland, startLocation, bigIslands, noVirtualHeadland)
-    self.logger = Logger('Center', Logger.level.debug)
+    self.logger = Logger('Center', Logger.level.debug, CpDebug.DBG_COURSES)
     self.context = context
     if headland == nil then
         -- if there are no headlands, we generate a virtual one, from the field boundary
