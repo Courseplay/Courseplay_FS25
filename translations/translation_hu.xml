@@ -183,6 +183,8 @@
     <text name="CP_vehicle_setting_foldImplementAtEnd_tooltip" text="Engedélyezi/letiltja a munkagépek automatikus összecsukását a munka végén."/>
     <text name="CP_vehicle_setting_returnToStart_title" text="Visszatérés a kezdőpontra"/>
     <text name="CP_vehicle_setting_returnToStart_tooltip" text="Visszatérés a kezdőpontra a munka végeztével."/>
+    <text name="CP_vehicle_setting_workMode_title" text="Work mode"/>
+    <text name="CP_vehicle_setting_workMode_tooltip" text="Overwrites the working mode, which was set by the user."/>
     <text name="CP_vehicle_setting_raiseImplementLate_title" text="Szerszám emelés"/>
     <text name="CP_vehicle_setting_raiseImplementLate_tooltip" text="Korán vagy késésel emelje fel a szerszámot a forduló kezdetén."/>
     <text name="CP_vehicle_setting_raiseImplementLate_early" text="korán"/>

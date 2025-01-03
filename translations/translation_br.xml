@@ -183,6 +183,8 @@
     <text name="CP_vehicle_setting_foldImplementAtEnd_tooltip" text="Ativar / desativar dobrar o implemento no final da rota."/>
     <text name="CP_vehicle_setting_returnToStart_title" text="Voltar ao ponto inicial"/>
     <text name="CP_vehicle_setting_returnToStart_tooltip" text="Voltar ao ponto inicial após finalizar trabalho no campo."/>
+    <text name="CP_vehicle_setting_workMode_title" text="Work mode"/>
+    <text name="CP_vehicle_setting_workMode_tooltip" text="Overwrites the working mode, which was set by the user."/>
     <text name="CP_vehicle_setting_raiseImplementLate_title" text="Levantar implemento"/>
     <text name="CP_vehicle_setting_raiseImplementLate_tooltip" text="Levantar o implemento no início ou no final da curva."/>
     <text name="CP_vehicle_setting_raiseImplementLate_early" text="início"/>

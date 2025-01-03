@@ -183,6 +183,8 @@
     <text name="CP_vehicle_setting_foldImplementAtEnd_tooltip" text="Geräte am Ende des Kurses einklappen oder nicht."/>
     <text name="CP_vehicle_setting_returnToStart_title" text="Zum Startpunkt zurückfahren"/>
     <text name="CP_vehicle_setting_returnToStart_tooltip" text="Fährt nach erledigter Arbeit zum Startpunkt zurück."/>
+    <text name="CP_vehicle_setting_workMode_title" text="Arbeitsmodus"/>
+    <text name="CP_vehicle_setting_workMode_tooltip" text="Überschreibt den vom Benutzer ausgewählten Arbeitsmodus."/>
     <text name="CP_vehicle_setting_raiseImplementLate_title" text="Gerät anheben"/>
     <text name="CP_vehicle_setting_raiseImplementLate_tooltip" text="Geräte früh oder spät anheben."/>
     <text name="CP_vehicle_setting_raiseImplementLate_early" text="früh"/>

@@ -57,6 +57,7 @@
 				<Text>early</Text>
 			</Texts>
 		</Setting>
+		<Setting classType="AIParameterSettingList" name="workMode" generateValuesFunction="generateWorkModes" isVisible="isWorkModeSettingVisible"/>
 		<!--Tool Offset X-->
 		<Setting classType="AIParameterSettingList" name="toolOffsetX" min="-10" max="10" incremental="0.1" default="0" unit="2"
 				 onChangeCallback="cpShowWorkWidth" setDefault="setAutomaticWorkWidthAndOffset" isVisible="isToolOffsetVisible"

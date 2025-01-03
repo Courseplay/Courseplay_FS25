@@ -104,6 +104,7 @@ end
 function CpVehicleSettings:onUpdate()
     local spec = self.spec_cpVehicleSettings
     if not spec.finishedFirstUpdate then
+        CpVehicleSettings.validateSettings(self)
         --- TODO: Maybe consider a more generic approach in the future.
         spec.toolOffsetX:resetToLoadedValue()
         spec.bunkerSiloWorkWidth:resetToLoadedValue()
@@ -495,6 +496,43 @@ function CpVehicleSettings:isRefillOnTheFieldSettingVisible()
         AIUtil.hasChildVehicleWithSpecialization(self, TreePlanter) or 
         CpVehicleSettings.isAdditiveFillUnitSettingVisible(self)
 end
+
+function CpVehicleSettings:isWorkModeSettingVisible()
+    local workmodeImplements, found = AIUtil.getAllChildVehiclesWithSpecialization(self, WorkMode)
+    if not found then 
+        return false
+    end
+    for _, implement in pairs(workmodeImplements) do
+       if implement.spec_workMode.workModes ~= nil then 
+            return true
+       end
+    end
+end
+
+function CpVehicleSettings:generateWorkModes()
+    local values = {
+        -1
+    }
+    local texts = {
+        g_i18n:getText("CP_deactivated")
+    }
+    if self.getChildVehicles then
+        local workmodeImplements, found = AIUtil.getAllChildVehiclesWithSpecialization(self, WorkMode)
+        if found then
+            for _, implement in pairs(workmodeImplements) do
+                if implement.spec_workMode.workModes ~= nil then 
+                    for ix, mode in ipairs(implement.spec_workMode.workModes) do
+                        table.insert(texts, mode.name)
+                        table.insert(values, ix)
+                    end
+                    break
+                end
+            end
+        end
+    end
+    return values, texts
+end
+
 
 ---------------------------------------------
 --- Console Commands

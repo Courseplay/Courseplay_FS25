@@ -183,6 +183,8 @@
     <text name="CP_vehicle_setting_foldImplementAtEnd_tooltip" text="İş bitiminde aletlerin otomatik katlanmasını etkinleştirir/devre dışı bırakır."/>
     <text name="CP_vehicle_setting_returnToStart_title" text="Başlangıç noktasına dön"/>
     <text name="CP_vehicle_setting_returnToStart_tooltip" text="İş bitiminde araçlar başlangıç noktasına döner."/>
+    <text name="CP_vehicle_setting_workMode_title" text="Work mode"/>
+    <text name="CP_vehicle_setting_workMode_tooltip" text="Overwrites the working mode, which was set by the user."/>
     <text name="CP_vehicle_setting_raiseImplementLate_title" text="Tarla Başlangıcı"/>
     <text name="CP_vehicle_setting_raiseImplementLate_tooltip" text="Tarla başlangıcında aletleri erken veya geç indirir."/>
     <text name="CP_vehicle_setting_raiseImplementLate_early" text="Erken"/>

@@ -571,6 +571,14 @@
 			<Text language="de"><![CDATA[Fährt nach erledigter Arbeit zum Startpunkt zurück.]]></Text>
 			<Text language="en"><![CDATA[Return to starting point after finished fieldwork.]]></Text>
 		</Translation>
+		<Translation name="CP_vehicle_setting_workMode_title">
+			<Text language="de"><![CDATA[Arbeitsmodus]]></Text>
+			<Text language="en"><![CDATA[Work mode]]></Text>
+		</Translation>
+		<Translation name="CP_vehicle_setting_workMode_tooltip">
+			<Text language="de"><![CDATA[Überschreibt den vom Benutzer ausgewählten Arbeitsmodus.]]></Text>
+			<Text language="en"><![CDATA[Overwrites the working mode, which was set by the user.]]></Text>
+		</Translation>
 		<Translation name="CP_vehicle_setting_raiseImplementLate_title">
 			<Text language="de"><![CDATA[Gerät anheben]]></Text>
 			<Text language="en"><![CDATA[Raise tools]]></Text>

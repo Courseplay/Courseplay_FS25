@@ -183,6 +183,8 @@
     <text name="CP_vehicle_setting_foldImplementAtEnd_tooltip" text="Aktiverar/inaktiverar automatisk hopfällning av redskap i slutet av kursen."/>
     <text name="CP_vehicle_setting_returnToStart_title" text="Återvänd till startpunkten"/>
     <text name="CP_vehicle_setting_returnToStart_tooltip" text="Återvänd till startpunkten efter avslutat fältarbete."/>
+    <text name="CP_vehicle_setting_workMode_title" text="Work mode"/>
+    <text name="CP_vehicle_setting_workMode_tooltip" text="Overwrites the working mode, which was set by the user."/>
     <text name="CP_vehicle_setting_raiseImplementLate_title" text="Redskapshöjning"/>
     <text name="CP_vehicle_setting_raiseImplementLate_tooltip" text="Redskapshöjning tidig eller sent i början av en sväng/vändteg."/>
     <text name="CP_vehicle_setting_raiseImplementLate_early" text="Tidig"/>

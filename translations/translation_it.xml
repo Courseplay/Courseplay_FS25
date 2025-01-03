@@ -183,6 +183,8 @@
     <text name="CP_vehicle_setting_foldImplementAtEnd_tooltip" text="Abilita/disabilita il ripiegamento automatico degli attrezzi a fine percorso"/>
     <text name="CP_vehicle_setting_returnToStart_title" text="Ritorna al punto di partenza"/>
     <text name="CP_vehicle_setting_returnToStart_tooltip" text="Ritorna al punto di partenza, dopo aver finito il lavoro."/>
+    <text name="CP_vehicle_setting_workMode_title" text="Work mode"/>
+    <text name="CP_vehicle_setting_workMode_tooltip" text="Overwrites the working mode, which was set by the user."/>
     <text name="CP_vehicle_setting_raiseImplementLate_title" text="Solleva attrezzo"/>
     <text name="CP_vehicle_setting_raiseImplementLate_tooltip" text="Solleva gli attrezzi in anticipo o in ritardo all'inizio di ogni corsia"/>
     <text name="CP_vehicle_setting_raiseImplementLate_early" text="Anticipa"/>
