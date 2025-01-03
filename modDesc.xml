@@ -87,7 +87,6 @@ Changelog 8.0.0.0:
 		<sourceFile filename="scripts/debug/CpDebug.lua"/>
 		<sourceFile filename="scripts/debug/CourseRecorder.lua"/>
 		<sourceFile filename="scripts/dev/ConsoleCommands.lua"/>
-		<sourceFile filename="scripts/dev/DevHelper.lua"/>
 		<sourceFile filename="scripts/config/VehicleConfigurations.lua"/>
 
 		<sourceFile filename="scripts/util/CpMathUtil.lua"/>
@@ -146,6 +145,7 @@ Changelog 8.0.0.0:
 		<sourceFile filename="scripts/field/CustomField.lua"/>
 		<sourceFile filename="scripts/field/CustomFieldManager.lua"/>
 		<sourceFile filename="scripts/field/FieldScanner.lua"/>
+		<sourceFile filename="scripts/field/FieldBoundaryDetector.lua"/>
 		<sourceFile filename="scripts/field/VineScanner.lua"/>
 
 		<sourceFile filename="scripts/silo/BunkerSiloVehicleController.lua"/>
@@ -314,11 +314,15 @@ Changelog 8.0.0.0:
 		<sourceFile filename="scripts/events/CpJobSyncOnLeaveEvent.lua"/>
 		<sourceFile filename="scripts/events/DriveNowRequestEvent.lua"/>
 		<sourceFile filename="scripts/events/PlowCenterTurnEvent.lua"/>
+
+		<sourceFile filename="scripts/dev/DevHelper.lua"/>
+
 	</extraSourceFiles>
 
 	<specializations>
 		<specialization name="cpAIImplement" className="CpAIImplement" filename="scripts/specializations/CpAIImplement.lua" />
 		<specialization name="cpVehicleSettings" className="CpVehicleSettings" filename="scripts/specializations/CpVehicleSettings.lua" />
+		<specialization name="cpCourseGenerator" className="CpCourseGenerator" filename="scripts/specializations/CpCourseGenerator.lua" />
 		<specialization name="cpCourseGeneratorSettings" className="CpCourseGeneratorSettings" filename="scripts/specializations/CpCourseGeneratorSettings.lua" />
 		<specialization name="cpCourseManager" className="CpCourseManager" filename="scripts/specializations/CpCourseManager.lua"/>
 		<specialization name="cpAIWorker" className="CpAIWorker" filename="scripts/specializations/CpAIWorker.lua"/>

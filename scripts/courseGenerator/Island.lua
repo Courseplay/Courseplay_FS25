@@ -17,6 +17,15 @@ function Island:init(id, perimeterPoints)
     self:createFromPerimeterPoints(perimeterPoints)
 end
 
+---@param id number
+---@param boundary Polygon
+---@return CourseGenerator.Island
+function Island.createFromBoundary(id, boundary)
+    local island = CourseGenerator.Island(id, {})
+    island.boundary = boundary
+    return island
+end
+
 function Island:getId()
     return self.id
 end

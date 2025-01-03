@@ -16,7 +16,7 @@
     <text name="CP_copy" text="Copy course:"/>
     <text name="CP_infoText" text="Courseplay(%s): For help, bug reports or patch notes, please visit: https://github.com/Courseplay/Courseplay_FS25."/>
     <text name="CP_error_no_course" text="Generate a course before starting the job."/>
-    <text name="CP_error_could_not_generate_course" text="Could not generate course. The log may have more information."/>
+    <text name="CP_error_could_not_generate_course" text="Could not generate course. Please try other settings."/>
     <text name="CP_error_not_on_field" text="Target is not on a field."/>
     <text name="CP_error_unloader_to_far_away_from_field" text="Unloader too far away from the field."/>
     <text name="CP_error_start_position_to_far_away_from_field" text="Starting position too far away from the field."/>

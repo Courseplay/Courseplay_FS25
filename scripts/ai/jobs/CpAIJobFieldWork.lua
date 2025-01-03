@@ -10,6 +10,7 @@ function CpAIJobFieldWork:init(isServer)
     self.foundVines = nil
     self.selectedFieldPlot = FieldPlot(true)
     self.selectedFieldPlot:setVisible(false)
+    self.courseGeneratorInterface = CourseGeneratorInterface()
 end
 
 function CpAIJobFieldWork:setupTasks(isServer)
@@ -217,7 +218,7 @@ function CpAIJobFieldWork:onClickGenerateFieldWorkCourse()
                 vineSettings.vineCenterOffset:getValue(),
                 tx, tz
         )
-        ok, course = CourseGeneratorInterface.generateVineCourse(
+        ok, course = self.courseGeneratorInterface:generateVineCourse(
                 vertices,
                 startingPoint,
                 vehicle,
@@ -232,7 +233,7 @@ function CpAIJobFieldWork:onClickGenerateFieldWorkCourse()
         )
     else
 
-        ok, course = CourseGeneratorInterface.generate(fieldPolygon,
+        ok, course = self.courseGeneratorInterface:generate(fieldPolygon,
                 { x = tx, z = tz },
                 vehicle,
                 settings

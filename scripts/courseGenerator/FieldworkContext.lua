@@ -35,7 +35,7 @@ function FieldworkContext:init(field, workingWidth, turningRadius, nHeadlands)
     self.evenRowDistribution = false
     self.useBaselineEdge = false
     self.enableSmallOverlapsWithHeadland = false
-    self.logger = Logger('FieldworkContext', Logger.level.debug)
+    self.logger = Logger('FieldworkContext', Logger.level.debug, CpDebug.DBG_COURSES)
     self.errors = {}
     
     self.reverseCourse = false

@@ -18,7 +18,7 @@ Headland.boundaryIdPrefix = 'F'
 ---@param mustNotCross|nil Polygon the headland must not cross this polygon, if it does, it is invalid. This is usually
 --- the outermost headland around the field, as when anything crosses that, it'll be at least partly outside of the field.
 function Headland:init(basePolygon, clockwise, passNumber, width, outward, mustNotCross)
-    self.logger = Logger('Headland ' .. passNumber or '')
+    self.logger = Logger('Headland ' .. passNumber or '', nil, CpDebug.DBG_COURSES)
     self.clockwise = clockwise
     self.passNumber = passNumber
     self.offsetVector = CourseGenerator.FieldworkCourseHelper.getOffsetVectorForHeadland(clockwise, outward)

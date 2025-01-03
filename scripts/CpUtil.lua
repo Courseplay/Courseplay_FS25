@@ -154,14 +154,19 @@ function CpUtil.debugFormat(channel, ...)
 	end
 end
 
+---@return boolean true if debug is enabled for this vehicle, or vehicle is invalid
+function CpUtil.debugEnabledForVehicle(vehicle)
+	local rootVehicle = vehicle and vehicle.rootVehicle
+	local enabled = rootVehicle == nil or rootVehicle.getCpSettings == nil or CpUtil.isVehicleDebugActive(rootVehicle)
+	return enabled
+end
+
 -- convenience debug function to show the vehicle name and expects string.format() arguments, 
 -- CpUtil.debugVehicle( CpDebug.DBG_TURN, vehicle, "fill level is %.1f, mode = %d", fillLevel, mode )
 ---@param channel number
 ---@param vehicle table
 function CpUtil.debugVehicle(channel, vehicle, ...)
-	local rootVehicle = vehicle and vehicle.rootVehicle
-	local active = rootVehicle == nil or rootVehicle.getCpSettings == nil or CpUtil.isVehicleDebugActive(rootVehicle)
-	if CpDebug and active and CpDebug:isChannelActive(channel) then
+	if CpDebug and CpDebug:isChannelActive(channel) and CpUtil.debugEnabledForVehicle()  then
 		CpUtil.internalPrintVehicle(vehicle, CpDebug:getText(channel), ...)
 	end
 end
