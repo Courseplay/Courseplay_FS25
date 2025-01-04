@@ -170,11 +170,9 @@ function SimpleCourseDisplay:init()
 end
 
 function SimpleCourseDisplay:setVisibility(visible)
-	if not self.rootNode then
-		return
+	if self.rootNode then
+		setVisibility(self.rootNode, visible)
 	end
-
-	setVisibility(self.rootNode, visible)
 end
 
 function SimpleCourseDisplay:cloneSign(protoType)
