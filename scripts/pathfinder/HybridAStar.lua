@@ -174,6 +174,24 @@ end
 function PathfinderConstraintInterface:showStatistics()
 end
 
+function PathfinderConstraintInterface:setStrictMode()
+end
+
+function PathfinderConstraintInterface:resetStrictMode()
+end
+
+function PathfinderConstraintInterface:trailerCollisionsOnly()
+    return false
+end
+
+function PathfinderConstraintInterface:getFruitPenaltyNodePercent()
+    return 0
+end
+
+function PathfinderConstraintInterface:getOffFieldPenaltyNodePercent()
+    return 0
+end
+
 ---@class HybridAStar : PathfinderInterface
 HybridAStar = CpObject(PathfinderInterface)
 
