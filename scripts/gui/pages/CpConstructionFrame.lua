@@ -242,6 +242,8 @@ function CpConstructionFrame:draw()
 	if self.brush then 
 		self.brush:draw()
 	end
+	local x, y, z = self.cursor:getPosition()
+	self.editor:draw(x, y, z)
 end
 
 function CpConstructionFrame:mouseEvent(posX, posY, isDown, isUp, button, eventUsed)

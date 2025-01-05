@@ -23,6 +23,10 @@ function CourseEditor:init()
 	self:load()
 end
 
+function CourseEditor:draw(x, y ,z)
+	
+end
+
 function CourseEditor:load()
 	self.brushCategory = self:loadCategory(Utils.getFilename("config/EditorCategories.xml", g_Courseplay.BASE_DIRECTORY))
 end
@@ -48,7 +52,7 @@ function CourseEditor:loadCategory(path)
 				iconSliceId = xmlFile:getValue(brushKey .. "#iconSliceId"),
 				isCourseOnly = xmlFile:getValue(brushKey .. "#isCourseOnly"),
 				brushParameters = {
-					CourseEditor.TRANSLATION_PREFIX .. tab.name .. "_" .. name 
+					self.TRANSLATION_PREFIX .. tab.name .. "_" .. name 
 				}
 			}
 			table.insert(tab.brushes, brush)
