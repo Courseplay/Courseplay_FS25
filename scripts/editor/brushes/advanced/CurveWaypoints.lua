@@ -3,8 +3,8 @@
 ---@class CpBrushCurveInsertWP : CpBrush
 CpBrushCurveInsertWP = CpObject(CpBrush)
 CpBrushCurveInsertWP.DELAY = 100
-function CpBrushCurveInsertWP:init(cursor, editor)
-	CpBrush.init(self, cursor, editor)
+function CpBrushCurveInsertWP:init(...)
+	CpBrush.init(self, ...)
 	self.supportsPrimaryButton = true
 	self.supportsPrimaryDragging = true
 	self.supportsSecondaryButton = true

@@ -12,6 +12,55 @@ function CourseEditor:init()
 	self.courseDisplay = EditorCourseDisplay(self)
 	self.title = ""
 	self.isActive = false
+	self.categorySchema = XMLSchema.new("cpConstructionCategories")
+	self.categorySchema:register(XMLValueType.STRING, "Category.Tab(?)#name", "Tab name")
+	self.categorySchema:register(XMLValueType.STRING, "Category.Tab(?)#iconSliceId", "Tab icon slice id")
+	self.categorySchema:register(XMLValueType.STRING, "Category.Tab(?).Brush(?)#name", "Brush name")
+	self.categorySchema:register(XMLValueType.STRING, "Category.Tab(?).Brush(?)#class", "Brush class")
+	self.categorySchema:register(XMLValueType.STRING, "Category.Tab(?).Brush(?)#iconSliceId", "Brush icon slice id")
+	self.categorySchema:register(XMLValueType.BOOL, "Category.Tab(?).Brush(?)#isCourseOnly", "Is course only?", false)
+
+	self:load()
+end
+
+function CourseEditor:load()
+	self.brushCategory = self:loadCategory(Utils.getFilename("config/EditorCategories.xml", g_Courseplay.BASE_DIRECTORY))
+end
+
+function CourseEditor:getBrushCategory()
+	return self.brushCategory
+end
+
+function CourseEditor:loadCategory(path)
+	local category = {}
+	local xmlFile = XMLFile.load("cpConstructionCategories", path, self.categorySchema)
+	xmlFile:iterate("Category.Tab", function (_, tabKey)
+		local tab = {
+			name = xmlFile:getValue(tabKey .. "#name"),
+			iconSliceId = xmlFile:getValue(tabKey .. "#iconSliceId"),
+			brushes = {}
+		}
+		xmlFile:iterate(tabKey .. ".Brush", function (_, brushKey)
+			local name = xmlFile:getValue(brushKey .. "#name")
+			local brush = {
+				name = name,
+				class = xmlFile:getValue(brushKey .. "#class"),
+				iconSliceId = xmlFile:getValue(brushKey .. "#iconSliceId"),
+				isCourseOnly = xmlFile:getValue(brushKey .. "#isCourseOnly"),
+				brushParameters = {
+					CourseEditor.TRANSLATION_PREFIX .. tab.name .. "_" .. name 
+				}
+			}
+			table.insert(tab.brushes, brush)
+		end)
+		table.insert(category, tab)
+	end)
+	xmlFile:delete()
+	return category
+end
+
+function CourseEditor:getBrushClass(className)
+	return CpUtil.getClassObject(className)
 end
 
 function CourseEditor:getTitle()
@@ -130,7 +179,7 @@ function CourseEditor:activate(file)
 			self.isActive = true
 			self.file = file
 			self.title = string.format(g_i18n:getText("CP_editor_course_title"), self.file:getName())
-			g_messageCenter:publish(MessageType.GUI_CP_INGAME_OPEN_CONSTRUCTION_MENU)
+			g_messageCenter:publish(MessageType.GUI_CP_INGAME_OPEN_CONSTRUCTION_MENU, self)
 			return true
 		end
 	end
@@ -148,7 +197,7 @@ function CourseEditor:activateCustomField(file, field)
 		self.courseWrapper = EditorCourseWrapper(Course(nil, field:getVertices()))
 		self.courseDisplay:setCourse(self.courseWrapper)
 		self.title = string.format(g_i18n:getText("CP_editor_custom_field_title"), self.file:getName())
-		g_messageCenter:publish(MessageType.GUI_CP_INGAME_OPEN_CONSTRUCTION_MENU)
+		g_messageCenter:publish(MessageType.GUI_CP_INGAME_OPEN_CONSTRUCTION_MENU, self)
 		return true
 	end
 	return false

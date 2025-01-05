@@ -5,8 +5,8 @@ CpBrushChangeRowNumberWP = CpObject(CpBrush)
 CpBrushChangeRowNumberWP.NO_ROW = 0
 CpBrushChangeRowNumberWP.TRANSLATIONS = {
 	NO_ROW = "noRow"}
-function CpBrushChangeRowNumberWP:init(cursor, editor)
-	CpBrush.init(self, cursor, editor)
+function CpBrushChangeRowNumberWP:init(...)
+	CpBrush.init(self, ...)
 	self.supportsPrimaryButton = true
 	self.supportsPrimaryDragging = true
 	self.supportsSecondaryButton = true

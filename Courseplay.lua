@@ -7,6 +7,9 @@ Courseplay.MOD_NAME = g_currentModName
 Courseplay.BASE_DIRECTORY = g_currentModDirectory
 Courseplay.baseXmlKey = "Courseplay"
 Courseplay.xmlKey = Courseplay.baseXmlKey.."."
+--- Makes sure other mods can access the courseplay mod,
+--- if they are accessing this after this call.
+g_modManager.CP_MOD_NAME = g_currentModName
 
 function Courseplay:init()
 	---TODO_25

@@ -14,9 +14,10 @@ CpBrush.inputTitle = "input_title"
 CpBrush.yesNoTitle = "yesNo_title"
 CpBrush.errMessage = "err"
 CpBrush.ERR_MESSAGE_DURATION = 15 * 1000 -- 15 sec
-function CpBrush:init(cursor, editor)
+function CpBrush:init(cursor, camera, editor)
 	self.isActive = false
 	self.cursor = cursor
+	self.camera = camera
 	self.supportsPrimaryButton = false
 	self.supportsPrimaryDragging = false
 	self.supportsSecondaryButton = false

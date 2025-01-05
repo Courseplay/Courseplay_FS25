@@ -56,7 +56,8 @@ function CpInGameMenu.new(target, customMt, messageCenter, l10n, inputManager, c
 		local index = self.pagingElement:getPageMappingIndexByElement(self.pageHelpLine)
 		self.pageSelector:setState(index, true)
 	end, self)
-	self.messageCenter:subscribe(MessageType.GUI_CP_INGAME_OPEN_CONSTRUCTION_MENU, function (menu)
+	self.messageCenter:subscribe(MessageType.GUI_CP_INGAME_OPEN_CONSTRUCTION_MENU, function (menu, ...)
+		self.pageConstruction:setData(...)
 		g_gui:showGui("CpInGameMenu")
 		self:changeScreen(CpInGameMenu)
 		self:updatePages()
@@ -165,7 +166,6 @@ function CpInGameMenu:initializePages()
 	self.pageConstruction:initialize(self)
 end
 
--- Lines 327-362
 function CpInGameMenu:setupMenuPages()
 	local orderedDefaultPages = {
 		{
@@ -198,9 +198,7 @@ function CpInGameMenu:setupMenuPages()
 		},
 		{
 			self.pageConstruction,
-			function ()
-				return g_courseEditor:getIsActive()
-			end,
+			CpInGameMenu.isContructionPageAvailiable,
 			"gui.icon_others_construction"
 		},
 		{
@@ -219,6 +217,11 @@ function CpInGameMenu:setupMenuPages()
 		end
 	end
 end
+
+function CpInGameMenu:isContructionPageAvailiable()
+	return g_courseEditor:getIsActive()
+end
+
 
 function CpInGameMenu:setupMenuButtonInfo()
 	CpInGameMenu:superClass().setupMenuButtonInfo(self)

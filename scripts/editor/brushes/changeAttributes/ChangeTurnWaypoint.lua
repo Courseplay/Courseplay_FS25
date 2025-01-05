@@ -13,8 +13,8 @@ CpBrushChangeTurnWP.TYPES_TRANSLATIONS = {
 	[CpBrushChangeTurnWP.TYPES.TURN_START] = "type_turnStart",
 	[CpBrushChangeTurnWP.TYPES.TURN_END] = "type_turnEnd",
 }
-function CpBrushChangeTurnWP:init(cursor, editor)
-	CpBrush.init(self, cursor, editor)
+function CpBrushChangeTurnWP:init(...)
+	CpBrush.init(self, ...)
 	self.supportsPrimaryButton = true
 end
 

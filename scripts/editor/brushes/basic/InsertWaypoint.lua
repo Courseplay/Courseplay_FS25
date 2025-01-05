@@ -2,8 +2,8 @@
 --- Inserts a new waypoint at the mouse position.
 ---@class CpBrushInsertWP : CpBrush
 CpBrushInsertWP = CpObject(CpBrush)
-function CpBrushInsertWP:init(cursor, editor)
-	CpBrush.init(self, cursor, editor)
+function CpBrushInsertWP:init(...)
+	CpBrush.init(self, ...)
 	self.supportsPrimaryButton = true
 	self.supportsSecondaryButton = true
 end

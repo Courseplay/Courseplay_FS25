@@ -2,8 +2,8 @@
 --- Deletes a new waypoint at the mouse position.
 ---@class CpBrushDeleteWP : CpBrush
 CpBrushDeleteWP = CpObject(CpBrush)
-function CpBrushDeleteWP:init(cursor, editor)
-	CpBrush.init(self, cursor, editor)
+function CpBrushDeleteWP:init(...)
+	CpBrush.init(self, ...)
 	self.supportsPrimaryButton = true
 	self.supportsPrimaryDragging = true
 	self.supportsSecondaryButton = true

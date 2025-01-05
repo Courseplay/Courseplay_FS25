@@ -6,8 +6,8 @@ CpBrushChangeHeadlandWP.MAX_HEADLANDS = 40
 CpBrushChangeHeadlandWP.NO_HEADLANDS = 0
 CpBrushChangeHeadlandWP.TRANSLATIONS = {
 		NO_HEADLAND = "noHeadland"}
-function CpBrushChangeHeadlandWP:init(cursor, editor)
-	CpBrush.init(self, cursor, editor)
+function CpBrushChangeHeadlandWP:init(...)
+	CpBrush.init(self, ...)
 	self.supportsPrimaryButton = true
 	self.supportsPrimaryDragging = true
 	self.supportsSecondaryButton = true

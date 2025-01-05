@@ -20,16 +20,7 @@ function CpConstructionFrame.new(target, custom_mt)
 	self.cursor = GuiTopDownCursor.new()
 	self.brush = nil
 	self.brushEvents = {}
-
-	self.categorySchema = XMLSchema.new("cpConstructionCategories")
-	self.categorySchema:register(XMLValueType.STRING, "Category.Tab(?)#name", "Tab name")
-	self.categorySchema:register(XMLValueType.STRING, "Category.Tab(?)#iconSliceId", "Tab icon slice id")
-	self.categorySchema:register(XMLValueType.STRING, "Category.Tab(?).Brush(?)#name", "Brush name")
-	self.categorySchema:register(XMLValueType.STRING, "Category.Tab(?).Brush(?)#class", "Brush class")
-	self.categorySchema:register(XMLValueType.STRING, "Category.Tab(?).Brush(?)#iconSliceId", "Brush icon slice id")
-	self.categorySchema:register(XMLValueType.BOOL, "Category.Tab(?).Brush(?)#isCourseOnly", "Is course only?", false)
-
-	self:loadBrushCategory()
+	self.brushCategory = {}
 	return self
 end
 
@@ -49,6 +40,11 @@ function CpConstructionFrame.setupGui()
 	 	"CpConstructionFrame", frame, true)
 end
 
+function CpConstructionFrame:setData(editor)
+	self.editor = editor
+	self.brushCategory = editor:getBrushCategory()
+end
+
 function CpConstructionFrame:delete()
 	self.camera:delete()
 	self.cursor:delete()
@@ -59,34 +55,6 @@ function CpConstructionFrame:delete()
 	self.containerPrefab:delete()
 	self.subCategoryDotPrefab:delete()
 	CpConstructionFrame:superClass().delete(self)
-end
-
-function CpConstructionFrame:loadBrushCategory()
-	self.brushCategory = {}
-	local path = Utils.getFilename("config/EditorCategories.xml", g_Courseplay.BASE_DIRECTORY)
-	local xmlFile = XMLFile.load("cpConstructionCategories", path, self.categorySchema)
-	xmlFile:iterate("Category.Tab", function (_, tabKey)
-		local tab = {
-			name = xmlFile:getValue(tabKey .. "#name"),
-			iconSliceId = xmlFile:getValue(tabKey .. "#iconSliceId"),
-			brushes = {}
-		}
-		xmlFile:iterate(tabKey .. ".Brush", function (_, brushKey)
-			local name = xmlFile:getValue(brushKey .. "#name")
-			local brush = {
-				name = name,
-				class = xmlFile:getValue(brushKey .. "#class"),
-				iconSliceId = xmlFile:getValue(brushKey .. "#iconSliceId"),
-				isCourseOnly = xmlFile:getValue(brushKey .. "#isCourseOnly"),
-				brushParameters = {
-					CourseEditor.TRANSLATION_PREFIX .. tab.name .. "_" .. name 
-				}
-			}
-			table.insert(tab.brushes, brush)
-		end)
-		table.insert(self.brushCategory, tab)
-	end)
-	xmlFile:delete()
 end
 
 function CpConstructionFrame:loadFromXMLFile(xmlFile, baseKey)
@@ -128,23 +96,26 @@ end
 
 function CpConstructionFrame:onFrameOpen()
 	CpConstructionFrame:superClass().onFrameOpen(self)
-	if not self.wasOpened then
-		local texts = {}
-		for _, tab in pairs(self.brushCategory) do 
-			table.insert(texts, tab.name)
-		end
-		self.subCategorySelector:setTexts(texts)
-		for i = 1, #self.subCategorySelector.texts do
-			local dot = self.subCategoryDotPrefab:clone(self.subCategoryDotBox)
-			FocusManager:loadElementFromCustomValues(dot)
-			dot.getIsSelected = function ()
-				return self.subCategorySelector:getState() == i
-			end
-		end
-		self.subCategoryDotBox:invalidateLayout()
-		self.wasOpened = true
+	
+	local texts = {}
+	for _, tab in pairs(self.brushCategory) do 
+		table.insert(texts, tab.name)
 	end
-	self.categoryHeaderText:setText(g_courseEditor:getTitle())
+	self.subCategorySelector:setTexts(texts)
+	for ix, clone in ipairs(self.subCategoryDotBox.elements) do
+		clone:delete()
+		self.subCategoryDotBox.elements[ix] = nil
+	end
+	self.subCategoryDotBox:invalidateLayout()
+	for i = 1, #self.subCategorySelector.texts do
+		local dot = self.subCategoryDotPrefab:clone(self.subCategoryDotBox)
+		FocusManager:loadElementFromCustomValues(dot)
+		dot.getIsSelected = function ()
+			return self.subCategorySelector:getState() == i
+		end
+	end
+	self.subCategoryDotBox:invalidateLayout()
+	self.categoryHeaderText:setText(self.editor:getTitle())
 
 	-- g_inputBinding:setContext(CpConstructionFrame.INPUT_CONTEXT)
 	local lOffset = self.menuBox.absPosition[1] + self.menuBox.size[1]
@@ -168,7 +139,7 @@ function CpConstructionFrame:onFrameOpen()
 	self.camera:setEdgeScrollingOffset(lOffset, bOffset, 1 - rOffset, 1 - tOffset)
 	self.camera:activate()
 	self.cursor:activate()
-	local x, z = g_courseEditor:getStartPosition()
+	local x, z = self.editor:getStartPosition()
 	if x ~= nil and z ~= nil then
 		self.camera:setCameraPosition(x, z)
 	end
@@ -221,7 +192,7 @@ end
 
 function CpConstructionFrame:requestClose(callback)
 	CpConstructionFrame:superClass().requestClose(self, callback)
-	g_courseEditor:onClickExit(function ()
+	self.editor:onClickExit(function ()
 		self.requestCloseCallback()
 		self.requestCloseCallback = function () end
 	end)
@@ -482,8 +453,8 @@ end
 
 function CpConstructionFrame:onClickItem(list, section, index, cell)
 	local item = self.brushCategory[self.subCategorySelector:getState()].brushes[index]
-	local class = CpUtil.getClassObject(item.class)
-	local brush = class(self.cursor, g_courseEditor)
+	local class = self.editor:getBrushClass(item.class)
+	local brush = class(self.cursor, self.camera, self.editor)
 	if item.brushParameters ~= nil then
 		brush:setStoreItem(item.storeItem)
 		brush:setParameters(unpack(item.brushParameters))

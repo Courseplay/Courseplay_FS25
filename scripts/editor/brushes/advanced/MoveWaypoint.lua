@@ -3,8 +3,8 @@
 ---@class CpBrushAdvancedMoveWP : CpBrush
 CpBrushAdvancedMoveWP = CpObject(CpBrush)
 CpBrushAdvancedMoveWP.DELAY = 100
-function CpBrushAdvancedMoveWP:init(cursor, editor)
-	CpBrush.init(self, cursor, editor)
+function CpBrushAdvancedMoveWP:init(...)
+	CpBrush.init(self, ...)
 	self.supportsPrimaryButton = true
 	self.supportsPrimaryDragging = true
 	self.supportsSecondaryButton = true
