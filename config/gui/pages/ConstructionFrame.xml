@@ -60,22 +60,28 @@
                                 onClick="onSubCategoryChanged" />
                             <BoxLayout profile="fs25_subCategorySelectorBox" id="subCategoryDotBox" />
                             <GuiElement profile="fs25_subCategoryListContainer">
-                                <SmoothList profile="fs25_constructionList" id="itemList" onClick="onClickItem"
-                                    startClipperElementName="leftClipper" endClipperElementName="rightClipper">
-                                    <ListItem profile="fs25_constructionListItem">
-                                        <Bitmap profile="fs25_constructionListItemBackground" />
-                                        <Bitmap profile="fs25_constructionListItemImage" name="icon" />
-                                        <Text profile="fs25_constructionListItemPrice" name="price" />
-                                        <TerrainLayer profile="fs25_constructionListItemTerrainIcon"
-                                            name="terrainLayer" />
-                                    </ListItem>
-                                </SmoothList>
-                                <ThreePartBitmap profile="fs25_subCategoryListSliderBox" position="26px 0px"
-                                    absoluteSizeOffset="0px 15px" pivot="1 1">
-                                    <Slider profile="fs25_listSlider" dataElementId="itemList" />
-                                </ThreePartBitmap>
-                                <Bitmap profile="fs25_subCategoryStartClipper" name="leftClipper" />
-                                <Bitmap profile="fs25_subCategoryStopClipper" name="rightClipper" />
+                                <GuiElement profile="fs25_aiJobTypeMultiTextOption" position="0 15px" id="currentSelectedBrushTitle">
+                                    <Bitmap profile="fs25_aiCreateJobParameterVehicleIcon" name="icon"/>
+                                    <Text profile="fs25_multiTextOptionText" name="text"/>
+                                </GuiElement>
+                                <GuiElement profile="fs25_aiCreateJobLayout">
+                                    <SmoothList profile="fs25_constructionList" id="itemList" onClick="onClickItem"
+                                        startClipperElementName="leftClipper" endClipperElementName="rightClipper">
+                                        <ListItem profile="fs25_constructionListItem">
+                                            <Bitmap profile="fs25_constructionListItemBackground" />
+                                            <Bitmap profile="fs25_constructionListItemImage" name="icon" />
+                                            <Text profile="fs25_constructionListItemPrice" name="price" />
+                                            <TerrainLayer profile="fs25_constructionListItemTerrainIcon"
+                                                name="terrainLayer" />
+                                        </ListItem>
+                                    </SmoothList>
+                                    <ThreePartBitmap profile="fs25_subCategoryListSliderBox" position="26px 0px"
+                                        absoluteSizeOffset="0px 15px" pivot="1 1">
+                                        <Slider profile="fs25_listSlider" dataElementId="itemList" />
+                                    </ThreePartBitmap>
+                                    <Bitmap profile="fs25_subCategoryStartClipper" name="leftClipper" />
+                                    <Bitmap profile="fs25_subCategoryStopClipper" name="rightClipper" />
+                                </GuiElement>
                             </GuiElement>
                         </GuiElement>
                         <GuiElement profile="fs25_subCategoryContainer" id="configsBox" visible="false">

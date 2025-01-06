@@ -100,3 +100,7 @@ end
 function CpBrush:resetError()
 	self.errorMsgTimer:reset()
 end
+
+function CpBrush:getTitle()
+	return self:getTranslation("title")
+end

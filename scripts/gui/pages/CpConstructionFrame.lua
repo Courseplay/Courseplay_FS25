@@ -146,7 +146,7 @@ function CpConstructionFrame:onFrameOpen()
 	self.isMouseMode = g_inputBinding.lastInputMode == GS_INPUT_HELP_MODE_KEYBOARD
 	self:toggleCustomInputContext(true, self.INPUT_CONTEXT)
 
-	self:onSubCategoryChanged()
+	self.itemList:reloadData()
 	self:setBrush(nil, true)
 	if g_localPlayer ~= nil then
 		local isFirstPerson
@@ -194,6 +194,7 @@ function CpConstructionFrame:requestClose(callback)
 	CpConstructionFrame:superClass().requestClose(self, callback)
 	self.editor:onClickExit(function ()
 		self.requestCloseCallback()
+		self.cpMenu:updatePages()
 		self.requestCloseCallback = function () end
 	end)
 	return false
@@ -251,7 +252,7 @@ function CpConstructionFrame:mouseEvent(posX, posY, isDown, isUp, button, eventU
 		posY < (self.cpMenu.buttonsPanel.absPosition[2] + self.cpMenu.buttonsPanel.size[2])
 	self.camera.mouseDisabled = self.isMouseInMenu
 	self.cursor.mouseDisabled = self.isMouseInMenu
-	self.camera:setMouseEdgeScrollingActive(true)
+	self.camera:setMouseEdgeScrollingActive(not self.isMouseInMenu)
 	self.camera:mouseEvent(posX, posY, isDown, isUp, button)
 	self.cursor:mouseEvent(posX, posY, isDown, isUp, button)
 	return CpConstructionFrame:superClass().mouseEvent(self, posX, posY, isDown, isUp, button, eventUsed)
@@ -410,6 +411,7 @@ end
 
 function CpConstructionFrame:onSubCategoryChanged()
 	self.itemList:reloadData()
+	self:setBrush(nil)
 end
 
 function CpConstructionFrame:getNumberOfItemsInSection(list, section)
@@ -457,6 +459,7 @@ function CpConstructionFrame:onClickItem(list, section, index, cell)
 	local item = self.brushCategory[self.subCategorySelector:getState()].brushes[index]
 	local class = self.editor:getBrushClass(item.class)
 	local brush = class(self.cursor, self.camera, self.editor)
+	brush.item = item
 	if item.brushParameters ~= nil then
 		brush:setStoreItem(item.storeItem)
 		brush:setParameters(unpack(item.brushParameters))
@@ -476,9 +479,16 @@ function CpConstructionFrame:setBrush(brush, force)
 		self.cursor:removeActionEvents()
 		self.camera:registerActionEvents()
 		self.cursor:registerActionEvents()
+		local icon = self.currentSelectedBrushTitle:getDescendantByName("icon")
+		icon:setVisible(self.brush~=nil and self.brush.item.iconSliceId ~= nil)
+		local text = self.currentSelectedBrushTitle:getDescendantByName("text")
 		if self.brush then 
 			self.brush:activate()
+			text:setText(self.brush:getTitle())
+			icon:setImageSlice(nil, self.brush.item.iconSliceId)
 			--- TODO Copy/restore old state here ..
+		else
+			text:setText("---")
 		end
 		self:updateActionEvents(self.brush)
 		self:updateActionEventTexts(self.brush)
