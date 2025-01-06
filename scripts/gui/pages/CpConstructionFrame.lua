@@ -293,6 +293,7 @@ function CpConstructionFrame:updateActionEvents(brush)
 							end
 						end
 					end, true, true, true, true)
+				g_inputBinding.events[id]:setIgnoreComboMask(true)
 			else
 				_, id = g_inputBinding:registerActionEvent(InputAction.CONSTRUCTION_ACTION_PRIMARY, self, function(self, action, inputValue)
 						if not self.isMouseInMenu and self.brush then 
@@ -308,20 +309,21 @@ function CpConstructionFrame:updateActionEvents(brush)
 			local _, id
 			if brush.supportsSecondaryDragging then
 				_, id = g_inputBinding:registerActionEvent(InputAction.CONSTRUCTION_ACTION_SECONDARY, self, function(self, action, inputValue)
-					if not self.isMouseInMenu and self.brush then 
-						local isDown = inputValue == 1 and self.previousSecondaryDragValue ~= 1
-						local isDrag = inputValue == 1 and self.previousSecondaryDragValue == 1
-						local isUp = inputValue == 0
-						self.previousSecondaryDragValue = inputValue
-						if self.dragIsLocked then
-							if isUp then
-								self.dragIsLocked = false
+						if not self.isMouseInMenu and self.brush then 
+							local isDown = inputValue == 1 and self.previousSecondaryDragValue ~= 1
+							local isDrag = inputValue == 1 and self.previousSecondaryDragValue == 1
+							local isUp = inputValue == 0
+							self.previousSecondaryDragValue = inputValue
+							if self.dragIsLocked then
+								if isUp then
+									self.dragIsLocked = false
+								end
+							else
+								self.brush:onButtonSecondary(isDown, isDrag, isUp)
 							end
-						else
-							self.brush:onButtonSecondary(isDown, isDrag, isUp)
 						end
-					end
-				end, true, true, true, true)
+					end, true, true, true, true)
+				g_inputBinding.events[id]:setIgnoreComboMask(true)
 			else
 				_, id = g_inputBinding:registerActionEvent(InputAction.CONSTRUCTION_ACTION_SECONDARY, self, function(self, action, inputValue)
 					if not self.isMouseInMenu and self.brush then 
