@@ -94,6 +94,14 @@ function CpConstructionFrame:initialize(menu)
 	}
 end
 
+function CpConstructionFrame:getOffsets()
+	local lOffset = self.menuBox.absPosition[1] + self.menuBox.size[1]
+	local bOffset = self.bottomBackground.absPosition[2] + self.bottomBackground.size[2]
+	local rOffset = self.rightBackground.size[1]
+	local tOffset = self.topBackground.size[2]
+	return lOffset, bOffset, rOffset, tOffset
+end
+
 function CpConstructionFrame:onFrameOpen()
 	CpConstructionFrame:superClass().onFrameOpen(self)
 	
@@ -118,10 +126,7 @@ function CpConstructionFrame:onFrameOpen()
 	self.categoryHeaderText:setText(self.editor:getTitle())
 
 	-- g_inputBinding:setContext(CpConstructionFrame.INPUT_CONTEXT)
-	local lOffset = self.menuBox.absPosition[1] + self.menuBox.size[1]
-	local bOffset = self.bottomBackground.absPosition[2] + self.bottomBackground.size[2]
-	local rOffset = self.rightBackground.size[1]
-	local tOffset = self.topBackground.size[2]
+	local lOffset, bOffset, rOffset, tOffset = self:getOffsets()
 	self.oldGameInfoDisplayPosition = {g_currentMission.hud.gameInfoDisplay:getPosition()}
 	g_currentMission.hud.gameInfoDisplay:setPosition(
 		self.oldGameInfoDisplayPosition[1] - rOffset, 
@@ -243,13 +248,19 @@ function CpConstructionFrame:draw()
 	if self.brush then 
 		self.brush:draw()
 	end
+end
+
+function CpConstructionFrame:drawInGame()
 	local x, y, z = self.cursor:getPosition()
 	self.editor:draw(x, y, z)
 end
 
 function CpConstructionFrame:mouseEvent(posX, posY, isDown, isUp, button, eventUsed)
-	self.isMouseInMenu = posX < (self.menuBox.absPosition[1] + self.menuBox.size[1]) or
-		posY < (self.cpMenu.buttonsPanel.absPosition[2] + self.cpMenu.buttonsPanel.size[2])
+	local lOffset, bOffset, rOffset, tOffset = self:getOffsets()
+
+	self.isMouseInMenu = posX < lOffset or posX > (1 - rOffset) or
+						 posY < bOffset or posY > (1 - tOffset)
+
 	self.camera.mouseDisabled = self.isMouseInMenu
 	self.cursor.mouseDisabled = self.isMouseInMenu
 	self.camera:setMouseEdgeScrollingActive(not self.isMouseInMenu)

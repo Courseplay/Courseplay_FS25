@@ -314,6 +314,14 @@ function CpInGameMenu:update(dt)
 	CpInGameMenu:superClass().update(self, dt)
 end
 
+function CpInGameMenu:draw()
+	if self.currentPage.drawInGame then 
+		self.currentPage:drawInGame()
+		new2DLayer()
+	end
+	CpInGameMenu:superClass().draw(self)
+end
+
 function CpInGameMenu:onClickMenu()
 	self:exitMenu()
 
