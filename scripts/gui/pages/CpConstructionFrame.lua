@@ -199,8 +199,8 @@ function CpConstructionFrame:requestClose(callback)
 	CpConstructionFrame:superClass().requestClose(self, callback)
 	self.editor:onClickExit(function ()
 		self.requestCloseCallback()
-		self.cpMenu:updatePages()
 		self.requestCloseCallback = function () end
+		self.cpMenu:updatePages()
 	end)
 	return false
 end

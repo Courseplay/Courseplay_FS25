@@ -164,6 +164,9 @@ function CourseEditor:onClickLaneOffsetSetting(closure, ignoreDialog)
 end
 
 function CourseEditor:onClickExit(callbackFunc)
+	if not self.file then 
+		printCallstack()
+	end 
 	YesNoDialog.show(
 		function (self, clickOk)
 			self:deactivate(clickOk)
