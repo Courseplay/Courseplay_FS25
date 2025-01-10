@@ -93,6 +93,7 @@ end
 
 --- Loads the course, might be a good idea to consolidate this with the loading of CpCourseManager.
 function CourseEditor:loadCourse(file)
+	self.needsMultiToolDialog = false
 	local function load(self, xmlFile, baseKey, noEventSend, name)
 		local course = nil
 		xmlFile:iterate(baseKey, function (i, key)
@@ -132,9 +133,26 @@ function CourseEditor:saveCourse()
 end
 
 function CourseEditor:update(dt)
-	-- if not g_gui:getIsDialogVisible() and self.needsMultiToolDialog then
-	-- 	self.needsMultiToolDialog = false
-	-- end
+
+end
+
+function CourseEditor:registerActionEvents(frame, events)
+	if not self.needsMultiToolDialog then 
+		return
+	end
+	local _, eventId = g_inputBinding:registerActionEvent(InputAction.CONSTRUCTION_ACTION_SNAPPING, frame, 
+		function(screen, actionName)
+			local event = g_inputBinding:getFirstActiveEventForActionName(actionName)
+			g_courseEditor:onClickLaneOffsetSetting(function(text)
+				g_inputBinding:setActionEventText(event.id, string.format(g_i18n:getText("CP_editor_change_lane_offset"), text))
+			end)
+		end, false, true, false, true)
+	table.insert(events, eventId)
+	g_courseEditor:onClickLaneOffsetSetting(function(text)
+		g_inputBinding:setActionEventText(eventId, string.format(g_i18n:getText("CP_editor_change_lane_offset"), text))
+	end, true)
+	g_inputBinding:setActionEventActive(eventId, true)
+	g_inputBinding:setActionEventTextVisibility(eventId, true)
 end
 
 function CourseEditor:onClickLaneOffsetSetting(closure, ignoreDialog)
@@ -165,7 +183,7 @@ end
 
 function CourseEditor:onClickExit(callbackFunc)
 	if not self.file then 
-		printCallstack()
+		return
 	end 
 	YesNoDialog.show(
 		function (self, clickOk)
@@ -198,6 +216,7 @@ function CourseEditor:activateCustomField(file, field)
 		return false
 	end
 	if file then 
+		self.needsMultiToolDialog = false
 		self.isActive = true
 		self.file = file
 		self.field = field

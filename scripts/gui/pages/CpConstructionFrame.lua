@@ -397,6 +397,9 @@ function CpConstructionFrame:updateActionEvents(brush)
 			g_inputBinding:setActionEventTextPriority(id, GS_PRIO_HIGH)
 		end
 	end	
+	if self.editor.registerActionEvents then 
+		self.editor:registerActionEvents(self, self.brushEvents)
+	end
 end
 
 function CpConstructionFrame:updateActionEventTexts(brush)
