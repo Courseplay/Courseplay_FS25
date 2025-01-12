@@ -183,6 +183,8 @@
     <text name="CP_vehicle_setting_foldImplementAtEnd_tooltip" text="Habilita/Deshabilita el plegado automático de herramientas al final de la ruta."/>
     <text name="CP_vehicle_setting_returnToStart_title" text="Regresar al Punto de Inicio."/>
     <text name="CP_vehicle_setting_returnToStart_tooltip" text="Regresa al Punto de Inicio al terminar el trabajo."/>
+    <text name="CP_vehicle_setting_workMode_title" text="Work mode"/>
+    <text name="CP_vehicle_setting_workMode_tooltip" text="Overwrites the working mode, which was set by the user."/>
     <text name="CP_vehicle_setting_raiseImplementLate_title" text="Elevar Herramientas"/>
     <text name="CP_vehicle_setting_raiseImplementLate_tooltip" text="Elevar Herramientas antes o después del siguiente giro."/>
     <text name="CP_vehicle_setting_raiseImplementLate_early" text="Antes"/>

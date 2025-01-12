@@ -183,6 +183,8 @@
     <text name="CP_vehicle_setting_foldImplementAtEnd_tooltip" text="Zapnout/vypnout složení nářadí do transportní pozice po ukončení práce."/>
     <text name="CP_vehicle_setting_returnToStart_title" text="Návrat na počáteční bod"/>
     <text name="CP_vehicle_setting_returnToStart_tooltip" text="Po dokončení práce se vrátí na výchozí bod."/>
+    <text name="CP_vehicle_setting_workMode_title" text="Work mode"/>
+    <text name="CP_vehicle_setting_workMode_tooltip" text="Overwrites the working mode, which was set by the user."/>
     <text name="CP_vehicle_setting_raiseImplementLate_title" text="Zvednutí nástroje"/>
     <text name="CP_vehicle_setting_raiseImplementLate_tooltip" text="Nastaví, kdy dojde ke zvednutí nástroje na souvrati."/>
     <text name="CP_vehicle_setting_raiseImplementLate_early" text="Brzy"/>

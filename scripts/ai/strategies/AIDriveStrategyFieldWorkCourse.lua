@@ -278,7 +278,7 @@ function AIDriveStrategyFieldWorkCourse:initializeImplementControllers(vehicle)
     self:addImplementController(vehicle, SoilSamplerController, nil, defaultDisabledStates, "spec_soilSampler")
     self:addImplementController(vehicle, StumpCutterController, StumpCutter, defaultDisabledStates)
     self:addImplementController(vehicle, TreePlanterController, TreePlanter, {})
-
+    self:addImplementController(vehicle, WorkModeController, WorkMode, {})
 end
 
 --- Start waiting for the implements to lower

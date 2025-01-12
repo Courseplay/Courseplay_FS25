@@ -183,6 +183,8 @@
     <text name="CP_vehicle_setting_foldImplementAtEnd_tooltip" text="Ustala czy pomocnik ma złożyć narzędzie po zakończeniu kursu."/>
     <text name="CP_vehicle_setting_returnToStart_title" text="Powrót do punktu startu"/>
     <text name="CP_vehicle_setting_returnToStart_tooltip" text="Ustala czy pomocnik ma wrócić do punktu początkowego po zakończeniu pracy."/>
+    <text name="CP_vehicle_setting_workMode_title" text="Work mode"/>
+    <text name="CP_vehicle_setting_workMode_tooltip" text="Overwrites the working mode, which was set by the user."/>
     <text name="CP_vehicle_setting_raiseImplementLate_title" text="Podnoszenie narzędzi"/>
     <text name="CP_vehicle_setting_raiseImplementLate_tooltip" text="Podnoszenie narzędzia wcześniej lub później na początku zawracania."/>
     <text name="CP_vehicle_setting_raiseImplementLate_early" text="Wcześniej"/>

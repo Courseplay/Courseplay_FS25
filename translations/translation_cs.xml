@@ -183,6 +183,8 @@
     <text name="CP_vehicle_setting_foldImplementAtEnd_tooltip" text="开启/关闭 工作结束时工具的自动收起。"/>
     <text name="CP_vehicle_setting_returnToStart_title" text="返回起始位置"/>
     <text name="CP_vehicle_setting_returnToStart_tooltip" text="完成工作后返回起始位置."/>
+    <text name="CP_vehicle_setting_workMode_title" text="Work mode"/>
+    <text name="CP_vehicle_setting_workMode_tooltip" text="Overwrites the working mode, which was set by the user."/>
     <text name="CP_vehicle_setting_raiseImplementLate_title" text="升起工具"/>
     <text name="CP_vehicle_setting_raiseImplementLate_tooltip" text="在转向开始时提前或晚些升起工具。"/>
     <text name="CP_vehicle_setting_raiseImplementLate_early" text="提前"/>
