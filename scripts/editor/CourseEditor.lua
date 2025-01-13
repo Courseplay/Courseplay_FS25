@@ -4,12 +4,13 @@
 	It works on a given course, that gets loaded
 	and saved on closing of the editor. 
 ]]
+---@class CourseEditor
 CourseEditor = CpObject()
 CourseEditor.TRANSLATION_PREFIX = "CP_editor_course_"
 
 function CourseEditor:init()
 	--- Simple course display for the selected course.
-	self.courseDisplay = EditorCourseDisplay(self)
+	self.courseDisplay = SimpleCourseDisplay()
 	self.title = ""
 	self.isActive = false
 	self.categorySchema = XMLSchema.new("cpConstructionCategories")
@@ -109,7 +110,8 @@ function CourseEditor:loadCourse(file)
 	end
     if file:load(CpCourseManager.xmlSchema, CpCourseManager.xmlKeyFileManager, 
     	load, self, false) then
-		self.courseDisplay:setCourse(self.courseWrapper)
+		self.courseDisplay:setCourseWrapper(self.courseWrapper)
+		self.courseDisplay:setVisible(true)
 		local course = self.courseWrapper:getCourse()
 		if course and course:getMultiTools() > 1 then
 			self.needsMultiToolDialog = true
@@ -221,7 +223,8 @@ function CourseEditor:activateCustomField(file, field)
 		self.file = file
 		self.field = field
 		self.courseWrapper = EditorCourseWrapper(Course(nil, field:getVertices()))
-		self.courseDisplay:setCourse(self.courseWrapper)
+		self.courseDisplay:setCourseWrapper(self.courseWrapper)
+		self.courseDisplay:setVisible(true)
 		self.title = string.format(g_i18n:getText("CP_editor_custom_field_title"), self.file:getName())
 		g_messageCenter:publish(MessageType.GUI_CP_INGAME_OPEN_CONSTRUCTION_MENU, self)
 		return true
@@ -229,14 +232,14 @@ function CourseEditor:activateCustomField(file, field)
 	return false
 end
 
-
 --- Deactivates the editor and saves the course.
 function CourseEditor:deactivate(needsSaving)
 	if not self:getIsActive() then 
 		return
 	end
 	self.isActive = false
-	self.courseDisplay:deleteSigns()
+	self.courseDisplay:clear()
+	self.courseDisplay:setVisible(false)
 	if needsSaving then
 		if self.field then 
 			self.field:setVertices(self.courseWrapper:getAllWaypoints())
@@ -250,7 +253,6 @@ function CourseEditor:deactivate(needsSaving)
 	self.courseWrapper = nil
 	self.needsMultiToolDialog = false
 end
-
 
 function CourseEditor:showYesNoDialog(title, callbackFunc)
 	YesNoDialog.show(

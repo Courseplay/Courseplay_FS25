@@ -37,7 +37,7 @@ function CourseRecorder:stop()
     self.recording = false
     self.paused = false
     self:debug('Course recording stopped, recorded %d waypoints', self.course:getNumberOfWaypoints())
-    self.courseDisplay:clearCourse()
+    self.courseDisplay:clear()
 end
 
 function CourseRecorder:pause()
