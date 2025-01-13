@@ -7,6 +7,9 @@ Courseplay.MOD_NAME = g_currentModName
 Courseplay.BASE_DIRECTORY = g_currentModDirectory
 Courseplay.baseXmlKey = "Courseplay"
 Courseplay.xmlKey = Courseplay.baseXmlKey.."."
+--- Makes sure other mods can access the courseplay mod,
+--- if they are accessing this after this call.
+g_modManager.CP_MOD_NAME = g_currentModName
 
 function Courseplay:init()
 	---TODO_25
@@ -118,8 +121,6 @@ function Courseplay:loadMap(filename)
 	--- Ugly hack to get access to the global AutoDrive table, as this global is dependent on the auto drive folder name.
 	self.autoDrive = FS25_AutoDrive and FS25_AutoDrive.AutoDrive
 	CpUtil.info("Auto drive found: %s", tostring(self.autoDrive~=nil))
-
-	g_courseEditor:load()
 end
 
 function Courseplay:deleteMap()
