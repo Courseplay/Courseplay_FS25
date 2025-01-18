@@ -183,6 +183,8 @@
     <text name="CP_vehicle_setting_foldImplementAtEnd_tooltip" text="Active/Désactive le repli automatique de l'outil à la fin de la course."/>
     <text name="CP_vehicle_setting_returnToStart_title" text="Retourner au point de départ"/>
     <text name="CP_vehicle_setting_returnToStart_tooltip" text="Retourne au point de départ après avoir terminé la course."/>
+    <text name="CP_vehicle_setting_workMode_title" text="Work mode"/>
+    <text name="CP_vehicle_setting_workMode_tooltip" text="Overwrites the working mode, which was set by the user."/>
     <text name="CP_vehicle_setting_raiseImplementLate_title" text="Relevage de l'outil"/>
     <text name="CP_vehicle_setting_raiseImplementLate_tooltip" text="Détermine si l'outil doit être relevé tôt ou tard en bout de ligne."/>
     <text name="CP_vehicle_setting_raiseImplementLate_early" text="tôt"/>

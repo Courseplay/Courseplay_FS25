@@ -183,6 +183,8 @@
     <text name="CP_vehicle_setting_foldImplementAtEnd_tooltip" text="有効にするとコースの終点で作業機を格納（折りたたみ）します"/>
     <text name="CP_vehicle_setting_returnToStart_title" text="Return to starting point"/>
     <text name="CP_vehicle_setting_returnToStart_tooltip" text="Return to starting point after finished fieldwork."/>
+    <text name="CP_vehicle_setting_workMode_title" text="Work mode"/>
+    <text name="CP_vehicle_setting_workMode_tooltip" text="Overwrites the working mode, which was set by the user."/>
     <text name="CP_vehicle_setting_raiseImplementLate_title" text="作業機を上げる"/>
     <text name="CP_vehicle_setting_raiseImplementLate_tooltip" text="ターンの最初に作業機を上げるタイミングを設定します"/>
     <text name="CP_vehicle_setting_raiseImplementLate_early" text="速い"/>

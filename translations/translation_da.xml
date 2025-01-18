@@ -183,6 +183,8 @@
     <text name="CP_vehicle_setting_foldImplementAtEnd_tooltip" text="Sammenklap redskab ved afslutning ja/nej."/>
     <text name="CP_vehicle_setting_returnToStart_title" text="Tilbage til start punket"/>
     <text name="CP_vehicle_setting_returnToStart_tooltip" text="Tilbage til start punket efter endt markarbejde."/>
+    <text name="CP_vehicle_setting_workMode_title" text="Work mode"/>
+    <text name="CP_vehicle_setting_workMode_tooltip" text="Overwrites the working mode, which was set by the user."/>
     <text name="CP_vehicle_setting_raiseImplementLate_title" text="Hæv redskab"/>
     <text name="CP_vehicle_setting_raiseImplementLate_tooltip" text="Hæv redskab tidligt eller sent."/>
     <text name="CP_vehicle_setting_raiseImplementLate_early" text="Tidligt"/>

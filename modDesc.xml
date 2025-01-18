@@ -226,6 +226,7 @@ Changelog 8.0.0.0:
 		<sourceFile filename="scripts/ai/controllers/PlowController.lua"/>
 		<sourceFile filename="scripts/ai/controllers/PalletFillerController.lua"/>
 		<sourceFile filename="scripts/ai/controllers/TreePlanterController.lua"/>
+		<sourceFile filename="scripts/ai/controllers/WorkModeController.lua"/>
 
 		<sourceFile filename="scripts/ai/strategies/AIDriveStrategyCourse.lua"/>
 		<sourceFile filename="scripts/ai/strategies/AIDriveStrategyDriveToFieldWorkStart.lua"/>
