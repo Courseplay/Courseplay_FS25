@@ -311,7 +311,7 @@
     <text name="CP_vehicle_courseGeneratorSetting_centerMode_lands" text="Sezioni alternate"/>
     <text name="CP_vehicle_courseGeneratorSetting_spiralFromInside_title" text="Spirale dall'interno"/>
     <text name="CP_vehicle_courseGeneratorSetting_spiralFromInside_tooltip" text="Avvia la spirale dall'interno."/>
-    <text name="CP_vehicle_courseGeneratorSetting_evenRowWidth_title" text="Anche la fila con"/>
+    <text name="CP_vehicle_courseGeneratorSetting_evenRowWidth_title" text="Larghezza omogenea delle corsie"/>
     <text name="CP_vehicle_courseGeneratorSetting_evenRowWidth_tooltip" text="Riduce la larghezza di lavoro per ottenere una distribuzione uniforme su tutte le corsie."/>
     <text name="CP_vehicle_courseGeneratorSetting_sharpenCorners_title" text="Squadrare gli angoli di fine campo"/>
     <text name="CP_vehicle_courseGeneratorSetting_sharpenCorners_tooltip" text="Rendere più squadrati gli angoli dei promontori non arrotondati"/>
