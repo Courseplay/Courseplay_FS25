@@ -6,6 +6,17 @@ SimpleSign.TYPES = {
 	START = 1,
 	STOP = 2
 }
+SimpleSign.COLORS = {
+	NORMAL     = { 1.000, 0.212, 0.000, 1.000 }, -- orange
+	TURN_START = { 0.200, 0.900, 0.000, 1.000 }, -- green
+	TURN_END   = { 0.896, 0.000, 0.000, 1.000 }, -- red
+	PATHFINDER = { 0.900, 0.000, 0.900, 1.000 }, -- purple
+	HOVERED     = {0, 1, 1, 1.000 }, -- blue green
+	SELECTED    = {1, 0, 1, 1.000 },  -- red blue
+	NORMAL_LINE = {0, 1, 1, 1.000 },
+	HEADLAND_LINE = {1, 0, 1, 1.000 },
+	CONNECTING_LINE = {0, 0, 0, 0 } 
+}
 function SimpleSign:init(type, node, heightOffset, protoTypes)
 	self.type = type
 	self.node = node
@@ -83,10 +94,10 @@ function SimpleSign:scaleLine(dist)
 	end
 end
 
-function SimpleSign:setBottomLineToGround()
+function SimpleSign:setBottomLineToGroundVisibility(visible)
 	local line = getChildAt(self.node, 1)
 	if line ~= nil and line ~= 0 then
-		setVisibility(line, true)
+		setVisibility(line, visible)
 		setScale(line, 1, 1, 1.5 * self.heightOffset)
 	end
 end
@@ -100,9 +111,12 @@ end
 function SimpleSign:setLineColor(color)
 	local line = getChildAt(self.node, 0)
 	if line ~= nil and line ~= 0 and self.type ~= SimpleSign.TYPES.STOP then
+		self:setBottomLineToGroundVisibility(color ~= nil)
 		self.lineColor = color
-		local x, y, z, w = unpack(color)
-		setShaderParameter(line, 'shapeColor', x, y, z, w, false)
+		if color then 
+			local x, y, z, w = unpack(color)
+			setShaderParameter(line, 'shapeColor', x, y, z, w, false)
+		end
 	end
 end
 
@@ -123,6 +137,7 @@ function SimpleSign:setWaypointData(wp, np)
 	end
 end
 
+--- Sign Prototyps, which can be cloned
 SignPrototypes = CpObject()
 SignPrototypes.HEIGHT_OFFSET = 4.5
 function SignPrototypes:init(heightOffset)
@@ -148,28 +163,98 @@ end
 
 g_signPrototypes = SignPrototypes()
 
+--- Data Wrapper to display a course.
+---@class CourseDataSourceDisplay
+CourseDataSourceDisplay = CpObject()
+CourseDataSourceDisplay.WAYPOINT_LOWER_LIMIT = 5 -- waypoints in front of the current
+CourseDataSourceDisplay.WAYPOINT_UPPER_LIMIT = 20 -- waypoints after the current
+function CourseDataSourceDisplay:init(course, wrapper)
+	---@type Course
+	self.course = course
+	---@type EditorCourseWrapper
+	self.courseWrapper = wrapper
+end
+
+function CourseDataSourceDisplay:getPoint(ix)
+	return self.course:getWaypoint(ix)
+end
+
+function CourseDataSourceDisplay:getNumberOfPoints()
+	return self.course:getNumberOfWaypoints()
+end
+
+function CourseDataSourceDisplay:getSignColors(i)
+	local color, lineColor = SimpleSign.COLORS.NORMAL, nil
+	if self.course:isTurnStartAtIx(i) then
+		color = SimpleSign.COLORS.TURN_START
+	elseif self.course:isTurnEndAtIx(i) then
+		color = SimpleSign.COLORS.TURN_END
+	elseif self.course:shouldUsePathfinderToNextWaypoint(i) or self.course:shouldUsePathfinderToThisWaypoint(i) then
+		color = SimpleSign.COLORS.PATHFINDER
+	end
+	if self.courseWrapper then
+		if self.courseWrapper:isSelected(i) then 
+			color = SimpleSign.COLORS.SELECTED
+		end
+		if self.courseWrapper:isHovered(i) then 
+			color = SimpleSign.COLORS.HOVERED 
+		end
+		lineColor = SimpleSign.COLORS.NORMAL_LINE 
+		if self.courseWrapper:isHeadland(i) or self.courseWrapper:isOnRowNumber(i) then 
+			lineColor = SimpleSign.COLORS.HEADLAND_LINE
+		end
+		if self.courseWrapper:isConnectingPath(i) then
+			lineColor = SimpleSign.COLORS.CONNECTING_LINE
+		end
+	end
+	return color, lineColor
+end
+
+---@param ix number
+---@param onlyStartStopVisible boolean|nil only display the first and last point?
+---@param onlyAroundCurrentWaypointVisible boolean|nil display waypoints around the current highlighted point?
+---@return boolean visible
+function CourseDataSourceDisplay:getIsPointVisible(ix, onlyStartStopVisible, onlyAroundCurrentWaypointVisible)
+	local showWaypoint = true
+	local currentWaypointIx = self.course:getCurrentWaypointIx()
+	if onlyAroundCurrentWaypointVisible then
+		--- Shows a few waypoints in front or after the last passed waypoint in between the lower and upper limit.
+		local lowerBound = currentWaypointIx - self.WAYPOINT_LOWER_LIMIT
+		local upperBound = currentWaypointIx + self.WAYPOINT_UPPER_LIMIT
+		showWaypoint = lowerBound <= ix and ix <= upperBound
+	end
+	if onlyStartStopVisible then 
+		showWaypoint =  ix == 1 or (ix <= self.course:getNumberOfWaypoints() and ix >= self.course:getNumberOfWaypoints())
+	end
+	return showWaypoint
+end
+
+
 --- A simple 3D course display without a buffer for a single course.
 ---@class SimpleCourseDisplay
 SimpleCourseDisplay = CpObject()
-SimpleCourseDisplay.COLORS = {
-	NORMAL     = { 1.000, 0.212, 0.000, 1.000 }, -- orange
-	TURN_START = { 0.200, 0.900, 0.000, 1.000 }, -- green
-	TURN_END   = { 0.896, 0.000, 0.000, 1.000 }, -- red
-	PATHFINDER = { 0.900, 0.000, 0.900, 1.000 }, -- purple
-}
 
 SimpleCourseDisplay.HEIGHT_OFFSET = 4.5
-SimpleCourseDisplay.WAYPOINT_LOWER_LIMIT = 5 -- waypoints in front of the current
-SimpleCourseDisplay.WAYPOINT_UPPER_LIMIT = 20 -- waypoints after the current
 
 function SimpleCourseDisplay:init()
 	self.protoTypes = g_signPrototypes:getPrototypes()
 	self.signs = {}
 	self.rootNode = CpUtil.createNode("SimpleCourseDisplay rootNode", 0, 0, 0, getRootNode())
-	self:setVisibility(false)
+	self.dataSource = nil
+	self:setVisible(false)
 end
 
-function SimpleCourseDisplay:setVisibility(visible)
+---@param courseWrapper EditorCourseWrapper
+function SimpleCourseDisplay:setCourseWrapper(courseWrapper)
+	self:setDataSource(CourseDataSourceDisplay(courseWrapper:getCourse(), courseWrapper))
+end
+
+---@param course Course
+function SimpleCourseDisplay:setCourse(course)
+	self:setDataSource(CourseDataSourceDisplay(course, nil))
+end
+
+function SimpleCourseDisplay:setVisible(visible)
 	setVisibility(self.rootNode, visible)
 end
 
@@ -191,9 +276,9 @@ end
 
 --- Applies the waypoint data and the correct sign type.
 function SimpleCourseDisplay:updateWaypoint(i)
-	local wp = self.course.waypoints[i]
-	local np = self.course.waypoints[i + 1]
-	local pp = self.course.waypoints[i - 1]
+	local wp = self.dataSource:getPoint(i)
+	local np = self.dataSource:getPoint(i + 1)
+	local pp = self.dataSource:getPoint(i - 1)
 	if i == 1 then 
 		--- Selects the start sign.
 		if self.signs[i] == nil then
@@ -203,7 +288,7 @@ function SimpleCourseDisplay:updateWaypoint(i)
 			self.signs[i] = self:cloneSign(self.protoTypes.START)
 		end
 		self.signs[i]:setWaypointData(wp, np)
-	elseif i == self.course:getNumberOfWaypoints() then
+	elseif i == self.dataSource:getNumberOfPoints() then
 		--- Selects the stop waypoint sign.
 		if self.signs[i] == nil then
 			self.signs[i] = self:cloneSign(self.protoTypes.STOP)
@@ -219,42 +304,36 @@ function SimpleCourseDisplay:updateWaypoint(i)
 	end
 	self.signs[i]:translate(wp.x, wp.z)
 	--- Changes the sign colors.
-	if self.course:isTurnStartAtIx(i) then
-		self.signs[i]:setColor(SimpleCourseDisplay.COLORS.TURN_START)
-	elseif self.course:isTurnEndAtIx(i) then
-		self.signs[i]:setColor(SimpleCourseDisplay.COLORS.TURN_END)
-	elseif self.course:shouldUsePathfinderToNextWaypoint(i) or self.course:shouldUsePathfinderToThisWaypoint(i) then
-		self.signs[i]:setColor(SimpleCourseDisplay.COLORS.PATHFINDER)
-	else
-		self.signs[i]:setColor(SimpleCourseDisplay.COLORS.NORMAL)
-	end
+	local color, lineColor = self.dataSource:getSignColors(i)
+	self.signs[i]:setColor(color)
+	self.signs[i]:setLineColor(lineColor)
 end
 
 --- Sets a new course for the display.
-function SimpleCourseDisplay:setCourse(course)
-	self.course = course
+---@param dataSource CourseDataSourceDisplay
+function SimpleCourseDisplay:setDataSource(dataSource)
+	self.dataSource = dataSource
 	--- Removes signs that are not needed.
-	for i = #self.signs, course:getNumberOfWaypoints() + 1, -1 do 
+	for i = #self.signs, dataSource:getNumberOfPoints() + 1, -1 do 
 		self.signs[i]:delete()
 		table.remove(self.signs, i)
 	end
-	for i = 1, course:getNumberOfWaypoints() do
+	for i = 1, dataSource:getNumberOfPoints() do
 		self:updateWaypoint(i)
 	end
-	
 end
 
-function SimpleCourseDisplay:clearCourse()
-	self.course = nil
+function SimpleCourseDisplay:clear()
+	self.dataSource = nil
 	self:deleteSigns()
 end
 
 --- Updates changes from ix or ix-1 onwards.
 function SimpleCourseDisplay:updateChanges(ix)
-	if not self.course then 
+	if not self.dataSource then 
 		return
 	end
-	for i = #self.signs, self.course:getNumberOfWaypoints() + 1, -1 do 
+	for i = #self.signs, self.dataSource:getNumberOfPoints() + 1, -1 do 
 		self.signs[i]:delete()
 		table.remove(self.signs, i)
 	end
@@ -262,41 +341,37 @@ function SimpleCourseDisplay:updateChanges(ix)
 	if ix - 1 > 0 then 
 		ix = ix - 1
 	end
-	for j = ix, self.course:getNumberOfWaypoints() do
+	for j = ix, self.dataSource:getNumberOfPoints() do
 		self:updateWaypoint(j)
 	end
 end
 
 --- Updates changes between waypoints.
+---@param firstIx number
+---@param secondIx number
 function SimpleCourseDisplay:updateChangesBetween(firstIx, secondIx)
-	for i = #self.signs, self.course:getNumberOfWaypoints() + 1, -1 do 
+	for i = #self.signs, self.dataSource:getNumberOfPoints() + 1, -1 do 
 		self.signs[i]:delete()
 		table.remove(self.signs, i)
 	end
 
-	for j = math.max(1, firstIx-1), math.min(self.course:getNumberOfWaypoints(), secondIx + 1) do
+	for j = math.max(1, firstIx-1), math.min(self.dataSource:getNumberOfPoints(), secondIx + 1) do
 		self:updateWaypoint(j)
 	end
 end
 
 --- Changes the visibility of the course.
+---@param visible boolean|nil all points are visible
+---@param onlyStartStopVisible boolean|nil only display the first and last point
+---@param onlyAroundCurrentWaypointVisible boolean|nil display points around the current waypoint
 function SimpleCourseDisplay:updateVisibility(visible, onlyStartStopVisible, onlyAroundCurrentWaypointVisible)
-	if self.course then
-		local numWp = self.course:getNumberOfWaypoints()
-		local currentWaypointIx = self.course:getCurrentWaypointIx()
+	if self.dataSource then
+		local numWp = self.dataSource:getNumberOfPoints()
 		for j = 1, numWp do
 			if self.signs[j] then
-				local showWaypoint = false
-					if onlyAroundCurrentWaypointVisible then
-						--- Shows a few waypoints in front or after the last passed waypoint in between the lower and upper limit.
-						local lowerBound = currentWaypointIx - self.WAYPOINT_LOWER_LIMIT
-						local upperBound = currentWaypointIx + self.WAYPOINT_UPPER_LIMIT
-						showWaypoint = lowerBound <= j and j <= upperBound
-					end
-				self.signs[j]:setVisible(visible or showWaypoint)
-				if not self.signs[j]:isNormalSign() or j == numWp - 1 then
-					self.signs[j]:setVisible(visible or onlyStartStopVisible or showWaypoint)
-				end
+				local isVisible = self.dataSource:getIsPointVisible(j, 
+					onlyStartStopVisible, onlyAroundCurrentWaypointVisible)
+				self.signs[j]:setVisible(visible or isVisible)
 			end
 		end
 	end
@@ -359,46 +434,4 @@ function BufferedCourseDisplay.deleteBuffer()
 	for i, sign in pairs(BufferedCourseDisplay.buffer) do 
 		sign:delete()
 	end
-end
-
-
---- 3D course display for the editor
----@class EditorCourseDisplay : SimpleCourseDisplay
-EditorCourseDisplay = CpObject(SimpleCourseDisplay)
-EditorCourseDisplay.COLORS = {
-	HOVERED     = {0, 1, 1, 1.000 }, -- blue green
-	SELECTED    = {1, 0, 1, 1.000 },  -- red blue
-	NORMAL_LINE = {0, 1, 1, 1.000 },
-	HEADLAND_LINE = {1, 0, 1, 1.000 },
-	CONNECTING_LINE = {0, 0, 0, 0 } 
-}
-EditorCourseDisplay.HEIGHT_OFFSET = 4.5
-
-function EditorCourseDisplay:init(editor)
-	SimpleCourseDisplay.init(self)
-	self.editor = editor
-	self:setVisibility(true)
-end
-
-function EditorCourseDisplay:setCourse(courseWrapper)
-	self.courseWrapper = courseWrapper
-	SimpleCourseDisplay.setCourse(self, courseWrapper:getCourse())
-end
-
-function EditorCourseDisplay:updateWaypoint(i)
-	SimpleCourseDisplay.updateWaypoint(self, i)
-	if self.courseWrapper:isSelected(i) then 
-		self.signs[i]:setColor(EditorCourseDisplay.COLORS.SELECTED)
-	end
-	if self.courseWrapper:isHovered(i) then 
-		self.signs[i]:setColor(EditorCourseDisplay.COLORS.HOVERED)
-	end
-	self.signs[i]:setLineColor(EditorCourseDisplay.COLORS.NORMAL_LINE)
-	if self.courseWrapper:isHeadland(i) or self.courseWrapper:isOnRowNumber(i) then 
-		self.signs[i]:setLineColor(EditorCourseDisplay.COLORS.HEADLAND_LINE)
-	end
-	if self.courseWrapper:isConnectingPath(i) then
-		self.signs[i]:setLineColor(EditorCourseDisplay.COLORS.CONNECTING_LINE)
-	end
-	self.signs[i]:setBottomLineToGround()
 end
