@@ -1,22 +1,18 @@
 
 --- Changes a new waypoint at the mouse position.
 ---@class CpBrushChangeHeadlandWP : CpBrush
-CpBrushChangeHeadlandWP = {
-	MAX_HEADLANDS = 40,
-	NO_HEADLANDS = 0,
-	TRANSLATIONS = {
-		NO_HEADLAND = "noHeadland"
-	}
-}
-local CpBrushChangeWP_mt = Class(CpBrushChangeHeadlandWP, CpBrush)
-function CpBrushChangeHeadlandWP.new(customMt, cursor)
-	local self =  CpBrush.new(customMt or CpBrushChangeWP_mt, cursor)
+CpBrushChangeHeadlandWP = CpObject(CpBrush)
+CpBrushChangeHeadlandWP.MAX_HEADLANDS = 40
+CpBrushChangeHeadlandWP.NO_HEADLANDS = 0
+CpBrushChangeHeadlandWP.TRANSLATIONS = {
+		NO_HEADLAND = "noHeadland"}
+function CpBrushChangeHeadlandWP:init(...)
+	CpBrush.init(self, ...)
 	self.supportsPrimaryButton = true
 	self.supportsPrimaryDragging = true
 	self.supportsSecondaryButton = true
 	self.supportsPrimaryAxis = true
 	self.mode = self.NO_HEADLANDS
-	return self
 end
 
 function CpBrushChangeHeadlandWP:onButtonPrimary()
