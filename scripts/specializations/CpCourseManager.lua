@@ -282,7 +282,7 @@ function CpCourseManager:onEnterVehicle(isControlling)
     if isControlling then
         local spec = self.spec_cpCourseManager
         if spec.courseDisplay then
-            spec.courseDisplay:setVisibility(true)
+            spec.courseDisplay:setVisible(true)
             self:updateCpCourseDisplayVisibility()
         end
     end
@@ -292,7 +292,7 @@ function CpCourseManager:onLeaveVehicle(wasEntered)
     if wasEntered then
         local spec = self.spec_cpCourseManager
         if spec.courseDisplay then
-            spec.courseDisplay:setVisibility(false)
+            spec.courseDisplay:setVisible(false)
         end
     end
 end
@@ -317,7 +317,7 @@ function CpCourseManager:onCpCourseChange(newCourse,noEventSend)
         local spec = self.spec_cpCourseManager 
         self:updateCpCourseDisplayVisibility()
         if spec.courseDisplay then
-            spec.courseDisplay:clearCourse()
+            spec.courseDisplay:clear()
         end
     end
 end

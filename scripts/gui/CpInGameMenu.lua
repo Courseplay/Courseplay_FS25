@@ -56,6 +56,14 @@ function CpInGameMenu.new(target, customMt, messageCenter, l10n, inputManager, c
 		local index = self.pagingElement:getPageMappingIndexByElement(self.pageHelpLine)
 		self.pageSelector:setState(index, true)
 	end, self)
+	self.messageCenter:subscribe(MessageType.GUI_CP_INGAME_OPEN_CONSTRUCTION_MENU, function (menu, ...)
+		self.pageConstruction:setData(...)
+		g_gui:showGui("CpInGameMenu")
+		self:changeScreen(CpInGameMenu)
+		self:updatePages()
+		local index = self.pagingElement:getPageMappingIndexByElement(self.pageConstruction)
+		self.pageSelector:setState(index, true)
+	end, self)
 
 	self.messageCenter:subscribe(MessageType.GUI_CP_INGAME_CURRENT_VEHICLE_CHANGED, 
 		self.onCurrentVehicleChanged, self)
@@ -69,6 +77,7 @@ function CpInGameMenu.createFromExistingGui(gui, guiName)
 	CpCourseGeneratorFrame.createFromExistingGui(g_gui.frames.cpInGameMenuCourseGenerator.target, "CpCourseGeneratorFrame")
 	CpCourseManagerFrame.createFromExistingGui(g_gui.frames.cpInGameMenuCourseManager.target, "CpCourseManagerFrame")
 	CpHelpFrame.createFromExistingGui(g_gui.frames.cpInGameMenuHelpLine.target, "CpHelpFrame")
+	CpConstructionFrame.createFromExistingGui(g_gui.frames.cpInGameMenuConstruction.target, "CpConstructionFrame")
 
 	local messageCenter = gui.messageCenter
 	local l10n = gui.l10n
@@ -93,12 +102,14 @@ function CpInGameMenu.setupGui(courseStorage)
 	MessageType.GUI_CP_INGAME_OPEN_COURSE_MANAGER = nextMessageTypeId()
 	MessageType.GUI_CP_INGAME_OPEN_HELP_MENU = nextMessageTypeId()
 	MessageType.GUI_CP_INGAME_CURRENT_VEHICLE_CHANGED = nextMessageTypeId()
+	MessageType.GUI_CP_INGAME_OPEN_CONSTRUCTION_MENU = nextMessageTypeId()
 
 	CpCourseGeneratorFrame.setupGui()
 	CpGlobalSettingsFrame.setupGui()
 	CpVehicleSettingsFrame.setupGui()
 	CpCourseManagerFrame.setupGui()
 	CpHelpFrame.setupGui()
+	CpConstructionFrame.setupGui()
 
 	g_cpInGameMenu = CpInGameMenu.new(nil, nil, g_messageCenter, g_i18n, g_inputBinding, courseStorage)
 	g_gui:loadGui(Utils.getFilename("config/gui/CpInGameMenu.xml", Courseplay.BASE_DIRECTORY),
@@ -121,6 +132,7 @@ function CpInGameMenu:loadFromXMLFile(xmlFile, baseKey)
 	self.pageVehicleSettings:loadFromXMLFile(xmlFile, baseKey)
 	self.pageCourseManager:loadFromXMLFile(xmlFile, baseKey)
 	self.pageHelpLine:loadFromXMLFile(xmlFile, baseKey)
+	self.pageConstruction:loadFromXMLFile(xmlFile, baseKey)
 end
 
 function CpInGameMenu:saveToXMLFile(xmlFile, baseKey)
@@ -130,6 +142,7 @@ function CpInGameMenu:saveToXMLFile(xmlFile, baseKey)
 	self.pageVehicleSettings:saveToXMLFile(xmlFile, baseKey)
 	self.pageCourseManager:saveToXMLFile(xmlFile, baseKey)
 	self.pageHelpLine:saveToXMLFile(xmlFile, baseKey)
+	self.pageConstruction:saveToXMLFile(xmlFile, baseKey)
 end
 
 function CpInGameMenu:initializePages()
@@ -150,11 +163,10 @@ function CpInGameMenu:initializePages()
 	self.pageVehicleSettings:initialize(self)
 	self.pageCourseGenerator:initialize(self)
 	self.pageCourseManager:initialize(self)
+	self.pageConstruction:initialize(self)
 end
 
--- Lines 327-362
 function CpInGameMenu:setupMenuPages()
-
 	local orderedDefaultPages = {
 		{
 			self.pageGlobalSettings,
@@ -185,6 +197,11 @@ function CpInGameMenu:setupMenuPages()
 			"cpUi.navigationPath"
 		},
 		{
+			self.pageConstruction,
+			CpInGameMenu.isContructionPageAvailiable,
+			"gui.icon_others_construction"
+		},
+		{
 			self.pageHelpLine,
 			function ()
 				return true
@@ -201,7 +218,11 @@ function CpInGameMenu:setupMenuPages()
 	end
 end
 
--- Lines 365-397
+function CpInGameMenu:isContructionPageAvailiable()
+	return g_courseEditor:getIsActive()
+end
+
+
 function CpInGameMenu:setupMenuButtonInfo()
 	CpInGameMenu:superClass().setupMenuButtonInfo(self)
 	local onButtonBackFunction = self.clickBackCallback
@@ -236,7 +257,6 @@ function CpInGameMenu:setupMenuButtonInfo()
 		[InputAction.MENU_PAGE_PREV] = onButtonPagePreviousFunction}
 end
 
--- Lines 399-424
 function CpInGameMenu:onGuiSetupFinished()
 	CpInGameMenu:superClass().onGuiSetupFinished(self)
 
@@ -244,12 +264,6 @@ function CpInGameMenu:onGuiSetupFinished()
 	self:setupMenuPages()
 end
 
--- Lines 431-433
-function CpInGameMenu:updateBackground()
-	-- self.background:setVisible(self.currentPage.needsSolidBackground)
-end
-
--- Lines 512-527
 function CpInGameMenu:reset()
 	CpInGameMenu:superClass().reset(self)
 
@@ -265,7 +279,24 @@ function CpInGameMenu:onButtonBack()
 			return
 		end
 	end
-	CpInGameMenu:superClass().onButtonBack(self)
+	if self.currentPage:requestClose(self.clickBackCallback) then
+		CpInGameMenu:superClass().onButtonBack(self)
+	end
+end
+
+function CpInGameMenu:onPageNext()
+	if self.currentPage:requestClose(function ()
+			TabbedMenu:superClass().onPageNext(self)
+		end) then
+		TabbedMenu:superClass().onPageNext(self)
+	end
+end
+function CpInGameMenu:onPagePrevious()
+	if self.currentPage:requestClose(function ()
+			TabbedMenu:superClass().onPagePrevious(self)
+		end) then
+		TabbedMenu:superClass().onPagePrevious(self)
+	end
 end
 
 function CpInGameMenu:onClose(element)
@@ -283,6 +314,14 @@ function CpInGameMenu:update(dt)
 	CpInGameMenu:superClass().update(self, dt)
 end
 
+function CpInGameMenu:draw()
+	if self.currentPage.drawInGame then 
+		self.currentPage:drawInGame()
+		new2DLayer()
+	end
+	CpInGameMenu:superClass().draw(self)
+end
+
 function CpInGameMenu:onClickMenu()
 	self:exitMenu()
 
@@ -291,10 +330,10 @@ end
 
 function CpInGameMenu:onPageChange(pageIndex, pageMappingIndex, element, skipTabVisualUpdate)
 	CpInGameMenu:superClass().onPageChange(self, pageIndex, pageMappingIndex, element, skipTabVisualUpdate)
-	self:updateBackground()
 	if self.currentPage.categoryHeaderIcon then
 		self.currentPage.categoryHeaderIcon:setImageSlice(nil, self.pageTabs[self.currentPage].iconSliceId)
 	end
+	self.background:setVisible(not self.currentPage.noBackgroundNeeded)
 end
 
 function CpInGameMenu:getPageButtonInfo(page)

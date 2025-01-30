@@ -451,13 +451,15 @@ Il percorso viene salvato automaticamente alla chiusura dell'editor e sovrascriv
     <!--Course editor-->
     <!---->
     <text name="CP_editor_course_title" text="Editor percorsi"/>
+    <text name="CP_editor_custom_field_title" text="Custom field editor : %s"/>
     <text name="CP_editor_change_lane_offset" text="Modifica l'offset della corsia selezionata(%s)"/>
-    <text name="CP_editor_delete_title" text="Cancella punto di passaggio"/>
-    <text name="CP_editor_delete_primary_text" text="Cancella punto di passaggio selezionato."/>
-    <text name="CP_editor_delete_secondary_text" text="Continua l'eliminazione dei punti di passaggio sospesi."/>
-    <text name="CP_editor_delete_tertiary_text" text="Cancella tutti i punti di passaggio fino all'ultimo punto."/>
-    <text name="CP_editor_delete_yesNo_deleteToLastWp_title" text="Sei sicuro che tutti i punti di passaggio, fino all'ultimo debbano essere cancellati?"/>
-    <text name="CP_editor_delete_err" text="Sono rimasti troppo pochi punti di passaggio."/>
+    <text name="CP_editor_save_changes" text="Should the changes to %s be saved?"/>
+    <text name="CP_editor_course_basic_delete_title" text="Cancella punto di passaggio"/>
+    <text name="CP_editor_course_basic_delete_primary_text" text="Cancella punto di passaggio selezionato."/>
+    <text name="CP_editor_course_basic_delete_secondary_text" text="Continua l'eliminazione dei punti di passaggio sospesi."/>
+    <text name="CP_editor_course_basic_delete_tertiary_text" text="Cancella tutti i punti di passaggio fino all'ultimo punto."/>
+    <text name="CP_editor_course_basic_delete_yesNo_deleteToLastWp_title" text="Sei sicuro che tutti i punti di passaggio, fino all'ultimo debbano essere cancellati?"/>
+    <text name="CP_editor_course_basic_delete_err" text="Sono rimasti troppo pochi punti di passaggio."/>
     <text name="CP_editor_course_basic_title" text="Base"/>
     <text name="CP_editor_course_basic_move_title" text="muovi punto di passaggio"/>
     <text name="CP_editor_course_basic_move_primary_text" text="primario"/>
