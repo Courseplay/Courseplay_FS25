@@ -359,11 +359,9 @@ function CpAIJob:writeStream(streamId, connection)
 		self.cpJobParameters:writeStream(streamId, connection)
 	end
 
-	if self.fieldPolygon then 
-		streamWriteBool(streamId, true)
-		CustomField.writeStreamVertices(self.fieldPolygon, streamId, connection)
-	else 
-		streamWriteBool(streamId, false)
+	local vehicle = self:getVehicle()
+	if vehicle then
+		CpCourseGenerator.onWriteStream(vehicle, streamId, connection)	
 	end
 end
 
@@ -383,8 +381,9 @@ function CpAIJob:readStream(streamId, connection)
 		self.cpJobParameters:validateSettings(true)
 		self.cpJobParameters:readStream(streamId, connection)
 	end
-	if streamReadBool(streamId) then 
-		self.fieldPolygon = CustomField.readStreamVertices(streamId, connection)
+	local vehicle = self:getVehicle()
+	if vehicle then
+		CpCourseGenerator.onReadStream(vehicle, streamId, connection)	
 	end
 	if not self:getIsHudJob() then
 		self:setValues()
@@ -409,10 +408,6 @@ end
 
 function CpAIJob:getCpJobParameters()
 	return self.cpJobParameters
-end
-
-function CpAIJob:setFieldPolygon(polygon)
-	self.fieldPolygon = polygon
 end
 
 --- Can the job be started?
