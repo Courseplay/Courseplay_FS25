@@ -144,7 +144,11 @@ function CpCourseGenerator:onWriteStream(streamId, connection)
         streamWriteInt32(streamId, #spec.fieldPolygon)
         for _, point in pairs(spec.fieldPolygon) do
             streamWriteFloat32(streamId, point.x)
-            streamWriteFloat32(streamId, point.y)
+            if point.y ~= nil then
+                streamWriteFloat32(streamId, point.y)
+            else 
+                streamWriteFloat32(streamId, getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, point.x, 1, point.z))
+            end
             streamWriteFloat32(streamId, point.z)
         end
     else
