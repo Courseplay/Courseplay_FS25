@@ -73,6 +73,18 @@ function Logger:debug(...)
     end
 end
 
+--- Write a debug message in the log if the log level is > Logger.level.debug. Will only write once every second.
+---@param [vehicle], ... string format and arguments
+function Logger:debugSparse(...)
+    local now = getTimeSec and getTimeSec() or os.time()
+    if self.lastCallSec and self.lastCallSec ~= now then
+        if self.logLevel >= Logger.level.debug then
+            self:log('DEBUG', ...)
+        end
+        self.lastCallSec = now
+    end
+end
+
 --- Write a trace in the log if the log level is > Logger.level.trace
 ---@param [vehicle], ... string format and arguments
 function Logger:trace(...)

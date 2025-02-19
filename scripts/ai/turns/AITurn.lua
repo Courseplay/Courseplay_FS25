@@ -54,6 +54,8 @@ function AITurn:init(vehicle, driveStrategy, ppc, proximityController, turnConte
     self:addState('REVERSING_AFTER_BLOCKED')
     self:addState('WAITING_FOR_PATHFINDER')
     self.vehicle = vehicle
+    self.workEndHandler = WorkEndHandler(vehicle, driveStrategy)
+    self.workStartHandler = WorkStartHandler(vehicle, driveStrategy)
     self.settings = vehicle:getCpSettings()
     self.turningRadius = AIUtil.getTurningRadius(self.vehicle)
     ---@type PurePursuitController
@@ -292,8 +294,8 @@ end
 
 function AITurn:finishRow(dt)
     -- keep driving straight until we need to raise our implements
-    if self.driveStrategy:shouldRaiseImplements(self:getRaiseImplementNode()) then
-        self.driveStrategy:raiseImplements()
+    self.workEndHandler:raiseImplementsAsNeeded(self:getRaiseImplementNode())
+    if self.workEndHandler:allRaised() then
         self.driveStrategy:raiseControllerEvent(AIDriveStrategyCourse.onFinishRowEvent, self.turnContext:isHeadlandCorner())
         self:debug('Row finished, starting turn.')
         self:startTurn()
@@ -304,10 +306,12 @@ end
 function AITurn:endTurn(dt)
     -- keep driving on the turn ending temporary course until we need to lower our implements
     -- check implements only if we are more or less in the right direction (next row's direction)
-    if self.turnContext:isDirectionCloseToEndDirection(self.vehicle:getAIDirectionNode(), 30) and
-            self.driveStrategy:shouldLowerImplements(self.turnContext.turnEndWpNode.node, false) then
-        self:debug('Turn ended, resume fieldwork')
-        self:resumeFieldworkAfterTurn(self.turnContext.turnEndWpIx)
+    if self.turnContext:isDirectionCloseToEndDirection(self.vehicle:getAIDirectionNode(), 30) then
+        self.workStartHandler:lowerImplementsAsNeeded(self.turnContext.turnEndWpNode.node, false)
+        if self.workStartHandler:allLowered() then
+            self:debug('Turn ended, resume fieldwork')
+            self:resumeFieldworkAfterTurn(self.turnContext.turnEndWpIx)
+        end
     end
     return true
 end
@@ -638,19 +642,14 @@ end
 ---@return boolean true if it is ok the continue driving, false when the vehicle should stop
 function CourseTurn:endTurn(dt)
     -- keep driving on the turn course until we need to lower our implements
-    local shouldLower, dz = self.driveStrategy:shouldLowerImplements(self:getLowerImplementNode(), self.ppc:isReversing())
+    local dz = self.workStartHandler:lowerImplementsAsNeeded(self:getLowerImplementNode(), self.ppc:isReversing())
     self.driveStrategy:raiseControllerEvent(AIDriveStrategyCourse.onTurnEndProgressEvent,
-            self:getLowerImplementNode(), self.ppc:isReversing(), shouldLower, self.turnContext:isLeftTurn())
-    if shouldLower then
-        if not self.implementsLowered then
-            -- have not started lowering implements yet
-            self:debug('Turn ending, lowering implements')
-            self.driveStrategy:lowerImplements()
-            self.implementsLowered = true
-            if self.ppc:isReversing() then
-                -- when ending a turn in reverse, don't drive the rest of the course, switch right back to fieldwork
-                self:resumeFieldworkAfterTurn(self.turnContext.turnEndWpIx)
-            end
+            self:getLowerImplementNode(), self.ppc:isReversing(), self.workStartHandler:allLowered(), self.turnContext:isLeftTurn())
+    if self.workStartHandler:allLowered() then
+        if self.ppc:isReversing() then
+            self:debug('Turn ending in reverse')
+            -- when ending a turn in reverse, don't drive the rest of the course, switch right back to fieldwork
+            self:resumeFieldworkAfterTurn(self.turnContext.turnEndWpIx)
         else
             -- implements already lowering, making sure we check if they are lowered, the faster we go, the earlier,
             -- for those people who set insanely high turn speeds...
@@ -1009,6 +1008,7 @@ function StartRowOnly:init(vehicle, driveStrategy, ppc, turnContext, startRowCou
     self:addState('IMPLEMENTS_LOWERING')
     self.vehicle = vehicle
     self.settings = vehicle:getCpSettings()
+    self.workStartHandler = WorkStartHandler(vehicle, driveStrategy)
     self.turningRadius = AIUtil.getTurningRadius(self.vehicle)
     ---@type AIDriveStrategyFieldWorkCourse
     self.driveStrategy = driveStrategy
@@ -1048,11 +1048,10 @@ function StartRowOnly:getDriveData()
                     self:getLowerImplementNode(), self.ppc:isReversing(), true, not self.turnContext:isNextTurnLeft())
         end
     elseif self.state == self.states.APPROACHING_ROW then
-        local shouldLower, _ = self.driveStrategy:shouldLowerImplements(self:getLowerImplementNode(), self.ppc:isReversing())
-        if shouldLower then
+        self.workStartHandler:lowerImplementsAsNeeded(self:getLowerImplementNode(), self.ppc:isReversing())
+        if self.workStartHandler:allLowered() then
             -- have not started lowering implements yet
-            self:debug('Lowering implements')
-            self.driveStrategy:lowerImplements()
+            self:debug('All implements lowering')
             self.state = self.states.IMPLEMENTS_LOWERING
             if self.ppc:isReversing() then
                 -- when ending a turn in reverse, don't drive the rest of the course, switch right back to fieldwork
@@ -1061,7 +1060,7 @@ function StartRowOnly:getDriveData()
         end
         return nil, nil, nil, self:getForwardSpeed()
     elseif self.state == self.states.IMPLEMENTS_LOWERING then
-        local _, dz = self.driveStrategy:shouldLowerImplements(self:getLowerImplementNode(), self.ppc:isReversing())
+        local dz = self.workStartHandler:lowerImplementsAsNeeded(self:getLowerImplementNode(), self.ppc:isReversing())
         -- implements already lowering, making sure we check if they are lowered, the faster we go, the earlier,
         -- for those people who set insanely high turn speeds...
         local implementCheckDistance = math.max(1, 0.1 * self.vehicle:getLastSpeed())

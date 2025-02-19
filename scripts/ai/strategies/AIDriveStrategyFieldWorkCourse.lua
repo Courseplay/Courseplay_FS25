@@ -300,34 +300,6 @@ function AIDriveStrategyFieldWorkCourse:startWaitingForLower()
     end
 end
 
-function AIDriveStrategyFieldWorkCourse:shouldRaiseImplements(turnStartNode)
-    -- see if the vehicle has AI markers -> has work areas (built-in implements like a mower or cotton harvester)
-    local doRaise = self:shouldRaiseThisImplement(self.vehicle, turnStartNode)
-    -- and then check all implements
-    for _, implement in pairs(AIUtil.getAllAIImplements(self.vehicle)) do
-        -- only when _all_ implements can be raised will we raise them all, hence the 'and'
-        doRaise = doRaise and self:shouldRaiseThisImplement(implement.object, turnStartNode)
-    end
-    return doRaise
-end
-
----@param turnStartNode number at the last waypoint of the row, pointing in the direction of travel. This is where
---- the implement should be raised when beginning a turn
-function AIDriveStrategyFieldWorkCourse:shouldRaiseThisImplement(object, turnStartNode)
-    local aiFrontMarker, _, aiBackMarker = WorkWidthUtil.getAIMarkers(object, true)
-    -- if something (like a combine) does not have an AI marker it should not prevent from raising other implements
-    -- like the header, which does have markers), therefore, return true here
-    if not aiBackMarker or not aiFrontMarker then
-        return true
-    end
-    local marker = self:getImplementRaiseLate() and aiBackMarker or aiFrontMarker
-    -- turn start node in the back marker node's coordinate system
-    local _, _, dz = localToLocal(marker, turnStartNode, 0, 0, 0)
-    self:debugSparse('%s: shouldRaiseImplements: dz = %.1f', CpUtil.getName(object), dz)
-    -- marker is just in front of the turn start node
-    return dz > 0
-end
-
 
 --- When finishing a turn, is it time to lower all implements here?
 -- TODO: remove the reversing parameter and use ppc to find out once not called from turn.lua
@@ -353,54 +325,6 @@ function AIDriveStrategyFieldWorkCourse:shouldLowerImplements(turnEndNode, rever
     return doLower, dz
 end
 
----@param object table is a vehicle or implement object with AI markers (marking the working area of the implement)
----@param workStartNode number node at the first waypoint of the row, pointing in the direction of travel. This is where
---- the implement should be in the working position after a turn
----@param reversing boolean are we reversing? When reversing towards the turn end point, we must lower the implements
---- when we are _behind_ the turn end node (dz < 0), otherwise once we reach it (dz > 0)
----@return boolean, boolean, number the second one is true when the first is valid, and the distance to the work start
---- in meters (<0) when driving forward, nil when driving backwards.
-function AIDriveStrategyFieldWorkCourse:shouldLowerThisImplement(object, workStartNode, reversing)
-    local aiLeftMarker, aiRightMarker, aiBackMarker = WorkWidthUtil.getAIMarkers(object, true)
-    if not aiLeftMarker then
-        return false, false, nil
-    end
-    local dxLeft, _, dzLeft = localToLocal(aiLeftMarker, workStartNode, 0, 0, 0)
-    local dxRight, _, dzRight = localToLocal(aiRightMarker, workStartNode, 0, 0, 0)
-    local dxBack, _, dzBack = localToLocal(aiBackMarker, workStartNode, 0, 0, 0)
-    local loweringDistance
-    if AIUtil.hasAIImplementWithSpecialization(self.vehicle, SowingMachine) then
-        -- sowing machines are stopped while lowering, but leave a little reserve to allow for stopping
-        -- TODO: rather slow down while approaching the lowering point
-        loweringDistance = 0.5
-    else
-        -- others can be lowered without stopping so need to start lowering before we get to the turn end to be
-        -- in the working position by the time we get to the first waypoint of the next row
-        loweringDistance = math.min(self.vehicle.lastSpeed, self.settings.turnSpeed:getValue() / 3600) *
-                self.loweringDurationMs + 0.5 -- vehicle.lastSpeed is in meters per millisecond
-    end
-    local aligned = CpMathUtil.isSameDirection(object.rootNode, workStartNode, 15)
-    -- some implements, especially plows may have the left and right markers offset longitudinally
-    -- so if the implement is aligned with the row direction already, then just take the front one
-    -- if not aligned, work with an average
-    local dzFront = aligned and math.max(dzLeft, dzRight) or (dzLeft + dzRight) / 2
-    local dxFront = (dxLeft + dxRight) / 2
-    self:debug('%s: dzLeft = %.1f, dzRight = %.1f, aligned = %s, dzFront = %.1f, dxFront = %.1f, dzBack = %.1f, loweringDistance = %.1f, reversing %s',
-            CpUtil.getName(object), dzLeft, dzRight, aligned, dzFront, dxFront, dzBack, loweringDistance, tostring(reversing))
-    local dz = self:getImplementLowerEarly() and dzFront or dzBack
-    if reversing then
-        return dz < 0, true, nil
-    else
-        -- dz will be negative as we are behind the target node. Also, dx must be close enough, otherwise
-        -- we'll lower them way too early if approaching the turn end from the side at about 90° (and we
-        -- want a constant value here, certainly not the loweringDistance which changes with the current speed
-        -- and thus introduces a feedback loop, causing the return value to oscillate, that is, we say should be
-        -- lowered, than the vehicle stops, but now the loweringDistance will be low, so we say should not be
-        -- lowering, vehicle starts again, and so on ...
-        local normalLoweringDistance = self.loweringDurationMs * self.settings.turnSpeed:getValue() / 3600
-        return dz > -loweringDistance and math.abs(dxFront) < normalLoweringDistance * 1.5, true, dz
-    end
-end
 
 --- Are all implements now aligned with the node? Can be used to find out if we are for instance aligned with the
 --- turn end node direction in a question mark turn and can start reversing.
@@ -766,6 +690,10 @@ end
 
 function AIDriveStrategyFieldWorkCourse:getTurnEndForwardOffset()
     return 0
+end
+
+function AIDriveStrategyFieldWorkCourse:getLoweringDurationMs()
+    return self.loweringDurationMs
 end
 
 function AIDriveStrategyFieldWorkCourse:getImplementRaiseLate()
