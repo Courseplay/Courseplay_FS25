@@ -72,15 +72,14 @@ end
 --	-1	point is outside of polygon
 --	 0	point is directly on polygon
 function CpMathUtil.isPointInPolygon(polygon, x, z)
+	if polygon == nil or #polygon <= 2 then 
+		CpUtil.error("CpMathUtil.isPointInPolygon(): polygon is too small or nil!")
+		return false
+	end
 	if x == nil or z == nil then 
 		CpUtil.error("CpMathUtil.isPointInPolygon(): x or z are nil!")
 		return false
 	end
-	if polygon == nil or #polygon <= 2 then 
-		CpUtil.error("CpMathUtil.isPointInPolygon(): polygon is to small or nil!")
-		return false
-	end
-
 
 	local function crossProductQuery(a, b, c)
 		-- returns:
@@ -136,6 +135,10 @@ end
 ---@return boolean true if the point is within the distance to any of the edges
 ---@return number the distance to the closest edge
 function CpMathUtil.isWithinDistanceToPolygon(polygon, x, z, distance)
+	if polygon == nil or #polygon <= 2 then 
+		CpUtil.error("CpMathUtil.isWithinDistanceToPolygon(): polygon is too small or nil!")
+		return false, math.huge
+	end
 	local closestDistance = math.huge
 	local point = Vector(x, -z)
 	for i = 1, #polygon do
