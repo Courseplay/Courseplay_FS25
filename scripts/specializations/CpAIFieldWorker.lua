@@ -78,6 +78,10 @@ function CpAIFieldWorker:onLoad(savegame)
 	--- Register the spec: spec_cpAIFieldWorker
     self.spec_cpAIFieldWorker = self["spec_" .. CpAIFieldWorker.SPEC_NAME]
     local spec = self.spec_cpAIFieldWorker
+    if spec == nil then
+        CpUtil.error("spec_cpAIFieldWorker is nil in onLoad")
+        return
+    end
     --- This job is for starting the driving with a key bind or the hud.
     spec.cpJob = g_currentMission.aiJobTypeManager:createJob(AIJobType.FIELDWORK_CP)
     spec.cpJob:getCpJobParameters().startAt:setValue(CpFieldWorkJobParameters.START_AT_NEAREST_POINT)
@@ -91,6 +95,10 @@ end
 
 function CpAIFieldWorker:onLoadFinished(savegame)
     local spec = self.spec_cpAIFieldWorker
+    if spec == nil then
+        CpUtil.error("spec_cpAIFieldWorker is nil in onLoadFinished")
+        return
+    end
     if savegame ~= nil then 
         spec.cpJob:getCpJobParameters():loadFromXMLFile(savegame.xmlFile, savegame.key.. CpAIFieldWorker.KEY..".cpJob")
         spec.cpJobStartAtLastWp:getCpJobParameters():loadFromXMLFile(savegame.xmlFile, savegame.key.. CpAIFieldWorker.KEY..".cpJobStartAtLastWp")
@@ -235,7 +243,7 @@ end
 
 function CpAIFieldWorker:onCpADRestarted()
     local spec = self.spec_cpAIFieldWorker
- 
+  
 end
 
 --- Event listener called, when an implement is full.

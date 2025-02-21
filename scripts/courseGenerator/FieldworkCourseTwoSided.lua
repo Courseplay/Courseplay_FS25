@@ -26,6 +26,11 @@ function FieldworkCourseTwoSided:init(context)
     self.logger = Logger('FieldworkCourseTwoSided')
     context:setRowPattern(CourseGenerator.RowPatternAlternatingFirstRowEntryOnly())
     self:_setContext(context)
+    -- Add nil check for self.boundary
+    if not self.boundary then
+        self.context:addError(self.logger, 'Boundary is nil')
+        return
+    end
     -- clockwise setting really does not matter but the generated headland is expected match the boundary
     self.virtualHeadland = CourseGenerator.FieldworkCourseHelper.createVirtualHeadland(self.boundary, self.boundary:isClockwise(),
             self.context.workingWidth)
@@ -81,6 +86,11 @@ function FieldworkCourseTwoSided:getCenterPath()
 end
 
 function FieldworkCourseTwoSided:generateHeadlands()
+    -- Add nil check for self.startHeadlandBlock
+    if not self.startHeadlandBlock then
+        self.context:addError(self.logger, 'Start headland block is nil')
+        return
+    end
     -- this is the side where we start working, generate here headlands parallel to the field edge
     -- block 1 on the drawing above
     self:_createStartHeadlandBlock()

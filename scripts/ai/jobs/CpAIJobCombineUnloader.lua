@@ -68,21 +68,26 @@ function CpAIJobCombineUnloader:applyCurrentState(vehicle, mission, farmId, isDi
 
 	self:copyFrom(vehicle:getCpCombineUnloaderJob())
 
-	local x, z = self.cpJobParameters.fieldPosition:getPosition()
-	-- no field position from the previous job, use the vehicle's current position
-	if x == nil or z == nil then
-		x, _, z = getWorldTranslation(vehicle.rootNode)
-		self.cpJobParameters.fieldPosition:setPosition(x, z)
+	if self.cpJobParameters.fieldPosition then
+		local x, z = self.cpJobParameters.fieldPosition:getPosition()
+		-- no field position from the previous job, use the vehicle's current position
+		if x == nil or z == nil then
+			x, _, z = getWorldTranslation(vehicle.rootNode)
+			self.cpJobParameters.fieldPosition:setPosition(x, z)
+		end
 	end
-	x, z = self.cpJobParameters.fieldUnloadPosition:getPosition()
-	local angle = self.cpJobParameters.fieldUnloadPosition:getAngle()
-	-- no field position from the previous job, use the vehicle's current position
-	if x == nil or z == nil or angle == nil then
-		x, _, z = getWorldTranslation(vehicle.rootNode)
-		local dirX, _, dirZ = localDirectionToWorld(vehicle.rootNode, 0, 0, 1)
-		angle = MathUtil.getYRotationFromDirection(dirX, dirZ)
-		self.cpJobParameters.fieldUnloadPosition:setPosition(x, z)
-		self.cpJobParameters.fieldUnloadPosition:setAngle(angle)
+
+	if self.cpJobParameters.fieldUnloadPosition then
+		local x, z = self.cpJobParameters.fieldUnloadPosition:getPosition()
+		local angle = self.cpJobParameters.fieldUnloadPosition:getAngle()
+		-- no field position from the previous job, use the vehicle's current position
+		if x == nil or z == nil or angle == nil then
+			x, _, z = getWorldTranslation(vehicle.rootNode)
+			local dirX, _, dirZ = localDirectionToWorld(vehicle.rootNode, 0, 0, 1)
+			angle = MathUtil.getYRotationFromDirection(dirX, dirZ)
+			self.cpJobParameters.fieldUnloadPosition:setPosition(x, z)
+			self.cpJobParameters.fieldUnloadPosition:setAngle(angle)
+		end
 	end
 end
 
