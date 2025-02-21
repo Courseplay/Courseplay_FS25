@@ -191,6 +191,8 @@ Changelog 8.0.0.0:
 		<sourceFile filename="scripts/ai/turns/TurnContext.lua"/>
 		<sourceFile filename="scripts/ai/turns/TurnManeuver.lua"/>
 		<sourceFile filename="scripts/ai/turns/TurnContext.lua"/>
+		<sourceFile filename="scripts/ai/turns/WorkStartHandler.lua"/>
+		<sourceFile filename="scripts/ai/turns/WorkEndHandler.lua"/>
 
 		<sourceFile filename="scripts/ai/controllers/ImplementController.lua"/>
 		<sourceFile filename="scripts/ai/controllers/BalerController.lua"/>
