@@ -12,6 +12,7 @@
 		<Setting classType="AIParameterSettingList" name="workWidth" min="0.5" max="55" incremental="0.1" unit="2" setDefault="setAutomaticWorkWidthAndOffset" onChangeCallback="cpShowWorkWidth" isVisible="isWorkWidthSettingVisible"/>
 		<Setting classType="AIParameterSettingList" name="multiTools" min="1" max="5" default="1" isExpertModeOnly="true"/>
 		<Setting classType="AIParameterBooleanSetting" name="useSameTurnWidth" isVisible="hasMoreThenOneVehicle" isExpertModeOnly="true"/>
+		<Setting classType="AIParameterSettingList" name="fieldMargin" min="-5" max="6" default="0" incremental="0.2" isExpertModeOnly="true"/>
 		<Setting classType="AIParameterSettingList" name="numberOfHeadlands" min="0" max="40"/>
 		<Setting classType="AIParameterBooleanSetting" name="narrowField" defaultBool="false" isVisible="isNarrowFieldEnabled" isExpertModeOnly="true"/>
 		<Setting classType="AIParameterBooleanSetting" name="startOnHeadland" defaultBool="true" isVisible="canStartOnRows">
@@ -33,8 +34,7 @@
 				<Text>clockwise</Text>
 			</Texts>
 		</Setting>
-		<Setting classType="AIParameterSettingList" name="headlandOverlapPercent" min="0" max="25" default="7" unit="4" isExpertModeOnly="true"/>
-		<Setting classType="AIParameterSettingList" name="fieldMargin" min="-5" max="6" default="0" incremental="0.2" isExpertModeOnly="true"/>
+		<Setting classType="AIParameterSettingList" name="headlandOverlapPercent" min="0" max="25" default="7" unit="4" isExpertModeOnly="true"/>		
 	</SettingSubTitle>
 	<!--Center settings-->
 	<SettingSubTitle title="center">
