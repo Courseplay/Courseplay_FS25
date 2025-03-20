@@ -508,7 +508,10 @@ function RowPatternLands:getPossibleEntries(rows)
         return RowPattern.getPossibleEntries(self, rows)
     end
     return {
+        -- reverseRowOrderBefore, reverseRowOrderAfter, reverseOddRows
         CourseGenerator.RowPattern.Entry(firstRow[1], false, false, false),
+        CourseGenerator.RowPattern.Entry(firstRow[#firstRow], false, false, true),
+        CourseGenerator.RowPattern.Entry(lastRow[1], true, false, false),
         CourseGenerator.RowPattern.Entry(lastRow[#lastRow], true, false, true)
     }
 end
