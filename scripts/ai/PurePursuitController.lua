@@ -90,6 +90,8 @@ function PurePursuitController:init(vehicle)
     self.lastPassedWaypointIx = nil
     self.waypointPassedListeners = {}
     self.waypointChangeListeners = {}
+    -- enable/disable stopping the vehicle when it is off-track (too far away from any waypoint)
+    self.stopWhenOffTrack = CpTemporaryObject(true)
 end
 
 -- destructor
@@ -127,6 +129,13 @@ end
 
 function PurePursuitController:getOffset()
     return self.course:getOffset()
+end
+
+--- Disable off-track detection temporarily, for instance while we know the vehicle must be driving
+--- longer distances between two waypoints, like an unloader following a chopper through a turn, where
+--- in some patterns the row end and the next row start are far apart.
+function PurePursuitController:disableStopWhenOffTrack(milliseconds)
+    self.stopWhenOffTrack:set(false, milliseconds)
 end
 
 --- Use a different node to track/control, for example the root node of a trailed implement
@@ -510,7 +519,7 @@ function PurePursuitController:findGoalPoint()
                 -- current waypoint is the waypoint at the end of the path segment
                 self:setCurrentWaypoint(ix + 1)
             end
-            if (q1 > self.cutOutDistanceLimit) and (q2 > self.cutOutDistanceLimit) then
+            if (q1 > self.cutOutDistanceLimit) and (q2 > self.cutOutDistanceLimit) and self.stopWhenOffTrack:get() then
                 CpUtil.infoVehicle(self.vehicle, 'vehicle off track, shutting off Courseplay now.')
                 self.vehicle:stopCurrentAIJob(AIMessageCpError.new())
                 return

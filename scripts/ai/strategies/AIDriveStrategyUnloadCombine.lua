@@ -804,6 +804,14 @@ function AIDriveStrategyUnloadCombine:handleChopper180Turn()
             else
                 self:debugSparse('Chopper said turn is forward only but has no turn course')
             end
+        else
+            self:debugSparse('Chopper said turn is not forward only, following without turn course')
+            -- in a lands, or spiral pattern the row start may be very far from the row end, and we only have
+            -- the normal course loaded, no field work course. So while following the chopper through the turn,
+            -- we may get too far from the previous and next waypoints (row end/row start), triggering the
+            -- off-track detection in PPC, which would stop the helper.
+            -- To avoid this, we disable it temporarily
+            self.ppc:disableStopWhenOffTrack(2000)
         end
     else
         local _, _, dz = self:getDistanceFromCombine()
