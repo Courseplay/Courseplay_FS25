@@ -124,6 +124,9 @@ function Courseplay:loadMap(filename)
 end
 
 function Courseplay:deleteMap()
+	if g_server == nil then
+		self:saveUserSettings()
+	end
 	g_courseEditor:delete()
 	BufferedCourseDisplay.deleteBuffer()
 	g_signPrototypes:delete()
