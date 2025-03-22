@@ -230,10 +230,17 @@ function CpTextHudElement:setTextDetails(text, textSize, textAlignment, textColo
 	self.textColor = textColor or self.textColor
 	self.textBold = textBold or self.textBold
     self.maxWidth = maxWidth or self.maxWidth
-	local width = getTextWidth(self.screenTextSize, self.text)
+    setTextBold(self.textBold)
+	setTextAlignment(self.textAlignment)
+    setTextWrapWidth(self.maxWidth)
+    setTextLineBounds(0,2)
+    local width = getTextWidth(self.screenTextSize, self.text)
 	local height = getTextHeight(self.screenTextSize, self.text)
-
 	self:setDimension(width, height)
+	setTextAlignment(RenderText.ALIGN_LEFT)
+	setTextWrapWidth(0)
+	setTextBold(false)
+	setTextColor(1, 1, 1, 1)
 end
 
 function CpTextHudElement:setHoveredText(text)
