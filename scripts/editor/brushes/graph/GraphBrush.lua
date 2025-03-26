@@ -5,15 +5,6 @@
 GraphBrush = CpObject(CpBrush)
 GraphBrush.radius = 0.5
 GraphBrush.sizeModifierMax = 10
--- -- GraphBrush.translationPrefix = "gui_ad_editor_"
--- GraphBrush.primaryButtonText = "primary_text"
--- GraphBrush.primaryAxisText = "primary_axis_text"
--- GraphBrush.secondaryButtonText = "secondary_text"
--- GraphBrush.secondaryAxisText = "secondary_axis_text"
--- GraphBrush.tertiaryButtonText = "tertiary_text"
--- GraphBrush.inputTitle = "input_title"
--- GraphBrush.yesNoTitle = "yesNo_title"
-
 function GraphBrush:init(...)
 	CpBrush.init(self, ...)
 	self.sizeModifier = 1

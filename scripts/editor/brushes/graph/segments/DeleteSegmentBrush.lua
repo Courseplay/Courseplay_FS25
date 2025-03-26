@@ -7,7 +7,7 @@ function DeleteSegmentBrush:init(...)
 	GraphBrush.init(self, ...)
 	self.supportsPrimaryButton = true
 	self.supportsPrimaryDragging = true
-	self.supportsPrimaryAxis = true
+	-- self.supportsPrimaryAxis = true
 	return self
 end
 

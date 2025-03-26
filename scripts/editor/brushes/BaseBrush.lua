@@ -95,7 +95,7 @@ end
 
 function CpBrush:getErrorMessage()
 	if self.errorMsgText then 
-		return self.editor.TRANSLATION_PREFIX .. self.errorMsgText
+		return g_i18n:getText(self.editor.TRANSLATION_PREFIX .. self.errorMsgText)
 	end
 	return self:getTranslation(self.defaultErrorMessage)
 end

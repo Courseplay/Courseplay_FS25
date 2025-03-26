@@ -1773,11 +1773,11 @@ The course is saved automatically on closing of the editor and overrides the sel
 			<Text language="de"><![CDATA[Gerade Line an Punkten erstellen.]]></Text>
 			<Text language="en"><![CDATA[Create a straight line of points.]]></Text>
 		</Translation>
-		<Translation name="CP_editor_graph_points_straightLinePoin_primary_text">
+		<Translation name="CP_editor_graph_points_straightLinePoint_primary_text">
 			<Text language="de"><![CDATA[TODO]]></Text>
 			<Text language="en"><![CDATA[TODO]]></Text>
 		</Translation>
-		<Translation name="CP_editor_graph_points_straightLinePoin_primary_axis_text">
+		<Translation name="CP_editor_graph_points_straightLinePoint_primary_axis_text">
 			<Text language="de"><![CDATA[TODO]]></Text>
 			<Text language="en"><![CDATA[TODO]]></Text>
 		</Translation>
@@ -1786,11 +1786,11 @@ The course is saved automatically on closing of the editor and overrides the sel
 			<Text language="de"><![CDATA[Gerade Line an Punkten erstellen.]]></Text>
 			<Text language="en"><![CDATA[Create a straight line of points.]]></Text>
 		</Translation>
-		<Translation name="CP_editor_graph_points_straightLinePoin_primary_text">
+		<Translation name="CP_editor_graph_points_straightLinePoint_primary_text">
 			<Text language="de"><![CDATA[TODO]]></Text>
 			<Text language="en"><![CDATA[TODO]]></Text>
 		</Translation>
-		<Translation name="CP_editor_graph_points_straightLinePoin_primary_axis_text">
+		<Translation name="CP_editor_graph_points_straightLinePoint_primary_axis_text">
 			<Text language="de"><![CDATA[TODO]]></Text>
 			<Text language="en"><![CDATA[TODO]]></Text>
 		</Translation>
@@ -3362,6 +3362,10 @@ TPS extension
 		<Translation name="input_CP_OPEN_INGAME_MENU">
 			<Text language="de"><![CDATA[CP: Menu öffnen]]></Text>
 			<Text language="en"><![CDATA[CP: Open menu]]></Text>
+		</Translation>
+		<Translation name="input_CP_OPEN_GRAPH_EDITOR">
+			<Text language="de"><![CDATA[CP: Straßen Editor öffnen]]></Text>
+			<Text language="en"><![CDATA[CP: Open street editor]]></Text>
 		</Translation>
 <!--
 		<Translation name="TEST">

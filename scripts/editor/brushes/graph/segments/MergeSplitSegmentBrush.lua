@@ -14,8 +14,8 @@ function MergeSplitSegmentBrush:onButtonPrimary(isDown, isDrag, isUp)
     local nodeId = self:getHoveredNodeId()	
     if isDown and not self.graphWrapper:hasSelectedNode() then
         if nodeId ~= nil then 
-            local isNotFirstOrLast, err = self.graphWrapper:isNotFirstOrLastSegmentPoint(nodeId) 
-            if isNotFirstOrLast then 
+            local isFirstOrLast, err = self.graphWrapper:isFirstOrLastSegmentPoint(nodeId) 
+            if not isFirstOrLast then 
                 self:setError(err)
                 return
             end
