@@ -479,6 +479,51 @@ Der Kurs wird beim Schließen automatisch gespeichert und überschrieben.
     <text name="CP_editor_course_advanced_curveInsert_secondary_text" text="Setzt die Auswahl der Wegpunkte zurück."/>
     <text name="CP_editor_course_advanced_curveInsert_err" text="Ein Wendepunkt darf nicht ausgewählt werden."/>
     <!---->
+    <!--Graph editor-->
+    <!---->
+    <text name="CP_editor_graph_title" text="Strecken Editor"/>
+    <text name="CP_editor_graph_err_point_not_found" text="Kein Punkt gefunden!"/>
+    <text name="CP_editor_graph_err_segment_not_found" text="Kein Segment gefunden!"/>
+    <text name="CP_editor_graph_err_min_distance_to_small" text="Abstand zu anderem Punkt ist zu klein!"/>
+    <text name="CP_editor_graph_err_node_is_first" text="Erster Punkt im Segment ist nicht zulässig!"/>
+    <text name="CP_editor_graph_err_node_is_last" text="Lester Punkt im Segment ist nicht zulässig!"/>
+    <text name="CP_editor_graph_err_node_not_first_or_last" text="Punkt muss in der Mitte vom Segment sein!"/>
+    <text name="CP_editor_graph_err_same_segment" text="Punkte müssen zu unterschiedlichen Segmenten gehören!"/>
+    <text name="CP_editor_graph_err_target_not_found" text="Kein Ziel für den Punkt gefunden!"/>
+    <text name="CP_editor_graph_err_already_has_target" text="Der Punkt hat bereits ein Ziel!"/>
+    <!---->
+    <!--Graph editor points-->
+    <!---->
+    <text name="CP_editor_graph_points_deletePoint_title" text="Punkte löschen"/>
+    <text name="CP_editor_graph_points_deletePoint_primary_text" text="Löscht den ausgewählten Punkt."/>
+    <text name="CP_editor_graph_points_insertPoint_title" text="Punkts einfügen"/>
+    <text name="CP_editor_graph_points_insertPoint_primary_text" text="Fügt einen Punkt vor einem weiteren Punkt hinzu."/>
+    <text name="CP_editor_graph_points_insertPoint_secondary_text" text="Fügt einen Punkt hinter einem weiteren Punkt hinzu."/>
+    <text name="CP_editor_graph_points_movePoint_title" text="Punkte bewegen"/>
+    <text name="CP_editor_graph_points_movePoint_primary_text" text="Bewegt ausgewählte Punkte."/>
+    <text name="CP_editor_graph_points_straightLinePoint_title" text="Gerade Line an Punkten erstellen."/>
+    <text name="CP_editor_graph_points_straightLinePoin_primary_text" text="TODO"/>
+    <text name="CP_editor_graph_points_straightLinePoin_primary_axis_text" text="TODO"/>
+    <!---->
+    <!--Course editor segments-->
+    <!---->
+    <text name="CP_editor_graph_segments_mergeSplitSegment_title" text="Teilt oder Fügt Segmente zusammen."/>
+    <text name="CP_editor_graph_segments_mergeSplitSegment_primary_text" text="TODO"/>
+    <text name="CP_editor_graph_segments_mergeSplitSegment_secondary_text" text="TODO"/>
+    <text name="CP_editor_graph_segments_deleteSegment_title" text="Segment löschen"/>
+    <text name="CP_editor_graph_segments_deleteSegment_primary_text" text="TODO"/>
+    <text name="CP_editor_graph_segments_changeSegmentType_title" text="Ändert den Segment Typ"/>
+    <text name="CP_editor_graph_segments_changeSegmentType_primary_text" text="TODO"/>
+    <!---->
+    <!--Course editor targets-->
+    <!---->
+    <text name="CP_editor_graph_targets_createTarget_title" text="Neues Ziel erstellen"/>
+    <text name="CP_editor_graph_points_createTarget_primary_text" text="TODO"/>
+    <text name="CP_editor_graph_targets_deleteTarget_title" text="Ziel löschen"/>
+    <text name="CP_editor_graph_points_deleteTarget_primary_text" text="TODO"/>
+    <text name="CP_editor_graph_targets_renameTarget_title" text="Ziel umbennen"/>
+    <text name="CP_editor_graph_points_renameTarget_primary_text" text="TODO"/>
+    <!---->
     <!--Info texts-->
     <!---->
     <text name="CP_infoTexts_isStuck" text="Hängt fest"/>

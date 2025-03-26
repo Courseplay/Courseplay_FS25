@@ -479,6 +479,51 @@ A rota é guardada automaticamente ao fechar o editor e sobrepõe-se a qualquer 
     <text name="CP_editor_course_advanced_curveInsert_secondary_text" text="secundário"/>
     <text name="CP_editor_course_advanced_curveInsert_err" text="Não é permitido selecionar um ponto que curva."/>
     <!---->
+    <!--Graph editor-->
+    <!---->
+    <text name="CP_editor_graph_title" text="Street editor"/>
+    <text name="CP_editor_graph_err_point_not_found" text="No point found!"/>
+    <text name="CP_editor_graph_err_segment_not_found" text="No segment found!"/>
+    <text name="CP_editor_graph_err_min_distance_to_small" text="Distance to another point is to small!"/>
+    <text name="CP_editor_graph_err_node_is_first" text="First point in the segment is not allowed!"/>
+    <text name="CP_editor_graph_err_node_is_last" text="Last point in the segment is not allowed!"/>
+    <text name="CP_editor_graph_err_node_not_first_or_last" text="Point has to be in the middle of the segment!"/>
+    <text name="CP_editor_graph_err_same_segment" text="Points have to be from different segments!"/>
+    <text name="CP_editor_graph_err_target_not_found" text="No assigend target found!"/>
+    <text name="CP_editor_graph_err_already_has_target" text="The point already has an assigned target!"/>
+    <!---->
+    <!--Graph editor points-->
+    <!---->
+    <text name="CP_editor_graph_points_deletePoint_title" text="Delete points"/>
+    <text name="CP_editor_graph_points_deletePoint_primary_text" text="Deletes the selected point."/>
+    <text name="CP_editor_graph_points_insertPoint_title" text="Insert points"/>
+    <text name="CP_editor_graph_points_insertPoint_primary_text" text="Inserts a new point in front of another point."/>
+    <text name="CP_editor_graph_points_insertPoint_secondary_text" text="Inserts a new point behind another point."/>
+    <text name="CP_editor_graph_points_movePoint_title" text="Moves points"/>
+    <text name="CP_editor_graph_points_movePoint_primary_text" text="Moves selected points."/>
+    <text name="CP_editor_graph_points_straightLinePoint_title" text="Create a straight line of points."/>
+    <text name="CP_editor_graph_points_straightLinePoin_primary_text" text="TODO"/>
+    <text name="CP_editor_graph_points_straightLinePoin_primary_axis_text" text="TODO"/>
+    <!---->
+    <!--Course editor segments-->
+    <!---->
+    <text name="CP_editor_graph_segments_mergeSplitSegment_title" text="Split or merge segments."/>
+    <text name="CP_editor_graph_segments_mergeSplitSegment_primary_text" text="TODO"/>
+    <text name="CP_editor_graph_segments_mergeSplitSegment_secondary_text" text="TODO"/>
+    <text name="CP_editor_graph_segments_deleteSegment_title" text="Deletes a segment"/>
+    <text name="CP_editor_graph_segments_deleteSegment_primary_text" text="TODO"/>
+    <text name="CP_editor_graph_segments_changeSegmentType_title" text="Changes the segment direction"/>
+    <text name="CP_editor_graph_segments_changeSegmentType_primary_text" text="TODO"/>
+    <!---->
+    <!--Course editor targets-->
+    <!---->
+    <text name="CP_editor_graph_targets_createTarget_title" text="Create a new target"/>
+    <text name="CP_editor_graph_points_createTarget_primary_text" text="TODO"/>
+    <text name="CP_editor_graph_targets_deleteTarget_title" text="Delete target"/>
+    <text name="CP_editor_graph_points_deleteTarget_primary_text" text="TODO"/>
+    <text name="CP_editor_graph_targets_renameTarget_title" text="Rename target"/>
+    <text name="CP_editor_graph_points_renameTarget_primary_text" text="TODO"/>
+    <!---->
     <!--Info texts-->
     <!---->
     <text name="CP_infoTexts_isStuck" text="Veículo atascado ou preso"/>
