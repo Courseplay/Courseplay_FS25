@@ -16,7 +16,7 @@ function EditorCourseWrapper:getCourse()
 	return self.course	
 end
 
-function EditorCourseWrapper:getWaypoints()
+function EditorCourseWrapper:getVisiblePoints()
 	return self.course.waypoints	
 end
 

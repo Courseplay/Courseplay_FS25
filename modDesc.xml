@@ -141,6 +141,12 @@ Changelog 8.0.0.0:
 		<sourceFile filename="scripts/courseGenerator/CenterPredefinedRows.lua"/>
 		<sourceFile filename="scripts/courseGenerator/CourseGeneratorInterface.lua"/>
 
+		<sourceFile filename="scripts/graph/GraphNode.lua"/>
+		<sourceFile filename="scripts/graph/GraphTarget.lua"/>
+		<sourceFile filename="scripts/graph/GraphPoint.lua"/>
+		<sourceFile filename="scripts/graph/GraphSegment.lua"/>
+		<sourceFile filename="scripts/graph/Graph.lua"/>
+
 		<sourceFile filename="scripts/field/CpFieldUtil.lua"/>
 		<sourceFile filename="scripts/field/CustomField.lua"/>
 		<sourceFile filename="scripts/field/CustomFieldManager.lua"/>
@@ -307,9 +313,22 @@ Changelog 8.0.0.0:
 		<sourceFile filename="scripts/editor/brushes/changeAttributes/ChangeConnectingPathWaypoint.lua"/>
 		<sourceFile filename="scripts/editor/brushes/advanced/MoveWaypoint.lua"/>
 		<sourceFile filename="scripts/editor/brushes/advanced/CurveWaypoints.lua"/>
+		<sourceFile filename="scripts/editor/brushes/graph/GraphBrush.lua"/>
+		<sourceFile filename="scripts/editor/brushes/graph/points/DeletePointBrush.lua"/>
+		<sourceFile filename="scripts/editor/brushes/graph/points/InsertPointBrush.lua"/>
+		<sourceFile filename="scripts/editor/brushes/graph/points/MovePointBrush.lua"/>
+		<sourceFile filename="scripts/editor/brushes/graph/points/StraightLinePointBrush.lua"/>
+		<sourceFile filename="scripts/editor/brushes/graph/segments/MergeSplitSegmentBrush.lua"/>
+		<sourceFile filename="scripts/editor/brushes/graph/segments/CreateSegmentBrush.lua"/>
+		<sourceFile filename="scripts/editor/brushes/graph/segments/DeleteSegmentBrush.lua"/>
+		<sourceFile filename="scripts/editor/brushes/graph/segments/ChangeSegmentTypBrush.lua"/>
+		<sourceFile filename="scripts/editor/brushes/graph/targets/CreateTargetBrush.lua"/>
+		<sourceFile filename="scripts/editor/brushes/graph/targets/DeleteTargetBrush.lua"/>
+		<sourceFile filename="scripts/editor/brushes/graph/targets/RenameTargetBrush.lua"/>
 		<sourceFile filename="scripts/editor/EditorCourseWrapper.lua"/>
 		<sourceFile filename="scripts/editor/CourseEditor.lua"/>
-
+		<sourceFile filename="scripts/editor/EditorGraphWrapper.lua"/>
+		<sourceFile filename="scripts/editor/GraphEditor.lua"/>
 		<sourceFile filename="scripts/events/CoursesEvent.lua"/>
 		<sourceFile filename="scripts/events/CpJoinEvent.lua"/>
 		<sourceFile filename="scripts/events/GlobalSettingsEvent.lua"/>

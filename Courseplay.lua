@@ -32,6 +32,7 @@ function Courseplay:registerXmlSchema()
 	CpBaseHud.registerXmlSchema(self.xmlSchema, self.xmlKey)
 	CpHudInfoTexts.registerXmlSchema(self.xmlSchema, self.xmlKey)
 	CpInGameMenu.registerXmlSchema(self.xmlSchema, self.xmlKey)
+	Graph.registerXmlSchema(self.xmlSchema, self.xmlKey)
 end
 
 --- Loads data not tied to a savegame.
@@ -115,6 +116,7 @@ function Courseplay:loadMap(filename)
 		self.xmlFile = XMLFile.load("cpXml", filePath , self.xmlSchema)
 		if self.xmlFile == nil then return end
 		self.globalSettings:loadFromXMLFile(self.xmlFile, g_Courseplay.xmlKey)
+		g_graph:loadFromXMLFile(self.xmlFile, g_Courseplay.xmlKey)
 		self.xmlFile:delete()
 	end
 
@@ -128,6 +130,7 @@ function Courseplay:deleteMap()
 		self:saveUserSettings()
 	end
 	g_courseEditor:delete()
+	g_graphEditor:delete()
 	BufferedCourseDisplay.deleteBuffer()
 	g_signPrototypes:delete()
 	g_consoleCommands:delete()
@@ -166,16 +169,19 @@ end
 --- Saves all global data, for example global settings.
 function Courseplay.saveToXMLFile(missionInfo)
 	if missionInfo.isValid then 
-		local saveGamePath = missionInfo.savegameDirectory .."/"
-		local xmlFile = XMLFile.create("cpXml", saveGamePath.. "Courseplay.xml", 
-				"Courseplay", g_Courseplay.xmlSchema)
-		if xmlFile then	
-			g_Courseplay.globalSettings:saveToXMLFile(xmlFile, g_Courseplay.xmlKey)
-			xmlFile:save()
-			xmlFile:delete()
-		end
-		g_Courseplay:saveUserSettings()
-		g_assignedCoursesManager:saveAssignedCourses(saveGamePath)
+		CpUtil.try(function ()
+			local saveGamePath = missionInfo.savegameDirectory .."/"
+			local xmlFile = XMLFile.create("cpXml", saveGamePath.. "Courseplay.xml", 
+					"Courseplay", g_Courseplay.xmlSchema)
+			if xmlFile then	
+				g_Courseplay.globalSettings:saveToXMLFile(xmlFile, g_Courseplay.xmlKey)
+				g_graph:saveToXMLFile(xmlFile, g_Courseplay.xmlKey)
+				xmlFile:save()
+				xmlFile:delete()
+			end
+			g_Courseplay:saveUserSettings()
+			g_assignedCoursesManager:saveAssignedCourses(saveGamePath)
+		end)
 	end
 end
 FSCareerMissionInfo.saveToXMLFile = Utils.prependedFunction(FSCareerMissionInfo.saveToXMLFile, Courseplay.saveToXMLFile)
@@ -186,6 +192,8 @@ function Courseplay:update(dt)
     g_triggerManager:update(dt)
 	g_baleToCollectManager:update(dt)
 	g_courseEditor:update(dt)
+	g_graphEditor:update(dt)
+	g_graph:update(dt)
     if not self.postInit then 
         -- Doubles the map zoom for 4x Maps. Mainly to make it easier to set targets for unload triggers.
         self.postInit = true
@@ -206,6 +214,7 @@ function Courseplay:draw()
 		g_triggerManager:draw()
 		g_baleToCollectManager:draw()
 	end
+	g_graph:draw()
 	g_devHelper:draw()
 	CpDebug:draw()
 	if not g_gui:getIsGuiVisible() and not g_noHudModeEnabled then

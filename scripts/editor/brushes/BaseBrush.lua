@@ -2,6 +2,7 @@
 	Basic brush, that manipulates waypoints.
 ]]
 ---@class CpBrush
+---@field setInputTextDirty function
 CpBrush = CpObject(ConstructionBrush)
 CpBrush.TRANSLATION_PREFIX = "CP_editor_"
 CpBrush.radius = 2
@@ -12,7 +13,7 @@ CpBrush.secondaryAxisText = "secondary_axis_text"
 CpBrush.tertiaryButtonText = "tertiary_text"
 CpBrush.inputTitle = "input_title"
 CpBrush.yesNoTitle = "yesNo_title"
-CpBrush.errMessage = "err"
+CpBrush.defaultErrorMessage = "err"
 CpBrush.ERR_MESSAGE_DURATION = 15 * 1000 -- 15 sec
 function CpBrush:init(cursor, camera, editor)
 	self.isActive = false
@@ -34,6 +35,7 @@ function CpBrush:init(cursor, camera, editor)
 	self.cursor:setShape(GuiTopDownCursor.SHAPES.CIRCLE)
 	self.lastHoveredIx = nil
 	self.errorMsgTimer = CpTemporaryObject(false)
+	self.errorMsgText = nil
 	self.editor = editor
 	self.courseWrapper = editor:getCourseWrapper()
 end
@@ -49,7 +51,7 @@ function CpBrush:getHoveredWaypointIx()
 		return
 	end
 	-- try to get a waypoint in mouse range
-	for ix, point in ipairs(self.courseWrapper:getWaypoints()) do
+	for ix, point in ipairs(self.courseWrapper:getVisiblePoints()) do
 		if self:isAtPos(point, x, y, z) then
 			return ix
 		end
@@ -68,6 +70,8 @@ function CpBrush:update(dt)
 	end
 	if self.errorMsgTimer:get() then
 		self.cursor:setErrorMessage(self:getErrorMessage())
+	else 
+		self.errorMsgText = nil
 	end
 end
 
@@ -90,17 +94,28 @@ function CpBrush:getTranslation(translation, ...)
 end
 
 function CpBrush:getErrorMessage()
-	return self:getTranslation(self.errMessage)
+	if self.errorMsgText then 
+		return self.editor.TRANSLATION_PREFIX .. self.errorMsgText
+	end
+	return self:getTranslation(self.defaultErrorMessage)
 end
 
-function CpBrush:setError()
+---@param errMsg string|nil
+function CpBrush:setError(errMsg)
 	self.errorMsgTimer:set(true, self.ERR_MESSAGE_DURATION)
+	self.errorMsgText = errMsg
+	self:debug("setting error: %s", tostring(errMsg))
 end
 
 function CpBrush:resetError()
 	self.errorMsgTimer:reset()
+	self.errorMsgText = nil
 end
 
 function CpBrush:getTitle()
 	return self:getTranslation("title")
+end
+
+function CpBrush:debug(...)
+	CpUtil.info(...)
 end

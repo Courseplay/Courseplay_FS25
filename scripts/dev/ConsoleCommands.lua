@@ -1,4 +1,5 @@
 --- All the cp console commands are here.
+---@class CpConsoleCommands
 CpConsoleCommands = CpObject()
 
 CpConsoleCommands.commands = {
@@ -276,4 +277,5 @@ if g_consoleCommands then
 	g_consoleCommands:delete()
 end
 
+---@type CpConsoleCommands
 g_consoleCommands = CpConsoleCommands()

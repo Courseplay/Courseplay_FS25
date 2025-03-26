@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Category>
+	<Tab name="points" iconSliceId="cpIconSprite.circle">
+		<Brush name="insertPoint" class="InsertPointBrush" iconSliceId="cpUi.editorInsert"/>
+		<Brush name="deletePoint" class="DeletePointBrush" iconSliceId="cpUi.trashcan"/>
+		<Brush name="movePoint" class="MovePointBrush" iconSliceId="cpUi.editorMove"/>
+		<Brush name="straightLinePoint" class="StraightLinePointBrush" iconSliceId="cpUi.editorMove"/>
+	</Tab>
+	<Tab name="segments" iconSliceId="cpIconSprite.circle">
+		<!-- <Brush name="createSegment" class="CreateSegmentBrush" iconSliceId="cpUi.editorInsert"/> -->
+		<Brush name="mergeSplitSegment" class="MergeSplitSegmentBrush" iconSliceId="cpUi.trashcan"/>
+		<Brush name="deleteSegment" class="DeleteSegmentBrush" iconSliceId="cpUi.trashcan"/>
+		<Brush name="changeSegmentType" class="ChangeSegmentTypBrush" iconSliceId="cpUi.trashcan"/>
+	</Tab>
+	<Tab name="targets" iconSliceId="cpIconSprite.circle">
+		<Brush name="createTarget" class="CreateTargetBrush" iconSliceId="cpUi.editorInsert"/>
+		<Brush name="deleteTarget" class="DeleteTargetBrush" iconSliceId="cpUi.trashcan"/>
+		<Brush name="renameTarget" class="RenameTargetBrush" iconSliceId="cpUi.editorMove"/>
+	</Tab>
+</Category>

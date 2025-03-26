@@ -219,9 +219,8 @@ function CpInGameMenu:setupMenuPages()
 end
 
 function CpInGameMenu:isContructionPageAvailiable()
-	return g_courseEditor:getIsActive()
+	return g_courseEditor:getIsActive() or g_graphEditor:getIsActive()
 end
-
 
 function CpInGameMenu:setupMenuButtonInfo()
 	CpInGameMenu:superClass().setupMenuButtonInfo(self)

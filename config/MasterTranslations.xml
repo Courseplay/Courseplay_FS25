@@ -1695,6 +1695,169 @@ The course is saved automatically on closing of the editor and overrides the sel
 		-->
 
 	</Category>
+	<Category name="Graph editor">
+		<Translation name="CP_editor_graph_title">
+			<Text language="de"><![CDATA[Strecken Editor]]></Text>
+			<Text language="en"><![CDATA[Street editor]]></Text>
+		</Translation>
+		<Translation name="CP_editor_graph_err_point_not_found">
+			<Text language="de"><![CDATA[Kein Punkt gefunden!]]></Text>
+			<Text language="en"><![CDATA[No point found!]]></Text>
+		</Translation>
+		<Translation name="CP_editor_graph_err_segment_not_found">
+			<Text language="de"><![CDATA[Kein Segment gefunden!]]></Text>
+			<Text language="en"><![CDATA[No segment found!]]></Text>
+		</Translation>
+		<Translation name="CP_editor_graph_err_min_distance_to_small">
+			<Text language="de"><![CDATA[Abstand zu anderem Punkt ist zu klein!]]></Text>
+			<Text language="en"><![CDATA[Distance to another point is to small!]]></Text>
+		</Translation>
+		<Translation name="CP_editor_graph_err_node_is_first">
+			<Text language="de"><![CDATA[Erster Punkt im Segment ist nicht zulässig!]]></Text>
+			<Text language="en"><![CDATA[First point in the segment is not allowed!]]></Text>
+		</Translation>
+		<Translation name="CP_editor_graph_err_node_is_last">
+			<Text language="de"><![CDATA[Lester Punkt im Segment ist nicht zulässig!]]></Text>
+			<Text language="en"><![CDATA[Last point in the segment is not allowed!]]></Text>
+		</Translation>
+		<Translation name="CP_editor_graph_err_node_not_first_or_last">
+			<Text language="de"><![CDATA[Punkt muss in der Mitte vom Segment sein!]]></Text>
+			<Text language="en"><![CDATA[Point has to be in the middle of the segment!]]></Text>
+		</Translation>
+		<Translation name="CP_editor_graph_err_same_segment">
+			<Text language="de"><![CDATA[Punkte müssen zu unterschiedlichen Segmenten gehören!]]></Text>
+			<Text language="en"><![CDATA[Points have to be from different segments!]]></Text>
+		</Translation>
+		<Translation name="CP_editor_graph_err_target_not_found">
+			<Text language="de"><![CDATA[Kein Ziel für den Punkt gefunden!]]></Text>
+			<Text language="en"><![CDATA[No assigend target found!]]></Text>
+		</Translation>
+		<Translation name="CP_editor_graph_err_already_has_target">
+			<Text language="de"><![CDATA[Der Punkt hat bereits ein Ziel!]]></Text>
+			<Text language="en"><![CDATA[The point already has an assigned target!]]></Text>
+		</Translation>
+	</Category>
+	<Category name="Graph editor points">
+		<Translation name="CP_editor_graph_points_deletePoint_title">
+			<Text language="de"><![CDATA[Punkte löschen]]></Text>
+			<Text language="en"><![CDATA[Delete points]]></Text>
+		</Translation>
+		<Translation name="CP_editor_graph_points_deletePoint_primary_text">
+			<Text language="de"><![CDATA[Löscht den ausgewählten Punkt.]]></Text>
+			<Text language="en"><![CDATA[Deletes the selected point.]]></Text>
+		</Translation>
+		
+		<Translation name="CP_editor_graph_points_insertPoint_title">
+			<Text language="de"><![CDATA[Punkts einfügen]]></Text>
+			<Text language="en"><![CDATA[Insert points]]></Text>
+		</Translation>
+		<Translation name="CP_editor_graph_points_insertPoint_primary_text">
+			<Text language="de"><![CDATA[Fügt einen Punkt vor einem weiteren Punkt hinzu.]]></Text>
+			<Text language="en"><![CDATA[Inserts a new point in front of another point.]]></Text>
+		</Translation>
+		<Translation name="CP_editor_graph_points_insertPoint_secondary_text">
+			<Text language="de"><![CDATA[Fügt einen Punkt hinter einem weiteren Punkt hinzu.]]></Text>
+			<Text language="en"><![CDATA[Inserts a new point behind another point.]]></Text>
+		</Translation>
+
+		<Translation name="CP_editor_graph_points_movePoint_title">
+			<Text language="de"><![CDATA[Punkte bewegen]]></Text>
+			<Text language="en"><![CDATA[Moves points]]></Text>
+		</Translation>
+		<Translation name="CP_editor_graph_points_movePoint_primary_text">
+			<Text language="de"><![CDATA[Bewegt ausgewählte Punkte.]]></Text>
+			<Text language="en"><![CDATA[Moves selected points.]]></Text>
+		</Translation>
+		
+		<Translation name="CP_editor_graph_points_straightLinePoint_title">
+			<Text language="de"><![CDATA[Gerade Line an Punkten erstellen.]]></Text>
+			<Text language="en"><![CDATA[Create a straight line of points.]]></Text>
+		</Translation>
+		<Translation name="CP_editor_graph_points_straightLinePoin_primary_text">
+			<Text language="de"><![CDATA[TODO]]></Text>
+			<Text language="en"><![CDATA[TODO]]></Text>
+		</Translation>
+		<Translation name="CP_editor_graph_points_straightLinePoin_primary_axis_text">
+			<Text language="de"><![CDATA[TODO]]></Text>
+			<Text language="en"><![CDATA[TODO]]></Text>
+		</Translation>
+
+		<Translation name="CP_editor_graph_points_straightLinePoint_title">
+			<Text language="de"><![CDATA[Gerade Line an Punkten erstellen.]]></Text>
+			<Text language="en"><![CDATA[Create a straight line of points.]]></Text>
+		</Translation>
+		<Translation name="CP_editor_graph_points_straightLinePoin_primary_text">
+			<Text language="de"><![CDATA[TODO]]></Text>
+			<Text language="en"><![CDATA[TODO]]></Text>
+		</Translation>
+		<Translation name="CP_editor_graph_points_straightLinePoin_primary_axis_text">
+			<Text language="de"><![CDATA[TODO]]></Text>
+			<Text language="en"><![CDATA[TODO]]></Text>
+		</Translation>
+	</Category>
+
+	<Category name="Course editor segments">
+		<Translation name="CP_editor_graph_segments_mergeSplitSegment_title">
+			<Text language="de"><![CDATA[Teilt oder Fügt Segmente zusammen.]]></Text>
+			<Text language="en"><![CDATA[Split or merge segments.]]></Text>
+		</Translation>
+		<Translation name="CP_editor_graph_segments_mergeSplitSegment_primary_text">
+			<Text language="de"><![CDATA[TODO]]></Text>
+			<Text language="en"><![CDATA[TODO]]></Text>
+		</Translation>
+		<Translation name="CP_editor_graph_segments_mergeSplitSegment_secondary_text">
+			<Text language="de"><![CDATA[TODO]]></Text>
+			<Text language="en"><![CDATA[TODO]]></Text>
+		</Translation>
+
+		<Translation name="CP_editor_graph_segments_deleteSegment_title">
+			<Text language="de"><![CDATA[Segment löschen]]></Text>
+			<Text language="en"><![CDATA[Deletes a segment]]></Text>
+		</Translation>
+		<Translation name="CP_editor_graph_segments_deleteSegment_primary_text">
+			<Text language="de"><![CDATA[TODO]]></Text>
+			<Text language="en"><![CDATA[TODO]]></Text>
+		</Translation>
+	
+		<Translation name="CP_editor_graph_segments_changeSegmentType_title">
+			<Text language="de"><![CDATA[Ändert den Segment Typ]]></Text>
+			<Text language="en"><![CDATA[Changes the segment direction]]></Text>
+		</Translation>
+		<Translation name="CP_editor_graph_segments_changeSegmentType_primary_text">
+			<Text language="de"><![CDATA[TODO]]></Text>
+			<Text language="en"><![CDATA[TODO]]></Text>
+		</Translation>
+
+	</Category>
+	<Category name="Course editor targets">
+		<Translation name="CP_editor_graph_targets_createTarget_title">
+			<Text language="de"><![CDATA[Neues Ziel erstellen]]></Text>
+			<Text language="en"><![CDATA[Create a new target]]></Text>
+		</Translation>
+		<Translation name="CP_editor_graph_points_createTarget_primary_text">
+			<Text language="de"><![CDATA[TODO]]></Text>
+			<Text language="en"><![CDATA[TODO]]></Text>
+		</Translation>
+
+		<Translation name="CP_editor_graph_targets_deleteTarget_title">
+			<Text language="de"><![CDATA[Ziel löschen]]></Text>
+			<Text language="en"><![CDATA[Delete target]]></Text>
+		</Translation>
+		<Translation name="CP_editor_graph_points_deleteTarget_primary_text">
+			<Text language="de"><![CDATA[TODO]]></Text>
+			<Text language="en"><![CDATA[TODO]]></Text>
+		</Translation>
+
+		<Translation name="CP_editor_graph_targets_renameTarget_title">
+			<Text language="de"><![CDATA[Ziel umbennen]]></Text>
+			<Text language="en"><![CDATA[Rename target]]></Text>
+		</Translation>
+		<Translation name="CP_editor_graph_points_renameTarget_primary_text">
+			<Text language="de"><![CDATA[TODO]]></Text>
+			<Text language="en"><![CDATA[TODO]]></Text>
+		</Translation>
+
+	</Category>
 	<Category name="Info texts">	
 		<Translation name="CP_infoTexts_isStuck">
 			<Text language="de"><![CDATA[Hängt fest]]></Text>
