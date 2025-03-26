@@ -502,8 +502,8 @@ Kurs jest automatycznie zapisywany po zamknięciu edytora i nadpisuje wybrany ku
     <text name="CP_editor_graph_points_movePoint_title" text="Moves points"/>
     <text name="CP_editor_graph_points_movePoint_primary_text" text="Moves selected points."/>
     <text name="CP_editor_graph_points_straightLinePoint_title" text="Create a straight line of points."/>
-    <text name="CP_editor_graph_points_straightLinePoin_primary_text" text="TODO"/>
-    <text name="CP_editor_graph_points_straightLinePoin_primary_axis_text" text="TODO"/>
+    <text name="CP_editor_graph_points_straightLinePoint_primary_text" text="TODO"/>
+    <text name="CP_editor_graph_points_straightLinePoint_primary_axis_text" text="TODO"/>
     <!---->
     <!--Course editor segments-->
     <!---->
@@ -1057,5 +1057,6 @@ Twój wybór powinien wyglądać podobnie do tego zdjęcia.
     <text name="input_CP_OPEN_COURSEGENERATOR_SETTINGS" text="CP: Otwórz menu generacji kursu/pracy"/>
     <text name="input_CP_OPEN_COURSEMANAGER" text="CP: Otwórz menadżer kursu"/>
     <text name="input_CP_OPEN_INGAME_MENU" text="CP: Otwórz menu"/>
+    <text name="input_CP_OPEN_GRAPH_EDITOR" text="CP: Open street editor"/>
   </texts>
 </l10n>

@@ -502,8 +502,8 @@ Der Kurs wird beim Schließen automatisch gespeichert und überschrieben.
     <text name="CP_editor_graph_points_movePoint_title" text="Punkte bewegen"/>
     <text name="CP_editor_graph_points_movePoint_primary_text" text="Bewegt ausgewählte Punkte."/>
     <text name="CP_editor_graph_points_straightLinePoint_title" text="Gerade Line an Punkten erstellen."/>
-    <text name="CP_editor_graph_points_straightLinePoin_primary_text" text="TODO"/>
-    <text name="CP_editor_graph_points_straightLinePoin_primary_axis_text" text="TODO"/>
+    <text name="CP_editor_graph_points_straightLinePoint_primary_text" text="TODO"/>
+    <text name="CP_editor_graph_points_straightLinePoint_primary_axis_text" text="TODO"/>
     <!---->
     <!--Course editor segments-->
     <!---->
@@ -1112,5 +1112,6 @@ Das Kreuz sollte jetzt, wie im Bild dargestellt, gelb sein.
     <text name="input_CP_OPEN_COURSEGENERATOR_SETTINGS" text="CP: Kursgenerator/Jobmenü öffnen"/>
     <text name="input_CP_OPEN_COURSEMANAGER" text="CP: Kursmanager öffnen"/>
     <text name="input_CP_OPEN_INGAME_MENU" text="CP: Menu öffnen"/>
+    <text name="input_CP_OPEN_GRAPH_EDITOR" text="CP: Straßen Editor öffnen"/>
   </texts>
 </l10n>

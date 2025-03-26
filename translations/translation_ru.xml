@@ -502,8 +502,8 @@
     <text name="CP_editor_graph_points_movePoint_title" text="Moves points"/>
     <text name="CP_editor_graph_points_movePoint_primary_text" text="Moves selected points."/>
     <text name="CP_editor_graph_points_straightLinePoint_title" text="Create a straight line of points."/>
-    <text name="CP_editor_graph_points_straightLinePoin_primary_text" text="TODO"/>
-    <text name="CP_editor_graph_points_straightLinePoin_primary_axis_text" text="TODO"/>
+    <text name="CP_editor_graph_points_straightLinePoint_primary_text" text="TODO"/>
+    <text name="CP_editor_graph_points_straightLinePoint_primary_axis_text" text="TODO"/>
     <!---->
     <!--Course editor segments-->
     <!---->
@@ -1099,5 +1099,6 @@ HUD также показывает оставшийся уровень запо
     <text name="input_CP_OPEN_COURSEGENERATOR_SETTINGS" text="CP: Генератор курсов/меню работ"/>
     <text name="input_CP_OPEN_COURSEMANAGER" text="CP: Открыть управление курсами"/>
     <text name="input_CP_OPEN_INGAME_MENU" text="CP: Открыть меню"/>
+    <text name="input_CP_OPEN_GRAPH_EDITOR" text="CP: Open street editor"/>
   </texts>
 </l10n>

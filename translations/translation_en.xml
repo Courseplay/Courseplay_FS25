@@ -502,8 +502,8 @@ The course is saved automatically on closing of the editor and overrides the sel
     <text name="CP_editor_graph_points_movePoint_title" text="Moves points"/>
     <text name="CP_editor_graph_points_movePoint_primary_text" text="Moves selected points."/>
     <text name="CP_editor_graph_points_straightLinePoint_title" text="Create a straight line of points."/>
-    <text name="CP_editor_graph_points_straightLinePoin_primary_text" text="TODO"/>
-    <text name="CP_editor_graph_points_straightLinePoin_primary_axis_text" text="TODO"/>
+    <text name="CP_editor_graph_points_straightLinePoint_primary_text" text="TODO"/>
+    <text name="CP_editor_graph_points_straightLinePoint_primary_axis_text" text="TODO"/>
     <!---->
     <!--Course editor segments-->
     <!---->
@@ -1129,5 +1129,6 @@ Now your selection should look similar to the image.
     <text name="input_CP_OPEN_COURSEGENERATOR_SETTINGS" text="CP: Open course generator/job menu"/>
     <text name="input_CP_OPEN_COURSEMANAGER" text="CP: Open course manager"/>
     <text name="input_CP_OPEN_INGAME_MENU" text="CP: Open menu"/>
+    <text name="input_CP_OPEN_GRAPH_EDITOR" text="CP: Open street editor"/>
   </texts>
 </l10n>

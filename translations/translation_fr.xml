@@ -502,8 +502,8 @@ La course est automatiquement sauvegardée à la fermeture de l'éditeur et remp
     <text name="CP_editor_graph_points_movePoint_title" text="Moves points"/>
     <text name="CP_editor_graph_points_movePoint_primary_text" text="Moves selected points."/>
     <text name="CP_editor_graph_points_straightLinePoint_title" text="Create a straight line of points."/>
-    <text name="CP_editor_graph_points_straightLinePoin_primary_text" text="TODO"/>
-    <text name="CP_editor_graph_points_straightLinePoin_primary_axis_text" text="TODO"/>
+    <text name="CP_editor_graph_points_straightLinePoint_primary_text" text="TODO"/>
+    <text name="CP_editor_graph_points_straightLinePoint_primary_axis_text" text="TODO"/>
     <!---->
     <!--Course editor segments-->
     <!---->
@@ -1073,5 +1073,6 @@ Votre sélection devrait ressembler à l'illustration ci-contre.
     <text name="input_CP_OPEN_COURSEGENERATOR_SETTINGS" text="CP: Ouvre le générateur de course/menu de la course"/>
     <text name="input_CP_OPEN_COURSEMANAGER" text="CP: Ouvre le gestionnaire de courses"/>
     <text name="input_CP_OPEN_INGAME_MENU" text="CP: Ouvre le menu"/>
+    <text name="input_CP_OPEN_GRAPH_EDITOR" text="CP: Open street editor"/>
   </texts>
 </l10n>
