@@ -752,7 +752,7 @@ end
 local function addMixerWagonTriggers(mixerWagon)
     local spec = mixerWagon.spec_mixerWagon
     if spec.hudTrigger then 
-        PathfinderUtil.CollisionDetector.addNodeToIgnore(spec.hudTrigger)
+        PathfinderCollisionDetector.addNodeToIgnore(spec.hudTrigger)
     end
 end
 MixerWagon.onLoad = Utils.appendedFunction(MixerWagon.onLoad, addMixerWagonTriggers)
@@ -760,7 +760,7 @@ MixerWagon.onLoad = Utils.appendedFunction(MixerWagon.onLoad, addMixerWagonTrigg
 local function deleteMixerWagonTrigger(mixerWagon)
     local spec = mixerWagon.spec_mixerWagon
     if spec.hudTrigger then 
-        PathfinderUtil.CollisionDetector.removeNodeToIgnore(spec.hudTrigger)
+        PathfinderCollisionDetector.removeNodeToIgnore(spec.hudTrigger)
     end
 end
 MixerWagon.onDelete = Utils.prependedFunction(MixerWagon.onDelete, deleteMixerWagonTrigger)

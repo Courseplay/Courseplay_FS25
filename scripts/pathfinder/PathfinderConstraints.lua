@@ -54,12 +54,12 @@ PathfinderConstraints = CpObject(PathfinderConstraintInterface)
 
 ---@param context PathfinderContext
 function PathfinderConstraints:init(context)
+    self.logger = Logger('PathfinderConstraints', Logger.level.debug, CpDebug.DBG_PATHFINDER)
+    self.vehicle = context._vehicle
+    self.turnRadius = AIUtil.getTurningRadius(context._vehicle) or 10
     self.vehicleData = PathfinderUtil.VehicleData(context._vehicle, true, 0.25)
     self.trailerHitchLength = AIUtil.getTowBarLength(context._vehicle) or 3
-    self.turnRadius = AIUtil.getTurningRadius(context._vehicle) or 10
-    self.objectsToIgnore = context._objectsToIgnore or {}
-    self.vehiclesToIgnore = context._vehiclesToIgnore or {}
-
+    self.collisionDetector = PathfinderCollisionDetector(context._vehicle, context._vehiclesToIgnore, context._objectsToIgnore, context._collisionMask)
     self.maxFruitPercent = context._maxFruitPercent
     self.offFieldPenalty = context._offFieldPenalty
     self.fieldNum = context._useFieldNum
@@ -72,12 +72,11 @@ function PathfinderConstraints:init(context)
     self.ignoreTrailerAtStartRange = context._ignoreTrailerAtStartRange or 0
     self.initialMaxFruitPercent = self.maxFruitPercent
     self.initialOffFieldPenalty = self.offFieldPenalty
-    self.collisionMask = context._collisionMask
     self.strictMode = false
     self:resetCounts()
     local areaToAvoidText = self.areaToAvoid and
             string.format('are to avoid %.1f x %.1f m', self.areaToAvoid.length, self.areaToAvoid.width) or 'none'
-    self:debug('Pathfinder constraints: off field penalty %.1f, max fruit percent: %.1f, field number %d, %s, ignore fruit %s, ignore off-field penalty %s',
+    self.logger:debug('off field penalty %.1f, max fruit percent: %.1f, field number %d, %s, ignore fruit %s, ignore off-field penalty %s',
             self.offFieldPenalty, self.maxFruitPercent, self.fieldNum, areaToAvoidText,
             self.areaToIgnoreFruit or 'none', self.areaToIgnoreOffFieldPenalty or 'none')
 end
@@ -173,7 +172,7 @@ function PathfinderConstraints:isValidAnalyticSolutionNode(node, log)
     local analyticLimit = self.maxFruitPercent * 2
     if hasFruit and fruitValue > analyticLimit then
         if log then
-            self:debug('isValidAnalyticSolutionNode: fruitValue %.1f, max %.1f @ %.1f, %.1f',
+            self.logger:debug('isValidAnalyticSolutionNode: fruitValue %.1f, max %.1f @ %.1f, %.1f',
                     fruitValue, analyticLimit, node.x, -node.y)
         end
         return false
@@ -205,20 +204,19 @@ function PathfinderConstraints:isValidNode(node, ignoreTrailer, offFieldValid)
             node.x, -node.y, CpMathUtil.angleToGame(node.t), 0.5)
 
     -- for debug purposes only, store validity info on node
-    node.collidingShapes = PathfinderUtil.collisionDetector:findCollidingShapes(PathfinderUtil.helperNode,
-            self.vehicleData, self.vehiclesToIgnore, self.objectsToIgnore, self.ignoreFruitHeaps, self.collisionMask)
+    node.collidingShapes = self.collisionDetector:findCollidingShapes(PathfinderUtil.helperNode,
+            self.vehicleData:getVehicle(), self.vehicleData:getVehicleOverlapBoxParams())
     ignoreTrailer = ignoreTrailer or node.d < self.ignoreTrailerAtStartRange
-    if self.vehicleData.trailer and not ignoreTrailer then
+    if self.vehicleData:getTowedImplement() and not ignoreTrailer then
         -- now check the trailer or towed implement
         -- move the node to the rear of the vehicle (where approximately the trailer is attached)
-        local x, y, z = localToWorld(PathfinderUtil.helperNode, 0, 0, self.vehicleData.trailerHitchOffset)
+        local x, y, z = localToWorld(PathfinderUtil.helperNode, 0, 0, self.vehicleData:getHitchOffset())
 
         PathfinderUtil.setWorldPositionAndRotationOnTerrain(PathfinderUtil.helperNode, x, z,
                 CpMathUtil.angleToGame(node.tTrailer), 0.5)
 
-        node.collidingShapes = node.collidingShapes + PathfinderUtil.collisionDetector:findCollidingShapes(
-                PathfinderUtil.helperNode, self.vehicleData.trailerRectangle, self.vehiclesToIgnore,
-                self.objectsToIgnore, self.ignoreFruitHeaps, self.collisionMask)
+        node.collidingShapes = node.collidingShapes + self.collisionDetector:findCollidingShapes(PathfinderUtil.helperNode,
+                self.vehicleData:getTowedImplement(), self.vehicleData:getTowedImplementOverlapBoxParams())
         if node.collidingShapes > 0 then
             self.trailerCollisionNodeCount = self.trailerCollisionNodeCount + 1
         end
@@ -241,10 +239,10 @@ function PathfinderConstraints:resetStrictMode()
 end
 
 function PathfinderConstraints:showStatistics()
-    self:debug('Nodes: %d, Penalties: fruit: %d, off-field: %d, not owned field: %d, collisions: %d, trailer collisions: %d, area to avoid: %d, preferred path: %d',
+    self.logger:debug('Nodes: %d, Penalties: fruit: %d, off-field: %d, not owned field: %d, collisions: %d, trailer collisions: %d, area to avoid: %d, preferred path: %d',
             self.totalNodeCount, self.fruitPenaltyNodeCount, self.offFieldPenaltyNodeCount, self.notOwnedFieldPenaltyNodeCount,
             self.collisionNodeCount, self.trailerCollisionNodeCount, self.areaToAvoidPenaltyCount, self.preferredPathPenaltyCount)
-    self:debug('  max fruit %.1f %%, off-field penalty: %.1f',
+    self.logger:debug('  max fruit %.1f %%, off-field penalty: %.1f',
             self.maxFruitPercent, self.offFieldPenalty)
 end
 
@@ -258,8 +256,4 @@ end
 
 function PathfinderConstraints:getOffFieldPenaltyNodePercent()
     return self.totalNodeCount > 0 and (self.offFieldPenaltyNodeCount / self.totalNodeCount) or 0
-end
-
-function PathfinderConstraints:debug(...)
-    self.vehicleData:debug(...)
 end

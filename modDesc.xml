@@ -164,6 +164,7 @@ Changelog 8.0.0.0:
 		<sourceFile filename="scripts/pathfinder/HybridAStar.lua"/>
 		<sourceFile filename="scripts/pathfinder/AStar.lua"/>
 		<sourceFile filename="scripts/pathfinder/HybridAStarWithAStarInTheMiddle.lua"/>
+		<sourceFile filename="scripts/pathfinder/PathfinderCollisionDetector.lua"/>
 		<sourceFile filename="scripts/pathfinder/PathfinderConstraints.lua"/>
 		<sourceFile filename="scripts/pathfinder/PathfinderContext.lua"/>
 		<sourceFile filename="scripts/pathfinder/PathfinderUtil.lua"/>
