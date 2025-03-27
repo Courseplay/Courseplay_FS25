@@ -501,9 +501,11 @@ Der Kurs wird beim Schließen automatisch gespeichert und überschrieben.
     <text name="CP_editor_graph_points_insertPoint_secondary_text" text="Fügt einen Punkt hinter einem weiteren Punkt hinzu."/>
     <text name="CP_editor_graph_points_movePoint_title" text="Punkte bewegen"/>
     <text name="CP_editor_graph_points_movePoint_primary_text" text="Bewegt ausgewählte Punkte."/>
-    <text name="CP_editor_graph_points_straightLinePoint_title" text="Gerade Line an Punkten erstellen."/>
-    <text name="CP_editor_graph_points_straightLinePoint_primary_text" text="TODO"/>
-    <text name="CP_editor_graph_points_straightLinePoint_primary_axis_text" text="TODO"/>
+    <text name="CP_editor_graph_points_linePoint_title" text="Gerade Line an Punkten erstellen."/>
+    <text name="CP_editor_graph_points_linePoint_primary_text" text="TODO"/>
+    <text name="CP_editor_graph_points_linePoint_secondary_text" text="TODO"/>
+    <text name="CP_editor_graph_points_linePoint_primary_axis_text" text="Ändert den Offset (%d %%)"/>
+    <text name="CP_editor_graph_points_linePoint_secondary_axis_text" text="Verschiebt den Kurvenmittelpunkt(%d %%)"/>
     <!---->
     <!--Course editor segments-->
     <!---->

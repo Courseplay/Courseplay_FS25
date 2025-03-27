@@ -501,9 +501,11 @@ Il percorso viene salvato automaticamente alla chiusura dell'editor e sovrascriv
     <text name="CP_editor_graph_points_insertPoint_secondary_text" text="Inserts a new point behind another point."/>
     <text name="CP_editor_graph_points_movePoint_title" text="Moves points"/>
     <text name="CP_editor_graph_points_movePoint_primary_text" text="Moves selected points."/>
-    <text name="CP_editor_graph_points_straightLinePoint_title" text="Create a straight line of points."/>
-    <text name="CP_editor_graph_points_straightLinePoint_primary_text" text="TODO"/>
-    <text name="CP_editor_graph_points_straightLinePoint_primary_axis_text" text="TODO"/>
+    <text name="CP_editor_graph_points_linePoint_title" text="Create a straight line of points."/>
+    <text name="CP_editor_graph_points_linePoint_primary_text" text="TODO"/>
+    <text name="CP_editor_graph_points_linePoint_secondary_text" text="TODO"/>
+    <text name="CP_editor_graph_points_linePoint_primary_axis_text" text="Change offset (%d %%)"/>
+    <text name="CP_editor_graph_points_linePoint_secondary_axis_text" text="Change curve center (%d %%)"/>
     <!---->
     <!--Course editor segments-->
     <!---->
