@@ -317,7 +317,7 @@ Changelog 8.0.0.0:
 		<sourceFile filename="scripts/editor/brushes/graph/points/DeletePointBrush.lua"/>
 		<sourceFile filename="scripts/editor/brushes/graph/points/InsertPointBrush.lua"/>
 		<sourceFile filename="scripts/editor/brushes/graph/points/MovePointBrush.lua"/>
-		<sourceFile filename="scripts/editor/brushes/graph/points/StraightLinePointBrush.lua"/>
+		<sourceFile filename="scripts/editor/brushes/graph/points/LinePointBrush.lua"/>
 		<sourceFile filename="scripts/editor/brushes/graph/segments/MergeSplitSegmentBrush.lua"/>
 		<sourceFile filename="scripts/editor/brushes/graph/segments/CreateSegmentBrush.lua"/>
 		<sourceFile filename="scripts/editor/brushes/graph/segments/DeleteSegmentBrush.lua"/>

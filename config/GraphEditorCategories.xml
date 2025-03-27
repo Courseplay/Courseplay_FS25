@@ -4,7 +4,7 @@
 		<Brush name="insertPoint" class="InsertPointBrush" iconSliceId="cpUi.editorInsert"/>
 		<Brush name="deletePoint" class="DeletePointBrush" iconSliceId="cpUi.trashcan"/>
 		<Brush name="movePoint" class="MovePointBrush" iconSliceId="cpUi.editorMove"/>
-		<Brush name="straightLinePoint" class="StraightLinePointBrush" iconSliceId="cpUi.editorMove"/>
+		<Brush name="linePoint" class="LinePointBrush" iconSliceId="cpUi.editorMove"/>
 	</Tab>
 	<Tab name="segments" iconSliceId="cpIconSprite.circle">
 		<!-- <Brush name="createSegment" class="CreateSegmentBrush" iconSliceId="cpUi.editorInsert"/> -->

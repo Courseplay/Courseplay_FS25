@@ -134,3 +134,14 @@ end
 function GraphSegment:getDirectionString()
    return GraphSegmentDirection.DEBUG_TEXTS[self._direction] or "???"
 end
+
+---@return number
+function GraphSegment:getLength()
+    local length = 0
+    for ix, node in ipairs(self._childNodes) do 
+        if ix > 1 then
+            length = length + node:getDistance2DToPoint(self._childNodes[ix-1]) 
+        end
+    end
+    return length
+end

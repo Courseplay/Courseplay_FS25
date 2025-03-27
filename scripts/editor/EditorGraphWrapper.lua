@@ -330,28 +330,34 @@ end
 --- Selected nodes
 --------------------------
 
+---@param ix string|nil
 function EditorGraphWrapper:setSelected(ix)
 	if ix ~=nil then
 		self.selectedNodeIds[ix] = true
 	end
 end
 
+---@return table<string, boolean>
 function EditorGraphWrapper:getSelectedNodeIDs()
 	return self.selectedNodeIds
 end
 
+---@return string|nil
 function EditorGraphWrapper:getFirstSelectedNodeID()
 	return next(self.selectedNodeIds)
 end
 
+---@param ix string|nil
+---@return boolean|nil
 function EditorGraphWrapper:isSelected(ix)
-	return ix ~= nil and self.selectedNodeIds[ix]
+	return self.selectedNodeIds[ix]
 end
 
 function EditorGraphWrapper:resetSelected()
 	self.selectedNodeIds = {}
 end
 
+---@return boolean|nil
 function EditorGraphWrapper:hasSelectedNode()
 	return next(self.selectedNodeIds) ~= nil
 end
@@ -398,6 +404,11 @@ end
 ---@return GraphPoint[]
 function EditorGraphWrapper:getTemporaryPoints()
 	return self.temporarySegment:getAllChildNodes()
+end
+
+---@return GraphSegment
+function EditorGraphWrapper:getTemporarySegment()
+	return self.temporarySegment
 end
 
 ---@return GraphPoint|nil

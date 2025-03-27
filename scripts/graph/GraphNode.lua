@@ -122,6 +122,12 @@ function GraphNode:getAllChildNodes()
     return self._childNodes
 end
 
+---@return string|nil
+function GraphNode:getLastNodeID()
+    local node = self._childNodes[#self._childNodes]
+    return node and node:getRelativeID()
+end
+
 --- Unlink the node from the parent and remove it from it's children
 ---@param successCallback function|nil
 ---@return boolean
