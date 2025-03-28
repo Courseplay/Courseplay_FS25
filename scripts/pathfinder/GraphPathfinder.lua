@@ -57,7 +57,7 @@ end
 ---@param maxIterations number maximum iterations before failing
 ---@param range number when an edge's exit is closer than range to another edge's entry, the
 --- two edges are considered as connected (and thus can traverse from one to the other)
----@param graph Vector[] the graph as described in the file header
+---@param graph GraphPathfinder.GraphEdge[] Array of edges, the graph as described in the file header
 function GraphPathfinder:init(yieldAfter, maxIterations, range, graph)
     HybridAStar.init(self, { }, yieldAfter, maxIterations)
     self.range = range
@@ -65,7 +65,7 @@ function GraphPathfinder:init(yieldAfter, maxIterations, range, graph)
     self.deltaPosGoal = self.range
     self.deltaThetaDeg = 181
     self.deltaThetaGoal = math.rad(self.deltaThetaDeg)
-    self.maxDeltaTheta = math.pi
+    self.maxDeltaTheta = self.deltaThetaGoal
     self.originalDeltaThetaGoal = self.deltaThetaGoal
     self.analyticSolverEnabled = false
     self.ignoreValidityAtStart = false
