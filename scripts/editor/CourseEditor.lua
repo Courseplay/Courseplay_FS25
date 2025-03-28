@@ -40,8 +40,9 @@ function CourseEditor:loadCategory(path)
 	local category = {}
 	local xmlFile = XMLFile.load("cpConstructionCategories", path, self.categorySchema)
 	xmlFile:iterate("Category.Tab", function (_, tabKey)
+		local tabName = xmlFile:getValue(tabKey .. "#name")
 		local tab = {
-			name = xmlFile:getValue(tabKey .. "#name"),
+			name = self.TRANSLATION_PREFIX .. tabName .. "_title",
 			iconSliceId = xmlFile:getValue(tabKey .. "#iconSliceId"),
 			brushes = {}
 		}
@@ -53,7 +54,7 @@ function CourseEditor:loadCategory(path)
 				iconSliceId = xmlFile:getValue(brushKey .. "#iconSliceId"),
 				isCourseOnly = xmlFile:getValue(brushKey .. "#isCourseOnly"),
 				brushParameters = {
-					self.TRANSLATION_PREFIX .. tab.name .. "_" .. name 
+					self.TRANSLATION_PREFIX .. tabName .. "_" .. name 
 				}
 			}
 			table.insert(tab.brushes, brush)

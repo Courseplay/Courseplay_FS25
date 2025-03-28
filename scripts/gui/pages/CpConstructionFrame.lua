@@ -108,7 +108,7 @@ function CpConstructionFrame:onFrameOpen()
 	
 	local texts = {}
 	for _, tab in pairs(self.brushCategory) do 
-		table.insert(texts, tab.name)
+		table.insert(texts, g_i18n:convertText(tab.name))
 	end
 	self.subCategorySelector:setTexts(texts)
 	for ix, clone in ipairs(self.subCategoryDotBox.elements) do

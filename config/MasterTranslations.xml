@@ -1700,6 +1700,18 @@ The course is saved automatically on closing of the editor and overrides the sel
 			<Text language="de"><![CDATA[Strecken Editor]]></Text>
 			<Text language="en"><![CDATA[Street editor]]></Text>
 		</Translation>
+		<Translation name="CP_editor_graph_points_title">
+			<Text language="de"><![CDATA[Punkte]]></Text>
+			<Text language="en"><![CDATA[Points]]></Text>
+		</Translation>
+		<Translation name="CP_editor_graph_segment_title">
+			<Text language="de"><![CDATA[Abschnitte]]></Text>
+			<Text language="en"><![CDATA[Segments]]></Text>
+		</Translation>
+		<Translation name="CP_editor_graph_target_title">
+			<Text language="de"><![CDATA[Ziele]]></Text>
+			<Text language="en"><![CDATA[Targets]]></Text>
+		</Translation>
 		<Translation name="CP_editor_graph_err_point_not_found">
 			<Text language="de"><![CDATA[Kein Punkt gefunden!]]></Text>
 			<Text language="en"><![CDATA[No point found!]]></Text>
@@ -1833,7 +1845,7 @@ The course is saved automatically on closing of the editor and overrides the sel
 			<Text language="de"><![CDATA[Neues Ziel erstellen]]></Text>
 			<Text language="en"><![CDATA[Create a new target]]></Text>
 		</Translation>
-		<Translation name="CP_editor_graph_points_createTarget_primary_text">
+		<Translation name="CP_editor_graph_targets_createTarget_primary_text">
 			<Text language="de"><![CDATA[TODO]]></Text>
 			<Text language="en"><![CDATA[TODO]]></Text>
 		</Translation>
@@ -1842,7 +1854,7 @@ The course is saved automatically on closing of the editor and overrides the sel
 			<Text language="de"><![CDATA[Ziel löschen]]></Text>
 			<Text language="en"><![CDATA[Delete target]]></Text>
 		</Translation>
-		<Translation name="CP_editor_graph_points_deleteTarget_primary_text">
+		<Translation name="CP_editor_graph_targets_deleteTarget_primary_text">
 			<Text language="de"><![CDATA[TODO]]></Text>
 			<Text language="en"><![CDATA[TODO]]></Text>
 		</Translation>
@@ -1851,7 +1863,7 @@ The course is saved automatically on closing of the editor and overrides the sel
 			<Text language="de"><![CDATA[Ziel umbennen]]></Text>
 			<Text language="en"><![CDATA[Rename target]]></Text>
 		</Translation>
-		<Translation name="CP_editor_graph_points_renameTarget_primary_text">
+		<Translation name="CP_editor_graph_targets_renameTarget_primary_text">
 			<Text language="de"><![CDATA[TODO]]></Text>
 			<Text language="en"><![CDATA[TODO]]></Text>
 		</Translation>
