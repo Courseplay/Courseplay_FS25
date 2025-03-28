@@ -662,6 +662,7 @@ function CpCourseGeneratorFrame:onDrawPostIngameMap(element, ingameMap)
 	if self.currentJob and self.currentJob.draw then
 		self.currentJob:draw(ingameMap, self.mode == self.MODE_OVERVIEW)
 	end
+	g_graph:drawMap(ingameMap)
 
 	--- Draws the current progress, while creating a custom field.
 	-- if pageAI.mode == CpInGameMenuAIFrameExtended.MODE_DRAW_FIELD_BORDER and next(CpInGameMenuAIFrameExtended.curDrawPositions) then

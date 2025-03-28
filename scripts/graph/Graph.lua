@@ -4,7 +4,11 @@ Graph = CpObject(GraphNode)
 Graph.XML_KEY = "Graph"
 function Graph:init()
     GraphNode.init(self)
+end
 
+function Graph:setup()
+    ---@type GraphPlot
+    self._ingameMapPlot = GraphPlot(self)
 end
 
 function Graph.registerXmlSchema(xmlSchema, baseKey)
@@ -45,6 +49,10 @@ function Graph:draw(hoveredNodeID, selectedNodeIDs)
     for i, segment in ipairs(self._childNodes) do 
         segment:draw(hoveredNodeID, selectedNodeIDs)
     end
+end
+
+function Graph:drawMap(map)
+    self._ingameMapPlot:draw(map)
 end
 
 function Graph:update(dt)

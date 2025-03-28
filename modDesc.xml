@@ -83,6 +83,7 @@ Changelog 8.0.0.0:
 
 		<sourceFile filename="scripts/Logger.lua"/>
 		<sourceFile filename="scripts/CpUtil.lua"/>
+		<sourceFile filename="scripts/gui/CpGuiUtil.lua"/>
 
 		<sourceFile filename="scripts/debug/CpDebug.lua"/>
 		<sourceFile filename="scripts/debug/CourseRecorder.lua"/>
@@ -275,12 +276,13 @@ Changelog 8.0.0.0:
 		<sourceFile filename="scripts/ai/tasks/CpAITaskBunkerSilo.lua"/>
 		<sourceFile filename="scripts/ai/tasks/CpAITaskSiloLoader.lua"/>
 
-		<sourceFile filename="scripts/gui/CpGuiUtil.lua"/>
 		<sourceFile filename="scripts/gui/plots/CoursePlot.lua"/>
 		<sourceFile filename="scripts/gui/plots/FieldPlot.lua"/>
 		<sourceFile filename="scripts/gui/plots/BunkerSiloPlot.lua"/>
 		<sourceFile filename="scripts/gui/plots/HeapPlot.lua"/>
 		<sourceFile filename="scripts/gui/plots/UnloadingTriggerPlot.lua"/>
+		<sourceFile filename="scripts/gui/plots/GraphPlot.lua"/>
+		
 		<sourceFile filename="scripts/gui/CpStatus.lua"/>
 		<sourceFile filename="scripts/gui/CustomFieldHotspot.lua"/>
 		<sourceFile filename="scripts/gui/CourseDisplay.lua"/>

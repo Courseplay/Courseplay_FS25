@@ -4,11 +4,17 @@ GraphSegmentDirection.FORWARD   = 1
 GraphSegmentDirection.REVERSE   = 2
 GraphSegmentDirection.DUAL      = 3
 GraphSegmentDirection.MAX_KEY   = GraphSegmentDirection.DUAL
+GraphSegmentDirection.COLORS = {
+    [GraphSegmentDirection.FORWARD] = {0.0742, 0.4341, 0.6939, 1},
+    [GraphSegmentDirection.REVERSE] = {0.0284, 0.0284, 0.0284, 1},
+    [GraphSegmentDirection.DUAL]    = {0.8, 0.4, 0, 1},
+}
 GraphSegmentDirection.DEBUG_TEXTS = {
     [GraphSegmentDirection.FORWARD] = "Forward",
     [GraphSegmentDirection.REVERSE] = "Reverse",
     [GraphSegmentDirection.DUAL]    = "Dual",
 }
+
 
 ---@class GraphSegment : GraphNode
 ---@field _childNodes GraphPoint[]
@@ -111,6 +117,7 @@ function GraphSegment:draw(hoveredNodeID, selectedNodeIDs, isTemporary, temporar
     end
 end
 
+---@return table
 function GraphSegment:getDebugInfos()
     return {string.format("Direction: %s", self:getDirectionString())}
 end
@@ -131,8 +138,17 @@ function GraphSegment:changeDirection(newDirection)
     self._direction = newDirection
 end
 
+---@return string
 function GraphSegment:getDirectionString()
    return GraphSegmentDirection.DEBUG_TEXTS[self._direction] or "???"
+end
+
+---@return number
+---@return number
+---@return number
+---@return number
+function GraphSegment:getDirectionColor()
+    return GraphSegmentDirection.COLORS[self._direction] or 0,0,0,1
 end
 
 ---@return number
@@ -144,4 +160,14 @@ function GraphSegment:getLength()
         end
     end
     return length
+end
+
+---@return boolean
+function GraphSegment:isReverse()
+    return self._direction == GraphSegmentDirection.REVERSE
+end
+
+---@return boolean
+function GraphSegment:isDual()
+    return self._direction == GraphSegmentDirection.DUAL
 end

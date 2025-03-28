@@ -39,6 +39,7 @@ function CoursePlot:init()
 	self.stopPosition = {}
 	self.drawArrows	= true
 	self.isVisible = false
+	self.invertArrowDirection = false
 end
 
 function CoursePlot:delete()
@@ -60,8 +61,9 @@ function CoursePlot:setVisible( isVisible )
 	self.isVisible = isVisible
 end
 
-function CoursePlot:setDrawingArrows(draw)
+function CoursePlot:setDrawingArrows(draw, invert)
 	self.drawArrows = draw
+	self.invertArrowDirection = invert
 end
 
 function CoursePlot:setWaypoints( waypoints )
@@ -182,6 +184,9 @@ function CoursePlot:drawArrow(map, x, z, rotation, r, g, b, a, isHudMap)
 	local arrowHeight = self.arrowThickness * map.uiScale * zoom * g_screenAspectRatio
 	local ax, ay, _ = CpGuiUtil.worldToScreen(map, x, z, isHudMap)
 	setOverlayColor( self.arrowOverlayId, r, g, b, a or 0.8)
+	if self.invertArrowDirection then 
+		rotation = rotation + math.pi
+	end
 	setOverlayRotation(self.arrowOverlayId, rotation, arrowWidth/2, arrowHeight/2 )
 	renderOverlay( self.arrowOverlayId,
 		ax - arrowWidth/2,
@@ -211,7 +216,7 @@ function CoursePlot:drawPoints(map, points, isHudMap)
 			end
 			if wp and np then
 				r, g, b = MathUtil.vector3ArrayLerp(self.lightColor, self.darkColor, wp.progress or 1)
-				self:drawLineBetween(map, wp.x, wp.z, np.x, np.z,
+				self:drawLineBetween(map, wp.x or wp._x, wp.z or wp._z, np.x or np._x, np.z or np._z,
 						isHudMap, lineThickness, r, g, b, 0.8,
 						wp.attributes and wp.attributes.rowStart,
 						np.attributes and np.attributes.rowEnd)
