@@ -1,6 +1,5 @@
 --- Street job.
----@class CpAIJobStreet : CpAIJobFieldWork
----@field selectedFieldPlot FieldPlot
+---@class CpAIJobStreet : CpAIJob
 CpAIJobStreet = CpObject(CpAIJob)
 CpAIJobStreet.name = "STREET_WORKER_CP"
 CpAIJobStreet.jobName = "CP_job_street"

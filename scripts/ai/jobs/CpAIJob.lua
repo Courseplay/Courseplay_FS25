@@ -222,14 +222,16 @@ function CpAIJob:setValues()
 
 	local vehicle = self.vehicleParameter:getVehicle()
 
-	self.driveToTask:setVehicle(vehicle)
+	if self.driveToTask then 
+		self.driveToTask:setVehicle(vehicle)
 
-	local angle = self.cpJobParameters.startPosition:getAngle()
-	local x, z = self.cpJobParameters.startPosition:getPosition()
-	if angle ~= nil and x ~= nil then
-		local dirX, dirZ = MathUtil.getDirectionFromYRotation(angle)
-		self.driveToTask:setTargetDirection(dirX, dirZ)
-		self.driveToTask:setTargetPosition(x, z)
+		local angle = self.cpJobParameters.startPosition:getAngle()
+		local x, z = self.cpJobParameters.startPosition:getPosition()
+		if angle ~= nil and x ~= nil then
+			local dirX, dirZ = MathUtil.getDirectionFromYRotation(angle)
+			self.driveToTask:setTargetDirection(dirX, dirZ)
+			self.driveToTask:setTargetPosition(x, z)
+		end
 	end
 end
 
@@ -525,5 +527,6 @@ function CpAIJob.registerJob(aiJobTypeManager)
 	register(CpAIJobCombineUnloader)
 	register(CpAIJobSiloLoader)
 	register(CpAIJobBunkerSilo)
+	register(CpAIJobStreet)
 end
 
