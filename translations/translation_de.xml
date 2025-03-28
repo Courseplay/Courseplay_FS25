@@ -504,8 +504,9 @@ Der Kurs wird beim Schließen automatisch gespeichert und überschrieben.
     <text name="CP_editor_graph_points_linePoint_title" text="Gerade Line an Punkten erstellen."/>
     <text name="CP_editor_graph_points_linePoint_primary_text" text="TODO"/>
     <text name="CP_editor_graph_points_linePoint_secondary_text" text="TODO"/>
+    <text name="CP_editor_graph_points_linePoint_tertiary_textt" text="Straße spiegeln"/>
     <text name="CP_editor_graph_points_linePoint_primary_axis_text" text="Ändert den Offset (%d %%)"/>
-    <text name="CP_editor_graph_points_linePoint_secondary_axis_text" text="Verschiebt den Kurvenmittelpunkt(%d %%)"/>
+    <text name="CP_editor_graph_points_linePoint_secondary_axis_text" text="Verschiebt die Gespiegelte Straße(%d %%)"/>
     <!---->
     <!--Course editor segments-->
     <!---->

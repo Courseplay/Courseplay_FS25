@@ -504,6 +504,7 @@ A rota é salva automaticamente ao fechar o editor e substituir a rota seleciona
     <text name="CP_editor_graph_points_linePoint_title" text="Create a straight line of points."/>
     <text name="CP_editor_graph_points_linePoint_primary_text" text="TODO"/>
     <text name="CP_editor_graph_points_linePoint_secondary_text" text="TODO"/>
+    <text name="CP_editor_graph_points_linePoint_tertiary_textt" text="Mirror street"/>
     <text name="CP_editor_graph_points_linePoint_primary_axis_text" text="Change offset (%d %%)"/>
     <text name="CP_editor_graph_points_linePoint_secondary_axis_text" text="Change curve center (%d %%)"/>
     <!---->
