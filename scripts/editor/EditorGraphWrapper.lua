@@ -15,12 +15,18 @@ function EditorGraphWrapper:init(graph)
 
 	---@type GraphSegment
 	self.temporarySegment = GraphSegment()
+	---@type GraphSegment
+	self.mirrorTemporarySegment = GraphSegment()
+	self.isMirrorTemporaryActive = false
 end
 
 function EditorGraphWrapper:draw(position)
 	self.graph:draw(self.hoveredNodeId, self.selectedNodeIds)
 	self.temporarySegment:draw(nil, nil, true,
 		self:getPointByIndex(self:getFirstSelectedNodeID()))
+	if self.isMirrorTemporaryActive then 
+		self.mirrorTemporarySegment:draw(nil, nil, true)
+	end
 	if not position then 
 		return
 	end
@@ -85,6 +91,11 @@ function EditorGraphWrapper:createSegmentWithPoint(x, y, z)
 	end
 	local segment = self.graph:createSegmentWithPoint(x, y, z)
 	return segment:getChildNodeByIndex(1):getRelativeID()
+end
+
+---@param segment GraphSegment
+function EditorGraphWrapper:addSegment(segment)
+	self.graph:appendChildNode(segment)
 end
 
 ---@param id string|nil
@@ -245,6 +256,17 @@ function EditorGraphWrapper:isFirstOrLastSegmentPoint(id)
 	return false, "err_node_not_first_or_last"
 end
 
+---@param id string|nil
+---@return boolean
+---@return string|nil
+function EditorGraphWrapper:isOnlyNodeLeftInSegment(id)
+	local segment, err = self:getSegmentByIndex(id)
+	if segment == nil then 
+		return false, err
+	end
+	return segment:getNumChildNodes() <= 1
+end
+
 ---@param idA string|nil
 ---@param idB string|nil
 ---@return boolean
@@ -396,6 +418,22 @@ function EditorGraphWrapper:addTemporaryPoint(x, y, z)
 	return point
 end
 
+
+---@param x any
+---@param y any
+---@param z any
+---@return GraphPoint|nil
+function EditorGraphWrapper:addMirrorTemporaryPoint(x, y, z)
+	if x == nil or y == nil or z == nil then 
+		return
+	end
+	local point = GraphPoint()
+	point:setPosition(x, y, z)
+	self.mirrorTemporarySegment:insertChildNodeAtIndex(point, 1)
+	return point
+end
+
+
 ---@return boolean
 function EditorGraphWrapper:hasTemporaryPoints()
 	return self.temporarySegment:hasChildNodes()
@@ -423,10 +461,30 @@ end
 
 function EditorGraphWrapper:clearTemporaryPoints()
 	self.temporarySegment:clearChildNodes()
+	self.mirrorTemporarySegment:clearChildNodes()
 end
 
 function EditorGraphWrapper:resetTemporaryPoints()
 	self:clearTemporaryPoints()
+end
+
+---@param active boolean
+function EditorGraphWrapper:setMirrorSegmentActive(active)
+	self.isMirrorTemporaryActive = active
+end
+
+---@return boolean
+function EditorGraphWrapper:isMirrorSegmentActive()
+	return self.isMirrorTemporaryActive
+end
+
+function EditorGraphWrapper:toggleMirrorSegmentActive()
+	self.isMirrorTemporaryActive = not self.isMirrorTemporaryActive
+end
+
+---@return GraphSegment
+function EditorGraphWrapper:getMirrorSegment()
+	return self.mirrorTemporarySegment
 end
 
 ----------------------------

@@ -7,19 +7,21 @@ LinePointBrush.MAX_DIST = 20
 LinePointBrush.START_DIST = 6
 LinePointBrush.MIN_OFFSET = -1
 LinePointBrush.MAX_OFFSET = 1
-LinePointBrush.MIN_CENTER = 0
-LinePointBrush.MAX_CENTER = 1
-LinePointBrush.START_CENTER = 0.5
+LinePointBrush.MIN_CENTER = 1
+LinePointBrush.MAX_CENTER = 5
+LinePointBrush.START_CENTER = 0
 LinePointBrush.START_OFFSET = 0
 function LinePointBrush:init(...)
 	GraphBrush.init(self, ...)
 	self.supportsPrimaryButton = true
 	self.supportsSecondaryButton = true
+    self.supportsTertiaryButton = true
     self.supportsPrimaryAxis = true
+    self.primaryAxisIsContinuous = true
     self.supportsSecondaryAxis = true
-    
+    self.secondaryAxisIsContinuous = true
     self.offset = 0
-    self.center = 0.5
+    self.center = 1
 end
 
 function LinePointBrush:onButtonPrimary()
@@ -53,6 +55,10 @@ function LinePointBrush:onButtonPrimary()
         else 
             segment:extendByChildren(tempSegment, false)
         end
+        if self.graphWrapper:isMirrorSegmentActive() then 
+            local mirrorSegment = self.graphWrapper:getMirrorSegment()
+            self.graphWrapper:addSegment(mirrorSegment:clone(true))
+        end
         self.graphWrapper:clearTemporaryPoints()
         self.graphWrapper:resetSelected()
         self.graphWrapper:setSelected(segment:getLastNodeID())
@@ -74,7 +80,6 @@ function LinePointBrush:onButtonPrimary()
 		else 
 			ix = self.graphWrapper:createSegmentWithPoint(x, y, z)
 			if ix then
-				--- TODO Update editor
 				self.graphWrapper:setSelected(ix)
 				self.graphWrapper:addTemporaryPoint(x, y, z)
 			end
@@ -83,8 +88,19 @@ function LinePointBrush:onButtonPrimary()
 end
 
 function LinePointBrush:onButtonSecondary()
+    if self.graphWrapper:hasSelectedNode() then
+        local ix = self.graphWrapper:getFirstSelectedNodeID() 
+        if self.graphWrapper:isOnlyNodeLeftInSegment(ix) then 
+            self.graphWrapper:removeSegmentByPointIndex(ix)
+        end
+    end
     self.graphWrapper:resetTemporaryPoints()
     self.graphWrapper:resetSelected()
+end
+
+function LinePointBrush:onButtonTertiary()
+    self.graphWrapper:toggleMirrorSegmentActive()
+    self:setInputTextDirty()
 end
 
 function LinePointBrush:update(dt)
@@ -105,8 +121,6 @@ function LinePointBrush:movePoints()
         return
     end
     self.graphWrapper:clearTemporaryPoints()
-    local tx, ty, tz = self.graphWrapper:getPositionByIndex(
-        self.graphWrapper:getFirstSelectedNodeID())
 	local dist = MathUtil.vector2Length(x-tx, z-tz)
 	if dist <= 1 then 
 		return
@@ -145,7 +159,7 @@ function LinePointBrush:movePoints()
     --         self.graphWrapper:addTemporaryPoint(dx, y, dz)
     --     end
     -- end
-    local distCenter = dist*self.center
+    local distCenter = dist * 0.5 --self.center
 	local ax, az = tx + nx * distCenter, tz + nz * distCenter
 	--- Rotation
 	local ncx = nx  * math.cos(math.pi/2) - nz  * math.sin(math.pi/2)
@@ -161,24 +175,36 @@ function LinePointBrush:movePoints()
 		{ cx, cz },
 		{ x, z}}
 	local dx, dz
+    self.graphWrapper:addMirrorTemporaryPoint(
+        tx + ncx * self.center, ty, tz + ncz * self.center)
+
 	for t=dt , 1, dt do 
 		dx, dz = CpMathUtil.de_casteljau(t, points)
         local dy = getTerrainHeightAtWorldPos(
-            g_currentMission.terrainRootNode, dx, y, dz)
+            g_currentMission.terrainRootNode, dx, y + 2, dz)
         if dy > y - 2 and dy < y + 2 then 
             y = dy
         end
 		self.graphWrapper:addTemporaryPoint(dx, y, dz)
+        local mx, mz = dx + ncx * self.center, dz + ncz * self.center
+        self.graphWrapper:addMirrorTemporaryPoint(mx, y, mz)
 	end
 end
 
 function LinePointBrush:onAxisPrimary(inputValue)
-	self.offset = math.clamp(self.offset+inputValue/50, self.MIN_OFFSET, self.MAX_OFFSET)
+	self.offset = math.clamp(self.offset+inputValue/100, self.MIN_OFFSET, self.MAX_OFFSET)
 	self:setInputTextDirty()
 end
 
 function LinePointBrush:onAxisSecondary(inputValue)
-	self.center = math.clamp(self.center+inputValue/50, self.MIN_CENTER, self.MAX_CENTER)
+    local newCenter = self.center - inputValue
+    if self.center < 0 and newCenter > -1 then
+        self.center = 1
+    elseif self.center > 0 and newCenter < 1 then
+        self.center = -1
+    else 
+        self.center = math.clamp(newCenter, -self.MAX_CENTER, self.MAX_CENTER)
+    end
 	self:setInputTextDirty()
 end
 
@@ -188,8 +214,8 @@ function LinePointBrush:activate()
 end
 
 function LinePointBrush:deactivate()
-	self.graphWrapper:resetSelected()
-	self.graphWrapper:resetTemporaryPoints()
+	self:onButtonSecondary()
+    self.graphWrapper:setMirrorSegmentActive(false)
 end
 function LinePointBrush:getButtonPrimaryText()
 	return self:getTranslation(self.primaryButtonText)

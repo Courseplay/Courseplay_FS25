@@ -1781,13 +1781,17 @@ The course is saved automatically on closing of the editor and overrides the sel
 			<Text language="de"><![CDATA[TODO]]></Text>
 			<Text language="en"><![CDATA[TODO]]></Text>
 		</Translation>
+		<Translation name="CP_editor_graph_points_linePoint_tertiary_textt">
+			<Text language="de"><![CDATA[Straße spiegeln]]></Text>
+			<Text language="en"><![CDATA[Mirror street]]></Text>
+		</Translation>
 		<Translation name="CP_editor_graph_points_linePoint_primary_axis_text">
 			<Text language="de"><![CDATA[Ändert den Offset (%d %%)]]></Text>
 			<Text language="en"><![CDATA[Change offset (%d %%)]]></Text>
 		</Translation>
 		<Translation name="CP_editor_graph_points_linePoint_secondary_axis_text">
-			<Text language="de"><![CDATA[Verschiebt den Kurvenmittelpunkt(%d %%)]]></Text>
-			<Text language="en"><![CDATA[Change curve center (%d %%)]]></Text>
+			<Text language="de"><![CDATA[Verschiebt die Gespiegelte Straße(%d %%)]]></Text>
+			<Text language="en"><![CDATA[Moves the mirrored street (%d %%)]]></Text>
 		</Translation>
 	</Category>
 

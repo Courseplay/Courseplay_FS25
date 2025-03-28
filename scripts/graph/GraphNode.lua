@@ -259,7 +259,7 @@ function GraphNode:copyTo(newNode, unlink)
         newNode._parentNode = self._parentNode
     end
     for _, node in ipairs(self._childNodes) do 
-        newNode:appendChildNode(node)
+        newNode:appendChildNode(node:clone(unlink))
     end
 end
 
