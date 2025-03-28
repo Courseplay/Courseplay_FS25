@@ -418,3 +418,12 @@ function CpSiloLoaderJobParameters:generateUnloadingStations(setting, oldIx)
     end
     return unloadingStationIds, texts, oldIx
 end
+
+--- AI parameters for the street driving job.
+---@class CpStreetJobParameters : CpJobParameters
+CpStreetJobParameters = CpObject(CpJobParameters)
+
+function CpStreetJobParameters:init(job)
+    CpJobParameters.init(self, job, 
+        CpStreetJobParameters, "StreetJobParameterSetup.xml")
+end

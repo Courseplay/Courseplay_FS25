@@ -267,6 +267,7 @@ Changelog 8.0.0.0:
 		<sourceFile filename="scripts/ai/jobs/CpAIJobCombineUnloader.lua"/>
 		<sourceFile filename="scripts/ai/jobs/CpAIJobBunkerSilo.lua"/>
 		<sourceFile filename="scripts/ai/jobs/CpAIJobSiloLoader.lua"/>
+		<sourceFile filename="scripts/ai/jobs/CpAIJobStreet.lua"/>
 
 		<sourceFile filename="scripts/ai/tasks/CpAITask.lua"/>
 		<sourceFile filename="scripts/ai/tasks/CpAITaskFieldWork.lua"/>
@@ -305,6 +306,7 @@ Changelog 8.0.0.0:
 		<sourceFile filename="scripts/gui/hud/CpCombineUnloaderHudPage.lua"/>
 		<sourceFile filename="scripts/gui/hud/CpBunkerSiloWorkerHudPage.lua"/>
 		<sourceFile filename="scripts/gui/hud/CpSiloLoaderWorkerHudPage.lua"/>
+		<sourceFile filename="scripts/gui/hud/CpStreetWorkerHudPage.lua"/>
 
 		<sourceFile filename="scripts/editor/brushes/BaseBrush.lua"/>
 		<sourceFile filename="scripts/editor/brushes/basic/InsertWaypoint.lua"/>
@@ -360,7 +362,7 @@ Changelog 8.0.0.0:
 		<specialization name="cpAICombineUnloader" className="CpAICombineUnloader" filename="scripts/specializations/CpAICombineUnloader.lua"/>
 		<specialization name="cpAIBunkerSiloWorker" className="CpAIBunkerSiloWorker" filename="scripts/specializations/CpAIBunkerSiloWorker.lua"/>
 		<specialization name="cpAISiloLoaderWorker" className="CpAISiloLoaderWorker" filename="scripts/specializations/CpAISiloLoaderWorker.lua"/>
-		<!-- <specialization name="cpGamePadHud" className="CpGamePadHud" filename="scripts/specializations/CpGamePadHud.lua"/> -->
+		<specialization name="cpAIStreetWorker" className="CpAIStreetWorker" filename="scripts/specializations/CpAIStreetWorker.lua"/>
 		<specialization name="cpHud" className="CpHud" filename="scripts/specializations/CpHud.lua"/>
 		<specialization name="cpInfoTexts" className="CpInfoTexts" filename="scripts/specializations/CpInfoTexts.lua"/>
 		<specialization name="cpShovelPositions" className="CpShovelPositions" filename="scripts/specializations/CpShovelPositions.lua"/>

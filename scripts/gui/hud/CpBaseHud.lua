@@ -127,6 +127,7 @@ function CpBaseHud:init(vehicle)
 
     self.siloLoaderWorkerLayout = self:addHudPage(CpSiloLoaderWorkerHudPageElement, vehicle)
 
+    self.streetWorkerLayout = self:addHudPage(CpStreetWorkerHudPageElement, vehicle)
     --------------------------------------
     --- Header
     --------------------------------------
@@ -473,7 +474,7 @@ function CpBaseHud:getActiveHudPage(vehicle)
     elseif vehicle:cpIsHudUnloaderJobSelected() then
         return self.combineUnloaderLayout
     elseif vehicle:cpIsHudStreetJobSelected() then
-      --  return self.fieldworkLayout
+        return self.streetWorkerLayout
     end
 end
 
@@ -530,6 +531,8 @@ function CpBaseHud:updateContent(vehicle, status)
     self.bunkerSiloWorkerLayout:setDisabled(true)
     self.siloLoaderWorkerLayout:setVisible(false)
     self.siloLoaderWorkerLayout:setDisabled(true)
+    self.streetWorkerLayout:setVisible(false)
+    self.streetWorkerLayout:setDisabled(true)
 
     local activeLayout = self:getActiveHudPage(vehicle)
     if activeLayout then
