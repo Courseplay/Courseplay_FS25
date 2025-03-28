@@ -482,6 +482,9 @@ Il percorso viene salvato automaticamente alla chiusura dell'editor e sovrascriv
     <!--Graph editor-->
     <!---->
     <text name="CP_editor_graph_title" text="Street editor"/>
+    <text name="CP_editor_graph_points_title" text="Points"/>
+    <text name="CP_editor_graph_segment_title" text="Segments"/>
+    <text name="CP_editor_graph_target_title" text="Targets"/>
     <text name="CP_editor_graph_err_point_not_found" text="No point found!"/>
     <text name="CP_editor_graph_err_segment_not_found" text="No segment found!"/>
     <text name="CP_editor_graph_err_min_distance_to_small" text="Distance to another point is to small!"/>
@@ -521,11 +524,11 @@ Il percorso viene salvato automaticamente alla chiusura dell'editor e sovrascriv
     <!--Course editor targets-->
     <!---->
     <text name="CP_editor_graph_targets_createTarget_title" text="Create a new target"/>
-    <text name="CP_editor_graph_points_createTarget_primary_text" text="TODO"/>
+    <text name="CP_editor_graph_targets_createTarget_primary_text" text="TODO"/>
     <text name="CP_editor_graph_targets_deleteTarget_title" text="Delete target"/>
-    <text name="CP_editor_graph_points_deleteTarget_primary_text" text="TODO"/>
+    <text name="CP_editor_graph_targets_deleteTarget_primary_text" text="TODO"/>
     <text name="CP_editor_graph_targets_renameTarget_title" text="Rename target"/>
-    <text name="CP_editor_graph_points_renameTarget_primary_text" text="TODO"/>
+    <text name="CP_editor_graph_targets_renameTarget_primary_text" text="TODO"/>
     <!---->
     <!--Info texts-->
     <!---->

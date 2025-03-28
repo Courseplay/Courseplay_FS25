@@ -482,6 +482,9 @@ Der Kurs wird beim Schließen automatisch gespeichert und überschrieben.
     <!--Graph editor-->
     <!---->
     <text name="CP_editor_graph_title" text="Strecken Editor"/>
+    <text name="CP_editor_graph_points_title" text="Punkte"/>
+    <text name="CP_editor_graph_segment_title" text="Abschnitte"/>
+    <text name="CP_editor_graph_target_title" text="Ziele"/>
     <text name="CP_editor_graph_err_point_not_found" text="Kein Punkt gefunden!"/>
     <text name="CP_editor_graph_err_segment_not_found" text="Kein Segment gefunden!"/>
     <text name="CP_editor_graph_err_min_distance_to_small" text="Abstand zu anderem Punkt ist zu klein!"/>
@@ -521,11 +524,11 @@ Der Kurs wird beim Schließen automatisch gespeichert und überschrieben.
     <!--Course editor targets-->
     <!---->
     <text name="CP_editor_graph_targets_createTarget_title" text="Neues Ziel erstellen"/>
-    <text name="CP_editor_graph_points_createTarget_primary_text" text="TODO"/>
+    <text name="CP_editor_graph_targets_createTarget_primary_text" text="TODO"/>
     <text name="CP_editor_graph_targets_deleteTarget_title" text="Ziel löschen"/>
-    <text name="CP_editor_graph_points_deleteTarget_primary_text" text="TODO"/>
+    <text name="CP_editor_graph_targets_deleteTarget_primary_text" text="TODO"/>
     <text name="CP_editor_graph_targets_renameTarget_title" text="Ziel umbennen"/>
-    <text name="CP_editor_graph_points_renameTarget_primary_text" text="TODO"/>
+    <text name="CP_editor_graph_targets_renameTarget_primary_text" text="TODO"/>
     <!---->
     <!--Info texts-->
     <!---->
