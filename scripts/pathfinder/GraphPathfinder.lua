@@ -28,6 +28,10 @@ function GraphPathfinder.GraphEdge:init(direction, vertices)
     self.direction = direction
 end
 
+function GraphPathfinder.GraphEdge:getDirection()
+    return self.direction
+end
+
 ---@return boolean is this a bidirectional edge?
 function GraphPathfinder.GraphEdge:isBidirectional()
     return self.direction == GraphPathfinder.GraphEdge.BIDIRECTIONAL
@@ -92,6 +96,7 @@ end
 --- two edges are considered as connected (and thus can traverse from one to the other)
 ---@param graph GraphPathfinder.GraphEdge[] Array of edges, the graph as described in the file header
 function GraphPathfinder:init(yieldAfter, maxIterations, range, graph)
+    self.logger = Logger('GraphPathfinder', Logger.level.debug, CpDebug.DBG_PATHFINDER)
     HybridAStar.init(self, { }, yieldAfter, maxIterations)
     self.range = range
     self.graph = graph
@@ -102,6 +107,11 @@ function GraphPathfinder:init(yieldAfter, maxIterations, range, graph)
     self.originalDeltaThetaGoal = self.deltaThetaGoal
     self.analyticSolverEnabled = false
     self.ignoreValidityAtStart = false
+end
+
+--- for backwards compatibility with the old pathfinder
+function GraphPathfinder:debug(...)
+    self.logger:debug(...)
 end
 
 function GraphPathfinder:getMotionPrimitives(turnRadius, allowReverse)
@@ -130,6 +140,43 @@ function GraphPathfinder:rollUpPath(lastNode, goal, path)
     return path
 end
 
+function GraphPathfinder:initRun(start, goal, ...)
+    self:createGraphEntryAndExit(start, goal)
+    return HybridAStar.initRun(self, start, goal, ...)
+end
+
+--- The start location may not be close to the start or end of an edge. Therefore,
+--- we need to look for entries among all the vertices of all edges in the graph. When we find that vertex, and
+--- it isn't the first or last point of the edge, we simply split that edge at that vertex so the parts can
+--- be used as entries.
+--- We do the same for the goal node to be able to exit the graph at the middle of an edge.
+function GraphPathfinder:createGraphEntryAndExit(start, goal)
+    local function splitClosestEdge(node)
+        local closestEdge, closestVertex
+        local closestDistance = math.huge
+        for _, edge in ipairs(self.graph) do
+            local v, d = edge:findClosestVertexToPoint(node)
+            if d and d < closestDistance then
+                closestDistance = d
+                closestEdge = edge
+                closestVertex = v
+            end
+        end
+        if closestVertex.ix ~= 1 and closestVertex.ix ~= #closestEdge then
+            self.logger:trace('Graph entry found and split at vertex %d, %.1f %.1f', closestVertex.ix, closestVertex.x, closestVertex.y)
+            local newEdge = GraphPathfinder.GraphEdge(closestEdge:getDirection())
+            for i = closestVertex.ix, #closestEdge do
+                newEdge:append(closestEdge[i])
+            end
+            newEdge:calculateProperties()
+            table.insert(self.graph, newEdge)
+            closestEdge:cutEndAtIx(closestVertex.ix)
+        end
+    end
+    splitClosestEdge(start)
+    splitClosestEdge(goal)
+end
+
 --- Motion primitives to use with the graph pathfinder, providing the entries
 --- to the next edges.
 ---@class GraphPathfinder.GraphMotionPrimitives : HybridAStar.MotionPrimitives
@@ -139,6 +186,7 @@ GraphPathfinder.GraphMotionPrimitives = CpObject(HybridAStar.MotionPrimitives)
 --- two edges are considered as connected (and thus can traverse from one to the other)
 ---@param graph Vector[] the graph as described in the file header
 function GraphPathfinder.GraphMotionPrimitives:init(range, graph)
+    self.logger = Logger('GraphMotionPrimitives', Logger.level.debug, CpDebug.DBG_PATHFINDER)
     self.range = range
     self.graph = graph
 end
@@ -155,6 +203,7 @@ function GraphPathfinder.GraphMotionPrimitives:getPrimitives(node)
                 local exit = edge:getExit(entry)
                 table.insert(primitives, { x = exit.x, y = exit.y, d = edge:getLength() + distanceToEntry,
                                            edge = edge, entry = entry })
+                self.logger:trace('\t primitives: %.1f %.1f', exit.x, exit.y)
             end
         end
     end
@@ -163,6 +212,8 @@ end
 
 ---@return State3D successor for the given primitive
 function GraphPathfinder.GraphMotionPrimitives:createSuccessor(node, primitive, hitchLength)
+    self.logger:trace('\t\tsuccessor: %.1f %.1f (d=%.1f) from node: %.1f %.1f (g=%.1f, d=%.1f)',
+            primitive.x, primitive.y, primitive.d, node.x, node.y, node.g, node.d)
     return GraphPathfinder.Node(primitive.x, primitive.y, node.g, node, node.d + primitive.d, primitive.edge, primitive.entry)
 end
 

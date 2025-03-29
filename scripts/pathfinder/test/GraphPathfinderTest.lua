@@ -177,5 +177,56 @@ function testRange()
     lu.assertIsNil(path)
 end
 
+function testStartInTheMiddle()
+    local graph = {
+        GraphEdge(GraphEdge.BIDIRECTIONAL,
+                {
+                    Vertex(200, 100),
+                    Vertex(150, 100),
+                    Vertex(100, 100),
+                }),
+        GraphEdge(
+                GraphEdge.UNIDIRECTIONAL,
+                {
+                    Vertex(200, 105),
+                    Vertex(150, 105),
+                    Vertex(100, 105),
+                }),
+    }
+    pathfinder = GraphPathfinder(math.huge, 500, 20, graph)
+    start = State3D(150, 95, 0, 0)
+    goal = State3D(95, 95, 0, 0)
+    done, path, goalNodeInvalid = pathfinder:run(start, goal, 1, false, TestConstraints(), 0)
+    lu.assertIsTrue(done)
+    lu.assertEquals(#path, 3)
+    -- path contains the start node and all points of the edge it goes through
+    lu.assertEquals(start, path[1])
+    path[2]:assertAlmostEquals(Vector(150, 100))
+    path[3]:assertAlmostEquals(Vector(100, 100))
+    graph = {
+        GraphEdge(GraphEdge.BIDIRECTIONAL,
+                {
+                    Vertex(200, 100),
+                    Vertex(150, 100),
+                    Vertex(100, 100),
+                }),
+        GraphEdge(
+                GraphEdge.UNIDIRECTIONAL,
+                {
+                    Vertex(200, 105),
+                    Vertex(150, 105),
+                    Vertex(100, 105),
+                }),
+    }
+    pathfinder = GraphPathfinder(math.huge, 500, 10, graph)
+    start, goal = goal, start
+    done, path, goalNodeInvalid = pathfinder:run(start, goal, 1, false, TestConstraints(), 0)
+    printPath()
+    lu.assertIsTrue(done)
+    lu.assertEquals(#path, 3)
+    lu.assertEquals(start, path[1])
+    path[2]:assertAlmostEquals(Vector(100, 100))
+    path[3]:assertAlmostEquals(Vector(150, 100))
+end
 
 os.exit(lu.LuaUnit.run())
