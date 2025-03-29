@@ -624,6 +624,7 @@ function HybridAStar:run(start, goal, turnRadius, allowReverse, constraints, hit
                 if succ:equals(self.goal, self.deltaPosGoal, self.deltaThetaGoal) then
                     succ.pred = succ.pred
                     self:debug('Successor at the goal (%d).', self.iterations)
+                    self:debug('%s', succ)
                     return self:finishRun(true, self:rollUpPath(succ, self.goal))
                 end
 
