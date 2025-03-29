@@ -24,3 +24,22 @@ g_vehicleConfigurations = {}
 function g_vehicleConfigurations:get()
 	return false
 end
+
+g_Courseplay = {
+	globalSettings = {
+		getSettings = function()
+			return {
+				deltaAngleRelaxFactorDeg = {
+					getValue = function()
+						return 10
+					end
+				},
+				maxDeltaAngleAtGoalDeg = {
+					getValue = function()
+						return 45
+					end
+				},
+			}
+		end
+	}
+}
