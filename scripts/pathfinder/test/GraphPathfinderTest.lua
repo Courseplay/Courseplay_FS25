@@ -229,4 +229,38 @@ function testStartInTheMiddle()
     path[3]:assertAlmostEquals(Vector(150, 100))
 end
 
+function testTwoPointSegments()
+    local graph = {
+        GraphEdge(GraphEdge.UNIDIRECTIONAL,
+                {
+                    Vertex(100, 100),
+                    Vertex(120, 100)
+                }),
+        GraphEdge(
+                GraphEdge.UNIDIRECTIONAL,
+                {
+                    Vertex(120, 105),
+                    Vertex(100, 105),
+                }),
+    }
+    pathfinder = GraphPathfinder(math.huge, 500, 20, graph)
+    start = State3D(90, 105, 0, 0)
+    goal = State3D(130, 105, 0, 0)
+    done, path, goalNodeInvalid = pathfinder:run(start, goal, 1, false, TestConstraints(), 0)
+    lu.assertIsTrue(done)
+    lu.assertEquals(#path, 3)
+    -- path contains the start node and all points of the edge it goes through
+    lu.assertEquals(start, path[1])
+    path[2]:assertAlmostEquals(Vector(100, 100))
+    path[#path]:assertAlmostEquals(Vector(120, 100))
+    start, goal = goal, start
+    done, path, goalNodeInvalid = pathfinder:run(start, goal, 1, false, TestConstraints(), 0)
+    lu.assertIsTrue(done)
+    lu.assertEquals(#path, 3)
+    lu.assertEquals(start, path[1])
+    path[2]:assertAlmostEquals(Vector(120, 105))
+    path[#path]:assertAlmostEquals(Vector(100, 105))
+end
+
+
 os.exit(lu.LuaUnit.run())
