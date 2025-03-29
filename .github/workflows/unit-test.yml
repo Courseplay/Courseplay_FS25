@@ -35,7 +35,7 @@ jobs:
           lua LoggerTest.lua
       - name: Run course generator unit tests
         run: |
-          cd scripts/courseGenerator/test
+          pushd scripts/courseGenerator/test
           lua BlockSequencerTest.lua
           lua CacheMapTest.lua
           lua CenterTest.lua
@@ -53,5 +53,6 @@ jobs:
           lua TransformTest.lua
           lua VertexTest.lua
           lua WrapAroundIndexTest.lua
-          cd scripts/pathfinder/test
+          popd
+          pushd scripts/pathfinder/test
           lua GraphPathfinderTest.lua
