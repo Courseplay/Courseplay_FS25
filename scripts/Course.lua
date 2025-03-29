@@ -1671,7 +1671,7 @@ function Course.createFromAnalyticPath(vehicle, path, isTemporary)
     local course = Course(vehicle, CpMathUtil.pointsToGameInPlace(path), isTemporary)
     -- enrichWaypointData rotated the last waypoint in the direction of the second to last,
     -- correct that according to the analytic path's last waypoint
-    local yRot = CpMathUtil.angleToGame(path[#path].t)
+    local yRot = CpMathUtil.angleToGame(path[#path].t or 0)
     course.waypoints[#course.waypoints].yRot = yRot
     course.waypoints[#course.waypoints].angle = math.deg(yRot)
     course.waypoints[#course.waypoints].dx, course.waypoints[#course.waypoints].dz = MathUtil.getDirectionFromYRotation(yRot)
