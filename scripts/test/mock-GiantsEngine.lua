@@ -110,3 +110,10 @@ end
 function printCallstack()
     
 end
+
+CollisionFlag = {}
+setmetatable(CollisionFlag, {__index = function() return 0 end})
+
+function openIntervalTimer() end
+function closeIntervalTimer() end
+function readIntervalTimerMs() return 0 end

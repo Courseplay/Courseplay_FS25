@@ -53,3 +53,5 @@ jobs:
           lua TransformTest.lua
           lua VertexTest.lua
           lua WrapAroundIndexTest.lua
+          cd scripts/pathfinder/test
+          lua GraphPathfinderTest.lua
