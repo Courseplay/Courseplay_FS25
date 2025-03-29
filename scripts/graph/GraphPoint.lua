@@ -46,7 +46,14 @@ end
 ---@param unlink boolean|nil
 function GraphPoint:copyTo(newNode, unlink)
     GraphNode.copyTo(self, newNode, unlink)
-    newNode._target = self._target
+    if self._target then
+        if unlink then
+            newNode._target = GraphTarget()
+            self._target:copyTo(newNode._target)
+        else 
+            newNode._target = self._target
+        end
+    end
     newNode._x = self._x
     newNode._y = self._y
     newNode._z = self._z
@@ -71,13 +78,14 @@ function GraphPoint:draw(hoveredNodeID, selectedNodeIDs, isTemporary)
     elseif isTemporary then
         color = Color.new(0, 1, 0)
     end
-    DebugUtil.drawDebugSphere(self._x, self._y, self._z, 
-        1, 3, 3, color, false, false)
-    
+    -- drawDebugPoint(self._x, self._y + 1, self._z, 
+    --     color.r, color.g, color.b, color.a, true)
+    DebugUtil.drawDebugSphere(self._x, self._y + 2, self._z, 
+        1, 6, 6, color, false, false)
     local data = self:getDebugInfos()
     local yOffset = 0
     for _, line in ipairs(data) do 
-        Utils.renderTextAtWorldPosition(self._x, self._y, self._z, 
+        Utils.renderTextAtWorldPosition(self._x, self._y + 1, self._z, 
             line, getCorrectTextSize(0.012), yOffset)
         yOffset = yOffset + getCorrectTextSize(0.012)
     end
@@ -205,6 +213,7 @@ function GraphPoint:removeTarget()
     if not self:hasTarget() then 
         return false
     end
+    self._target:delete()
     self._target = nil
     return true
 end

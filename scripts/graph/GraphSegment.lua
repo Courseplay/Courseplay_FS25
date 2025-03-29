@@ -82,7 +82,7 @@ function GraphSegment:draw(hoveredNodeID, selectedNodeIDs, isTemporary, temporar
             local dist = MathUtil.vector3Length(x - dx, y - dy, z - dz)
             if dist > 1 then 
                 local nx, _, nz = MathUtil.vector3Normalize(x - dx, y - dy, z - dz)
-                local delta = 2
+                local delta = 6
                 local numArrows = dist / delta + 1 
                 local spacing = dist / (numArrows + 1)
                 if self._direction == GraphSegmentDirection.REVERSE then 
@@ -99,16 +99,16 @@ function GraphSegment:draw(hoveredNodeID, selectedNodeIDs, isTemporary, temporar
                         end
                         local ncx = nx * math.cos(math.pi/4) - nz * math.sin(math.pi/4)
                         local ncz = nx * math.sin(math.pi/4) + nz * math.cos(math.pi/4)                    
-                        DebugUtil.drawDebugLine(tx, y, tz,
-                            tx - ncx * 2, y, tz - ncz * 2, unpack(color))
+                        DebugUtil.drawDebugLine(tx, y + 2, tz,
+                            tx - ncx * 2, y + 2, tz - ncz * 2, unpack(color))
                         ncx = nx * math.cos(-math.pi/4) - nz * math.sin(-math.pi/4)
                         ncz = nx * math.sin(-math.pi/4) + nz * math.cos(-math.pi/4)
-                        DebugUtil.drawDebugLine(tx, y, tz,
-                            tx - ncx * 2, y, tz - ncz * 2, unpack(color))
+                        DebugUtil.drawDebugLine(tx, y + 2, tz,
+                            tx - ncx * 2, y + 2, tz - ncz * 2, unpack(color))
                     elseif self._direction == GraphSegmentDirection.DUAL then
                         -- x, y, z, radius, steps, color, alignToTerrain, filled
-                        DebugUtil.drawDebugCircle(dx + nx * i, y, dz + nz * i,
-                            1, 10, color)
+                        DebugUtil.drawDebugCircle(dx + nx * i, y + 2, dz + nz * i,
+                            1, 8, color)
                     end
                 end
             end

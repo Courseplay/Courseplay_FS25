@@ -2,15 +2,10 @@
 --- Inserts a new waypoint at the mouse position.
 ---@class LinePointBrush : GraphBrush
 LinePointBrush = CpObject(GraphBrush)
-LinePointBrush.MIN_DIST = 2
-LinePointBrush.MAX_DIST = 20
-LinePointBrush.START_DIST = 6
 LinePointBrush.MIN_OFFSET = -1
 LinePointBrush.MAX_OFFSET = 1
 LinePointBrush.MIN_CENTER = 1
 LinePointBrush.MAX_CENTER = 5
-LinePointBrush.START_CENTER = 0
-LinePointBrush.START_OFFSET = 0
 function LinePointBrush:init(...)
 	GraphBrush.init(self, ...)
 	self.supportsPrimaryButton = true
@@ -21,7 +16,7 @@ function LinePointBrush:init(...)
     self.supportsSecondaryAxis = true
     self.secondaryAxisIsContinuous = true
     self.offset = 0
-    self.center = 1
+    self.center = -3.5
 end
 
 function LinePointBrush:onButtonPrimary()
@@ -62,7 +57,7 @@ function LinePointBrush:onButtonPrimary()
         self.graphWrapper:clearTemporaryPoints()
         self.graphWrapper:resetSelected()
         self.graphWrapper:setSelected(segment:getLastNodeID())
-
+        self.offset = 0
     else
 		if ix then 
             local isNotFirsOrLast, err = self.graphWrapper:isNotFirstOrLastSegmentPoint(ix)
@@ -94,6 +89,7 @@ function LinePointBrush:onButtonSecondary()
             self.graphWrapper:removeSegmentByPointIndex(ix)
         end
     end
+    self.offset = 0
     self.graphWrapper:resetTemporaryPoints()
     self.graphWrapper:resetSelected()
 end
@@ -131,35 +127,7 @@ function LinePointBrush:movePoints()
 		nx = 0
 		nz = 1
 	end
-	-- local n = math.max(math.ceil(dist/spacing), 2)
-	-- spacing = dist / n
-    -- if self.graphWrapper:isLastSegmentPoint(
-    --     self.graphWrapper:getFirstSelectedNodeID()) then 
-    --     --- Forwards 
-    --     for i = 1, n + 1 do 
-    --         local dx = tx + nx * i * spacing 
-    --         local dz = tz + nz * i * spacing
-    --         local dy = getTerrainHeightAtWorldPos(
-    --             g_currentMission.terrainRootNode, dx, y, dz)
-    --         if dy > y - 2 and dy < y + 2 then 
-    --             y = dy
-    --         end
-    --         self.graphWrapper:addTemporaryPoint(dx, y, dz)
-    --     end
-    -- else 
-    --     --- Backwards
-    --     for i = 1, n + 1 do 
-    --         local dx = tx + nx * i * spacing 
-    --         local dz = tz + nz * i * spacing
-    --         local dy = getTerrainHeightAtWorldPos(
-    --             g_currentMission.terrainRootNode, dx, y, dz)
-    --         if dy > y - 2 and dy < y + 2 then 
-    --             y = dy
-    --         end
-    --         self.graphWrapper:addTemporaryPoint(dx, y, dz)
-    --     end
-    -- end
-    local distCenter = dist * 0.5 --self.center
+    local distCenter = dist * 0.5
 	local ax, az = tx + nx * distCenter, tz + nz * distCenter
 	--- Rotation
 	local ncx = nx  * math.cos(math.pi/2) - nz  * math.sin(math.pi/2)
@@ -167,7 +135,7 @@ function LinePointBrush:movePoints()
 	--- Translation
 	local cx, cz = ax + ncx * self.offset * dist, az + ncz * self.offset * dist
 	local halfDist = MathUtil.vector2Length(cx - tx, cz - tz)
-	local dt = 2/(1.5*halfDist)
+	local dt = 3/halfDist
 	local n = math.ceil(halfDist/spacing)
 	spacing = halfDist/n
 	local points = {
@@ -177,27 +145,25 @@ function LinePointBrush:movePoints()
 	local dx, dz
     self.graphWrapper:addMirrorTemporaryPoint(
         tx + ncx * self.center, ty, tz + ncz * self.center)
-
+    local lastY = ty
 	for t=dt , 1, dt do 
 		dx, dz = CpMathUtil.de_casteljau(t, points)
-        local dy = getTerrainHeightAtWorldPos(
-            g_currentMission.terrainRootNode, dx, y + 2, dz)
-        if dy > y - 2 and dy < y + 2 then 
-            y = dy
-        end
-		self.graphWrapper:addTemporaryPoint(dx, y, dz)
+        local _, _, dy = RaycastUtil.raycastClosest(dx, lastY + 3, dz, 0, -1, 0, 5, 
+            CollisionFlag.STATIC_OBJECT + CollisionFlag.ROAD + CollisionFlag.AI_DRIVABLE + CollisionFlag.TERRAIN)
+		lastY = dy
+        self.graphWrapper:addTemporaryPoint(dx, y, dz)
         local mx, mz = dx + ncx * self.center, dz + ncz * self.center
         self.graphWrapper:addMirrorTemporaryPoint(mx, y, mz)
 	end
 end
 
 function LinePointBrush:onAxisPrimary(inputValue)
-	self.offset = math.clamp(self.offset+inputValue/100, self.MIN_OFFSET, self.MAX_OFFSET)
+	self.offset = math.clamp(self.offset+inputValue/125, self.MIN_OFFSET, self.MAX_OFFSET)
 	self:setInputTextDirty()
 end
 
 function LinePointBrush:onAxisSecondary(inputValue)
-    local newCenter = self.center - inputValue
+    local newCenter = self.center - inputValue/20
     if self.center < 0 and newCenter > -1 then
         self.center = 1
     elseif self.center > 0 and newCenter < 1 then
@@ -223,6 +189,10 @@ end
 
 function LinePointBrush:getButtonSecondaryText()
 	return self:getTranslation(self.secondaryButtonText)
+end
+
+function LinePointBrush:getButtonTertiaryText()
+	return self:getTranslation(self.tertiaryButtonText)
 end
 
 function LinePointBrush:getAxisPrimaryText()

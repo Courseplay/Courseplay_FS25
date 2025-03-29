@@ -5,6 +5,9 @@ Graph.XML_KEY = "Graph"
 function Graph:init()
     GraphNode.init(self)
     g_consoleCommands:registerConsoleCommand("cpGraphFindPathTo", "Tries to find a path to: ", "consoleCommandFindPathTo", self)
+
+    ---@type GraphTarget[]
+    self._targets = {}
 end
 
 function Graph:consoleCommandFindPathTo(name)
@@ -155,6 +158,23 @@ function Graph:createSegmentWithPoint(x, y, z)
     segment:appendChildNode(point)
     self:appendChildNode(segment)
     return segment
+end
+
+---@param target GraphTarget
+function Graph:onTargetCreated(target)
+    table.insert(self._targets, target)
+end
+
+---@param target GraphTarget
+function Graph:onTargetDeleted(target)
+    local ixToRemove
+    for i=#self._targets, 1, -1 do
+        if self._targets[i] == target then
+            ixToRemove = i
+            break
+        end
+    end
+    table.remove(self._targets, ixToRemove)
 end
 
 ---@type Graph
