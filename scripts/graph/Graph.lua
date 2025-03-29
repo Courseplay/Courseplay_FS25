@@ -4,6 +4,49 @@ Graph = CpObject(GraphNode)
 Graph.XML_KEY = "Graph"
 function Graph:init()
     GraphNode.init(self)
+    g_consoleCommands:registerConsoleCommand("cpGraphFindPathTo", "Tries to find a path to: ", "consoleCommandFindPathTo", self)
+end
+
+function Graph:consoleCommandFindPathTo(name)
+    if not name then 
+        return "No target given!"
+    end
+    local cmd = function ()
+        local edges = {}
+        local targetPos
+        for _, seg in ipairs(self._childNodes) do 
+            for _, node in ipairs(seg:getAllChildNodes()) do 
+                local target = node:getTarget()
+                if target and target:getName() == name then 
+                    local x, z = node:getPosition2D()
+                    targetPos = CpMathUtil.pointFromGame({x = x, z = z})
+                end
+            end
+            table.insert(edges, seg:toGraphEdge())
+        end
+        if targetPos == nil or targetPos.x == nil or targetPos.y == nil then
+            return "Failed to find target!"
+        end
+        local vehicle = CpUtil.getCurrentVehicle()
+        if vehicle == nil then 
+            return "Must be in a vehicle!"
+        end
+        local pathfinder = GraphPathfinder(math.huge, 500, 20, edges)
+        local start = PathfinderUtil.getVehiclePositionAsState3D(vehicle)
+        local goal = State3D(targetPos.x, targetPos.y, 0, 0)
+        CpUtil.info("Goal: %s", tostring(goal))
+        local TestConstraints = CpObject(PathfinderConstraintInterface)
+        local done, path, goalNodeInvalid = pathfinder:run(start, goal, 1, false, TestConstraints(), 0)
+        if not done or path == nil or #path < 2 then
+            return "Pathfinder failed!"
+        end
+        local course = Course.createFromAnalyticPath(vehicle, path, true)
+        vehicle:setFieldWorkCourse(course)
+    end
+    local success, ret = CpUtil.try(cmd)
+    if not success then 
+        CpUtil.info(ret)
+    end
 end
 
 function Graph:setup()

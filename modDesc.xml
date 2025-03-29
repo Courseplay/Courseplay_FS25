@@ -175,6 +175,7 @@ Changelog 8.0.0.0:
 		<sourceFile filename="scripts/pathfinder/PathfinderConstraints.lua"/>
 		<sourceFile filename="scripts/pathfinder/PathfinderContext.lua"/>
 		<sourceFile filename="scripts/pathfinder/PathfinderUtil.lua"/>
+		<sourceFile filename="scripts/pathfinder/GraphPathfinder.lua"/>
 
 		<sourceFile filename="scripts/ai/util/AIUtil.lua"/>
 		<sourceFile filename="scripts/ai/util/FillLevelUtil.lua"/>

@@ -171,3 +171,21 @@ end
 function GraphSegment:isDual()
     return self._direction == GraphSegmentDirection.DUAL
 end
+
+function GraphSegment:toGraphEdge()
+    local firstNode = self._childNodes[1]
+    local lastNode = self._childNodes[#self._childNodes]
+    if self:isDual() then 
+        return GraphPathfinder.GraphEdge(
+            GraphPathfinder.GraphEdge.BIDIRECTIONAL,
+            {Vector(firstNode:getPosition2D()), Vector(lastNode:getPosition2D())})
+    elseif self:isReverse() then
+        return GraphPathfinder.GraphEdge(
+            GraphPathfinder.GraphEdge.UNIDIRECTIONAL,
+            {Vector(lastNode:getPosition2D()), Vector(firstNode:getPosition2D())})
+    else 
+        return GraphPathfinder.GraphEdge(
+            GraphPathfinder.GraphEdge.UNIDIRECTIONAL,
+            {Vector(firstNode:getPosition2D()), Vector(lastNode:getPosition2D())})
+    end
+end
