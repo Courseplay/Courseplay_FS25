@@ -11,9 +11,9 @@ end
 function CreateTargetBrush:onButtonPrimary()
 	local nodeId = self:getHoveredNodeId()
 	if nodeId ~= nil then
-		local found, err = self.graphWrapper:hasTargetByIndex(nodeId)
-		if not found then
-			self:setError(err)
+		local found = self.graphWrapper:hasTargetByIndex(nodeId)
+		if found then
+			self:setError("err_already_has_target")
 			return
 		end
 		self:openTextInput(function(self, text, clickOk, nodeId)
