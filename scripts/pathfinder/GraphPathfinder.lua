@@ -163,7 +163,8 @@ function GraphPathfinder:createGraphEntryAndExit(start, goal)
             end
         end
         if closestVertex.ix ~= 1 and closestVertex.ix ~= #closestEdge then
-            self.logger:trace('Graph entry found and split at vertex %d, %.1f %.1f', closestVertex.ix, closestVertex.x, closestVertex.y)
+            self.logger:debug('Graph entry/exit found and split at vertex %d, d: %.1f, x: %.1f y: %.1f',
+                    closestVertex.ix, closestDistance, closestVertex.x, closestVertex.y)
             local newEdge = GraphPathfinder.GraphEdge(closestEdge:getDirection())
             for i = closestVertex.ix, #closestEdge do
                 newEdge:append(closestEdge[i])
