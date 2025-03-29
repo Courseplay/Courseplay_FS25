@@ -172,6 +172,10 @@ function GraphPoint:getDistance2DToPoint(other)
     return MathUtil.vector2Length(self._x - dx, self._z - dz)
 end
 
+function GraphPoint:toVector()
+    return Vector(self._x, -self._z)
+end
+
 -----------------------------
 --- Target
 -----------------------------

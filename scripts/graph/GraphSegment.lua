@@ -173,19 +173,19 @@ function GraphSegment:isDual()
 end
 
 function GraphSegment:toGraphEdge()
-    local firstNode = self._childNodes[1]
-    local lastNode = self._childNodes[#self._childNodes]
+    local points = {}
+    local sx, ex, inc = 1, #self._childNodes, 1
+    if self:isReverse() then 
+        sx, ex, inc = #self._childNodes, 1, -1
+    end
+    for i = sx, ex, inc do
+        table.insert(points, self._childNodes[i]:toVector())
+    end
     if self:isDual() then 
         return GraphPathfinder.GraphEdge(
-            GraphPathfinder.GraphEdge.BIDIRECTIONAL,
-            {Vector(firstNode:getPosition2D()), Vector(lastNode:getPosition2D())})
-    elseif self:isReverse() then
-        return GraphPathfinder.GraphEdge(
-            GraphPathfinder.GraphEdge.UNIDIRECTIONAL,
-            {Vector(lastNode:getPosition2D()), Vector(firstNode:getPosition2D())})
+            GraphPathfinder.GraphEdge.BIDIRECTIONAL, points)
     else 
         return GraphPathfinder.GraphEdge(
-            GraphPathfinder.GraphEdge.UNIDIRECTIONAL,
-            {Vector(firstNode:getPosition2D()), Vector(lastNode:getPosition2D())})
+            GraphPathfinder.GraphEdge.UNIDIRECTIONAL, points)
     end
 end

@@ -19,10 +19,12 @@ function Graph:consoleCommandFindPathTo(name)
                 local target = node:getTarget()
                 if target and target:getName() == name then 
                     local x, z = node:getPosition2D()
-                    targetPos = CpMathUtil.pointFromGame({x = x, z = z})
+                    targetPos = Vector(x, -z)
                 end
             end
-            table.insert(edges, seg:toGraphEdge())
+            local edge = seg:toGraphEdge()
+            print(tostring(edge))
+            table.insert(edges, edge)
         end
         if targetPos == nil or targetPos.x == nil or targetPos.y == nil then
             return "Failed to find target!"
@@ -44,7 +46,7 @@ function Graph:consoleCommandFindPathTo(name)
         vehicle:setFieldWorkCourse(course)
     end
     local success, ret = CpUtil.try(cmd)
-    if not success then 
+    if not success or ret then 
         CpUtil.info(ret)
     end
 end
