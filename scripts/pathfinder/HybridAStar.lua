@@ -63,6 +63,7 @@ end
 --
 -- After start(), call resume() until it returns done == true.
 ---@see PathfinderInterface#run also on how to use.
+---@return PathfinderResult
 function PathfinderInterface:start(...)
     if not self.coroutine then
         self.coroutine = coursePlayCoroutine.create(self.run)
@@ -83,19 +84,17 @@ function PathfinderInterface:isActive()
 end
 
 --- Resume the pathfinding
----@return boolean true if the pathfinding is done, false if it isn't ready. In this case you'll have to call resume() again
----@return Polyline path if the path found or nil if none found.
--- @return array of the points of the grid used for the pathfinding, for test purposes only
+---@return PathfinderResult
 function PathfinderInterface:resume(...)
-    local ok, done, path, goalNodeInvalid = coursePlayCoroutine.resume(self.coroutine, self, ...)
-    if not ok or done then
+    local ok, result = coursePlayCoroutine.resume(self.coroutine, self, ...)
+    if not ok or result.done then
         if not ok then
-            print(done)
+            print(result.done)
         end
         self.coroutine = nil
-        return true, path, goalNodeInvalid
+        return result
     end
-    return false
+    return PathfinderResult(false)
 end
 
 function PathfinderInterface:debug(...)
@@ -504,7 +503,7 @@ end
 ---                              when we search for a valid analytic solution we use this instead of isValidNode()
 ---@param hitchLength number hitch length of a trailer (length between hitch on the towing vehicle and the
 --- rear axle of the trailer), can be nil
----@return boolean, {}|nil, boolean done, path, goal node invalid
+---@return PathfinderResult
 function HybridAStar:initRun(start, goal, turnRadius, allowReverse, constraints, hitchLength)
     self:debug('Start pathfinding between %s and %s', tostring(start), tostring(goal))
     self:debug('  turnRadius = %.1f, allowReverse: %s', turnRadius, tostring(allowReverse))
@@ -533,12 +532,12 @@ function HybridAStar:initRun(start, goal, turnRadius, allowReverse, constraints,
     -- ignore trailer for the first check, we don't know its heading anyway
     if not constraints:isValidNode(goal, true) then
         self:debug('Goal node is invalid, abort pathfinding.')
-        return true, nil, true
+        return PathfinderResult(true, nil, true)
     end
 
     if not constraints:isValidAnalyticSolutionNode(goal, true) then
         -- goal node is invalid (for example in fruit), does not make sense to try analytic solutions
-        self.goalNodeIsInvalid = true
+        self.goalNodeInvalid = true
         self:debug('Goal node is invalid for analytical path.')
     end
 
@@ -548,7 +547,7 @@ function HybridAStar:initRun(start, goal, turnRadius, allowReverse, constraints,
         if self:isPathValid(analyticPath) then
             self:debug('Found collision free analytic path (%s) from start to goal', pathType)
             CourseGenerator.addDebugPolyline(Polyline(analyticPath))
-            return true, analyticPath
+            return PathfinderResult(true, analyticPath, self.goalNodeInvalid)
         end
         self:debug('Length of analytic solution is %.1f', analyticSolutionLength)
     end
@@ -561,7 +560,7 @@ function HybridAStar:initRun(start, goal, turnRadius, allowReverse, constraints,
     self.expansions = 0
     self.yields = 0
     self.initialized = true
-    return false
+    return PathfinderResult(false)
 end
 
 --- Wrap up this run, clean up timer, reset initialized flag so next run will start cleanly
@@ -569,15 +568,16 @@ function HybridAStar:finishRun(result, path)
     self.initialized = false
     self.constraints:showStatistics()
     closeIntervalTimer(self.timer)
-    return result, path
+    return PathfinderResult(result, path, self.goalNodeInvalid)
 end
 
 --- Reentry-safe pathfinder runner
+---@return PathfinderResult
 function HybridAStar:run(start, goal, turnRadius, allowReverse, constraints, hitchLength)
     if not self.initialized then
-        local done, path, goalNodeInvalid = self:initRun(start, goal, turnRadius, allowReverse, constraints, hitchLength)
-        if done then
-            return done, path, goalNodeInvalid
+        local result = self:initRun(start, goal, turnRadius, allowReverse, constraints, hitchLength)
+        if result.done then
+            return result
         end
     end
     self.timer = openIntervalTimer()
@@ -598,13 +598,13 @@ function HybridAStar:run(start, goal, turnRadius, allowReverse, constraints, hit
             self.yields = self.yields + 1
             closeIntervalTimer(self.timer)
             -- if we had the coroutine package, we would coursePlayCoroutine.yield(false) here
-            return false
+            return PathfinderResult(false)
         end
         if not pred:isClosed() then
             -- analytical expansion: try a Dubins/Reeds-Shepp path from here randomly, more often as we getting closer to the goal
             -- also, try it before we start with the pathfinding
             if pred.h then
-                if self.analyticSolverEnabled and not self.goalNodeIsInvalid and
+                if self.analyticSolverEnabled and not self.goalNodeInvalid and
                         math.random() > 2 * pred.h / self.distanceToGoal then
                     self:debug('Check analytic solution at iteration %d, %.1f, %.1f', self.iterations, pred.h, pred.h / self.distanceToGoal)
                     local analyticPath, _, pathType = self:getAnalyticPath(pred, self.goal, self.turnRadius, self.allowReverse, self.hitchLength)
