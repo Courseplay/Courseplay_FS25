@@ -32,9 +32,6 @@ function CpAIStreetWorker.registerEventListeners(vehicleType)
     SpecializationUtil.registerEventListener(vehicleType, 'onLoadFinished', CpAIStreetWorker)
     SpecializationUtil.registerEventListener(vehicleType, 'onReadStream', CpAIStreetWorker)
     SpecializationUtil.registerEventListener(vehicleType, 'onWriteStream', CpAIStreetWorker)
-
-    SpecializationUtil.registerEventListener(vehicleType, 'onCpADStartedByPlayer', CpAIStreetWorker)
-    SpecializationUtil.registerEventListener(vehicleType, 'onCpADRestarted', CpAIStreetWorker)
 end
 
 function CpAIStreetWorker.registerFunctions(vehicleType)
@@ -61,66 +58,66 @@ end
 --- Event listeners
 ---------------------------------------------------------------------------------------------------------------------------
 function CpAIStreetWorker:onLoad(savegame)
-	--- Register the spec: spec_CpAIStreetWorker
-    self.spec_CpAIStreetWorker = self["spec_" .. CpAIStreetWorker.SPEC_NAME]
-    local spec = self.spec_CpAIStreetWorker
+	--- Register the spec: spec_cpAIStreetWorker
+    self.spec_cpAIStreetWorker = self["spec_" .. CpAIStreetWorker.SPEC_NAME]
+    local spec = self.spec_cpAIStreetWorker
     --- This job is for starting the driving with a key bind or the mini gui.
     spec.cpJob = g_currentMission.aiJobTypeManager:createJob(AIJobType.STREET_WORKER_CP)
     spec.cpJob:setVehicle(self, true)
 end
 
 function CpAIStreetWorker:onLoadFinished(savegame)
-    local spec = self.spec_CpAIStreetWorker
+    local spec = self.spec_cpAIStreetWorker
     if savegame ~= nil then 
         spec.cpJob:getCpJobParameters():loadFromXMLFile(savegame.xmlFile, savegame.key.. CpAIStreetWorker.KEY..".cpJob")
     end
 end
 
 function CpAIStreetWorker:saveToXMLFile(xmlFile, baseKey, usedModNames)
-    local spec = self.spec_CpAIStreetWorker
+    local spec = self.spec_cpAIStreetWorker
     spec.cpJob:getCpJobParameters():saveToXMLFile(xmlFile, baseKey.. ".cpJob")
 end
 
 function CpAIStreetWorker:onReadStream(streamId, connection)
-    local spec = self.spec_CpAIStreetWorker
+    local spec = self.spec_cpAIStreetWorker
     spec.cpJob:readStream(streamId, connection)
 end
 
 function CpAIStreetWorker:onWriteStream(streamId, connection)
-    local spec = self.spec_CpAIStreetWorker
+    local spec = self.spec_cpAIStreetWorker
     spec.cpJob:writeStream(streamId, connection)
 end
 
 function CpAIStreetWorker:getCpStreetWorkerJobParameters()
-    local spec = self.spec_CpAIStreetWorker
+    local spec = self.spec_cpAIStreetWorker
     return spec.cpJob:getCpJobParameters() 
 end
 
 function CpAIStreetWorker:getCpStreetWorkerJob()
-    local spec = self.spec_CpAIStreetWorker
+    local spec = self.spec_cpAIStreetWorker
     return spec.cpJob
 end
 
 
 function CpAIStreetWorker:applyCpStreetWorkerJobParameters(job)
-    local spec = self.spec_CpAIStreetWorker
+    local spec = self.spec_cpAIStreetWorker
     spec.cpJob:getCpJobParameters():validateSettings()
     spec.cpJob:copyFrom(job)
 end
 
---- Is the bale finder allowed?
+--- Is the Street job allowed?
 function CpAIStreetWorker:getCanStartCpStreetWorker()
 	return true
 end
 
 function CpAIStreetWorker:getCanStartCp(superFunc)
-    return superFunc(self) or self:getCanStartCpStreetWorker() and not self:getIsCpCourseRecorderActive()
+    return superFunc(self) or self:getCanStartCpStreetWorker()
 end
 
 --- Only use the bale finder, if the cp field work job is not possible.
 function CpAIStreetWorker:getCpStartableJob(superFunc, isStartedByHud)
-    local spec = self.spec_CpAIStreetWorker
-    if isStartedByHud and self:cpIsHudStreetWorkerJobSelected() then 
+    local spec = self.spec_cpAIStreetWorker
+    if isStartedByHud and self:cpIsHudStreetJobSelected() then 
         return self:getCanStartCpStreetWorker() and spec.cpJob
     end
 	return superFunc(self, isStartedByHud) or not isStartedByHud and self:getCanStartCpStreetWorker() and spec.cpJob
@@ -128,47 +125,31 @@ end
 
 --- Starts the cp driver at the first waypoint.
 function CpAIStreetWorker:startCpAtFirstWp(superFunc)
-    -- if not superFunc(self) then 
-    --     if self:getCanStartCpStreetWorker() then 
-    --         local spec = self.spec_CpAIStreetWorker
-    --         --- Applies the bale wrap type set in the hud, so ad can start with the correct type.
-    --         --- TODO: This should only be applied, if the driver was started for the first time by ad and not every time.
-    --         spec.cpJobStartAtLastWp:getCpJobParameters().baleWrapType:setValue(spec.cpJob:getCpJobParameters().baleWrapType:getValue())
-    --         spec.cpJob:applyCurrentState(self, g_currentMission, g_currentMission.playerSystem:getLocalPlayer().farmId, true)
-    --         spec.cpJob:setValues()
-    --         local success = spec.cpJob:validate(false)
-    --         if success then
-    --             g_client:getServerConnection():sendEvent(AIJobStartRequestEvent.new(spec.cpJob, self:getOwnerFarmId()))
-    --             return true
-    --         end
-    --     end
-    -- else 
-    --     return true
-    -- end
+    if not superFunc(self) then 
+        if self:getCanStartCpStreetWorker() then 
+            local spec = self.spec_cpAIStreetWorker
+            spec.cpJob:applyCurrentState(self, g_currentMission, g_currentMission.playerSystem:getLocalPlayer().farmId, true)
+            spec.cpJob:setValues()
+            local success = spec.cpJob:validate(false)
+            if success then
+                g_client:getServerConnection():sendEvent(AIJobStartRequestEvent.new(spec.cpJob, self:getOwnerFarmId()))
+                return true
+            end
+        end
+    else 
+        return true
+    end
 end
 
 --- Starts the cp driver at the last driven waypoint.
 function CpAIStreetWorker:startCpAtLastWp(superFunc)
-    -- if not superFunc(self) then 
-    --     if self:getCanStartCpStreetWorker() then 
-    --         local spec = self.spec_CpAIStreetWorker
-    --         spec.cpJobStartAtLastWp:applyCurrentState(self, g_currentMission, g_currentMission.playerSystem:getLocalPlayer().farmId, true)
-    --         spec.cpJobStartAtLastWp:setValues()
-    --         local success = spec.cpJobStartAtLastWp:validate(false)
-    --         if success then
-    --             g_client:getServerConnection():sendEvent(AIJobStartRequestEvent.new(spec.cpJobStartAtLastWp, self:getOwnerFarmId()))
-    --             return true
-    --         end
-    --     end
-    -- else 
-    --     return true
-    -- end
+    CpAIStreetWorker.startCpAtFirstWp(self, superFunc)
 end
 
 function CpAIStreetWorker:onCpADStartedByPlayer()
-    local spec = self.spec_CpAIStreetWorker
+    local spec = self.spec_cpAIStreetWorker
     --- Applies the bale wrap type set in the hud, so ad can start with the correct type.
-    spec.cpJobStartAtLastWp:getCpJobParameters().baleWrapType:setValue(spec.cpJob:getCpJobParameters().baleWrapType:getValue())
+   
 end
 
 function CpAIStreetWorker:onCpADRestarted()

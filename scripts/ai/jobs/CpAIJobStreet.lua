@@ -37,7 +37,7 @@ function CpAIJobStreet:applyCurrentState(vehicle, mission, farmId, isDirectStart
 	CpAIJob.applyCurrentState(self, vehicle, mission, farmId, isDirectStart)
 	self.cpJobParameters:validateSettings()
 
-	-- self:copyFrom(vehicle:getCpBaleFinderJob())
+	self:copyFrom(vehicle:getCpStreetWorkerJob())
 	
 end
 
@@ -55,7 +55,7 @@ function CpAIJobStreet:validate(farmId)
 	end
 	local vehicle = self.vehicleParameter:getVehicle()
 	if vehicle then 
-		-- vehicle:applyCpBaleFinderJobParameters(self)
+		vehicle:applyCpStreetWorkerJobParameters(self)
 	end
 	
 	return isValid or isRunning, errorMessage

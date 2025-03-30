@@ -296,7 +296,7 @@ end
 
 --- Only allow the basic field work job to start, if a course is assigned.
 function CpAIFieldWorker:getCanStartCp(superFunc)
-    return not self:getIsCpCourseRecorderActive() and  self:hasCpCourse() and self:getCanStartCpFieldWork() or superFunc(self)
+    return self:hasCpCourse() and self:getCanStartCpFieldWork() or superFunc(self)
 end
 
 --- Gets the field work job for the hud or start action event.

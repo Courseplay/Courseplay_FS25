@@ -418,6 +418,10 @@
 			<Text language="de"><![CDATA[CP: Silo laden]]></Text>
 			<Text language="en"><![CDATA[CP: Silo loading]]></Text>
 		</Translation>
+		<Translation name="CP_job_street">
+			<Text language="de"><![CDATA[CP: Straße]]></Text>
+			<Text language="en"><![CDATA[CP: Street]]></Text>
+		</Translation>
 		<Translation name="CP_ai_page_generate_course">
 			<Text language="de"><![CDATA[CP: Feldkurs generieren]]></Text>
 			<Text language="en"><![CDATA[CP: Generate fieldwork course]]></Text>

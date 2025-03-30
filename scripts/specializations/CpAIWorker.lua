@@ -259,6 +259,10 @@ function CpAIWorker:cpStartStopDriver(isStartedByHud)
             CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, self, "Could not find a CP job to start!")
             return
         end
+        if self:getIsCpCourseRecorderActive() then 
+            CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, self, "Could not start cp, as the course recorder is active!")
+            return
+        end
         if self:getCanStartCp() and job then
 
             job:applyCurrentState(self, g_currentMission, g_currentMission.playerSystem:getLocalPlayer().farmId, true, true)

@@ -455,20 +455,23 @@ function CpStreetJobParameters:init(job)
 end
 
 function CpStreetJobParameters:hasNoValidTrailerAttached()
-    local vehicle = self.job:getVehicle()
-    if vehicle then
-        return not AIUtil.hasChildVehicleWithSpecialization(vehicle, Dischargeable) 
-            or not AIUtil.hasChildVehicleWithSpecialization(vehicle, Trailer) 
-    end
-    return false
+    return true
+    -- local vehicle = self.job:getVehicle()
+    -- if vehicle then
+    --     return not AIUtil.hasChildVehicleWithSpecialization(vehicle, Dischargeable) 
+    --         or not AIUtil.hasChildVehicleWithSpecialization(vehicle, Trailer) 
+    -- end
+    -- return false
 end
 
 function CpStreetJobParameters:isUnloadTargetPointDisabled()
-   return self:hasNoValidTrailerAttached() or self.loadUnloadTargetMode:getValue() == CpStreetJobParameters.DRIVE_TO
+    return false
+--    return self:hasNoValidTrailerAttached() or self.loadUnloadTargetMode:getValue() == CpStreetJobParameters.DRIVE_TO
 end
 
 function CpStreetJobParameters:isLoadTargetPointDisabled()
-    return self:hasNoValidTrailerAttached() or self.loadUnloadTargetMode:getValue() ~= CpStreetJobParameters.LOAD_AND_UNLOAD
+    return true
+    -- return self:hasNoValidTrailerAttached() or self.loadUnloadTargetMode:getValue() ~= CpStreetJobParameters.LOAD_AND_UNLOAD
 end
 
 function CpStreetJobParameters:isRunCounterDisabled()
