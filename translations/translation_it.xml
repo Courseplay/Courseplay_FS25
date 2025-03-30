@@ -127,6 +127,7 @@
     <text name="CP_job_combineUnload" text="CP: scarica mietitrebbia"/>
     <text name="CP_job_bunkerSilo" text="CP: Lavoro in silos"/>
     <text name="CP_job_siloLoader" text="CP: Caricamento del silos"/>
+    <text name="CP_job_street" text="CP: Street"/>
     <text name="CP_ai_page_generate_course" text="[CP] Genera percorso di lavoro"/>
     <text name="CP_ai_page_open_course_generator" text="[CP] Apri/Chiudi menù"/>
     <!---->

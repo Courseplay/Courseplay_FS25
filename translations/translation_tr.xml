@@ -127,6 +127,7 @@
     <text name="CP_job_combineUnload" text="CP: Biçerdöver Boşaltma"/>
     <text name="CP_job_bunkerSilo" text="CP: Silo çalışması"/>
     <text name="CP_job_siloLoader" text="CP: Silo yükleme"/>
+    <text name="CP_job_street" text="CP: Street"/>
     <text name="CP_ai_page_generate_course" text="CP: Tarla çalışma rotası oluşturma."/>
     <text name="CP_ai_page_open_course_generator" text="CP: Rota oluşturucuyu aç/kapat."/>
     <!---->

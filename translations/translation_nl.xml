@@ -127,6 +127,7 @@
     <text name="CP_job_combineUnload" text="CP: Unload Combine"/>
     <text name="CP_job_bunkerSilo" text="CP: Silo work"/>
     <text name="CP_job_siloLoader" text="CP: Silo loading"/>
+    <text name="CP_job_street" text="CP: Street"/>
     <text name="CP_ai_page_generate_course" text="CP: Veldwerk baan genereren."/>
     <text name="CP_ai_page_open_course_generator" text="CP: Koersgenerator openen/sluiten."/>
     <!---->

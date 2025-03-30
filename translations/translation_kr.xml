@@ -127,6 +127,7 @@
     <text name="CP_job_combineUnload" text="CP: 콤바인 하역"/>
     <text name="CP_job_bunkerSilo" text="CP: 벙커 사일로 작업"/>
     <text name="CP_job_siloLoader" text="CP: 사일로 적재"/>
+    <text name="CP_job_street" text="CP: Street"/>
     <text name="CP_ai_page_generate_course" text="CP: 필드 작업 경로 생성."/>
     <text name="CP_ai_page_open_course_generator" text="CP: 경로 생성기 열기/닫기."/>
     <!---->

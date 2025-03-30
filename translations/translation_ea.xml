@@ -127,6 +127,7 @@
     <text name="CP_job_combineUnload" text="CP: Descargar Cosechadora"/>
     <text name="CP_job_bunkerSilo" text="CP: Trabajo en Silo"/>
     <text name="CP_job_siloLoader" text="CP: Carga de silos"/>
+    <text name="CP_job_street" text="CP: Street"/>
     <text name="CP_ai_page_generate_course" text="CP: Crear ruta de trabajo de campo."/>
     <text name="CP_ai_page_open_course_generator" text="CP: Abrir/Cerrar generador de rutas."/>
     <!---->

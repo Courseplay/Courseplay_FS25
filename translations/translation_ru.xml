@@ -127,6 +127,7 @@
     <text name="CP_job_combineUnload" text="CP: Разгрузка комбайна"/>
     <text name="CP_job_bunkerSilo" text="CP: Работа в силосной яме"/>
     <text name="CP_job_siloLoader" text="CP: Загрузка из кучи"/>
+    <text name="CP_job_street" text="CP: Street"/>
     <text name="CP_ai_page_generate_course" text="CP: Сгенерировать курс"/>
     <text name="CP_ai_page_open_course_generator" text="CP: Откр/закр. генератор курсов"/>
     <!---->

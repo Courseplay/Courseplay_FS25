@@ -127,6 +127,7 @@
     <text name="CP_job_combineUnload" text="CP: Vykládka kombajnu"/>
     <text name="CP_job_bunkerSilo" text="CP: Práce v silážní jámě"/>
     <text name="CP_job_siloLoader" text="CP: Plnění silážní jámy"/>
+    <text name="CP_job_street" text="CP: Street"/>
     <text name="CP_ai_page_generate_course" text="CP: Vypočítat polní práce"/>
     <text name="CP_ai_page_open_course_generator" text="CP: Zapnout/vypnout generátor tras"/>
     <!---->

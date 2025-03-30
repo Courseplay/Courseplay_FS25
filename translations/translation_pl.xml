@@ -127,6 +127,7 @@
     <text name="CP_job_combineUnload" text="CP: Rozładunek kombajnu"/>
     <text name="CP_job_bunkerSilo" text="CP: Silos bunkrowy"/>
     <text name="CP_job_siloLoader" text="CP: Załadunek pryzmy"/>
+    <text name="CP_job_street" text="CP: Street"/>
     <text name="CP_ai_page_generate_course" text="CP: Wygeneruj kurs pracy polowej"/>
     <text name="CP_ai_page_open_course_generator" text="CP: Otwórz/Zamknij generator kursu"/>
     <!---->

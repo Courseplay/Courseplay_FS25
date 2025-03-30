@@ -127,6 +127,7 @@
     <text name="CP_job_combineUnload" text="CP: Drescher entladen"/>
     <text name="CP_job_bunkerSilo" text="CP: Siloarbeit"/>
     <text name="CP_job_siloLoader" text="CP: Silo laden"/>
+    <text name="CP_job_street" text="CP: Straße"/>
     <text name="CP_ai_page_generate_course" text="CP: Feldkurs generieren"/>
     <text name="CP_ai_page_open_course_generator" text="CP: Kursgenerator öffnen/schließen"/>
     <!---->

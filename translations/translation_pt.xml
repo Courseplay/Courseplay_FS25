@@ -127,6 +127,7 @@
     <text name="CP_job_combineUnload" text="CP: Descarrega Ceifeira"/>
     <text name="CP_job_bunkerSilo" text="CP: Trabalho no Silo"/>
     <text name="CP_job_siloLoader" text="CP: Carregar Silo"/>
+    <text name="CP_job_street" text="CP: Street"/>
     <text name="CP_ai_page_generate_course" text="CP: Gerar rota para serviço no campo."/>
     <text name="CP_ai_page_open_course_generator" text="CP: Abrir/fechar gerador de rotas."/>
     <!---->

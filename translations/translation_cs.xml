@@ -127,6 +127,7 @@
     <text name="CP_job_combineUnload" text="CP: 收割机卸载"/>
     <text name="CP_job_bunkerSilo" text="CP: 筒仓作业"/>
     <text name="CP_job_siloLoader" text="CP: 筒仓装载"/>
+    <text name="CP_job_street" text="CP: Street"/>
     <text name="CP_ai_page_generate_course" text="CP: 生成田地工作路线"/>
     <text name="CP_ai_page_open_course_generator" text="CP: 打开/关闭 创建工作路线界面"/>
     <!---->
