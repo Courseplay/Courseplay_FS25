@@ -90,6 +90,17 @@ function GraphPathfinder.Node:init(x, y, g, pred, d, edge, entry)
     self.entry = entry
 end
 
+--- Create a graph pathfinder.
+---
+--- Use start(start, goal) as described at PathfinderInterface:start() to run the pathfinder.
+--- The entry at the graph will be at the vertex closest to the start location, the exit at the vertex closest
+--- to the goal location. (The graph's edges are polylines, consisting of vertices). There is no limitation for the
+--- distance between the entry/exit vertices and the start/goal locations.
+---
+--- The resulting path will only contain vertices of the edges that are traversed from the entry to the exit, it
+--- will not contain the start or the goal. The caller is responsible for creating the sections from the start to the
+--- entry (first point of the path) and from the exit (last point of the path) to the goal.
+---
 ---@param yieldAfter number coroutine yield after so many iterations (number of iterations in one update loop)
 ---@param maxIterations number maximum iterations before failing
 ---@param range number when an edge's exit is closer than range to another edge's entry, the
@@ -134,22 +145,26 @@ function GraphPathfinder:rollUpPath(lastNode, goal, path)
         end
         currentNode = currentNode.pred
     end
-    table.insert(path, 1, currentNode)
     self:debug('Nodes %d, iterations %d, yields %d, deltaTheta %.1f', #path, self.iterations, self.yields,
             math.deg(self.deltaThetaGoal))
     return path
 end
 
 function GraphPathfinder:initRun(start, goal, ...)
-    self:createGraphEntryAndExit(start, goal)
-    return HybridAStar.initRun(self, start, goal, ...)
+    local graphEntry, graphExit = self:createGraphEntryAndExit(start, goal)
+    return HybridAStar.initRun(self, graphEntry, graphExit, ...)
 end
 
---- The start location may not be close to the start or end of an edge. Therefore,
---- we need to look for entries among all the vertices of all edges in the graph. When we find that vertex, and
+--- Create the entry and exit vertices for the graph.
+---
+--- Look for the vertex closest to the start/end location. When we find that vertex, and
 --- it isn't the first or last point of the edge, we simply split that edge at that vertex so the parts can
---- be used as entries.
---- We do the same for the goal node to be able to exit the graph at the middle of an edge.
+--- be used as entries/exits.
+---
+---@param start State3D the start location for the pathfinder
+---@param goal State3D the goal location for the pathfinder
+---@return State3D the entry vertex of the graph, closest to start
+---@return State3D the exit vertex of the graph, closest to goal
 function GraphPathfinder:createGraphEntryAndExit(start, goal)
     local function splitClosestEdge(node)
         local closestEdge, closestVertex
@@ -162,6 +177,8 @@ function GraphPathfinder:createGraphEntryAndExit(start, goal)
                 closestVertex = v
             end
         end
+        -- if the vertex is the first or last vertex of the edge, we can use it directly as the entry/exit,
+        -- otherwise, we split the edge at the vertex so we can use it as an entry/exit point.
         if closestVertex.ix ~= 1 and closestVertex.ix ~= #closestEdge then
             self.logger:debug('Graph entry/exit found and split at vertex %d, d: %.1f, x: %.1f y: %.1f',
                     closestVertex.ix, closestDistance, closestVertex.x, closestVertex.y)
@@ -173,9 +190,11 @@ function GraphPathfinder:createGraphEntryAndExit(start, goal)
             table.insert(self.graph, newEdge)
             closestEdge:cutEndAtIx(closestVertex.ix)
         end
+        return State3D(closestVertex.x, closestVertex.y, 0)
     end
-    splitClosestEdge(start)
-    splitClosestEdge(goal)
+    local entry, exit = splitClosestEdge(start), splitClosestEdge(goal)
+    self.logger:debug('Graph entry at (%.1f, %.1f), exit at (%.1f, %.1f)', entry.x, entry.y, exit.x, exit.y)
+    return entry, exit
 end
 
 --- Motion primitives to use with the graph pathfinder, providing the entries
@@ -187,7 +206,7 @@ GraphPathfinder.GraphMotionPrimitives = CpObject(HybridAStar.MotionPrimitives)
 --- two edges are considered as connected (and thus can traverse from one to the other)
 ---@param graph Vector[] the graph as described in the file header
 function GraphPathfinder.GraphMotionPrimitives:init(range, graph)
-    self.logger = Logger('GraphMotionPrimitives', Logger.level.debug, CpDebug.DBG_PATHFINDER)
+    self.logger = Logger('GraphMotionPrimitives', Logger.level.trace, CpDebug.DBG_PATHFINDER)
     self.range = range
     self.graph = graph
 end
