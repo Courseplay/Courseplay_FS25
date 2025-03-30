@@ -43,12 +43,7 @@ end
 ---                              when we search for a valid analytic solution we use this instead of isValidNode()
 ---@param hitchLength number hitch length of a trailer (length between hitch on the towing vehicle and the
 --- rear axle of the trailer), can be nil
----@return boolean true if pathfinding is done (success or failure), false means it isn't ready and
----                resume() must be called to continue until this is true
----@return Polyline the path if found
----@return boolean if true, the goal node is invalid (for instance a vehicle or obstacle is there) so
----                the pathfinding can never succeed.
----@return number the furthest distance the pathfinding tried from the start, only when no path found
+---@return PathfinderResult
 function HybridAStarWithAStarInTheMiddle:start(start, goal, turnRadius, allowReverse, constraints, hitchLength)
     self.startNode, self.goalNode = State3D.copy(start), State3D.copy(goal)
     self.originalStartNode = State3D.copy(self.startNode)
@@ -68,6 +63,7 @@ function HybridAStarWithAStarInTheMiddle:start(start, goal, turnRadius, allowRev
 end
 
 -- distance between start and goal is relatively short, one phase hybrid A* all the way
+---@return PathfinderResult
 function HybridAStarWithAStarInTheMiddle:findHybridStartToEnd()
     self.phase = self.ALL_HYBRID
     self:debug('Goal is closer than %d, use one phase pathfinding only', self.hybridRange * 3)
@@ -77,6 +73,7 @@ function HybridAStarWithAStarInTheMiddle:findHybridStartToEnd()
 end
 
 -- start and goal far away, this is the hybrid A* from start to the middle section
+---@return PathfinderResult
 function HybridAStarWithAStarInTheMiddle:findPathFromStartToMiddle()
     self:debug('Finding path between start and middle section...')
     self.phase = self.START_TO_MIDDLE
@@ -88,6 +85,7 @@ function HybridAStarWithAStarInTheMiddle:findPathFromStartToMiddle()
 end
 
 -- start and goal far away, this is the hybrid A* from the middle section to the goal
+---@return PathfinderResult
 function HybridAStarWithAStarInTheMiddle:findPathFromMiddleToEnd()
     -- generate middle to end
     self.phase = self.MIDDLE_TO_END
@@ -98,47 +96,48 @@ function HybridAStarWithAStarInTheMiddle:findPathFromMiddleToEnd()
 end
 
 --- The resume() of this pathfinder is more complicated as it handles essentially three separate pathfinding runs
+---@return PathfinderResult
 function HybridAStarWithAStarInTheMiddle:resume(...)
-    local ok, done, path, goalNodeInvalid = coursePlayCoroutine.resume(self.coroutine, self.currentPathfinder, ...)
+    local ok, result = coursePlayCoroutine.resume(self.coroutine, self.currentPathfinder, ...)
     if not ok then
-        print(done)
+        print(result.done)
         printCallstack()
         self:debug('Pathfinding failed')
         self.coroutine = nil
-        return PathfinderResult(true, nil, goalNodeInvalid, self.currentPathfinder:getHighestDistance(),
+        return PathfinderResult(true, nil, result.goalNodeInvalid, self.currentPathfinder:getHighestDistance(),
                 self.constraints)
     end
-    if done then
+    if result.done then
         self.coroutine = nil
         if self.phase == self.ALL_HYBRID then
-            if path then
+            if result.path then
                 -- start and goal near, just one phase, all hybrid, we are done
-                return PathfinderResult(true, path)
+                return PathfinderResult(true, result.path)
             else
                 self:debug('all hybrid: no path found')
-                return PathfinderResult(true, nil, goalNodeInvalid, self.currentPathfinder:getHighestDistance(),
+                return PathfinderResult(true, nil, result.goalNodeInvalid, self.currentPathfinder:getHighestDistance(),
                         self.constraints)
             end
         elseif self.phase == self.ASTAR then
             self.constraints:resetStrictMode()
-            if not path then
+            if not result.path then
                 self:debug('fast A*: no path found')
-                return PathfinderResult(true, nil, goalNodeInvalid, self.currentPathfinder:getHighestDistance(),
+                return PathfinderResult(true, nil, result.goalNodeInvalid, self.currentPathfinder:getHighestDistance(),
                         self.constraints)
             end
-            CourseGenerator.addDebugPolyline(Polyline(path), {1, 0, 0})
-            local lMiddlePath = HybridAStar.length(path)
+            CourseGenerator.addDebugPolyline(Polyline(result.path), {1, 0, 0})
+            local lMiddlePath = HybridAStar.length(result.path)
             self:debug('Direct path is %d m', lMiddlePath)
             -- do we even need to use the normal A star or the nodes are close enough that the hybrid A star will be fast enough?
             if lMiddlePath < self.hybridRange * 2 then
                 return self:findHybridStartToEnd()
             end
             -- middle part ready, now trim start and end to make room for the hybrid parts
-            self.middlePath = path
+            self.middlePath = result.path
             HybridAStar.shortenStart(self.middlePath, self.hybridRange)
             HybridAStar.shortenEnd(self.middlePath, self.hybridRange)
             if #self.middlePath < 2 then
-                return PathfinderResult(true, nil, goalNodeInvalid, self.currentPathfinder:getHighestDistance(),
+                return PathfinderResult(true, nil, result.goalNodeInvalid, self.currentPathfinder:getHighestDistance(),
                         self.constraints)
             end
             State3D.smooth(self.middlePath)
@@ -146,10 +145,10 @@ function HybridAStarWithAStarInTheMiddle:resume(...)
             State3D.calculateTrailerHeadings(self.middlePath, self.hitchLength, true)
             return self:findPathFromStartToMiddle()
         elseif self.phase == self.START_TO_MIDDLE then
-            if path then
-                CourseGenerator.addDebugPolyline(Polyline(path), {0, 1, 0})
+            if result.path then
+                CourseGenerator.addDebugPolyline(Polyline(result.path), {0, 1, 0})
                 -- start and middle sections ready, continue with the piece from the middle to the end
-                self.path = path
+                self.path = result.path
                 -- create start point at the last waypoint of middlePath before shortening
                 self.middleToEndStart = State3D.copy(self.middlePath[#self.middlePath])
                 -- now shorten both ends of middlePath to avoid short fwd/reverse sections due to overlaps (as the
@@ -163,26 +162,26 @@ function HybridAStarWithAStarInTheMiddle:resume(...)
                 return self:findPathFromMiddleToEnd()
             else
                 self:debug('start to middle: no path found')
-                return PathfinderResult(true, nil, goalNodeInvalid, self.currentPathfinder:getHighestDistance(),
+                return PathfinderResult(true, nil, result.goalNodeInvalid, self.currentPathfinder:getHighestDistance(),
                         self.constraints)
             end
         elseif self.phase == self.MIDDLE_TO_END then
-            if path then
-                CourseGenerator.addDebugPolyline(Polyline(path), {0, 0, 1})
+            if result.path then
+                CourseGenerator.addDebugPolyline(Polyline(result.path), {0, 0, 1})
                 -- last piece is ready, this was generated from the goal point to the end of the middle section so
                 -- first remove the last point of the middle section to make the transition smoother
                 -- and then add the last section in reverse order
                 -- also, for reasons we don't fully understand, this section may have a direction change at the last waypoint,
                 -- so we just ignore the last one
-                for i = 1, #path do
-                    table.insert(self.path, path[i])
+                for i = 1, #result.path do
+                    table.insert(self.path, result.path[i])
                 end
                 State3D.smooth(self.path)
                 self.constraints:showStatistics()
                 return PathfinderResult(true, self.path)
             else
                 self:debug('middle to end: no path found')
-                return PathfinderResult(true, nil, goalNodeInvalid, self.currentPathfinder:getHighestDistance(),
+                return PathfinderResult(true, nil, result.goalNodeInvalid, self.currentPathfinder:getHighestDistance(),
                         self.constraints)
             end
         end
