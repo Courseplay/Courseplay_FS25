@@ -102,11 +102,11 @@ end
 ---@param sx number
 ---@param ex number
 ---@return GraphNode[]
-function GraphNode:cloneChildNodesBetweenIndex(sx, ex)
+function GraphNode:getChildNodesBetweenIndex(sx, ex)
     local nodes = {}
     for ix, node in ipairs(self._childNodes) do 
         if ix >= sx and ix <= ex then
-            table.insert(nodes, node:clone(true))
+            table.insert(nodes, node)
         end
     end
     return nodes

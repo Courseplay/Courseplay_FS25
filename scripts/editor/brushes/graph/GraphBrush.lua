@@ -3,7 +3,7 @@
 ]]
 ---@class GraphBrush : CpBrush
 GraphBrush = CpObject(CpBrush)
-GraphBrush.radius = 0.5
+GraphBrush.radius = 1
 GraphBrush.sizeModifierMax = 10
 function GraphBrush:init(...)
 	CpBrush.init(self, ...)
@@ -21,11 +21,11 @@ end
 ---@param x number
 ---@param y number
 ---@param z number
----@return boolean
+---@return boolean|nil
 function GraphBrush:isAtPos(point, x, y, z)
 	local dx, dy, dz = point:getPosition()
 	if MathUtil.getPointPointDistance(dx, dz, x, z) < self.radius * self.sizeModifier * (1 + self.camera.zoomFactor) then 
-		return math.abs(dy - y) < 3
+		return math.abs(dy + 2 - y) < 3
 	end
 end
 

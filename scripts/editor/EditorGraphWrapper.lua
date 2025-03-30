@@ -339,12 +339,12 @@ function EditorGraphWrapper:splitSegment(id)
 		return false, err
 	end
 	local ix = segment:getChildNodeIndex(node)
-	local postNodes = segment:cloneChildNodesBetweenIndex(ix + 1, segment:getNumChildNodes())
-	segment:removeChildNodesBetweenIndex(ix + 1, segment:getNumChildNodes())
-	---@type GraphSegment
+	local postNodes = segment:getChildNodesBetweenIndex(ix + 1, segment:getNumChildNodes())
+	--@type GraphSegment
 	local newSegment = GraphSegment()
 	newSegment:extendByChildNodes(postNodes, false)
-	self.graph:appendChildNode(segment)
+	self.graph:appendChildNode(newSegment)
+	segment:removeChildNodesBetweenIndex(ix + 1, segment:getNumChildNodes())
 	return true
 end
 

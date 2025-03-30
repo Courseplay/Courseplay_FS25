@@ -96,7 +96,7 @@ function GraphSegment:drawLineBetween(prevPoint, point)
         local x, y, z = point:getPosition()
         local dx, dy, dz = prevPoint:getPosition()
         DebugUtil.drawDebugLine(x, y + 2, z, 
-            dx, dy + 2, dz, unpack(color), 2)
+            dx, dy + 0.5, dz, unpack(color), 2)
         local dist = MathUtil.vector3Length(x - dx, y - dy, z - dz)
         if dist > 1 then 
             local nx, _, nz = MathUtil.vector3Normalize(x - dx, y - dy, z - dz)
@@ -117,15 +117,15 @@ function GraphSegment:drawLineBetween(prevPoint, point)
                     end
                     local ncx = nx * math.cos(math.pi/4) - nz * math.sin(math.pi/4)
                     local ncz = nx * math.sin(math.pi/4) + nz * math.cos(math.pi/4)                    
-                    DebugUtil.drawDebugLine(tx, y + 2, tz,
-                        tx - ncx * 2, y + 2, tz - ncz * 2, unpack(color))
+                    DebugUtil.drawDebugLine(tx, y + 0.5, tz,
+                        tx - ncx * 2, y + 0.5, tz - ncz * 2, unpack(color))
                     ncx = nx * math.cos(-math.pi/4) - nz * math.sin(-math.pi/4)
                     ncz = nx * math.sin(-math.pi/4) + nz * math.cos(-math.pi/4)
-                    DebugUtil.drawDebugLine(tx, y + 2, tz,
-                        tx - ncx * 2, y + 2, tz - ncz * 2, unpack(color))
+                    DebugUtil.drawDebugLine(tx, y + 0.5, tz,
+                        tx - ncx * 2, y + 0.5, tz - ncz * 2, unpack(color))
                 elseif self._direction == GraphSegmentDirection.DUAL then
                     -- x, y, z, radius, steps, color, alignToTerrain, filled
-                    DebugUtil.drawDebugCircle(dx + nx * i, y + 2, dz + nz * i,
+                    DebugUtil.drawDebugCircle(dx + nx * i, y + 0.5, dz + nz * i,
                         1, 8, color)
                 end
             end

@@ -78,7 +78,7 @@ function GraphPoint:draw(hoveredNodeID, selectedNodeIDs, isTemporary)
     elseif isTemporary then
         color = Color.new(0, 1, 0)
     end
-    DebugUtil.drawDebugSphere(self._x, self._y + 2, self._z, 
+    DebugUtil.drawDebugSphere(self._x, self._y + 0.5, self._z, 
         1, 6, 6, color, false, false)
     local data = self:getDebugInfos()
     local yOffset = 0
