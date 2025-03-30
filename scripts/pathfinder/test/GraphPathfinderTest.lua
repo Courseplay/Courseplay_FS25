@@ -25,7 +25,7 @@ require('GraphPathfinder')
 
 local GraphEdge = GraphPathfinder.GraphEdge
 local TestConstraints = CpObject(PathfinderConstraintInterface)
-local pathfinder, start, goal, done, path
+local pathfinder, start, goal, done, path, goalNodeInvalid
 
 local function printPath()
     for _, p in ipairs(path) do
@@ -38,7 +38,7 @@ local function runPathfinder()
     while not result.done do
         result = pathfinder:resume()
     end
-    return result.done, result.path
+    return result.done, result.path, result.goalNodeInvalid
 end
 
 function testDirection()
@@ -57,7 +57,7 @@ function testDirection()
                     Vertex(100, 105),
                 }),
     }
-    pathfinder = GraphPathfinder(math.huge, 500, 20, graph)
+    pathfinder = GraphPathfinder(math.huge, 500, 10, graph)
     start = State3D(90, 105, 0, 0)
     goal = State3D(130, 105, 0, 0)
     done, path, _ = runPathfinder()
@@ -92,7 +92,7 @@ function testBidirectional()
                     Vertex(100, 105),
                 }),
     }
-    pathfinder = GraphPathfinder(math.huge, 500, 20, graph)
+    pathfinder = GraphPathfinder(math.huge, 500, 10, graph)
     start = State3D(90, 105, 0, 0)
     goal = State3D(130, 105, 0, 0)
     done, path, _ = runPathfinder()
@@ -131,7 +131,7 @@ function testShorterPath()
                     Vertex(120, 105),
                 }),
     }
-    pathfinder = GraphPathfinder(math.huge, 500, 20, graph)
+    pathfinder = GraphPathfinder(math.huge, 500, 10, graph)
     start = State3D(90, 105, 0, 0)
     goal = State3D(130, 105, 0, 0)
     done, path, _ = runPathfinder()
@@ -164,7 +164,7 @@ function testRange()
                     Vertex(150, 100)
                 }),
     }
-    pathfinder = GraphPathfinder(math.huge, 500, 20, graph)
+    pathfinder = GraphPathfinder(math.huge, 500, 10, graph)
     start = State3D(90, 105, 0, 0)
     goal = State3D(150, 105, 0, 0)
     done, path, _ = runPathfinder()
@@ -194,7 +194,7 @@ function testStartInTheMiddle()
                     Vertex(100, 105),
                 }),
     }
-    pathfinder = GraphPathfinder(math.huge, 500, 20, graph)
+    pathfinder = GraphPathfinder(math.huge, 500, 10, graph)
     start = State3D(150, 95, 0, 0)
     goal = State3D(95, 95, 0, 0)
     done, path, _ = runPathfinder()
@@ -241,7 +241,7 @@ function testTwoPointSegments()
                     Vertex(100, 105),
                 }),
     }
-    pathfinder = GraphPathfinder(math.huge, 500, 20, graph)
+    pathfinder = GraphPathfinder(math.huge, 500, 10, graph)
     start = State3D(90, 105, 0, 0)
     goal = State3D(130, 105, 0, 0)
     done, path, _ = runPathfinder()
@@ -306,7 +306,7 @@ function testEntryExit()
 end
 
 function testGoalWithinRange()
-
+    -- goal too close to start (graph entry too close to graph exit)
     local graph = {
         GraphEdge(GraphEdge.UNIDIRECTIONAL,
                 {
@@ -318,14 +318,10 @@ function testGoalWithinRange()
     -- start/goal far away
     start = State3D(100, 100, 0, 0)
     goal = State3D(120, 100, 0, 0)
-    print('******** single ******')
-    done, path, _ = runPathfinder()
+    done, path, goalNodeInvalid = runPathfinder()
     lu.assertIsTrue(done)
-    lu.assertEquals(#path, 2)
-    -- path contains all points of the edge it goes through
-    path[1]:assertAlmostEquals(Vector(100, 100))
-    --path[2]:assertAlmostEquals(Vector(110, 100))
-    path[#path]:assertAlmostEquals(Vector(120, 100))
+    lu.assertIsTrue(goalNodeInvalid)
+    lu.assertIsNil(path)
 end
 
 os.exit(lu.LuaUnit.run())

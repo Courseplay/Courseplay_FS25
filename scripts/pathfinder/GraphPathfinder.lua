@@ -152,6 +152,13 @@ end
 
 function GraphPathfinder:initRun(start, goal, ...)
     local graphEntry, graphExit = self:createGraphEntryAndExit(start, goal)
+    local distance = (graphExit - graphEntry):length()
+    if distance <= self.range then
+        -- if the distance between the entry and exit is less than the range, we can just return the entry as the exit
+        self.logger:error('Graph entry and exit are closer than %.1f meters (%.1f), no point in running the pathfinder.',
+                self.range, distance)
+        return PathfinderResult(true, nil, true)
+    end
     return HybridAStar.initRun(self, graphEntry, graphExit, ...)
 end
 
