@@ -100,6 +100,26 @@
     <text name="CP_siloLoaderJobParameters_unloadAt_trailer" text="Anhänger"/>
     <text name="CP_siloLoaderJobParameters_unloadAt_unloadTrigger" text="Abladestation"/>
     <!---->
+    <!--AI street job parameters-->
+    <!---->
+    <text name="CP_streetJobParameters_subTitle_loadUnloadTargetMode" text="Modus"/>
+    <text name="CP_streetJobParameters_loadUnloadTargetMode_title" text="Modus"/>
+    <text name="CP_streetJobParameters_loadUnloadTargetMode_driveTo" text="Fahre zu"/>
+    <text name="CP_streetJobParameters_loadUnloadTargetMode_unloadAtTarget" text="Abladen am Ziel"/>
+    <text name="CP_streetJobParameters_loadUnloadTargetMode_loadAndUnload" text="Beladen und entladen"/>
+    <text name="CP_streetJobParameters_subTitle_unloadTargetPoint" text="Zielwegpunkt"/>
+    <text name="CP_streetJobParameters_unloadTargetPoint_title" text="Zielwegpunkt"/>
+    <text name="CP_streetJobParameters_subTitle_loadTargetPoint" text="Ladewegpunkt"/>
+    <text name="CP_streetJobParameters_loadTargetPoint_title" text="Ladewegpunkt"/>
+    <text name="CP_streetJobParameters_subTitle_loadingMultipleFruitTypesAllowed" text="Mehrere Fruchtarten laden"/>
+    <text name="CP_streetJobParameters_loadingMultipleFruitTypesAllowed_title" text="Mehrere Fruchtarten laden"/>
+    <text name="CP_streetJobParameters_subTitle_fillTypes" text="Fruchtarten"/>
+    <text name="CP_streetJobParameters_counter_title" text="Anzahl der Durchläufe"/>
+    <text name="CP_streetJobParameters_minFillLevel_title" text="Minimal Füllstand"/>
+    <text name="CP_streetJobParameters_maxFillLevel_title" text="Maximal Füllstand"/>
+    <text name="CP_streetJobParameters_fillType_title" text="Fruchtart"/>
+    <text name="CP_streetJobParameters_fillTypeSelection_title" text="Fruchtart Auswahl"/>
+    <!---->
     <!--AI jobs-->
     <!---->
     <text name="CP_job_fieldWork" text="CP: Feldarbeit"/>
