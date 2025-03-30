@@ -28,7 +28,7 @@ local TestConstraints = CpObject(PathfinderConstraintInterface)
 local pathfinder, start, goal, done, path, goalNodeInvalid
 local function printPath()
     for _, p in ipairs(path) do
-        print(p)
+        print(Vector.__tostring(p))
     end
 end
 
@@ -53,19 +53,17 @@ function testDirection()
     goal = State3D(130, 105, 0, 0)
     done, path, goalNodeInvalid = pathfinder:run(start, goal, 1, false, TestConstraints(), 0)
     lu.assertIsTrue(done)
-    lu.assertEquals(#path, 4)
-    -- path contains the start node and all points of the edge it goes through
-    lu.assertEquals(start, path[1])
-    path[2]:assertAlmostEquals(Vector(100, 100))
-    path[3]:assertAlmostEquals(Vector(110, 100))
+    lu.assertEquals(#path, 3)
+    -- path contains all points of the edge it goes through
+    path[1]:assertAlmostEquals(Vector(100, 100))
+    path[2]:assertAlmostEquals(Vector(110, 100))
     path[#path]:assertAlmostEquals(Vector(120, 100))
     start, goal = goal, start
     done, path, goalNodeInvalid = pathfinder:run(start, goal, 1, false, TestConstraints(), 0)
     lu.assertIsTrue(done)
-    lu.assertEquals(#path, 4)
-    lu.assertEquals(start, path[1])
-    path[2]:assertAlmostEquals(Vector(120, 105))
-    path[3]:assertAlmostEquals(Vector(110, 105))
+    lu.assertEquals(#path, 3)
+    path[1]:assertAlmostEquals(Vector(120, 105))
+    path[2]:assertAlmostEquals(Vector(110, 105))
     path[#path]:assertAlmostEquals(Vector(100, 105))
 end
 
@@ -90,23 +88,21 @@ function testBidirectional()
     goal = State3D(130, 105, 0, 0)
     done, path, goalNodeInvalid = pathfinder:run(start, goal, 1, false, TestConstraints(), 0)
     lu.assertIsTrue(done)
-    lu.assertEquals(#path, 4)
+    lu.assertEquals(#path, 3)
     -- path contains the start node and all points of the edge it goes through
-    lu.assertEquals(start, path[1])
-    path[2]:assertAlmostEquals(Vector(100, 100))
-    path[3]:assertAlmostEquals(Vector(110, 100))
+    path[1]:assertAlmostEquals(Vector(100, 100))
+    path[2]:assertAlmostEquals(Vector(110, 100))
     path[#path]:assertAlmostEquals(Vector(120, 100))
     start, goal = goal, start
     done, path, goalNodeInvalid = pathfinder:run(start, goal, 1, false, TestConstraints(), 0)
     lu.assertIsTrue(done)
-    lu.assertEquals(#path, 4)
-    lu.assertEquals(start, path[1])
+    lu.assertEquals(#path, 3)
     -- TODO: here, it should have taken the other path, over y = 105, as it is slightly shorter since both start and
     -- goal are on y = 105, but since we reach the goal in a single step,
     -- it just goes with the first one it finds. This isn't the hill we want to die on, so for now,
     -- we will just accept this behavior.
-    path[2]:assertAlmostEquals(Vector(120, 100))
-    path[3]:assertAlmostEquals(Vector(110, 100))
+    path[1]:assertAlmostEquals(Vector(120, 100))
+    path[2]:assertAlmostEquals(Vector(110, 100))
     path[#path]:assertAlmostEquals(Vector(100, 100))
 end
 
@@ -131,11 +127,9 @@ function testShorterPath()
     goal = State3D(130, 105, 0, 0)
     done, path, goalNodeInvalid = pathfinder:run(start, goal, 1, false, TestConstraints(), 0)
     lu.assertIsTrue(done)
-    lu.assertEquals(#path, 4)
-    -- path contains the start node and all points of the edge it goes through
-    lu.assertEquals(start, path[1])
-    path[2]:assertAlmostEquals(Vector(100, 100))
-    path[3]:assertAlmostEquals(Vector(110, 100))
+    lu.assertEquals(#path, 3)
+    path[1]:assertAlmostEquals(Vector(100, 100))
+    path[2]:assertAlmostEquals(Vector(110, 100))
     path[#path]:assertAlmostEquals(Vector(120, 100))
 end
 
@@ -166,13 +160,11 @@ function testRange()
     goal = State3D(150, 105, 0, 0)
     done, path, goalNodeInvalid = pathfinder:run(start, goal, 1, false, TestConstraints(), 0)
     lu.assertIsTrue(done)
-    lu.assertEquals(#path, 7)
-    -- path contains the start node and all points of the edge it goes through
-    lu.assertEquals(start, path[1])
-    path[2]:assertAlmostEquals(Vector(100, 100))
-    path[3]:assertAlmostEquals(Vector(110, 100))
+    lu.assertEquals(#path, 6)
+    path[1]:assertAlmostEquals(Vector(100, 100))
+    path[2]:assertAlmostEquals(Vector(110, 100))
     path[#path]:assertAlmostEquals(Vector(150, 100))
-    pathfinder = GraphPathfinder(math.huge, 500, 10, graph)
+    pathfinder = GraphPathfinder(math.huge, 500, 9, graph)
     done, path, goalNodeInvalid = pathfinder:run(start, goal, 1, false, TestConstraints(), 0)
     lu.assertIsNil(path)
 end
@@ -198,11 +190,9 @@ function testStartInTheMiddle()
     goal = State3D(95, 95, 0, 0)
     done, path, goalNodeInvalid = pathfinder:run(start, goal, 1, false, TestConstraints(), 0)
     lu.assertIsTrue(done)
-    lu.assertEquals(#path, 3)
-    -- path contains the start node and all points of the edge it goes through
-    lu.assertEquals(start, path[1])
-    path[2]:assertAlmostEquals(Vector(150, 100))
-    path[3]:assertAlmostEquals(Vector(100, 100))
+    lu.assertEquals(#path, 2)
+    path[1]:assertAlmostEquals(Vector(150, 100))
+    path[2]:assertAlmostEquals(Vector(100, 100))
     graph = {
         GraphEdge(GraphEdge.BIDIRECTIONAL,
                 {
@@ -223,10 +213,9 @@ function testStartInTheMiddle()
     done, path, goalNodeInvalid = pathfinder:run(start, goal, 1, false, TestConstraints(), 0)
     printPath()
     lu.assertIsTrue(done)
-    lu.assertEquals(#path, 3)
-    lu.assertEquals(start, path[1])
-    path[2]:assertAlmostEquals(Vector(100, 100))
-    path[3]:assertAlmostEquals(Vector(150, 100))
+    lu.assertEquals(#path, 2)
+    path[1]:assertAlmostEquals(Vector(100, 100))
+    path[2]:assertAlmostEquals(Vector(150, 100))
 end
 
 function testTwoPointSegments()
@@ -248,19 +237,86 @@ function testTwoPointSegments()
     goal = State3D(130, 105, 0, 0)
     done, path, goalNodeInvalid = pathfinder:run(start, goal, 1, false, TestConstraints(), 0)
     lu.assertIsTrue(done)
-    lu.assertEquals(#path, 3)
-    -- path contains the start node and all points of the edge it goes through
-    lu.assertEquals(start, path[1])
-    path[2]:assertAlmostEquals(Vector(100, 100))
+    lu.assertEquals(#path, 2)
+    path[1]:assertAlmostEquals(Vector(100, 100))
     path[#path]:assertAlmostEquals(Vector(120, 100))
     start, goal = goal, start
     done, path, goalNodeInvalid = pathfinder:run(start, goal, 1, false, TestConstraints(), 0)
     lu.assertIsTrue(done)
-    lu.assertEquals(#path, 3)
-    lu.assertEquals(start, path[1])
-    path[2]:assertAlmostEquals(Vector(120, 105))
+    lu.assertEquals(#path, 2)
+    path[1]:assertAlmostEquals(Vector(120, 105))
     path[#path]:assertAlmostEquals(Vector(100, 105))
 end
 
+function testEntryExit()
+    local graph = {
+        GraphEdge(GraphEdge.UNIDIRECTIONAL,
+                {
+                    Vertex(100, 100),
+                    Vertex(110, 100),
+                    Vertex(120, 100)
+                }),
+        GraphEdge(
+                GraphEdge.UNIDIRECTIONAL,
+                {
+                    Vertex(120, 105),
+                    Vertex(110, 105),
+                    Vertex(100, 105),
+                }),
+    }
+    -- range is 5 so goal is never within the range of start, that is in the testGoalWithinRange() function
+    pathfinder = GraphPathfinder(math.huge, 500, 5, graph)
+    -- start/goal far away
+    start = State3D(0, 0, 0, 0)
+    goal = State3D(130, 0, 0, 0)
+    done, path, goalNodeInvalid = pathfinder:run(start, goal, 1, false, TestConstraints(), 0)
+    lu.assertIsTrue(done)
+    lu.assertEquals(#path, 3)
+    -- path contains all points of the edge it goes through
+    path[1]:assertAlmostEquals(Vector(100, 100))
+    path[2]:assertAlmostEquals(Vector(110, 100))
+    path[#path]:assertAlmostEquals(Vector(120, 100))
+    -- start/goal far away
+    start = State3D(130, 200, 0, 0)
+    goal = State3D(0, 200, 0, 0)
+    done, path, goalNodeInvalid = pathfinder:run(start, goal, 1, false, TestConstraints(), 0)
+    lu.assertIsTrue(done)
+    lu.assertEquals(#path, 3)
+    -- path contains all points of the edge it goes through
+    path[1]:assertAlmostEquals(Vector(120, 105))
+    path[2]:assertAlmostEquals(Vector(110, 105))
+    path[#path]:assertAlmostEquals(Vector(100, 105))
+    -- start/goal far away, middle entry
+    start = State3D(110, 0, 0, 0)
+    goal = State3D(130, 0, 0, 0)
+    done, path, goalNodeInvalid = pathfinder:run(start, goal, 1, false, TestConstraints(), 0)
+    lu.assertIsTrue(done)
+    lu.assertEquals(#path, 2)
+    path[1]:assertAlmostEquals(Vector(110, 100))
+    path[#path]:assertAlmostEquals(Vector(120, 100))
+end
+
+function testGoalWithinRange()
+
+    local graph = {
+        GraphEdge(GraphEdge.UNIDIRECTIONAL,
+                {
+                    Vertex(100, 100),
+                    Vertex(120, 100)
+                }),
+    }
+    pathfinder = GraphPathfinder(math.huge, 500, 21, graph)
+    -- start/goal far away
+    start = State3D(100, 100, 0, 0)
+    goal = State3D(120, 100, 0, 0)
+    print('******** single ******')
+    done, path, goalNodeInvalid = pathfinder:run(start, goal, 1, false, TestConstraints(), 0)
+    lu.assertIsTrue(done)
+    lu.assertEquals(#path, 2)
+    -- path contains all points of the edge it goes through
+    path[1]:assertAlmostEquals(Vector(100, 100))
+    --path[2]:assertAlmostEquals(Vector(110, 100))
+    path[#path]:assertAlmostEquals(Vector(120, 100))
+end
 
 os.exit(lu.LuaUnit.run())
