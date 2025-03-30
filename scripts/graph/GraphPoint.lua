@@ -173,8 +173,16 @@ function GraphPoint:moveTo2D(dx, dz)
 end
 
 ---@param other GraphPoint
+---@return number
 function GraphPoint:getDistance2DToPoint(other)
     local dx, dz = other:getPosition2D()
+    return MathUtil.vector2Length(self._x - dx, self._z - dz)
+end
+
+---@param dx number
+---@param dz number
+---@return number
+function GraphPoint:getDistance2DTo(dx, dz)
     return MathUtil.vector2Length(self._x - dx, self._z - dz)
 end
 

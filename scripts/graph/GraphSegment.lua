@@ -19,10 +19,12 @@ GraphSegmentDirection.DEBUG_TEXTS = {
 ---@field _childNodes GraphPoint[]
 GraphSegment = CpObject(GraphNode)
 GraphSegment.XML_KEY = "Segment"
-GraphSegment.DRAW_CAMERA_RANGE = 200
-function GraphSegment:init()
+GraphSegment.DRAW_CAMERA_RANGE = 125
+function GraphSegment:init(isGeneratedBySpline)
     GraphNode.init(self)
     self._direction = GraphSegmentDirection.FORWARD
+    ---@type boolean
+    self._isGeneratedBySpline = isGeneratedBySpline or false
 end
 
 function GraphSegment.registerXmlSchema(xmlSchema, baseKey)
@@ -30,11 +32,15 @@ function GraphSegment.registerXmlSchema(xmlSchema, baseKey)
     xmlSchema:register(XMLValueType.INT, 
         key .. "(?)#direction", 
         "Current direction", GraphSegmentDirection.FORWARD)
+    xmlSchema:register(XMLValueType.BOOL, 
+        key .. "(?)#isGeneratedBySpline", 
+        "Was generated from splines?", false)
     GraphPoint.registerXmlSchema(xmlSchema, key .. "(?).")
 end
 
 function GraphSegment:loadFromXMLFile(xmlFile, baseKey)
     self._direction = xmlFile:getValue(baseKey .. "#direction", GraphSegmentDirection.FORWARD)
+    self._isGeneratedBySpline = xmlFile:getValue(baseKey .. "isGeneratedBySpline", false)
     xmlFile:iterate(baseKey .. "." .. GraphPoint.XML_KEY, function (ix, key)
         local point = GraphPoint()
         point:loadFromXMLFile(xmlFile, key)
@@ -44,6 +50,7 @@ end
 
 function GraphSegment:saveToXMLFile(xmlFile, baseKey)
     xmlFile:setValue(baseKey .. "#direction", self._direction)
+    xmlFile:setValue(baseKey .. "#isGeneratedBySpline", self._isGeneratedBySpline)
     for i, point in ipairs(self._childNodes) do 
         local key = string.format("%s.%s(%d)", baseKey, GraphPoint.XML_KEY, i - 1)
         point:saveToXMLFile(xmlFile, key)

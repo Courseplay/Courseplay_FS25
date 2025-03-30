@@ -4,10 +4,19 @@ Graph = CpObject(GraphNode)
 Graph.XML_KEY = "Graph"
 function Graph:init()
     GraphNode.init(self)
-    g_consoleCommands:registerConsoleCommand("cpGraphFindPathTo", "Tries to find a path to: ", "consoleCommandFindPathTo", self)
+    g_consoleCommands:registerConsoleCommand("cpGraphFindPathTo", 
+        "Tries to find a path to: ", "consoleCommandFindPathTo", self)
+    g_consoleCommands:registerConsoleCommand("cpGraphGenerateFromSplines", 
+        "Generates segmenets from traffic splines", 
+        "consoleCommandGenerateSegmentsFromSplines", self)
 
     ---@type GraphTarget[]
     self._targets = {}
+    self._hasGeneratedSplines = false
+end
+
+function Graph:delete()
+    
 end
 
 function Graph:consoleCommandFindPathTo(name)
@@ -45,7 +54,7 @@ function Graph:consoleCommandFindPathTo(name)
         while not result.done do
             result = pathfinder:resume()
         end
-        if not result.done or result.path == nil or #result.path < 2 then
+        if result.path == nil or #result.path < 2 then
             return "Pathfinder failed!"
         end
         local course = Course.createFromAnalyticPath(vehicle, result.path, true)
@@ -57,6 +66,86 @@ function Graph:consoleCommandFindPathTo(name)
     end
 end
 
+function Graph:consoleCommandGenerateSegmentsFromSplines()
+    if self._hasGeneratedSplines then 
+        CpUtil.info("Already generated from road splines!")
+        return
+    end
+    local function isSplineEqual(segA, segB)
+        local snA1 = segA:getChildNodeByIndex(1)
+        local enA1 = segA:getChildNodeByIndex(segA:getNumChildNodes())
+        local snA2 = segA:getChildNodeByIndex(2)
+        local enA2 = segA:getChildNodeByIndex(segA:getNumChildNodes() - 1)
+
+        local snB1 = segB:getChildNodeByIndex(1)
+        local enB1 = segB:getChildNodeByIndex(segB:getNumChildNodes())
+        local snB2 = segB:getChildNodeByIndex(2)
+        local enB2 = segB:getChildNodeByIndex(segB:getNumChildNodes() - 1)
+        local margin = 3
+        if (snA1:getDistance2DToPoint(enB1) <= margin or 
+            snA1:getDistance2DToPoint(enB2) <= margin or 
+            snA2:getDistance2DToPoint(enB1) <= margin or 
+            snA2:getDistance2DToPoint(enB2) <= margin) and
+            (snB1:getDistance2DToPoint(enA1) <= margin or 
+            snB1:getDistance2DToPoint(enA2) <= margin or 
+            snB2:getDistance2DToPoint(enA1) <= margin or 
+            snB2:getDistance2DToPoint(enA2) <= margin) then 
+
+            return true
+        end
+    end
+
+    local splineToCount = {}
+    for spline, _ in pairs(g_currentMission.aiSystem:getRoadSplines()) do
+        splineToCount[spline] = 0
+        local sx, _, sz = getSplinePosition(spline, 0)
+        local ex, _, ez = getSplinePosition(spline, 0)
+        local length = getSplineLength(spline)
+        for otherSpline, _ in pairs(g_currentMission.aiSystem:getRoadSplines()) do
+            if spline ~= otherSpline then 
+                local dsx, _, dsz = getSplinePosition(otherSpline, 0)
+                local dex, _, dez = getSplinePosition(otherSpline, 0)
+                if MathUtil.vector2Length(sx - dsx, sz - dsz) < 1 or 
+                    MathUtil.vector2Length(sx - dex, sz - dez) < 1 or
+                    MathUtil.vector2Length(ex - dsx, ez - dsz) < 1 or 
+                    MathUtil.vector2Length(ex - dex, ez - dez) < 1 then
+                    if length < getSplineLength(otherSpline) then
+                        splineToCount[spline] = splineToCount[spline] + 1
+                    end
+                end
+            end
+        end
+    end
+    local splineSegments = {}
+    for spline, count in pairs(splineToCount) do
+        local ignoreSpline = count > 0
+        local length = getSplineLength(spline)
+        local segment = GraphSegment(true)
+        if not ignoreSpline then
+            for i = 0, 1, 6/length do 
+                local posX, posY, posZ = getSplinePosition(spline, i)
+                local point = GraphPoint()
+                point:setPosition(posX, posY, posZ)
+                segment:appendChildNode(point)
+            end
+            if segment:getNumChildNodes() > 1 then
+                for _, seg in ipairs(splineSegments) do 
+                    if isSplineEqual(segment, seg) then
+                        seg:changeDirection(GraphSegmentDirection.DUAL)
+                        ignoreSpline = true
+                        break
+                    end
+                end
+                if not ignoreSpline then
+                    table.insert(splineSegments, segment)
+                end
+            end
+        end
+    end 
+    self:extendByChildNodes(splineSegments, false)
+    self._hasGeneratedSplines = true
+end
+
 function Graph:setup()
     ---@type GraphPlot
     self._ingameMapPlot = GraphPlot(self)
@@ -65,6 +154,9 @@ end
 function Graph.registerXmlSchema(xmlSchema, baseKey)
     GraphSegment.registerXmlSchema(xmlSchema, 
         baseKey .. Graph.XML_KEY .. ".")
+    xmlSchema:register(XMLValueType.BOOL, 
+        baseKey .. Graph.XML_KEY .. "#hasGeneratedSplines", 
+        "Has generated splines?", false)
 end
 
 function Graph:loadFromXMLFile(xmlFile, baseKey)
@@ -73,6 +165,8 @@ function Graph:loadFromXMLFile(xmlFile, baseKey)
         segment:loadFromXMLFile(xmlFile, key)
         self:appendChildNode(segment)
     end)
+    self._hasGeneratedSplines = xmlFile:getValue(
+        baseKey .. self.XML_KEY .. "#hasGeneratedSplines")
 end
 
 function Graph:saveToXMLFile(xmlFile, baseKey)
@@ -80,6 +174,8 @@ function Graph:saveToXMLFile(xmlFile, baseKey)
         segment:saveToXMLFile(xmlFile, string.format("%s.%s(%i)", 
             baseKey .. self.XML_KEY, GraphSegment.XML_KEY, i - 1))
     end
+    xmlFile:setValue(baseKey .. self.XML_KEY .. "#hasGeneratedSplines", 
+        self._hasGeneratedSplines)
 end
 
 ---@param node GraphNode
