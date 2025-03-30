@@ -36,16 +36,19 @@ function Graph:consoleCommandFindPathTo(name)
         if vehicle == nil then 
             return "Must be in a vehicle!"
         end
-        local pathfinder = GraphPathfinder(math.huge, 500, 20, edges)
+        local pathfinder = GraphPathfinder(1000, 500, 20, edges)
         local start = PathfinderUtil.getVehiclePositionAsState3D(vehicle)
         local goal = State3D(targetPos.x, targetPos.y, 0, 0)
         CpUtil.info("Goal: %s", tostring(goal))
         local TestConstraints = CpObject(PathfinderConstraintInterface)
-        local done, path, goalNodeInvalid = pathfinder:run(start, goal, 1, false, TestConstraints(), 0)
-        if not done or path == nil or #path < 2 then
+        local result = pathfinder:start(start, goal, 1, false, TestConstraints(), 0)
+        while not result.done do
+            result = pathfinder:resume()
+        end
+        if not result.done or result.path == nil or #result.path < 2 then
             return "Pathfinder failed!"
         end
-        local course = Course.createFromAnalyticPath(vehicle, path, true)
+        local course = Course.createFromAnalyticPath(vehicle, result.path, true)
         vehicle:setFieldWorkCourse(course)
     end
     local success, ret = CpUtil.try(cmd)
