@@ -326,6 +326,77 @@
 			<Text language="en"><![CDATA[Unload station]]></Text>
 		</Translation>
 	</Category>
+	<Category name="AI street job parameters">
+		<Translation name="CP_streetJobParameters_subTitle_loadUnloadTargetMode">
+			<Text language="de"><![CDATA[Modus]]></Text>
+			<Text language="en"><![CDATA[Mode]]></Text>
+		</Translation>
+		<Translation name="CP_streetJobParameters_loadUnloadTargetMode_title">
+			<Text language="de"><![CDATA[Modus]]></Text>
+			<Text language="en"><![CDATA[Mode]]></Text>
+		</Translation>
+		<Translation name="CP_streetJobParameters_loadUnloadTargetMode_driveTo">
+			<Text language="de"><![CDATA[Fahre zu]]></Text>
+			<Text language="en"><![CDATA[Drive to]]></Text>
+		</Translation>
+		<Translation name="CP_streetJobParameters_loadUnloadTargetMode_unloadAtTarget">
+			<Text language="de"><![CDATA[Abladen am Ziel]]></Text>
+			<Text language="en"><![CDATA[Unloading at goal]]></Text>
+		</Translation>
+		<Translation name="CP_streetJobParameters_loadUnloadTargetMode_loadAndUnload">
+			<Text language="de"><![CDATA[Beladen und entladen]]></Text>
+			<Text language="en"><![CDATA[Loading and unloading]]></Text>
+		</Translation>
+		
+		<Translation name="CP_streetJobParameters_subTitle_unloadTargetPoint">
+			<Text language="de"><![CDATA[Zielwegpunkt]]></Text>
+			<Text language="en"><![CDATA[Goal waypoint]]></Text>
+		</Translation>
+		<Translation name="CP_streetJobParameters_unloadTargetPoint_title">
+			<Text language="de"><![CDATA[Zielwegpunkt]]></Text>
+			<Text language="en"><![CDATA[Goal waypoint]]></Text>
+		</Translation>
+		<Translation name="CP_streetJobParameters_subTitle_loadTargetPoint">
+			<Text language="de"><![CDATA[Ladewegpunkt]]></Text>
+			<Text language="en"><![CDATA[Loading waypoint]]></Text>
+		</Translation>
+		<Translation name="CP_streetJobParameters_loadTargetPoint_title">
+			<Text language="de"><![CDATA[Ladewegpunkt]]></Text>
+			<Text language="en"><![CDATA[Loading waypoint]]></Text>
+		</Translation>
+		<Translation name="CP_streetJobParameters_subTitle_loadingMultipleFruitTypesAllowed">
+			<Text language="de"><![CDATA[Mehrere Fruchtarten laden]]></Text>
+			<Text language="en"><![CDATA[Loading of multiple fruits]]></Text>
+		</Translation>
+		<Translation name="CP_streetJobParameters_loadingMultipleFruitTypesAllowed_title">
+			<Text language="de"><![CDATA[Mehrere Fruchtarten laden]]></Text>
+			<Text language="en"><![CDATA[Loading of multiple fruits]]></Text>
+		</Translation>
+		<Translation name="CP_streetJobParameters_subTitle_fillTypes">
+			<Text language="de"><![CDATA[Fruchtarten]]></Text>
+			<Text language="en"><![CDATA[Fruit types]]></Text>
+		</Translation>
+		<Translation name="CP_streetJobParameters_counter_title">
+			<Text language="de"><![CDATA[Anzahl der Durchläufe]]></Text>
+			<Text language="en"><![CDATA[Number of runs]]></Text>
+		</Translation>
+		<Translation name="CP_streetJobParameters_minFillLevel_title">
+			<Text language="de"><![CDATA[Minimal Füllstand]]></Text>
+			<Text language="en"><![CDATA[Min fill level]]></Text>
+		</Translation>
+		<Translation name="CP_streetJobParameters_maxFillLevel_title">
+			<Text language="de"><![CDATA[Maximal Füllstand]]></Text>
+			<Text language="en"><![CDATA[Max fill level]]></Text>
+		</Translation>
+		<Translation name="CP_streetJobParameters_fillType_title">
+			<Text language="de"><![CDATA[Fruchtart]]></Text>
+			<Text language="en"><![CDATA[Fill type]]></Text>
+		</Translation>
+		<Translation name="CP_streetJobParameters_fillTypeSelection_title">
+			<Text language="de"><![CDATA[Fruchtart Auswahl]]></Text>
+			<Text language="en"><![CDATA[Fill type selection]]></Text>
+		</Translation>
+	</Category>
 	<Category name="AI jobs">
 		<Translation name="CP_job_fieldWork">
 			<Text language="de"><![CDATA[CP: Feldarbeit]]></Text>
