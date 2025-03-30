@@ -5,13 +5,11 @@ InsertPointBrush = CpObject(GraphBrush)
 function InsertPointBrush:init(...)
 	GraphBrush.init(self, ...)
 	self.supportsPrimaryButton = true
-	self.supportsPrimaryDragging = true
 	self.supportsSecondaryButton = true
-	self.supportsSecondaryDragging = true
 end
 
-function InsertPointBrush:onButtonPrimary(isDown, isDrag, isUp)
-	self:handleButtonEvent(isDown, isDrag, isUp, function (selectedId, point)
+function InsertPointBrush:onButtonPrimary()
+	self:handleButtonEvent(function (selectedId, point)
 		local success, err = self.graphWrapper:insertPointBehindIndex(selectedId, point:clone())
 		if not success then 
 			self:setError(err)
@@ -22,49 +20,76 @@ function InsertPointBrush:onButtonPrimary(isDown, isDrag, isUp)
 	end)
 end
 
-function InsertPointBrush:onButtonSecondary(isDown, isDrag, isUp)
-	self:handleButtonEvent(isDown, isDrag, isUp, function (selectedId, point)
-		local success, err =  self.graphWrapper:insertPointAheadOfIndex(selectedId, point:clone())
-		if not success then 
-			self:setError(err)
-			return
-		end
-		self:debug("Successfully inserted Point: %s ahead of index: %s", 
-			point:getRelativeID(), selectedId)
-	end)
+function InsertPointBrush:onButtonSecondary()
+	-- self:handleButtonEvent(function (selectedId, point)
+	-- 	local success, err =  self.graphWrapper:insertPointAheadOfIndex(selectedId, point:clone())
+	-- 	if not success then 
+	-- 		self:setError(err)
+	-- 		return
+	-- 	end
+	-- 	self:debug("Successfully inserted Point: %s ahead of index: %s", 
+	-- 		point:getRelativeID(), selectedId)
+	-- end)
+	if self.graphWrapper:hasSelectedNode() then
+        local ix = self.graphWrapper:getFirstSelectedNodeID() 
+        if self.graphWrapper:isOnlyNodeLeftInSegment(ix) then 
+            self.graphWrapper:removeSegmentByPointIndex(ix)
+        end
+    end
+    self.graphWrapper:resetTemporaryPoints()
+    self.graphWrapper:resetSelected()
 end
 
-function InsertPointBrush:handleButtonEvent(isDown, isDrag, isUp, insertLambda)
-	if isDown then 
-		local ix = self:getHoveredNodeId()
-		local x, y, z = self.cursor:getPosition()
+function InsertPointBrush:handleButtonEvent(insertLambda)
+	local ix = self:getHoveredNodeId()
+	local x, y, z = self.cursor:getPosition()
+	if self.graphWrapper:hasSelectedNode() then 
+		local point = self.graphWrapper:getFirstTemporaryPoint()
+		local selectedId = self.graphWrapper:getFirstSelectedNodeID()
+		local segment, err = self.graphWrapper:getSegmentByIndex(selectedId)
+        if not segment then 
+            self:setError(err)
+            return
+        end
+		if ix then 
+			self:setError("err_min_distance_to_small")
+			return
+		end
+		if selectedId and point then 
+			insertLambda(selectedId, point)
+		end
+		self.graphWrapper:resetTemporaryPoints()
+		self.graphWrapper:resetSelected()
+		self.graphWrapper:setSelected(segment:getLastNodeID())
+	else
 		if ix then 
 			self.graphWrapper:setSelected(ix)
-			self.graphWrapper:addTemporaryPoint(x, y, z)
 		else 
 			ix = self.graphWrapper:createSegmentWithPoint(x, y, z)
 			if ix then
 				self.graphWrapper:setSelected(ix)
-				self.graphWrapper:addTemporaryPoint(x, y, z)
 			end
 		end
 	end
-	if isDrag then 
-		local point = self.graphWrapper:getFirstTemporaryPoint()
-		if point then 
-			local x, y, z = self.cursor:getPosition()
-			point:moveTo(x, y, z)
-		end
+end
+
+function InsertPointBrush:update(dt)
+	GraphBrush.update(self, dt)
+	local x, y, z = self.cursor:getPosition()
+	if x == nil or z == nil then 
+		return
 	end
-	if isUp then 
-		local point = self.graphWrapper:getFirstTemporaryPoint()
-		local selectedId = self.graphWrapper:getFirstSelectedNodeID()
-		if selectedId ~= nil and point then 
-			insertLambda(selectedId, point)
-			self.graphWrapper:resetSelected()
-			self.graphWrapper:resetTemporaryPoints()
-		end
+    local tx, ty, tz = self.graphWrapper:getPositionByIndex(
+        self.graphWrapper:getFirstSelectedNodeID())
+    if tx == nil or tz == nil then 
+        return
+    end
+	self.graphWrapper:clearTemporaryPoints()
+	local dist = MathUtil.vector2Length(x-tx, z-tz)
+	if dist <= 1 then 
+		return
 	end
+	self.graphWrapper:addTemporaryPoint(x, y, z)
 end
 
 function InsertPointBrush:activate()
@@ -73,8 +98,7 @@ function InsertPointBrush:activate()
 end
 
 function InsertPointBrush:deactivate()
-	self.graphWrapper:resetSelected()
-	self.graphWrapper:resetTemporaryPoints()
+	self:onButtonSecondary()
 end
 
 

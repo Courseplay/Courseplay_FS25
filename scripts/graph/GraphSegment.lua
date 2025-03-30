@@ -15,11 +15,11 @@ GraphSegmentDirection.DEBUG_TEXTS = {
     [GraphSegmentDirection.DUAL]    = "Dual",
 }
 
-
 ---@class GraphSegment : GraphNode
 ---@field _childNodes GraphPoint[]
 GraphSegment = CpObject(GraphNode)
 GraphSegment.XML_KEY = "Segment"
+GraphSegment.DRAW_CAMERA_RANGE = 200
 function GraphSegment:init()
     GraphNode.init(self)
     self._direction = GraphSegmentDirection.FORWARD
@@ -68,52 +68,61 @@ end
 ---@param hoveredNodeID string|nil
 ---@param selectedNodeIDs table<string, boolean>|nil
 ---@param isTemporary boolean|nil
----@param temporaryPrevPoint GraphNode|nil
+---@param temporaryPrevPoint GraphPoint|nil
 function GraphSegment:draw(hoveredNodeID, selectedNodeIDs, isTemporary, temporaryPrevPoint)
     local prevPoint = temporaryPrevPoint
     for _, point in ipairs(self._childNodes) do 
-        point:draw(hoveredNodeID, selectedNodeIDs, isTemporary)
-        if prevPoint then
-            local color = {0, 0.5, 1}
-            local x, y, z = point:getPosition()
-            local dx, dy, dz = prevPoint:getPosition()
-            DebugUtil.drawDebugLine(x, y + 2, z, 
-                dx, dy + 2, dz, unpack(color), 2)
-            local dist = MathUtil.vector3Length(x - dx, y - dy, z - dz)
-            if dist > 1 then 
-                local nx, _, nz = MathUtil.vector3Normalize(x - dx, y - dy, z - dz)
-                local delta = 6
-                local numArrows = dist / delta + 1 
-                local spacing = dist / (numArrows + 1)
-                if self._direction == GraphSegmentDirection.REVERSE then 
-                    nz = -1 * nz
-                    nx = -1 * nx
-                end
-                for i = spacing/2, dist, spacing do     
-                    if self._direction == GraphSegmentDirection.FORWARD or 
-                        self._direction == GraphSegmentDirection.REVERSE then 
-                    
-                        local tx, tz = dx + nx * i, dz + nz * i
-                        if self._direction == GraphSegmentDirection.REVERSE then 
-                            tx, tz = x + nx * i, z + nz * i
-                        end
-                        local ncx = nx * math.cos(math.pi/4) - nz * math.sin(math.pi/4)
-                        local ncz = nx * math.sin(math.pi/4) + nz * math.cos(math.pi/4)                    
-                        DebugUtil.drawDebugLine(tx, y + 2, tz,
-                            tx - ncx * 2, y + 2, tz - ncz * 2, unpack(color))
-                        ncx = nx * math.cos(-math.pi/4) - nz * math.sin(-math.pi/4)
-                        ncz = nx * math.sin(-math.pi/4) + nz * math.cos(-math.pi/4)
-                        DebugUtil.drawDebugLine(tx, y + 2, tz,
-                            tx - ncx * 2, y + 2, tz - ncz * 2, unpack(color))
-                    elseif self._direction == GraphSegmentDirection.DUAL then
-                        -- x, y, z, radius, steps, color, alignToTerrain, filled
-                        DebugUtil.drawDebugCircle(dx + nx * i, y + 2, dz + nz * i,
-                            1, 8, color)
+        local x, y, z = point:getPosition()
+        if DebugUtil.isPositionInCameraRange(x, y, z, self.DRAW_CAMERA_RANGE) then
+            point:draw(hoveredNodeID, selectedNodeIDs, isTemporary)
+            self:drawLineBetween(prevPoint, point)
+        end
+        prevPoint = point
+    end
+end
+
+---@param prevPoint GraphPoint|nil
+---@param point GraphPoint
+function GraphSegment:drawLineBetween(prevPoint, point)
+    if prevPoint then
+        local color = {0, 0.5, 1}
+        local x, y, z = point:getPosition()
+        local dx, dy, dz = prevPoint:getPosition()
+        DebugUtil.drawDebugLine(x, y + 2, z, 
+            dx, dy + 2, dz, unpack(color), 2)
+        local dist = MathUtil.vector3Length(x - dx, y - dy, z - dz)
+        if dist > 1 then 
+            local nx, _, nz = MathUtil.vector3Normalize(x - dx, y - dy, z - dz)
+            local delta = 6
+            local numArrows = dist / delta + 1 
+            local spacing = dist / (numArrows + 1)
+            if self._direction == GraphSegmentDirection.REVERSE then 
+                nz = -1 * nz
+                nx = -1 * nx
+            end
+            for i = spacing/2, dist, spacing do     
+                if self._direction == GraphSegmentDirection.FORWARD or 
+                    self._direction == GraphSegmentDirection.REVERSE then 
+                
+                    local tx, tz = dx + nx * i, dz + nz * i
+                    if self._direction == GraphSegmentDirection.REVERSE then 
+                        tx, tz = x + nx * i, z + nz * i
                     end
+                    local ncx = nx * math.cos(math.pi/4) - nz * math.sin(math.pi/4)
+                    local ncz = nx * math.sin(math.pi/4) + nz * math.cos(math.pi/4)                    
+                    DebugUtil.drawDebugLine(tx, y + 2, tz,
+                        tx - ncx * 2, y + 2, tz - ncz * 2, unpack(color))
+                    ncx = nx * math.cos(-math.pi/4) - nz * math.sin(-math.pi/4)
+                    ncz = nx * math.sin(-math.pi/4) + nz * math.cos(-math.pi/4)
+                    DebugUtil.drawDebugLine(tx, y + 2, tz,
+                        tx - ncx * 2, y + 2, tz - ncz * 2, unpack(color))
+                elseif self._direction == GraphSegmentDirection.DUAL then
+                    -- x, y, z, radius, steps, color, alignToTerrain, filled
+                    DebugUtil.drawDebugCircle(dx + nx * i, y + 2, dz + nz * i,
+                        1, 8, color)
                 end
             end
         end
-        prevPoint = point
     end
 end
 
