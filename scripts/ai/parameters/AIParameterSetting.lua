@@ -2,19 +2,20 @@
 ---@class AIParameterSetting : AIParameterSettingInterface
 AIParameterSetting = CpObject(AIParameterSettingInterface)
 
-function AIParameterSetting:init(name)	
+function AIParameterSetting:init(data, vehicle, class)	
 	AIParameterSettingInterface.init(self)
-	self.data = nil
-	self.vehicle = nil
-	self.class = nil
+	self.data = data
+	self.vehicle = vehicle
+	self.class = class
 
-	self.name = name
+	self.name = ""
 	self.title = ""
 	self.tooltip = ""
 
 	self.isValid = true
 
 	self.guiParameterType = nil
+	self.parent = nil
 end
 
 --- Initialize the setting from config data supplied in CpSettingsUtil
@@ -67,9 +68,20 @@ function AIParameterSetting:setIsValid(isValid)
 	self.isValid = isValid
 end
 
+function AIParameterSetting:setParent(parent)
+	self.parent = parent
+end
+
+function AIParameterSetting:setClass(class)
+	self.class = class
+end
+
 function AIParameterSetting:getIsDisabled()
 	if self:hasCallback(self.data.isDisabledFunc) then 
 		return self:getCallback(self.data.isDisabledFunc)
+	end
+	if self.parent and self.parent:getIsDisabled() then 
+		return true
 	end
 	return false
 end
@@ -86,6 +98,9 @@ function AIParameterSetting:getIsVisible()
 	end
 	if self:hasCallback(self.data.isVisibleFunc) then 
 		return self:getCallback(self.data.isVisibleFunc)
+	end
+	if self.parent and not self.parent:getIsVisible() then 
+		return false
 	end
 	return true
 end

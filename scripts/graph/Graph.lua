@@ -276,5 +276,9 @@ function Graph:onTargetDeleted(target)
     table.remove(self._targets, ixToRemove)
 end
 
+function Graph:getAllTargets()
+    return self._targets
+end
+
 ---@type Graph
 g_graph = Graph()

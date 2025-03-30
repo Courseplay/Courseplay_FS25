@@ -1,5 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <Settings prefixText="CP_streetJobParameters_">
-	
+	<SettingSubTitle title="loadUnloadTargetMode" >
+		<Setting classType="AIParameterSettingList" name="loadUnloadTargetMode" onChangeCallback="onChangeTargetPoints">
+			<Values>
+				<Value name="DRIVE_TO">0</Value>
+				<Value name="UNLOAD_AT_TARGET" isDisabled="hasNoValidTrailerAttached">1</Value>
+				<Value name="LOAD_AND_UNLOAD" isDisabled="hasNoValidTrailerAttached" >2</Value>
+			</Values>
+			<Texts>
+				<Text>driveTo</Text>
+				<Text>unloadAtTarget</Text>
+				<Text>loadAndUnload</Text>
+			</Texts>
+		</Setting>
+	</SettingSubTitle>
+	<SettingSubTitle title="unloadTargetPoint" >
+		<Setting classType="CpAIParameterTargetPoint" name="unloadTargetPoint" generateValuesFunction="generateTargets" onChangeCallback="onChangeTargetPoints"/>
+	</SettingSubTitle>
+	<SettingSubTitle title="loadTargetPoint" >
+		<Setting classType="CpAIParameterTargetPoint" name="loadTargetPoint" isDisabled="isLoadTargetPointDisabled" generateValuesFunction="generateTargets" onChangeCallback="onChangeTargetPoints"/>
+	</SettingSubTitle>
+	<SettingSubTitle title="loadingMultipleFruitTypesAllowed" >
+		<Setting classType="AIParameterBooleanSetting" name="loadingMultipleFruitTypesAllowed" isDisabled="isLoadTargetPointDisabled"/>
+	</SettingSubTitle>
+	<SettingSubTitle title="fillTypes">
+		<Setting classType="CpAIParameterFillTypeSetting" name="fillTypeSelection1" isDisabled="isLoadTargetPointDisabled" title="CP_streetJobParameters_fillTypeSelection_title"/>
+		<Setting classType="CpAIParameterFillTypeSetting" name="fillTypeSelection2" isDisabled="isLoadTargetPointDisabled" title="CP_streetJobParameters_fillTypeSelection_title"/>
+		<Setting classType="CpAIParameterFillTypeSetting" name="fillTypeSelection3" isDisabled="isLoadTargetPointDisabled" title="CP_streetJobParameters_fillTypeSelection_title"/>
+	</SettingSubTitle>
 </Settings>

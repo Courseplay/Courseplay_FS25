@@ -1,9 +1,16 @@
 ---@class GraphTarget
 GraphTarget = CpObject()
+GraphTarget.uniqueID = 0
+function GraphTarget.getNextUniqueID()
+    GraphTarget.uniqueID = GraphTarget.uniqueID + 1
+    return GraphTarget.uniqueID
+end
+
 function GraphTarget:init(point, name)
     ---@type GraphPoint
     self._point = point
     self._name = name or "???"
+    self._uniqueID = GraphTarget.getNextUniqueID()
     g_graph:onTargetCreated(self)
 end
 
@@ -26,6 +33,10 @@ end
 ---@param otherTarget GraphTarget
 function GraphTarget:copyTo(otherTarget)
     otherTarget._name = self._name
+end
+
+function GraphTarget:getUniqueID()
+    return self._uniqueID
 end
 
 ---@return string

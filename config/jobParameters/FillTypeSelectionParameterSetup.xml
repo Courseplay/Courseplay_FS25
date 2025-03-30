@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Settings prefixText="CP_streetJobParameters_">
+	<SettingSubTitle title="ai_parameterGroupTitlePosition">
+		<Setting classType="AIParameterSettingList" name="fillType" generateValuesFunction="generateFillTypes"/>
+		<Setting classType="AIParameterSettingList" name="maxFillLevel" min="20" max="100" default="100" unit="4"/>
+		<Setting classType="AIParameterSettingList" name="minFillLevel" min="0" max="100" default="0" unit="4"/>
+		<Setting classType="AIParameterSettingList" name="counter" min="1" max="100" default="15" isDisabled="isRunCounterDisabled"/>
+	</SettingSubTitle>
+</Settings>

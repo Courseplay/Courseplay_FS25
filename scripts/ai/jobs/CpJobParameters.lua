@@ -141,6 +141,32 @@ function CpJobParameters:isCpActive()
     return self.job:getVehicle() and self.job:getVehicle():getIsCpActive()
 end
 
+--- Crawls through the parameters and collects all CpAIParameterFillTypeSetting settings.
+---@return table
+function CpJobParameters:getFillTypeSelectionSettings()
+    local parameters = {}
+    for i, setting in ipairs(self.settings) do
+        if setting:is_a(CpAIParameterFillTypeSetting) then
+            table.insert(parameters, setting)
+        end
+    end
+    return parameters
+end
+
+function CpJobParameters:generateTargets()
+    local targets = g_graph:getAllTargets()
+    local values, texts = {}, {}
+    for _, t in ipairs(targets) do 
+        table.insert(values, t:getUniqueID())
+        table.insert(texts, t:getName())
+    end
+    if #values <=0 then 
+        table.insert(values, -1)
+        table.insert(texts, "---")
+    end
+    return values, texts
+end
+
 ---@class CpFieldWorkJobParameters : CpJobParameters
 CpFieldWorkJobParameters = CpObject(CpJobParameters)
 function CpFieldWorkJobParameters:init(job)
@@ -426,4 +452,86 @@ CpStreetJobParameters = CpObject(CpJobParameters)
 function CpStreetJobParameters:init(job)
     CpJobParameters.init(self, job, 
         CpStreetJobParameters, "StreetJobParameterSetup.xml")
+end
+
+function CpStreetJobParameters:hasNoValidTrailerAttached()
+    local vehicle = self.job:getVehicle()
+    if vehicle then
+        return not AIUtil.hasChildVehicleWithSpecialization(vehicle, Dischargeable) 
+            or not AIUtil.hasChildVehicleWithSpecialization(vehicle, Trailer) 
+    end
+    return false
+end
+
+function CpStreetJobParameters:isUnloadTargetPointDisabled()
+   return self:hasNoValidTrailerAttached() or self.loadUnloadTargetMode:getValue() == CpStreetJobParameters.DRIVE_TO
+end
+
+function CpStreetJobParameters:isLoadTargetPointDisabled()
+    return self:hasNoValidTrailerAttached() or self.loadUnloadTargetMode:getValue() ~= CpStreetJobParameters.LOAD_AND_UNLOAD
+end
+
+function CpStreetJobParameters:isRunCounterDisabled()
+    return false
+end
+function CpStreetJobParameters:generateFillTypes()
+    local fillTypes = {}
+    local texts = {}
+    -- local vehicle = self.job and self.job:getVehicle()
+    -- if vehicle then
+    --     fillTypes = AIUtil.getAllValidFillTypes(vehicle, function()
+    --         return true
+    --     end)
+    --     for _, f in pairs(fillTypes) do 
+    --         table.insert(texts, g_fillTypeManager:getFillTypeTitleByIndex(f))
+    --     end
+    -- else 
+    --     for ix, _ in pairs(g_fillTypeManager:getFillTypes()) do 
+    --         if ix ~= FillType.UNKNOWN then
+    --             table.insert(fillTypes, ix)
+    --             table.insert(texts, g_fillTypeManager:getFillTypeTitleByIndex(f))
+    --         end
+    --     end
+    -- end
+    table.insert(fillTypes, 1, -1)
+    table.insert(texts, 1, "---")
+    return fillTypes, texts
+end
+
+---@param setting CpAIParameterTargetPoint
+function CpStreetJobParameters:onChangeTargetPoints(setting)
+    -- if setting:getIsDisabled() then 
+    --     return
+    -- end
+    -- local vehicle = self.job:getVehicle()
+    -- if not vehicle then
+    --     return
+    -- end 
+    -- local startId 
+    -- if self:isLoadTargetPointDisabled() then
+    --     g_graphCourseManager:generateCourseFromVehicleToStart(vehicle, 
+    --     function(toUnloadCourse)
+    --         if self:isLoadTargetPointDisabled() then 
+    --             self.job:onCourseGenerated(setting, toUnloadCourse, nil)
+    --         else 
+    --             g_graphCourseManager:generateCourseBetweenPoints(vehicle,
+    --                 function(fromUnloadCourse)
+    --                     self.job:onCourseGenerated(setting, toUnloadCourse, fromUnloadCourse)
+    --                 end, self.unloadTargetPoint:getValue(), startId)
+    --         end
+    --     end, self.unloadTargetPoint:getValue())
+    -- else
+    --     startId = self.loadTargetPoint:getValue()
+    --     g_graphCourseManager:generateCourseBetweenPoints(vehicle, 
+    --     function(toUnloadCourse)
+    --         if self:isLoadTargetPointDisabled() then 
+    --             self.job:onCourseGenerated(setting, toUnloadCourse, nil)
+    --         else 
+    --             g_graphCourseManager:generateCourseBetweenPoints(vehicle,
+    --                 function(fromUnloadCourse)
+    --                     self.job:onCourseGenerated(setting, toUnloadCourse, fromUnloadCourse)
+    --                 end, self.unloadTargetPoint:getValue(), startId)
+    --         end
+    --     end, startId, self.unloadTargetPoint:getValue())
+    -- end
 end
