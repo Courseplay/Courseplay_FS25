@@ -68,6 +68,9 @@ end
 
 --- Gets the first task to start with.
 function CpAIJob:getStartTaskIndex()
+	if not self.driveToTask then 
+		return 1
+	end
 	if self.currentTaskIndex ~= 0 or self.isDirectStart or self:isTargetReached() then
 		-- skip Giants driveTo
 		-- TODO: this isn't very nice as we rely here on the derived classes to add more tasks

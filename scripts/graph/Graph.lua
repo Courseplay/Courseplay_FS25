@@ -35,7 +35,6 @@ function Graph:consoleCommandFindPathTo(name)
                 end
             end
             local edge = seg:toGraphEdge()
-            print(tostring(edge))
             table.insert(edges, edge)
         end
         if targetPos == nil or targetPos.x == nil or targetPos.y == nil then
@@ -279,6 +278,27 @@ end
 function Graph:getAllTargets()
     return self._targets
 end
+
+---@param id number
+---@return GraphTarget|nil
+function Graph:getTargetByUniqueID(id)
+    for _, target in ipairs(self._targets) do 
+        if target:getUniqueID() == id then 
+            return target
+        end
+    end
+end
+
+---@return GraphPathfinder.GraphEdge[]
+function Graph:getGraphEdges()
+    local edges = {}
+    for _, seg in ipairs(self._childNodes) do 
+        local edge = seg:toGraphEdge()
+        table.insert(edges, edge)
+    end
+    return edges
+end
+
 
 ---@type Graph
 g_graph = Graph()

@@ -252,6 +252,7 @@ Changelog 8.0.0.0:
 		<sourceFile filename="scripts/ai/strategies/AIDriveStrategyBunkerSilo.lua"/>
 		<sourceFile filename="scripts/ai/strategies/AIDriveStrategySiloLoader.lua"/>
 		<sourceFile filename="scripts/ai/strategies/AIDriveStrategyShovelSiloLoader.lua"/>
+		<sourceFile filename="scripts/ai/strategies/AIDriveStrategyStreetDriveToPoint.lua"/>
 
 		<sourceFile filename="scripts/ai/parameters/AIParameterSettingInterface.lua"/>
 		<sourceFile filename="scripts/ai/parameters/AIParameterSetting.lua"/>
@@ -279,6 +280,7 @@ Changelog 8.0.0.0:
 		<sourceFile filename="scripts/ai/tasks/CpAITaskAttachHeader.lua"/>
 		<sourceFile filename="scripts/ai/tasks/CpAITaskBunkerSilo.lua"/>
 		<sourceFile filename="scripts/ai/tasks/CpAITaskSiloLoader.lua"/>
+		<sourceFile filename="scripts/ai/tasks/CpAITaskDriveToPoint.lua"/>
 
 		<sourceFile filename="scripts/gui/plots/CoursePlot.lua"/>
 		<sourceFile filename="scripts/gui/plots/FieldPlot.lua"/>

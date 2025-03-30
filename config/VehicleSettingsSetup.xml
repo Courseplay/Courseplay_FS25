@@ -147,6 +147,8 @@
 		<Setting classType="AIParameterSettingList" name="fieldWorkSpeed" min="5" max="50" default="25" unit="1" isExpertModeOnly="true" generateValuesFunction="generateSpeedSettingValuesAndTexts"/>
 		<!--Field Speed-->
 		<Setting classType="AIParameterSettingList" name="fieldSpeed" min="5" max="50" default="20" unit="1" isExpertModeOnly="true" generateValuesFunction="generateSpeedSettingValuesAndTexts"/>
+		<!--Street Speed-->
+		<Setting classType="AIParameterSettingList" name="streetSpeed" min="5" max="60" default="40" unit="1" isExpertModeOnly="true" generateValuesFunction="generateSpeedSettingValuesAndTexts"/>
 		<!--Turn Speed-->
 		<Setting classType="AIParameterSettingList" name="turnSpeed" min="2" max="25" default="8" unit="1" isExpertModeOnly="true"/>
 		<!--Reverse Speed-->

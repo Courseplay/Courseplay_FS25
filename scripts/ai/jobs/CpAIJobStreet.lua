@@ -10,11 +10,13 @@ end
 
 function CpAIJobStreet:setupTasks(isServer)
 	-- CpAIJob.setupTasks(self, isServer)
-	
+	self.driveToPointTask = CpAITaskDriveToPoint(isServer, self)
+	self:addTask(self.driveToPointTask)
 end
 
 function CpAIJobStreet:onPreStart()
-	--- TODO
+	self.driveToPointTask:setTarget(
+		g_graph:getTargetByUniqueID(self.cpJobParameters.unloadTargetPoint:getValue()))
 end
 
 
@@ -42,7 +44,7 @@ end
 function CpAIJobStreet:setValues()
 	CpAIJob.setValues(self)
 	local vehicle = self.vehicleParameter:getVehicle()
-	
+	self.driveToPointTask:setVehicle(vehicle)
 end
 
 --- Called when parameters change, scan field
