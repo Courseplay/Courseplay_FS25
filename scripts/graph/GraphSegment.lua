@@ -40,7 +40,7 @@ end
 
 function GraphSegment:loadFromXMLFile(xmlFile, baseKey)
     self._direction = xmlFile:getValue(baseKey .. "#direction", GraphSegmentDirection.FORWARD)
-    self._isGeneratedBySpline = xmlFile:getValue(baseKey .. "isGeneratedBySpline", false)
+    self._isGeneratedBySpline = xmlFile:getValue(baseKey .. "#isGeneratedBySpline", false)
     xmlFile:iterate(baseKey .. "." .. GraphPoint.XML_KEY, function (ix, key)
         local point = GraphPoint()
         point:loadFromXMLFile(xmlFile, key)
