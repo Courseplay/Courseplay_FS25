@@ -28,8 +28,11 @@
     <text name="CP_error_no_heap_found" text="Keinen Haufen gefunden."/>
     <text name="CP_error_no_unload_trigger_found" text="Keinen Abladepunkt gefunden."/>
     <text name="CP_error_unload_target_to_far_away_from_silo" text="Ausgewählter Abladepunkt ist zu weit vom Silo entfernt."/>
+    <text name="CP_error_no_target_selected" text="Kein Ziel ausgewählt"/>
+    <text name="CP_error_invalid_fillType_selection" text="Eine Fruchtart Einstellung ist falsch."/>
+    <text name="CP_error_no_fillType_selection" text="Keine Fruchtart Einstellung vorhanden."/>
     <!---->
-    <!--AI job parameters-->
+    <!--AI fieldwork job parameters-->
     <!---->
     <text name="CP_fieldWorkJobParameters_fieldPosition_title" text="Feldposition:"/>
     <text name="CP_fieldWorkJobParameters_bunkerSiloPosition_title" text="Siloposition:"/>
@@ -62,6 +65,8 @@
     <text name="CP_baleFinderJobParameters_baleWrapType_only_wrapped_bales" text="Nur gewickelte"/>
     <text name="CP_baleFinderJobParameters_baleWrapType_only_not_wrapped_bales" text="Nur ungewickelte"/>
     <text name="CP_baleFinder_balesLeftover" text="Ballen übrig:"/>
+    <text name="CP_baleFinderJobParameters_subTitle_unloadTargetPoint" text="Abladen:"/>
+    <text name="CP_baleFinderJobParameters_unloadTargetPoint_title" text="Abladen:"/>
     <!---->
     <!--AI combine unloader job parameters-->
     <!---->
@@ -69,13 +74,15 @@
     <text name="CP_combineUnloaderJobParameters_unloadTarget_title" text="Entlade:"/>
     <text name="CP_combineUnloaderJobParameters_unloadTarget_combine" text="Drescher"/>
     <text name="CP_combineUnloaderJobParameters_unloadTarget_siloLoader" text="Lader"/>
-    <text name="CP_combineUnloaderJobParameters_subTitle_giantsUnloader" text="Giants Ablader:"/>
-    <text name="CP_combineUnloaderJobParameters_useGiantsUnload_title" text="Giants Ablader benutzen:"/>
     <text name="CP_combineUnloaderJobParameters_unloadingStation_title" text="Abladestation:"/>
-    <text name="CP_combineUnloaderJobParameters_subTitle_fieldUnload" text="Abladen auf dem Feld:"/>
-    <text name="CP_combineUnloaderJobParameters_useFieldUnload_title" text="Abladen auf dem Feld benutzen:"/>
     <text name="CP_combineUnloaderJobParameters_fieldUnloadPosition_title" text="Abladeposition:"/>
     <text name="CP_combineUnloaderJobParameters_unloadingTipSide_title" text="Abladeseite Anhänger:"/>
+    <text name="CP_combineUnloaderJobParameters_subTitle_unloadWith" text="Abladen mit/aud:"/>
+    <text name="CP_combineUnloaderJobParameters_unloadWith_title" text="Abladen mit/aud:"/>
+    <text name="CP_combineUnloaderJobParameters_unloadWith_giants" text="Giants"/>
+    <text name="CP_combineUnloaderJobParameters_unloadWith_autoDrive" text="Autodrive"/>
+    <text name="CP_combineUnloaderJobParameters_unloadWith_field" text="Feld"/>
+    <text name="CP_combineUnloaderJobParameters_unloadTargetPoint_title" text="Abladepunkt"/>
     <!---->
     <!--AI bunker silo worker job parameters-->
     <!---->

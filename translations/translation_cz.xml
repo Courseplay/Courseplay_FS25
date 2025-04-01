@@ -28,8 +28,11 @@
     <text name="CP_error_no_heap_found" text="Hromada nenalezena."/>
     <text name="CP_error_no_unload_trigger_found" text="Místo vykládky nenalezeno."/>
     <text name="CP_error_unload_target_to_far_away_from_silo" text="Zvolené místo vykládky je daleko od sila."/>
+    <text name="CP_error_no_target_selected" text="No target selected"/>
+    <text name="CP_error_invalid_fillType_selection" text="At least one fill type is wrongfully selected."/>
+    <text name="CP_error_no_fillType_selection" text="No fill type selection present."/>
     <!---->
-    <!--AI job parameters-->
+    <!--AI fieldwork job parameters-->
     <!---->
     <text name="CP_fieldWorkJobParameters_fieldPosition_title" text="Umístění pole:"/>
     <text name="CP_fieldWorkJobParameters_bunkerSiloPosition_title" text="Umístění jámy:"/>
@@ -62,6 +65,8 @@
     <text name="CP_baleFinderJobParameters_baleWrapType_only_wrapped_bales" text="pouze ovinuté"/>
     <text name="CP_baleFinderJobParameters_baleWrapType_only_not_wrapped_bales" text="pouze neovinuté"/>
     <text name="CP_baleFinder_balesLeftover" text="Zbývá balíků:"/>
+    <text name="CP_baleFinderJobParameters_subTitle_unloadTargetPoint" text="Unload:"/>
+    <text name="CP_baleFinderJobParameters_unloadTargetPoint_title" text="Unload:"/>
     <!---->
     <!--AI combine unloader job parameters-->
     <!---->
@@ -69,13 +74,15 @@
     <text name="CP_combineUnloaderJobParameters_unloadTarget_title" text="Vykládka:"/>
     <text name="CP_combineUnloaderJobParameters_unloadTarget_combine" text="Kombajn"/>
     <text name="CP_combineUnloaderJobParameters_unloadTarget_siloLoader" text="Nakladač"/>
-    <text name="CP_combineUnloaderJobParameters_subTitle_giantsUnloader" text="Giants odvozce:"/>
-    <text name="CP_combineUnloaderJobParameters_useGiantsUnload_title" text="Použít Giants odvozce:"/>
     <text name="CP_combineUnloaderJobParameters_unloadingStation_title" text="Místo vykládky:"/>
-    <text name="CP_combineUnloaderJobParameters_subTitle_fieldUnload" text="Giants odvozce:"/>
-    <text name="CP_combineUnloaderJobParameters_useFieldUnload_title" text="Vykládka na poli:"/>
     <text name="CP_combineUnloaderJobParameters_fieldUnloadPosition_title" text="Místo vykládky na poli:"/>
     <text name="CP_combineUnloaderJobParameters_unloadingTipSide_title" text="Vysýpací strana návěsu:"/>
+    <text name="CP_combineUnloaderJobParameters_subTitle_unloadWith" text="Unload with/on:"/>
+    <text name="CP_combineUnloaderJobParameters_unloadWith_title" text="Unload with/on:"/>
+    <text name="CP_combineUnloaderJobParameters_unloadWith_giants" text="Giants"/>
+    <text name="CP_combineUnloaderJobParameters_unloadWith_autoDrive" text="Autodrive"/>
+    <text name="CP_combineUnloaderJobParameters_unloadWith_field" text="Feld"/>
+    <text name="CP_combineUnloaderJobParameters_unloadTargetPoint_title" text="Unloading waypoint"/>
     <!---->
     <!--AI bunker silo worker job parameters-->
     <!---->
