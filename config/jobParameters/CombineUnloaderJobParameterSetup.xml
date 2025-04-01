@@ -7,7 +7,11 @@
 
 <Settings prefixText="CP_combineUnloaderJobParameters_">
 	<SettingSubTitle title="ai_parameterGroupTitlePosition" prefix="false">
-		<Setting classType="CpAIParameterPositionAngle" name="startPosition" positionParameterType="DRIVE_TO"/>
+		<Setting classType="CpAIParameterPositionAngle" name="startPosition" 
+			positionParameterType="DRIVE_TO" isVisible="isGiantsForStreetActive"/>
+		<Setting classType="CpAIParameterTargetPoint" name="startTargetPoint" 
+			generateValuesFunction="generateTargets" isVisible="isStreetModeActive"
+			onChangeCallback="onChangeStartTargetPoint"/>
 	</SettingSubTitle>
 	<SettingSubTitle title="CP_fieldWorkJobParameters_fieldPosition_title" prefix="false">
 		<Setting classType="CpAIParameterPosition" name="fieldPosition" positionParameterType="FIELD_OR_SILO"/>
@@ -24,15 +28,29 @@
 			</Texts>
 		</Setting>
 	</SettingSubTitle>
-	<SettingSubTitle title="giantsUnloader">
-		<!-- Is the giants ai unloader wanted for unloading? -->
-		<Setting classType="AIParameterBooleanSetting" name="useGiantsUnload" defaultBool="false" isDisabled ="isGiantsUnloadDisabled"/>
-		<Setting classType="CpAIParameterUnloadingStation" name="unloadingStation" isVisible ="isUnloadStationSelectorVisible" generateValuesFunction="generateUnloadingStations"/>
-	</SettingSubTitle>
-	<SettingSubTitle title="fieldUnload">
-		<!-- Is unloading onto the field allowed? -->
-		<Setting classType="AIParameterBooleanSetting" name="useFieldUnload" defaultBool="false" isDisabled ="isFieldUnloadDisabled"/>
-		<Setting classType="CpAIParameterPositionAngle" name="fieldUnloadPosition" positionParameterType="UNLOAD" isDisabled ="isFieldUnloadPositionSelectorDisabled"/>
-		<Setting classType="AIParameterSettingList" name="unloadingTipSide" isDisabled ="isFieldUnloadTipSideDisabled" generateValuesFunction="generateTipSides"/>
+	<SettingSubTitle title="unloadWith">
+		<Setting classType="AIParameterSettingList" name="unloadWith">
+			<Values>
+				<Value name="DEACTIVATED">1</Value>
+				<Value name="UNLOAD_WITH_GIANTS" isDisabled="isAutoDriveForStreetActive">2</Value>
+				<Value name="UNLOAD_WITH_STREET_MODE" isDisabled="isStreetModeActive">3</Value>
+				<Value name="UNLOAD_ON_FIELD">4</Value>
+			</Values>
+			<Texts>
+				<Text prefix="false">CP_deactivated</Text>
+				<Text>giants</Text>
+				<Text>autoDrive</Text>
+				<Text>field</Text>
+			</Texts>
+		</Setting>
+		<Setting classType="CpAIParameterUnloadingStation" name="unloadingStation" 
+			isVisible="isGiantsForStreetActive" generateValuesFunction="generateUnloadingStations"/>
+		<Setting classType="CpAIParameterTargetPoint" name="unloadTargetPoint" 
+			isVisible="isStreetModeActive" generateValuesFunction="generateTargets" 
+			onChangeCallback="onChangeUnloadTargetPoint"/>
+		<Setting classType="CpAIParameterPositionAngle" name="fieldUnloadPosition" 
+			positionParameterType="UNLOAD" isDisabled ="isFieldUnloadDisabled"/>
+		<Setting classType="AIParameterSettingList" name="unloadingTipSide" 
+			isDisabled ="isFieldUnloadTipSideDisabled" generateValuesFunction="generateTipSides"/>
 	</SettingSubTitle>
 </Settings>

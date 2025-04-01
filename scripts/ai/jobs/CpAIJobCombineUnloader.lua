@@ -42,7 +42,6 @@ function CpAIJobCombineUnloader:setupJobParameters()
 	CpAIJob.setupJobParameters(self)
     self:setupCpJobParameters(CpCombineUnloaderJobParameters(self))
 	self.cpJobParameters.fieldUnloadPosition:setSnappingAngle(math.pi/8) -- AI menu snapping angle of 22.5 degree.
-
 	--- Giants unload
 	self.unloadingStationParameter = self.cpJobParameters.unloadingStation
 	self.waitForFillingTask = self.combineUnloaderTask
@@ -120,10 +119,15 @@ function CpAIJobCombineUnloader:validate(farmId)
 	if vehicle then 
 		vehicle:applyCpCombineUnloaderJobParameters(self)
 	end
+
+	local useGiantsUnload = self.cpJobParameters.unloadWith:getValue() == CpCombineUnloaderJobParameters.UNLOAD_WITH_GIANTS
+	local useFieldUnload = self.cpJobParameters.unloadWith:getValue() == CpCombineUnloaderJobParameters.UNLOAD_ON_FIELD
+	local useStreetModeUnload = self.cpJobParameters.unloadWith:getValue() == CpCombineUnloaderJobParameters.UNLOAD_WITH_STREET_MODE
+
 	------------------------------------
 	--- Validate giants unload if needed
 	-------------------------------------
-	if not self.cpJobParameters.useGiantsUnload:getIsDisabled() and self.cpJobParameters.useGiantsUnload:getValue() then
+	if useGiantsUnload then
 		isValid, errorMessage = self.cpJobParameters.unloadingStation:validateUnloadingStation()
 
 		if not isValid then
@@ -160,15 +164,14 @@ function CpAIJobCombineUnloader:onFieldBoundaryDetectionFinished(vehicle, fieldP
 		self.selectedFieldPlot:setWaypoints(fieldPolygon)
 		self.selectedFieldPlot:setVisible(true)
 	end
+	local useGiantsUnload = self.cpJobParameters.unloadWith:getValue() == CpCombineUnloaderJobParameters.UNLOAD_WITH_GIANTS
+	local useFieldUnload = self.cpJobParameters.unloadWith:getValue() == CpCombineUnloaderJobParameters.UNLOAD_ON_FIELD
+	local useStreetModeUnload = self.cpJobParameters.unloadWith:getValue() == CpCombineUnloaderJobParameters.UNLOAD_WITH_STREET_MODE
 	------------------------------------
 	--- Validate start distance to field
 	-------------------------------------
-	local useGiantsUnload = false
-	if not self.cpJobParameters.useGiantsUnload:getIsDisabled() then 
-		useGiantsUnload =  self.cpJobParameters.useGiantsUnload:getValue() 
-	end
-	local isValid, errorMessage = true
-	if fieldPolygon and self.isDirectStart then
+	local isValid, errorMessage = true, ""
+	if not useStreetModeUnload and fieldPolygon and self.isDirectStart then
 		--- Checks the distance for starting with the hud, as a safety check.
 		--- Firstly check, if the vehicle is near the field.
 		local x, _, z = getWorldTranslation(vehicle.rootNode)
@@ -190,12 +193,7 @@ function CpAIJobCombineUnloader:onFieldBoundaryDetectionFinished(vehicle, fieldP
 	------------------------------------
 	--- Validate field unload if needed
 	-------------------------------------
-	local useFieldUnload = false
-	if not self.cpJobParameters.useFieldUnload:getIsDisabled() then 
-		useFieldUnload =  self.cpJobParameters.useFieldUnload:getValue() 
-	end
 	if useFieldUnload then 
-		
 		local x, z = self.cpJobParameters.fieldUnloadPosition:getPosition()
 		isValid = CpMathUtil.isPointInPolygon(fieldPolygon, x, z) or 
 				  CpMathUtil.isWithinDistanceToPolygon(fieldPolygon, x, z, self.minFieldUnloadDistanceToField)

@@ -91,8 +91,20 @@
 			<Text language="de"><![CDATA[Ausgewählter Abladepunkt ist zu weit vom Silo entfernt.]]></Text>
 			<Text language="en"><![CDATA[Selected unloading point is too far away from the silo.]]></Text>
 		</Translation>
+		<Translation name="CP_error_no_target_selected">
+			<Text language="de"><![CDATA[Kein Ziel ausgewählt]]></Text>
+			<Text language="en"><![CDATA[No target selected]]></Text>
+		</Translation>
+		<Translation name="CP_error_invalid_fillType_selection">
+			<Text language="de"><![CDATA[Eine Fruchtart Einstellung ist falsch.]]></Text>
+			<Text language="en"><![CDATA[At least one fill type is wrongfully selected.]]></Text>
+		</Translation>
+		<Translation name="CP_error_no_fillType_selection">
+			<Text language="de"><![CDATA[Keine Fruchtart Einstellung vorhanden.]]></Text>
+			<Text language="en"><![CDATA[No fill type selection present.]]></Text>
+		</Translation>
 	</Category>
-	<Category name="AI job parameters">	
+	<Category name="AI fieldwork job parameters">	
 		<Translation name="CP_fieldWorkJobParameters_fieldPosition_title">
 			<Text language="de"><![CDATA[Feldposition:]]></Text>
 			<Text language="en"><![CDATA[Field position:]]></Text>
@@ -207,6 +219,14 @@
 			<Text language="de"><![CDATA[Ballen übrig:]]></Text>
 			<Text language="en"><![CDATA[Bales left:]]></Text>
 		</Translation>		
+		<Translation name="CP_baleFinderJobParameters_subTitle_unloadTargetPoint">
+			<Text language="de"><![CDATA[Abladen:]]></Text>
+			<Text language="en"><![CDATA[Unload:]]></Text>
+		</Translation>
+		<Translation name="CP_baleFinderJobParameters_unloadTargetPoint_title">
+			<Text language="de"><![CDATA[Abladen:]]></Text>
+			<Text language="en"><![CDATA[Unload:]]></Text>
+		</Translation>
 	</Category>
 	<Category name="AI combine unloader job parameters">
 		<Translation name="CP_combineUnloaderJobParameters_subTitle_unloadTarget">
@@ -225,25 +245,9 @@
 			<Text language="de"><![CDATA[Lader]]></Text>
 			<Text language="en"><![CDATA[Loader]]></Text>
 		</Translation>
-		<Translation name="CP_combineUnloaderJobParameters_subTitle_giantsUnloader">
-			<Text language="de"><![CDATA[Giants Ablader:]]></Text>
-			<Text language="en"><![CDATA[Giants unloader:]]></Text>
-		</Translation>
-		<Translation name="CP_combineUnloaderJobParameters_useGiantsUnload_title">
-			<Text language="de"><![CDATA[Giants Ablader benutzen:]]></Text>
-			<Text language="en"><![CDATA[Use giants unloader:]]></Text>
-		</Translation>
 		<Translation name="CP_combineUnloaderJobParameters_unloadingStation_title">
 			<Text language="de"><![CDATA[Abladestation:]]></Text>
 			<Text language="en"><![CDATA[Unloading station:]]></Text>
-		</Translation>
-		<Translation name="CP_combineUnloaderJobParameters_subTitle_fieldUnload">
-			<Text language="de"><![CDATA[Abladen auf dem Feld:]]></Text>
-			<Text language="en"><![CDATA[Unloading on the field:]]></Text>
-		</Translation>
-		<Translation name="CP_combineUnloaderJobParameters_useFieldUnload_title">
-			<Text language="de"><![CDATA[Abladen auf dem Feld benutzen:]]></Text>
-			<Text language="en"><![CDATA[Use unload on field:]]></Text>
 		</Translation>
 		<Translation name="CP_combineUnloaderJobParameters_fieldUnloadPosition_title">
 			<Text language="de"><![CDATA[Abladeposition:]]></Text>
@@ -252,6 +256,30 @@
 		<Translation name="CP_combineUnloaderJobParameters_unloadingTipSide_title">
 			<Text language="de"><![CDATA[Abladeseite Anhänger:]]></Text>
 			<Text language="en"><![CDATA[Trailer tip side:]]></Text>
+		</Translation>
+		<Translation name="CP_combineUnloaderJobParameters_subTitle_unloadWith">
+			<Text language="de"><![CDATA[Abladen mit/aud:]]></Text>
+			<Text language="en"><![CDATA[Unload with/on:]]></Text>
+		</Translation>
+		<Translation name="CP_combineUnloaderJobParameters_unloadWith_title">
+			<Text language="de"><![CDATA[Abladen mit/aud:]]></Text>
+			<Text language="en"><![CDATA[Unload with/on:]]></Text>
+		</Translation>
+		<Translation name="CP_combineUnloaderJobParameters_unloadWith_giants">
+			<Text language="de"><![CDATA[Giants]]></Text>
+			<Text language="en"><![CDATA[Giants]]></Text>
+		</Translation>
+		<Translation name="CP_combineUnloaderJobParameters_unloadWith_autoDrive">
+			<Text language="de"><![CDATA[Autodrive]]></Text>
+			<Text language="en"><![CDATA[Autodrive]]></Text>
+		</Translation>
+		<Translation name="CP_combineUnloaderJobParameters_unloadWith_field">
+			<Text language="de"><![CDATA[Feld]]></Text>
+			<Text language="en"><![CDATA[Feld]]></Text>
+		</Translation>
+		<Translation name="CP_combineUnloaderJobParameters_unloadTargetPoint_title">
+			<Text language="de"><![CDATA[Abladepunkt]]></Text>
+			<Text language="en"><![CDATA[Unloading waypoint]]></Text>
 		</Translation>
 	</Category>
 	<Category name="AI bunker silo worker job parameters">

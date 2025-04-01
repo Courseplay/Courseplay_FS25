@@ -249,3 +249,49 @@ function FillLevelUtil.getTrailerFillLevels(trailer)
     end
     return totalFillLevel, totalCapacity, totalFreeCapacity
 end
+
+
+--- Gets all currently possible fill types.
+---@param vehicle table
+---@param lambda function|nil
+---@return table[] all fill types
+---@return table<number,boolean> fill types as keys
+function FillLevelUtil.getAllValidFillTypes(vehicle, lambda, ...)
+	local fillTypes, fillTypesByIndex = {}, {}
+	for _, v in pairs(vehicle:getChildVehicles()) do 
+		if v.getFillUnits then
+			for ix, _ in pairs(v:getFillUnits()) do 
+				for fillType, state in pairs(v:getFillUnitSupportedFillTypes(ix)) do 
+					if state then 
+						if not fillTypesByIndex[fillType] and 
+							(lambda == nil or lambda(fillType, ...)) then 
+							fillTypesByIndex[fillType] = true
+							table.insert(fillTypes, fillType)
+						end
+					end
+				end
+			end
+		end
+	end
+	return fillTypes, fillTypesByIndex
+end
+
+--- Gets all discharge nodes.
+---@param vehicle table
+---@param lambda function|nil
+---@return table[]
+---@return table<table, table>
+function FillLevelUtil.getAllDischargeNodes(vehicle, lambda, ...)
+	local dischargeNodes, dischargeNodeToObject = {}, {}
+	for _, v in pairs(vehicle:getChildVehicles()) do 
+		if v.spec_dischargeable then
+			for _, node in pairs(v.spec_dischargeable.dischargeNodes) do 
+				if lambda == nil or lambda(node, ...) then 
+					dischargeNodeToObject[node] = v
+					table.insert(dischargeNodes, node)
+				end
+			end
+		end
+	end
+	return dischargeNodes, dischargeNodeToObject
+end

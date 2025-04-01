@@ -119,6 +119,14 @@ function CpJobParameters:isFieldWorkHudModeDisabled()
     return false
 end
 
+function CpJobParameters:isStreetModeActive()
+    return true
+end
+
+function CpJobParameters:isGiantsForStreetActive()
+    return false
+end
+
 --- Callback raised by a setting and executed as an vehicle event.
 ---@param callbackStr string event to be raised
 ---@param setting AIParameterSettingList setting that raised the callback.
@@ -165,6 +173,19 @@ function CpJobParameters:generateTargets()
         table.insert(texts, "---")
     end
     return values, texts
+end
+
+--- Are the setting values roughly equal.
+---@param otherParameters CpJobParameters
+---@return boolean
+function CpJobParameters:areAlmostEqualTo(otherParameters)
+    for i, param in pairs(self.settings) do 
+        if not param:isAlmostEqualTo(otherParameters[param:getName()]) then 
+            CpUtil.debugFormat(CpDebug.DBG_HUD, "Parameter: %s not equal!", param:getName())
+            return false
+        end
+    end
+    return true
 end
 
 ---@class CpFieldWorkJobParameters : CpJobParameters
@@ -252,17 +273,91 @@ function CpFieldWorkJobParameters:isLaneOffsetDisabled()
     return self:noMultiToolsCourseSelected() or vehicle and vehicle:getIsCpActive()
 end
 
---- Are the setting values roughly equal.
----@param otherParameters CpJobParameters
----@return boolean
-function CpJobParameters:areAlmostEqualTo(otherParameters)
-    for i, param in pairs(self.settings) do 
-        if not param:isAlmostEqualTo(otherParameters[param:getName()]) then 
-            CpUtil.debugFormat(CpDebug.DBG_HUD, "Parameter: %s not equal!", param:getName())
-            return false
+function CpFieldWorkJobParameters:isUnloadRefillTargetDisabled()
+    return true --- TODO: Added check for refill/unload possibilities ...
+end
+
+
+function CpFieldWorkJobParameters:generateFillTypes()
+    local fillTypes = {}
+    local texts = {}
+    local vehicle = self.job and self.job:getVehicle()
+    if vehicle then
+        fillTypes = FillLevelUtil.getAllValidFillTypes(vehicle, function()
+            return true
+        end)
+        for _, f in pairs(fillTypes) do 
+            table.insert(texts, g_fillTypeManager:getFillTypeTitleByIndex(f))
+        end
+    else 
+        for ix, _ in pairs(g_fillTypeManager:getFillTypes()) do 
+            if ix ~= FillType.UNKNOWN then
+                table.insert(fillTypes, ix)
+                table.insert(texts, g_fillTypeManager:getFillTypeTitleByIndex(f))
+            end
         end
     end
+    table.insert(fillTypes, 1, -1)
+    table.insert(texts, 1, "---")
+    return fillTypes, texts
+end
+
+function CpFieldWorkJobParameters:isLoadingDisabled()
+    if self:isUnloadRefillTargetDisabled() then 
+        return true
+    end
+
+    local vehicle = self.job:getVehicle()
+    if not vehicle then 
+        return false
+    end
+    return not AIUtil.hasChildVehicleWithSpecialization(vehicle, Sprayer) and not 
+        AIUtil.hasChildVehicleWithSpecialization(vehicle, SowingMachine)
+end
+
+function CpFieldWorkJobParameters:isUnloadingDisabled()
+    if self:isUnloadRefillTargetDisabled() then 
+        return true
+    end
+    local vehicle = self.job:getVehicle()
+    if not vehicle then 
+        return false
+    end
+    return not AIUtil.hasChildVehicleWithSpecialization(vehicle, ForageWagon)
+end
+
+function CpFieldWorkJobParameters:isRunCounterDisabled()
     return true
+end
+
+function CpFieldWorkJobParameters:isUnloadRefillDisabled()
+
+    local vehicle = self.job:getVehicle()
+    if not vehicle then 
+        return false
+    end
+    if self:isLoadingDisabled() and self:isUnloadingDisabled() then 
+        return true
+    end
+    return not self.unloadRefillActivated:getValue()
+end
+
+function CpFieldWorkJobParameters:isUnloadRefillFillTypeDisabled()
+    return self:isUnloadRefillDisabled() or self:isLoadingDisabled()
+end
+
+function CpFieldWorkJobParameters:isUnloadRefillExtraDisabled()
+    local vehicle = self.job:getVehicle()
+    if not vehicle then 
+        return false
+    end
+    return self:isUnloadRefillDisabled() or 
+        not (AIUtil.hasChildVehicleWithSpecialization(vehicle, Sprayer) and 
+        AIUtil.hasChildVehicleWithSpecialization(vehicle, SowingMachine))
+end
+
+function CpFieldWorkJobParameters:onChangeStartUnloadRefillTargetPoint(setting)
+    
 end
 
 --- AI parameters for the bale finder job.
@@ -286,6 +381,14 @@ function CpBaleFinderJobParameters:hasBaleLoader()
     return true
 end
 
+function CpBaleFinderJobParameters:isUnloadTargetPointDisabled()
+    return not self:hasBaleLoader()
+end
+
+function CpBaleFinderJobParameters:isBaleWrapSettingVisible()
+   return self:hasBaleLoader()
+end
+
 --- AI parameters for the bale finder job.
 ---@class CpCombineUnloaderJobParameters : CpJobParameters
 ---@field useGiantsUnload AIParameterBooleanSetting
@@ -298,24 +401,20 @@ function CpCombineUnloaderJobParameters:init(job)
 end
 
 function CpCombineUnloaderJobParameters:isGiantsUnloadDisabled()
-    return self:hasPipe() or self.useFieldUnload:getValue()
+    return self:hasPipe() or 
+        self.unloadWith:getValue() ~= CpCombineUnloaderJobParameters.UNLOAD_WITH_GIANTS
+end
+
+function CpCombineUnloaderJobParameters:isUnloadWithStreetModeDisabled()
+    return self:hasPipe() or 
+        self.unloadWith:getValue() ~= CpCombineUnloaderJobParameters.UNLOAD_WITH_STREET_MODE
 end
 
 function CpCombineUnloaderJobParameters:isFieldUnloadDisabled()
-    return self.useGiantsUnload:getValue()
+    return self.unloadWith:getValue() ~= CpCombineUnloaderJobParameters.UNLOAD_ON_FIELD
 end
-
-function CpCombineUnloaderJobParameters:isUnloadStationSelectorVisible()
-    return not self:isGiantsUnloadDisabled() and self.useGiantsUnload:getValue() 
-end
-
-function CpCombineUnloaderJobParameters:isFieldUnloadPositionSelectorDisabled()
-    return self:isFieldUnloadDisabled() or not self.useFieldUnload:getValue() 
-end
-
-
 function CpCombineUnloaderJobParameters:isFieldUnloadTipSideDisabled()
-    return self:isFieldUnloadDisabled() or self:hasPipe() or not self.useFieldUnload:getValue() 
+    return self:isFieldUnloadDisabled() or self:hasPipe() 
 end
 
 function CpCombineUnloaderJobParameters:hasPipe()
@@ -323,6 +422,7 @@ function CpCombineUnloaderJobParameters:hasPipe()
     if vehicle then
         return AIUtil.hasChildVehicleWithSpecialization(vehicle, Pipe)
     end
+    return false
 end
 
 --- Inserts the current available unloading stations into the setting values/texts.
@@ -482,7 +582,7 @@ function CpStreetJobParameters:generateFillTypes()
     local texts = {}
     -- local vehicle = self.job and self.job:getVehicle()
     -- if vehicle then
-    --     fillTypes = AIUtil.getAllValidFillTypes(vehicle, function()
+    --     fillTypes = FillLevelUtil.getAllValidFillTypes(vehicle, function()
     --         return true
     --     end)
     --     for _, f in pairs(fillTypes) do 

@@ -930,6 +930,7 @@ function CpCourseGeneratorFrame:updateParameterValueTexts()
 			invalidElement:setVisible(not parameter:getIsValid() and parameter:getCanBeChanged())
 		end
 		element:setDisabled(not parameter:getCanBeChanged())
+		element:setVisible(parameter.getIsVisible == nil or parameter:getIsVisible())
 		local parameterType = parameter:getType()
 		if parameterType == AIParameterType.TEXT then
 			local title = element:getDescendantByName("title")
@@ -1661,6 +1662,7 @@ function CpCourseGeneratorFrame:setActiveJobTypeSelection(jobTypeIndex)
 						element:updateTitle()
 					end
 					element:setDisabled(not item:getCanBeChanged())
+					element:setVisible(item.getIsVisible == nil or item:getIsVisible())
 					table.insert(self.currentJobElements, element)
 				end
 			end

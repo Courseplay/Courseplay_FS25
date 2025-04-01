@@ -25,10 +25,6 @@ function CpAIJobStreet:setupJobParameters()
     self:setupCpJobParameters(CpStreetJobParameters(self))
 end
 
-function CpAIJobStreet:getIsAvailableForVehicle(vehicle, cpJobsAllowed)
-	return CpAIJob.getIsAvailableForVehicle(self, vehicle, cpJobsAllowed)
-end
-
 function CpAIJobStreet:getCanStartJob()
 	return true
 end
@@ -57,7 +53,9 @@ function CpAIJobStreet:validate(farmId)
 	if vehicle then 
 		vehicle:applyCpStreetWorkerJobParameters(self)
 	end
-	
+	if self.cpJobParameters.unloadTargetPoint:getValue() < 0 then 
+		return false, g_i18n:getText("CP_error_no_target_selected")
+	end
 	return isValid or isRunning, errorMessage
 end
 

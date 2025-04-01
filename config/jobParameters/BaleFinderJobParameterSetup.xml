@@ -7,13 +7,23 @@
 
 <Settings prefixText="CP_baleFinderJobParameters_">
 	<SettingSubTitle title="ai_parameterGroupTitlePosition" prefix="false">
-		<Setting classType="CpAIParameterPositionAngle" name="startPosition" positionParameterType="DRIVE_TO"/>
+		<Setting classType="CpAIParameterPositionAngle" name="startPosition" 
+			positionParameterType="DRIVE_TO" isVisible="isGiantsForStreetActive"/>
+		<Setting classType="CpAIParameterTargetPoint" name="startTargetPoint" 
+			generateValuesFunction="generateTargets" isVisible="isStreetModeActive" 
+			onChangeCallback="onChangeStartTargetPoint"/>
 	</SettingSubTitle>
 	<SettingSubTitle title="CP_fieldWorkJobParameters_fieldPosition_title" prefix="false">
 		<Setting classType="CpAIParameterPosition" name="fieldPosition" positionParameterType="FIELD_OR_SILO"/>
 	</SettingSubTitle>
+	<SettingSubTitle title="unloadTargetPoint">
+		<Setting classType="CpAIParameterTargetPoint" name="unloadTargetPoint" 
+			generateValuesFunction="generateTargets" isDisabled="isUnloadTargetPointDisabled" 
+			isVisible="isStreetModeActive" />
+	</SettingSubTitle>
 	<SettingSubTitle title="baleWrapType">
-		<Setting classType="AIParameterSettingList" name="baleWrapType" isVisible="hasBaleLoader" isDisabled="isCpActive" onChangeCallback="onCpWrapTypeSettingChanged">
+		<Setting classType="AIParameterSettingList" name="baleWrapType" isVisible="hasBaleLoader" 
+			isDisabled="isCpActive" onChangeCallback="onCpWrapTypeSettingChanged">
 			<Values>
 				<Value name="ALL_BALES">1</Value>
 				<Value name="ONLY_WRAPPED_BALES">2</Value>

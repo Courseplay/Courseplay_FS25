@@ -7,7 +7,11 @@
 
 <Settings prefixText="CP_siloLoaderJobParameters_">
 	<SettingSubTitle title="ai_parameterGroupTitlePosition" prefix="false">
-		<Setting classType="CpAIParameterPositionAngle" name="startPosition" positionParameterType="DRIVE_TO"/>
+		<Setting classType="CpAIParameterPositionAngle" name="startPosition" 
+			positionParameterType="DRIVE_TO" isDisabled="isGiantsForStreetActive"/>
+		<Setting classType="CpAIParameterTargetPoint" name="startTargetPoint" 
+			generateValuesFunction="generateTargets" isDisabled="isStreetModeActive" 
+			onChangeCallback="onChangeStartTargetPoint"/>
 	</SettingSubTitle>
 	<SettingSubTitle title="loadPosition">
 		<Setting classType="CpAIParameterPositionAngle" name="loadPosition" positionParameterType="LOAD"/>
@@ -24,6 +28,7 @@
 			</Texts>
 		</Setting>
 		<Setting classType="CpAIParameterPositionAngle" name="unloadPosition" positionParameterType="UNLOAD"/>
-		<Setting classType="CpAIParameterUnloadingStation" name="unloadStation" isDisabled="isUnloadStationDisabled" generateValuesFunction="generateUnloadingStations"></Setting>
+		<Setting classType="CpAIParameterUnloadingStation" name="unloadStation" 
+			isDisabled="isUnloadStationDisabled" generateValuesFunction="generateUnloadingStations"/>
 	</SettingSubTitle>
 </Settings>

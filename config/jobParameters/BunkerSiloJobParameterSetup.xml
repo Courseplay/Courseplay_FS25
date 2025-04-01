@@ -7,7 +7,11 @@
 
 <Settings prefixText="CP_bunkerSiloJobParameters_">
 	<SettingSubTitle title="ai_parameterGroupTitlePosition" prefix="false">
-		<Setting classType="CpAIParameterPositionAngle" name="startPosition" positionParameterType="DRIVE_TO"/>
+		<Setting classType="CpAIParameterPositionAngle" name="startPosition" 
+			positionParameterType="DRIVE_TO" isVisible="isGiantsForStreetActive"/>
+		<Setting classType="CpAIParameterTargetPoint" name="startTargetPoint" 
+			generateValuesFunction="generateTargets" isVisible="isStreetModeActive" 
+			onChangeCallback="onChangeStartTargetPoint"/>
 	</SettingSubTitle>
 	<SettingSubTitle title="CP_fieldWorkJobParameters_bunkerSiloPosition_title" prefix="false">
 		<Setting classType="CpAIParameterPosition" name="siloPosition" positionParameterType="FIELD_OR_SILO"/>
