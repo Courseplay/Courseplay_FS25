@@ -455,6 +455,7 @@ HybridAStar.defaultMaxIterations = 40000
 ---@param maxIterations number
 ---@param mustBeAccurate boolean|nil
 function HybridAStar:init(vehicle, yieldAfter, maxIterations, mustBeAccurate)
+    self.logger = Logger('HybridAStar', Logger.level.error, CpDebug.DBG_PATHFINDER)
     self.vehicle = vehicle
     self.count = 0
     self.yields = 0
@@ -585,7 +586,7 @@ function HybridAStar:run(start, goal, turnRadius, allowReverse, constraints, hit
         -- pop lowest cost node from queue
         ---@type State3D
         local pred = State3D.pop(self.openList)
-        --self:debug('pop %s', tostring(pred))
+        self.logger:trace('pop %s', tostring(pred))
 
         if pred:equals(self.goal, self.deltaPosGoal, self.deltaThetaGoal) then
             -- done!
@@ -641,16 +642,16 @@ function HybridAStar:run(start, goal, turnRadius, allowReverse, constraints, hit
                             analyticSolutionCost = analyticSolution:getLength(self.turnRadius)
                             succ:updateH(self.goal, analyticSolutionCost)
                         else
-                            succ:updateH(self.goal, 0, succ:distance(self.goal) * 1.5)
+                            succ:updateH(self.goal, 0, succ:distance(self.goal) * 1.0)
                         end
 
-                        --self:debug('     %s', tostring(succ))
+                        self.logger:trace('     %s', tostring(succ))
                         if existingSuccNode then
-                            --self:debug('   existing node %s', tostring(existingSuccNode))
+                            self.logger:trace('   existing node %s', tostring(existingSuccNode))
                             -- there is already a node at this (discretized) position
                             -- add a small number before comparing to adjust for floating point calculation differences
                             if existingSuccNode:getCost() + 0.001 >= succ:getCost() then
-                                --self:debug('%.6f replacing %s with %s', succ:getCost() - existingSuccNode:getCost(),  tostring(existingSuccNode), tostring(succ))
+                                self.logger:trace('%.6f replacing %s with %s', succ:getCost() - existingSuccNode:getCost(),  tostring(existingSuccNode), tostring(succ))
                                 if self.openList:valueByPayload(existingSuccNode) then
                                     -- existing node is on open list already, remove it here, will replace with
                                     existingSuccNode:remove(self.openList)
@@ -660,7 +661,7 @@ function HybridAStar:run(start, goal, turnRadius, allowReverse, constraints, hit
                                 -- add to open list
                                 succ:insert(self.openList)
                             else
-                                --self:debug('insert existing node back %s (iteration %d), diff %s', tostring(succ), self.iterations, tostring(succ:getCost() - existingSuccNode:getCost()))
+                                self.logger:trace('insert existing node back %s (iteration %d), diff %s', tostring(succ), self.iterations, tostring(succ:getCost() - existingSuccNode:getCost()))
                             end
                         else
                             -- successor cell does not yet exist
@@ -669,13 +670,13 @@ function HybridAStar:run(start, goal, turnRadius, allowReverse, constraints, hit
                             succ:insert(self.openList)
                         end
                     else
-                        --self:debug('Invalid node %s (iteration %d)', tostring(succ), self.iterations)
+                        self.logger:trace('Invalid node %s (iteration %d)', tostring(succ), self.iterations)
                         succ:close()
                     end -- valid node
                 end
             end
             -- node as been expanded, close it to prevent expansion again
-            --self:debug(tostring(pred))
+            self.logger:trace(tostring(pred))
             pred:close()
             self.expansions = self.expansions + 1
         end
