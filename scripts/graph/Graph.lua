@@ -44,7 +44,7 @@ function Graph:consoleCommandFindPathTo(name)
         if vehicle == nil then 
             return "Must be in a vehicle!"
         end
-        local pathfinder = GraphPathfinder(1000, 500, 20, edges)
+        local pathfinder = GraphPathfinder(1000, 800, 25, edges)
         local start = PathfinderUtil.getVehiclePositionAsState3D(vehicle)
         local goal = State3D(targetPos.x, targetPos.y, 0, 0)
         CpUtil.info("Goal: %s", tostring(goal))
