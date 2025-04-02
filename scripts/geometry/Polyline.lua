@@ -46,8 +46,12 @@ function Polyline:prepend(v)
     end
 end
 
+function Polyline:_getNewInstance()
+    return Polyline()
+end
+
 function Polyline:clone()
-    local clone = Polyline({})
+    local clone = self:_getNewInstance()
     for _, v in ipairs(self) do
         clone:append(v:clone())
     end
