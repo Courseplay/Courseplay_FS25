@@ -1,9 +1,9 @@
 ---@class CpAIParameterFillTypeSetting : AIParameterSetting
 CpAIParameterFillTypeSetting = CpObject(AIParameterSetting)
-
+AIParameterType.TEXT_BUTTON = 99
 function CpAIParameterFillTypeSetting:init(data, vehicle, class)
 	AIParameterSetting.init(self, data, vehicle, class)
-	self.guiParameterType = AIParameterType.TEXT --- For the giants gui element.
+	self.guiParameterType = AIParameterType.TEXT_BUTTON --- For the giants gui element.
 	self:initFromData(data, vehicle, class)
 	--- Use this hack to load the setting without the need for changing every setting behavior.
 	local filePath = Utils.getFilename("config/jobParameters/FillTypeSelectionParameterSetup.xml", 
@@ -147,4 +147,9 @@ end
 
 function CpAIParameterFillTypeSetting:getIsCounterValid()
 	return self.currentCounterValue <= self.counter:getValue()
+end
+
+function CpAIParameterFillTypeSetting:getCustomIconFilename()
+	local fillType = g_fillTypeManager:getFillTypeByIndex(self.fillType:getValue())
+	return fillType and fillType.hudOverlayFilename
 end

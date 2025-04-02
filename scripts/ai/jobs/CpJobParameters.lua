@@ -274,7 +274,7 @@ function CpFieldWorkJobParameters:isLaneOffsetDisabled()
 end
 
 function CpFieldWorkJobParameters:isUnloadRefillTargetDisabled()
-    return true --- TODO: Added check for refill/unload possibilities ...
+    return false --- TODO: Added check for refill/unload possibilities ...
 end
 
 

@@ -32,8 +32,8 @@
 		<Setting classType="AIParameterSettingList" name="unloadWith">
 			<Values>
 				<Value name="DEACTIVATED">1</Value>
-				<Value name="UNLOAD_WITH_GIANTS" isDisabled="isAutoDriveForStreetActive">2</Value>
-				<Value name="UNLOAD_WITH_STREET_MODE" isDisabled="isStreetModeActive">3</Value>
+				<Value name="UNLOAD_WITH_GIANTS" isDisabled="isStreetModeActive">2</Value>
+				<Value name="UNLOAD_WITH_STREET_MODE" isDisabled="isGiantsForStreetActive">3</Value>
 				<Value name="UNLOAD_ON_FIELD">4</Value>
 			</Values>
 			<Texts>

@@ -60,6 +60,10 @@ function AIParameterSetting:getString()
 	return ""	
 end
 
+function AIParameterSetting:getCustomIconFilename()
+	return nil
+end
+
 function AIParameterSetting:getIsValid()
 	return self.isValid
 end

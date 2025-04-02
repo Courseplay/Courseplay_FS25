@@ -776,8 +776,17 @@ function CpCourseGeneratorFrame:onClickMultiTextOptionParameter(index, element)
 	self:validateParameters()
 end
 
-function CpCourseGeneratorFrame:onClickMultiTextOptionCenterParameter()
-	
+function CpCourseGeneratorFrame:onClickMultiTextOptionCenterParameter(element)
+	local param = element.aiParameter
+	if self.currentJob ~= nil then
+		if param and param:getType() == AIParameterType.TEXT_BUTTON then 
+			param.fillType:setNextItem()
+			print("onclick")
+		end
+		self.currentJob:onParameterValueChanged(element.aiParameter)
+		self:updateParameterValueTexts()
+	end
+	self:validateParameters()
 end
 
 function CpCourseGeneratorFrame:executePickingCallback(...)
@@ -909,11 +918,13 @@ function CpCourseGeneratorFrame:onFieldBoundaryDetectionFinished(isValid, errorT
 end
 
 function CpCourseGeneratorFrame:updateWarnings()
-	for _, element in ipairs(self.currentJobElements) do 
-		local parameter = element.aiParameter
-		local invalidElement = element:getDescendantByName("invalid")
-		if invalidElement ~= nil then
-			invalidElement:setVisible(not parameter:getIsValid() and parameter:getCanBeChanged())
+	for _, group in ipairs(self.currentJobElements) do 
+		for _, element in ipairs(group.elements) do 
+			local parameter = element.aiParameter
+			local invalidElement = element:getDescendantByName("invalid")
+			if invalidElement ~= nil then
+				invalidElement:setVisible(not parameter:getIsValid() and parameter:getCanBeChanged())
+			end
 		end
 	end
 end
@@ -923,40 +934,54 @@ function CpCourseGeneratorFrame:updateParameterValueTexts()
 	g_currentMission:removeMapHotspot(self.fieldSiloAiTargetMapHotspot)
 	g_currentMission:removeMapHotspot(self.unloadAiTargetMapHotspot)
 	g_currentMission:removeMapHotspot(self.loadAiTargetMapHotspot)
-	for _, element in ipairs(self.currentJobElements) do 
-		local parameter = element.aiParameter
-		local invalidElement = element:getDescendantByName("invalid")
-		if invalidElement ~= nil then
-			invalidElement:setVisible(not parameter:getIsValid() and parameter:getCanBeChanged())
-		end
-		element:setDisabled(not parameter:getCanBeChanged())
-		element:setVisible(parameter.getIsVisible == nil or parameter:getIsVisible())
-		local parameterType = parameter:getType()
-		if parameterType == AIParameterType.TEXT then
-			local title = element:getDescendantByName("title")
-
-			title:setText(parameter:getString())
-		elseif parameter.is_a and parameter:is_a(CpAIParameterPosition) then 
-			element:setText(parameter:getString())
-			if parameter:getPositionType() == CpAIParameterPositionAngle.POSITION_TYPES.DRIVE_TO then 
-				if parameter:applyToMapHotspot(self.driveToAiTargetMapHotspot) then
-					g_currentMission:addMapHotspot(self.driveToAiTargetMapHotspot)
-				end
-			elseif parameter:getPositionType() == CpAIParameterPositionAngle.POSITION_TYPES.FIELD_OR_SILO then 
-				if parameter:applyToMapHotspot(self.fieldSiloAiTargetMapHotspot) then
-					g_currentMission:addMapHotspot(self.fieldSiloAiTargetMapHotspot)
-				end
-			elseif parameter:getPositionType() == CpAIParameterPositionAngle.POSITION_TYPES.UNLOAD then 
-				if parameter:applyToMapHotspot(self.unloadAiTargetMapHotspot) then
-					g_currentMission:addMapHotspot(self.unloadAiTargetMapHotspot)
-				end
-			elseif parameter:getPositionType() == CpAIParameterPositionAngle.POSITION_TYPES.LOAD then 
-				if parameter:applyToMapHotspot(self.loadAiTargetMapHotspot) then
-					g_currentMission:addMapHotspot(self.loadAiTargetMapHotspot)
-				end
+	for _, groupElement in ipairs(self.currentJobElements) do 
+		groupElement.title:setVisible(groupElement.group:getIsVisible())
+		for _, element in ipairs(groupElement.elements) do 
+			local parameter = element.aiParameter
+			local invalidElement = element:getDescendantByName("invalid")
+			if invalidElement ~= nil then
+				invalidElement:setVisible(not parameter:getIsValid() and parameter:getCanBeChanged())
 			end
-		elseif element.updateTitle then
-			element:updateTitle()
+			local icon = element:getDescendantByName("icon")
+			if icon ~= nil and parameter.getCustomIconFilename then	
+				local filename = parameter:getCustomIconFilename()
+				if filename then
+					icon:setImageFilename(parameter:getCustomIconFilename())
+					icon:setImageUVs(0,0,0,0,1,1,0,1,1)
+				end
+				icon:setVisible(filename ~= nil)
+			end
+			element:setDisabled(groupElement.group:getIsDisabled() or not parameter:getCanBeChanged())
+			element:setVisible(groupElement.group:getIsVisible() and (parameter.getIsVisible == nil or parameter:getIsVisible()))
+			local parameterType = parameter:getType()
+			if parameterType == AIParameterType.TEXT then
+				local title = element:getDescendantByName("title")
+
+				title:setText(parameter:getString())
+			elseif parameterType == AIParameterType.TEXT_BUTTON then 
+				element:setText(parameter:getString())
+			elseif parameter.is_a and parameter:is_a(CpAIParameterPosition) then 
+				element:setText(parameter:getString())
+				if parameter:getPositionType() == CpAIParameterPositionAngle.POSITION_TYPES.DRIVE_TO then 
+					if parameter:applyToMapHotspot(self.driveToAiTargetMapHotspot) then
+						g_currentMission:addMapHotspot(self.driveToAiTargetMapHotspot)
+					end
+				elseif parameter:getPositionType() == CpAIParameterPositionAngle.POSITION_TYPES.FIELD_OR_SILO then 
+					if parameter:applyToMapHotspot(self.fieldSiloAiTargetMapHotspot) then
+						g_currentMission:addMapHotspot(self.fieldSiloAiTargetMapHotspot)
+					end
+				elseif parameter:getPositionType() == CpAIParameterPositionAngle.POSITION_TYPES.UNLOAD then 
+					if parameter:applyToMapHotspot(self.unloadAiTargetMapHotspot) then
+						g_currentMission:addMapHotspot(self.unloadAiTargetMapHotspot)
+					end
+				elseif parameter:getPositionType() == CpAIParameterPositionAngle.POSITION_TYPES.LOAD then 
+					if parameter:applyToMapHotspot(self.loadAiTargetMapHotspot) then
+						g_currentMission:addMapHotspot(self.loadAiTargetMapHotspot)
+					end
+				end
+			elseif element.updateTitle then
+				element:updateTitle()
+			end
 		end
 	end
 end
@@ -1633,9 +1658,12 @@ function CpCourseGeneratorFrame:setActiveJobTypeSelection(jobTypeIndex)
 		self.currentJobElements = {}
 		for _, group in ipairs(self.currentJob:getGroupedParameters()) do
 			local titleElement = self.createTitleTemplate:clone(self.jobMenuLayout)
-
 			titleElement:setText(group:getTitle())
-
+			local groupElements = {
+				group = group,
+				title = titleElement,
+				elements = {}
+			}
 			for _, item in ipairs(group:getParameters()) do
 				local element = nil
 				local parameterType = item:getType()
@@ -1651,21 +1679,31 @@ function CpCourseGeneratorFrame:setActiveJobTypeSelection(jobTypeIndex)
 					parameterType == AIParameterType.FILLTYPE then
 					
 					element = self.createMultiOptionTemplate:clone(self.jobMenuLayout)
-
 					element:setDataSource(item)
+				elseif parameterType == AIParameterType.TEXT_BUTTON then
+					element = self.createButtonTemplate:clone(self.jobMenuLayout)
+					element:setText(item:getString())
 				end
 				if element then 
 					FocusManager:loadElementFromCustomValues(element)
-
 					element.aiParameter = item
 					if element.updateTitle then 
 						element:updateTitle()
 					end
 					element:setDisabled(not item:getCanBeChanged())
 					element:setVisible(item.getIsVisible == nil or item:getIsVisible())
-					table.insert(self.currentJobElements, element)
+					local icon = element:getDescendantByName("icon")
+					if icon ~= nil and item.getCustomIconFilename then	
+						local filename = item:getCustomIconFilename()
+						if filename then
+							icon:setImageFilename(filename)
+						end
+						icon:setVisible(filename ~= nil)
+					end
+					table.insert(groupElements.elements, element)
 				end
 			end
+			table.insert(self.currentJobElements, groupElements)
 		end
 		self:validateParameters()
 		self:updateParameterValueTexts()

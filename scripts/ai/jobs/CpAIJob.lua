@@ -46,7 +46,7 @@ end
 function CpAIJob:setupJobParameters()
 	self.vehicleParameter = AIParameterVehicle.new()
 	self:addNamedParameter("vehicle", self.vehicleParameter)
-	local vehicleGroup = AIParameterGroup.new(g_i18n:getText("ai_parameterGroupTitleVehicle"))
+	local vehicleGroup = CpAIParameterGroup(nil, {title = "ai_parameterGroupTitleVehicle"})
 	vehicleGroup:addParameter(self.vehicleParameter)
 	table.insert(self.groupedParameters, vehicleGroup)
 end

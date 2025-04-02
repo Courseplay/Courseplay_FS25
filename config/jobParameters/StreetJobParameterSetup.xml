@@ -24,9 +24,9 @@
 	<SettingSubTitle title="loadingMultipleFruitTypesAllowed" >
 		<Setting classType="AIParameterBooleanSetting" name="loadingMultipleFruitTypesAllowed" isDisabled="isLoadTargetPointDisabled"/>
 	</SettingSubTitle>
-	<SettingSubTitle title="fillTypes">
-		<Setting classType="CpAIParameterFillTypeSetting" name="fillTypeSelection1" isDisabled="isLoadTargetPointDisabled" title="CP_streetJobParameters_fillTypeSelection_title"/>
-		<Setting classType="CpAIParameterFillTypeSetting" name="fillTypeSelection2" isDisabled="isLoadTargetPointDisabled" title="CP_streetJobParameters_fillTypeSelection_title"/>
-		<Setting classType="CpAIParameterFillTypeSetting" name="fillTypeSelection3" isDisabled="isLoadTargetPointDisabled" title="CP_streetJobParameters_fillTypeSelection_title"/>
+	<SettingSubTitle title="fillTypes" isDisabled="isLoadTargetPointDisabled">
+		<Setting classType="CpAIParameterFillTypeSetting" name="fillTypeSelection1" title="CP_streetJobParameters_fillTypeSelection_title"/>
+		<Setting classType="CpAIParameterFillTypeSetting" name="fillTypeSelection2" title="CP_streetJobParameters_fillTypeSelection_title"/>
+		<Setting classType="CpAIParameterFillTypeSetting" name="fillTypeSelection3" title="CP_streetJobParameters_fillTypeSelection_title"/>
 	</SettingSubTitle>
 </Settings>

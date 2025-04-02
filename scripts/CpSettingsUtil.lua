@@ -385,7 +385,7 @@ end
 ---@param class table
 function CpSettingsUtil.generateAiJobGuiElementsFromSettingsTable(settingsBySubTitle, class, settings)
 	for _, data in ipairs(settingsBySubTitle) do 
-		local parameterGroup = AIParameterGroup.new(g_i18n:getText(data.title))
+		local parameterGroup = CpAIParameterGroup(settings, data)
 		for _, setting in ipairs(data.elements) do 
 			local s = settings[setting:getName()]
 			parameterGroup:addParameter(s)

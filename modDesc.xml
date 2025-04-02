@@ -262,7 +262,8 @@ Changelog 8.0.0.0:
 		<sourceFile filename="scripts/ai/parameters/CpAIParameterPositionAngle.lua"/>
 		<sourceFile filename="scripts/ai/parameters/CpAIParameterTargetPoint.lua"/>
 		<sourceFile filename="scripts/ai/parameters/CpAIParameterFillTypeSelection.lua"/>
-
+		<sourceFile filename="scripts/ai/parameters/CpAIParameterGroup.lua"/>
+		
 		<sourceFile filename="scripts/ai/jobs/CpJobParameters.lua"/>
 		<sourceFile filename="scripts/ai/jobs/CpAIJob.lua"/>
 		<sourceFile filename="scripts/ai/jobs/CpAIJobFieldWork.lua"/>

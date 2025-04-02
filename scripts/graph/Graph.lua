@@ -165,7 +165,7 @@ function Graph:loadFromXMLFile(xmlFile, baseKey)
         self:appendChildNode(segment)
     end)
     self._hasGeneratedSplines = xmlFile:getValue(
-        baseKey .. self.XML_KEY .. "#hasGeneratedSplines")
+        baseKey .. self.XML_KEY .. "#hasGeneratedSplines", false)
 end
 
 function Graph:saveToXMLFile(xmlFile, baseKey)
@@ -174,7 +174,7 @@ function Graph:saveToXMLFile(xmlFile, baseKey)
             baseKey .. self.XML_KEY, GraphSegment.XML_KEY, i - 1))
     end
     xmlFile:setValue(baseKey .. self.XML_KEY .. "#hasGeneratedSplines", 
-        self._hasGeneratedSplines)
+        self._hasGeneratedSplines or false)
 end
 
 ---@param node GraphNode

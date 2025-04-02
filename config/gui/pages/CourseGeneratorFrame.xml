@@ -72,13 +72,14 @@
                                 <Bitmap profile="fs25_aiCreateJobParameterInvalid" name="invalid" />
                             </OptionToggle>
                             <ThreePartBitmap profile="fs25_aiCreateJobParameterBg" id="createTextTemplate">
-                                <Bitmap profile="fs25_aiCreateJobParameterVehicleIcon" />
+                                <Bitmap profile="fs25_aiCreateJobParameterVehicleIcon" name="icon"/>
                                 <Text profile="fs25_multiTextOptionText" name="title" />
                                 <Bitmap profile="fs25_aiCreateJobParameterInvalid" name="invalid" />
                             </ThreePartBitmap>
-                            <Button profile="fs25_aiCreateJobParameterBg" id="createButtonTemplate" onClick="onClickMultiTextOptionCenterParameter">
-                                <Bitmap profile="fs25_aiCreateJobParameterVehicleIcon" />
-                                <Text profile="fs25_multiTextOptionText" name="title" />
+                            <Button profile="fs25_aiCreateJobParameterButton" id="createButtonTemplate"
+                                onClick="onClickMultiTextOptionCenterParameter">
+                                <ThreePartBitmap profile="fs25_aiCreateJobParameterBg" />
+                                <Bitmap profile="fs25_aiCreateJobParameterIcon" name="icon"/>
                                 <Bitmap profile="fs25_aiCreateJobParameterInvalid" name="invalid" />
                             </Button>
                             <Text profile="fs25_aiCreateJobParameterTitle" id="createTitleTemplate"
