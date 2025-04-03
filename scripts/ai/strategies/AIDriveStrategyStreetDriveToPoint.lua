@@ -74,7 +74,7 @@ function AIDriveStrategyStreetDriveToPoint:getDriveData(dt, vX, vY, vZ)
         self:setMaxSpeed(0)
         if self.target then     
             self.vehicle:prepareForAIDriving()
-            local pathfinder = GraphPathfinder(1000, 500, 20, g_graph:getGraphEdges())
+            local pathfinder = GraphPathfinder(1000, 800, 25, g_graph:getGraphEdges())
             local start = PathfinderUtil.getVehiclePositionAsState3D(self.vehicle)
             local targetVector = self.target:toVector()
             local goal = State3D(targetVector.x, targetVector.y, 0, 0)
