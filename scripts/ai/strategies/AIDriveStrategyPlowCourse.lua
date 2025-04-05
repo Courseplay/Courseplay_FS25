@@ -190,7 +190,7 @@ function AIDriveStrategyPlowCourse:getTurnEndSideOffset()
     end
 end
 
-function AIDriveStrategyPlowCourse:updateFieldworkOffset(course)
+function AIDriveStrategyPlowCourse:updateCourseOffset(course)
 	--- Ignore the tool offset setting.
 	course:setOffset((self.aiOffsetX or 0), (self.aiOffsetZ or 0))
 end

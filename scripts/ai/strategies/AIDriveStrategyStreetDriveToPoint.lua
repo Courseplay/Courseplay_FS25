@@ -123,13 +123,18 @@ function AIDriveStrategyStreetDriveToPoint:limitSpeed()
             -- proportionally in between
             local slowDownFactor = math.min(50, math.max(self.turningRadius, r - self.turningRadius)) / 50
             self.limitedSpeed = self.settings.turnSpeed:getValue() +
-                            (self.settings.streetSpeed:getValue() - self.settings.turnSpeed:getValue()) * slowDownFactor
+                    (self.settings.streetSpeed:getValue() - self.settings.turnSpeed:getValue()) * slowDownFactor
             self:debug('Limiting speed to %.2f (r=%.2f, slowDownFactor=%.2f)', self.limitedSpeed, r, slowDownFactor)
         end
     end
     if self.limitedSpeed then
         self:setMaxSpeed(self.limitedSpeed)
     end
+end
+
+function AIDriveStrategyStreetDriveToPoint:calculateTightTurnOffset()
+    self.tightTurnOffset = AIUtil.calculateTightTurnOffset(self.vehicle, self.turningRadius, self.course,
+            self.tightTurnOffset)
 end
 
 function AIDriveStrategyStreetDriveToPoint:drivingCourse()
@@ -154,6 +159,10 @@ function AIDriveStrategyStreetDriveToPoint:onWaypointPassed(ix, course)
             self:onCourseEndReached()
         end
     end
+end
+
+function AIDriveStrategyStreetDriveToPoint:onWaypointChange(ix, course)
+    self:calculateTightTurnOffset()
 end
 
 --------------------------------------------------------

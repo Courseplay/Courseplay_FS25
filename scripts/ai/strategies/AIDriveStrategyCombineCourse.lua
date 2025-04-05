@@ -312,7 +312,7 @@ function AIDriveStrategyCombineCourse:getDriveData(dt, vX, vY, vZ)
     return AIDriveStrategyFieldWorkCourse.getDriveData(self, dt, vX, vY, vZ)
 end
 
-function AIDriveStrategyCombineCourse:updateFieldworkOffset(course)
+function AIDriveStrategyCombineCourse:updateCourseOffset(course)
     if self.state == self.states.UNLOADING_ON_FIELD and self:isUnloadStateOneOf(self.selfUnloadStates) then
         -- do not apply fieldwork offset when not doing fieldwork
         course:setOffset((self.aiOffsetX or 0) + (self.tightTurnOffset or 0), (self.aiOffsetZ or 0))

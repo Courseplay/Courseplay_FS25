@@ -59,7 +59,7 @@ end
 --- the most we need is an alignment course to lower the implements
 function AIDriveStrategyFieldWorkCourse:start(course, startIx, jobParameters)
     self:showAllInfo('Starting field work at waypoint %d', startIx)
-    self:updateFieldworkOffset(course)
+    self:updateCourseOffset(course)
     self.fieldWorkCourse = course
     self.fieldWorkCourse:setCurrentWaypointIx(startIx)
     self.remainingTime = CpRemainingTime(self.vehicle, course, startIx)
@@ -148,7 +148,7 @@ end
 --- This is the interface to the Giant's AIFieldWorker specialization, telling it the direction and speed
 function AIDriveStrategyFieldWorkCourse:getDriveData(dt, vX, vY, vZ)
 
-    self:updateFieldworkOffset(self.course)
+    self:updateCourseOffset(self.course)
     self:updateLowFrequencyImplementControllers()
     Markers.refreshMarkerNodes(self.vehicle, self.measuredBackDistance)
 

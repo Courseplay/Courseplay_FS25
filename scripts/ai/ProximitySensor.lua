@@ -99,7 +99,7 @@ function ProximitySensor:update()
                 2 * self.maxRotation))
     end
 
-    local x, _, z = localToWorld(self.node, self.xOffset, 0, 0)
+    local x, y, z = localToWorld(self.node, self.xOffset, 0, 0)
     -- we want the rays run parallel to the terrain, so always use the terrain height (because the node itself
     -- can be under ground at sudden elevation changes, even node y + height, and when the ray starts from under
     -- the ground, it seems to cause a hit, even if it should not for the terrain
@@ -107,6 +107,10 @@ function ProximitySensor:update()
     -- get the terrain height at the end of the raycast line
     local tx, _, tz = localToWorld(self.node, self.dx + self.xOffset, 0, self.dz)
     local y2 = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, tx, 0, tz)
+    if math.abs(y - y1) > 1.5 * self.height then
+        -- workaround: likely on a bridge, the terrain height at the node shouldn't be much more than height
+        y1, y2 = y - self.height, y - self.height
+    end
     -- make sure the raycast line is parallel with the ground
     local ny = (y2 - y1) / self.range
     local nx, _, nz = localDirectionToWorld(self.node, self.lx, 0, self.lz)

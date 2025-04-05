@@ -65,7 +65,7 @@ function AIDriveStrategyDriveToFieldWorkStart:initializeImplementControllers(veh
 end
 
 function AIDriveStrategyDriveToFieldWorkStart:start(course, startIx, jobParameters)
-    self:updateFieldworkOffset(course)
+    self:updateCourseOffset(course)
     --- Saves the course start position, so it can be given to the job instance.
     local x, _, z = course:getWaypointPosition(startIx)
     self.startPosition = {x = x, z = z}
