@@ -35,6 +35,10 @@ function CpAIParameterTargetPoint:setValue(uniqueID, noEventSend)
 	end
 end
 
+function CpAIParameterTargetPoint:copy(setting)
+	self:setValue(setting:getValue())
+end
+
 function CpAIParameterTargetPoint:onChange()
 	self:raiseCallback(self.data.callbacks.onChangeCallbackStr)
 end
