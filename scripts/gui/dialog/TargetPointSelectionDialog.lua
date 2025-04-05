@@ -41,6 +41,7 @@ function TargetPointSelectionDialog:onCreate()
 end
 
 function TargetPointSelectionDialog:onOpen()
+    TargetPointSelectionDialog:superClass().onOpen(self)
     local onOpenList = function (list, setting, header)
         list:reloadData(self)
         list:setVisible(setting ~= nil and not setting:getIsDisabled())
@@ -59,17 +60,13 @@ function TargetPointSelectionDialog:onClickOk()
         self.callbackFunc()
     end
     self:close()
-	return false
 end
 
-function TargetPointSelectionDialog:onClickBack()
-    local ret = TargetPointSelectionDialog:superClass().onClickBack(self)
-    if not ret then
-        if self.callbackFunc then 
-            self.callbackFunc()
-        end
+function TargetPointSelectionDialog:onClickDiscard()
+    if self.callbackFunc then 
+        self.callbackFunc()
     end
-    return ret
+    self:close()
 end
 
 function TargetPointSelectionDialog:setTargetPoints(settings)

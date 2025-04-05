@@ -70,8 +70,7 @@
             </GuiElement>
         </GuiElement>
         <BoxLayout profile="fs25_dialogButtonBox">
-            <Button profile="buttonBack" id="okButton" onClick="onClickBack"
-                text="$l10n_button_back" />
+            <Button profile="buttonBack" onClick="onClickDiscard" text="$l10n_button_back" />
             <Bitmap profile="fs25_dialogButtonBoxSeparator" />
             <Button profile="buttonOK" text="$l10n_button_ok" onClick="onClickOk" />
         </BoxLayout>
