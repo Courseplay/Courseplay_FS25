@@ -335,6 +335,22 @@ function PathfinderController:findPathToGoal(context, goal, numRetries)
     return true
 end
 
+function PathfinderController:findPathOnStreet(context, goal, numRetries)
+    if not self.callbackSuccessFunction then
+        self:error("No valid success callback was given!")
+        return false
+    end
+    self:start(context, numRetries,
+            function()
+                local pathfinder = GraphPathfinder(100, 1000, 25, g_graph:getGraphEdges())
+                local start = PathfinderUtil.getVehiclePositionAsState3D(self.vehicle)
+                -- no constraints
+                return pathfinder, pathfinder:start(start, goal, AIUtil.getTurningRadius(self.vehicle), false, PathfinderConstraintInterface(), 0)
+            end
+    )
+    return true
+end
+
 --- Generate an analytic path from the vehicle's current position to a goal position
 --- Does not need a context
 ---@param goal State3D goal pose

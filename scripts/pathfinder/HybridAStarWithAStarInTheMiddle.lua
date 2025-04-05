@@ -1,9 +1,15 @@
---- A pathfinder combining the (slow) hybrid A * and the (fast) regular A * star.
---- Near the start and the goal the hybrid A * is used to ensure the generated path is drivable (direction changes
---- always obey the turn radius), but use the A * between the two.
---- We'll run 3 pathfindings: one A * between start and goal (phase 1), then trim the ends of the result in hybridRange
---- Now run a hybrid A * from the start to the beginning of the trimmed A * path (phase 2), then another hybrid A * from the
---- end of the trimmed A * to the goal (phase 3).
+--- A pathfinder combining the (slow) hybrid A* and the (fast) regular A* .
+---
+--- Near the start and the goal the hybrid A* is used to ensure the generated path is drivable (direction changes
+--- always obey the turn radius), but use the A* between the two.
+---
+--- We'll run 3 pathfindings:
+---
+--- * one A* between start and goal (phase 1), then trim the ends of the result in hybridRange
+---
+--- * now run a hybrid A* from the start to the beginning of the trimmed A* path (phase 2),
+---
+--- * then another hybrid A* from the end of the trimmed A* to the goal (phase 3).
 HybridAStarWithAStarInTheMiddle = CpObject(PathfinderInterface)
 
 ---@param yieldAfter number coroutine yield after so many iterations (number of iterations in one update loop)
