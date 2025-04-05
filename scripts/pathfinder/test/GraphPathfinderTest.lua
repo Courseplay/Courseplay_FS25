@@ -30,21 +30,6 @@ local GraphEdge = GraphPathfinder.GraphEdge
 local TestConstraints = CpObject(PathfinderConstraintInterface)
 local pathfinder, start, goal, done, path, goalNodeInvalid
 
-local splitEdges, ensureMinimumRadius = Polyline.splitEdges, Polyline.ensureMinimumRadius
-
-local function setup()
-    -- these create the curves between the graph edges, resulting in many vertices which we don't want to test,
-    -- so disable and work with just the edges
-    Polyline.splitEdges = function()  end
-    Polyline.ensureMinimumRadius = function() end
-end
-
-local function teardown()
-    -- restore the Polyline functions
-    Polyline.splitEdges = splitEdges
-    Polyline.ensureMinimumRadius = ensureMinimumRadius
-end
-
 local function printPath()
     for i, p in ipairs(path) do
         print(i, Vector.__tostring(p))
@@ -52,15 +37,31 @@ local function printPath()
 end
 
 local function runPathfinder()
-    local result = pathfinder:start(start, goal, 1, false, TestConstraints(), 0)
+    local result = pathfinder:start(start, goal, 6, false, TestConstraints(), 0)
     while not result.done do
         result = pathfinder:resume()
     end
     return result.done, result.path, result.goalNodeInvalid
 end
 
-function testDirection()
-    setup()
+TestWithoutTransitions = {}
+function TestWithoutTransitions:setUp()
+    self.splitEdges = Polyline.splitEdges
+    self.ensureMinimumRadius = Polyline.ensureMinimumRadius
+    -- these create the curves between the graph edges, resulting in many vertices which we don't want to test,
+    -- so disable and work with just the edges
+    Polyline.splitEdges = function() end
+    Polyline.ensureMinimumRadius = function() end
+end
+
+function TestWithoutTransitions:tearDown()
+    -- restore the Polyline functions
+    Polyline.splitEdges = self.splitEdges
+    Polyline.ensureMinimumRadius = self.ensureMinimumRadius
+end
+
+function TestWithoutTransitions:testDirection()
+    
     local graph = {
         GraphEdge(GraphEdge.UNIDIRECTIONAL,
                 {
@@ -93,11 +94,11 @@ function testDirection()
     path[1]:assertAlmostEquals(Vector(120, 105))
     path[2]:assertAlmostEquals(Vector(110, 105))
     path[#path]:assertAlmostEquals(Vector(100, 105))
-    teardown()
+    
 end
 
-function testBidirectional()
-    setup()
+function TestWithoutTransitions:testBidirectional()
+    
     local graph = {
         GraphEdge(GraphEdge.BIDIRECTIONAL,
                 {
@@ -130,11 +131,11 @@ function testBidirectional()
     path[1]:assertAlmostEquals(Vector(120, 105))
     path[2]:assertAlmostEquals(Vector(110, 105))
     path[#path]:assertAlmostEquals(Vector(100, 105))
-    teardown()
+    
 end
 
-function testShorterPath()
-    setup()
+function TestWithoutTransitions:testShorterPath()
+    
     local graph = {
         GraphEdge(GraphEdge.UNIDIRECTIONAL,
                 {
@@ -159,11 +160,11 @@ function testShorterPath()
     path[1]:assertAlmostEquals(Vector(100, 100))
     path[2]:assertAlmostEquals(Vector(110, 100))
     path[#path]:assertAlmostEquals(Vector(120, 100))
-    teardown()
+    
 end
 
-function testRange()
-    setup()
+function TestWithoutTransitions:testRange()
+    
     local graph = {
         GraphEdge(GraphEdge.UNIDIRECTIONAL,
                 {
@@ -197,11 +198,11 @@ function testRange()
     pathfinder = GraphPathfinder(math.huge, 500, 9, graph)
     done, path, _ = runPathfinder()
     lu.assertIsNil(path)
-    teardown()
+    
 end
 
-function testStartInTheMiddle()
-    setup()
+function TestWithoutTransitions:testStartInTheMiddle()
+    
     local graph = {
         GraphEdge(GraphEdge.BIDIRECTIONAL,
                 {
@@ -247,11 +248,11 @@ function testStartInTheMiddle()
     lu.assertEquals(#path, 2)
     path[1]:assertAlmostEquals(Vector(100, 100))
     path[2]:assertAlmostEquals(Vector(150, 100))
-    teardown()
+    
 end
 
-function testTwoPointSegments()
-    setup()
+function TestWithoutTransitions:testTwoPointSegments()
+    
     local graph = {
         GraphEdge(GraphEdge.UNIDIRECTIONAL,
                 {
@@ -279,11 +280,11 @@ function testTwoPointSegments()
     lu.assertEquals(#path, 2)
     path[1]:assertAlmostEquals(Vector(120, 105))
     path[#path]:assertAlmostEquals(Vector(100, 105))
-    teardown()
+    
 end
 
-function testEntryExit()
-    setup()
+function TestWithoutTransitions:testEntryExit()
+    
     local graph = {
         GraphEdge(GraphEdge.UNIDIRECTIONAL,
                 {
@@ -329,12 +330,12 @@ function testEntryExit()
     lu.assertEquals(#path, 2)
     path[1]:assertAlmostEquals(Vector(110, 100))
     path[#path]:assertAlmostEquals(Vector(120, 100))
-    teardown()
+    
 end
 
-function testGoalWithinRange()
+function TestWithoutTransitions:testGoalWithinRange()
     -- goal too close to start (graph entry too close to graph exit)
-    setup()
+    
     local graph = {
         GraphEdge(GraphEdge.UNIDIRECTIONAL,
                 {
@@ -350,11 +351,11 @@ function testGoalWithinRange()
     lu.assertIsTrue(done)
     lu.assertIsTrue(goalNodeInvalid)
     lu.assertIsNil(path)
-    teardown()
+    
 end
 
-function testTwoWayStreet()
-    setup()
+function TestWithoutTransitions:testTwoWayStreet()
+    
     local graph = {
         -- lane to the right, closer to the start location
         GraphEdge(GraphEdge.UNIDIRECTIONAL,
@@ -392,10 +393,10 @@ function testTwoWayStreet()
     lu.assertEquals(#path, 2)
     path[1]:assertAlmostEquals(Vector(0, 20))
     path[#path]:assertAlmostEquals(Vector(-100, 20))
-    teardown()
 end
 
-function testTransition()
+TestWithTransitions = {}
+function TestWithTransitions:testTransition()
     local graph = {
         GraphEdge(GraphEdge.UNIDIRECTIONAL,
                 {
@@ -415,6 +416,7 @@ function testTransition()
     start = State3D(-5, 0, 0, 0)
     goal = State3D(210, 205, 0, 0)
     done, path, _ = runPathfinder()
+    printPath()
     lu.assertIsTrue(done)
     lu.assertEquals(#path, 90)
     -- path contains all points of the edge it goes through
@@ -424,6 +426,5 @@ function testTransition()
     path[52]:assertAlmostEquals(Vector(210, 10))
     path[#path]:assertAlmostEquals(Vector(210, 200))
 end
-
 
 os.exit(lu.LuaUnit.run())
