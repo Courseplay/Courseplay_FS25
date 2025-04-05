@@ -151,11 +151,17 @@ end
 function Graph:setup()
     ---@type GraphPlot
     self._ingameMapPlot = GraphPlot(self)
+    if self._loadedMapId ~= g_currentMission.missionInfo.mapId then 
+        --- TODO Show warning, as the loaded graph map id is different!
+    end
 end
 
 function Graph.registerXmlSchema(xmlSchema, baseKey)
     GraphSegment.registerXmlSchema(xmlSchema, 
         baseKey .. Graph.XML_KEY .. ".")
+    xmlSchema:register(XMLValueType.STRING, 
+        baseKey .. Graph.XML_KEY .. "#mapId", 
+        "The savegame map id to which the graph is assigned.")
     xmlSchema:register(XMLValueType.BOOL, 
         baseKey .. Graph.XML_KEY .. "#hasGeneratedSplines", 
         "Has generated splines?", false)
@@ -169,6 +175,8 @@ function Graph:loadFromXMLFile(xmlFile, baseKey)
     end)
     self._hasGeneratedSplines = xmlFile:getValue(
         baseKey .. self.XML_KEY .. "#hasGeneratedSplines", false)
+    self._loadedMapId = xmlFile:getValue(
+        baseKey .. self.XML_KEY .. "#mapId", "")
 end
 
 function Graph:saveToXMLFile(xmlFile, baseKey)
@@ -178,6 +186,8 @@ function Graph:saveToXMLFile(xmlFile, baseKey)
     end
     xmlFile:setValue(baseKey .. self.XML_KEY .. "#hasGeneratedSplines", 
         self._hasGeneratedSplines or false)
+    xmlFile:setValue(baseKey .. self.XML_KEY .. "#mapId", 
+        g_currentMission.missionInfo.mapId or "")
 end
 
 ---@param node GraphNode
