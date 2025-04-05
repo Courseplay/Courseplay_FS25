@@ -20,7 +20,7 @@ require('Vertex')
 require('Polyline')
 require('Polygon')
 require('Slider')
-require('WraparoundIndex') -- for the test cases
+require('WrapAroundIndex') -- for the test cases
 require('AnalyticHelper') -- for the test cases
 require('PathfinderUtil')
 require('HybridAStar')
