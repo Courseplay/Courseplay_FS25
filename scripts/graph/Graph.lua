@@ -7,7 +7,7 @@ function Graph:init()
     g_consoleCommands:registerConsoleCommand("cpGraphFindPathTo", 
         "Tries to find a path to: ", "consoleCommandFindPathTo", self)
     g_consoleCommands:registerConsoleCommand("cpGraphGenerateFromSplines", 
-        "Generates segmenets from traffic splines", 
+        "Generates segments from traffic splines",
         "consoleCommandGenerateSegmentsFromSplines", self)
 
     ---@type GraphTarget[]
@@ -16,7 +16,10 @@ function Graph:init()
 end
 
 function Graph:delete()
-    
+    -- TODO: fix this and ConsoleCommands so we can unregister a single command. Otherwise reloading this
+    -- script won't work
+    removeConsoleCommand("cpGraphFindPathTo")
+    removeConsoleCommand("cpGraphGenerateFromSplines")
 end
 
 function Graph:consoleCommandFindPathTo(name)
@@ -49,7 +52,7 @@ function Graph:consoleCommandFindPathTo(name)
         local goal = State3D(targetPos.x, targetPos.y, 0, 0)
         CpUtil.info("Goal: %s", tostring(goal))
         local TestConstraints = CpObject(PathfinderConstraintInterface)
-        local result = pathfinder:start(start, goal, 1, false, TestConstraints(), 0)
+        local result = pathfinder:start(start, goal, AIUtil.getTurningRadius(vehicle), false, TestConstraints(), 0)
         while not result.done do
             result = pathfinder:resume()
         end
@@ -235,7 +238,7 @@ function Graph:getPointByIndex(index)
             if point then 
                 return point
             else 
-                CpUtil.info("Failed to get Graph segement(%d) point: %d", ix, jx)
+                CpUtil.info("Failed to get Graph segment(%d) point: %d", ix, jx)
             end
         else 
             CpUtil.info("Failed to get Graph segment for: %d", ix)
@@ -320,6 +323,19 @@ function Graph:getGraphEdges()
     return edges
 end
 
+-- clean up for script reload
+local savedGraph
+if g_graph then
+    savedGraph = g_graph
+    g_graph:delete()
+end
 
 ---@type Graph
 g_graph = Graph()
+
+if savedGraph then
+    -- TODO: there are more dependencies somewhere on the UI so this may not work completely
+    g_graph._childNodes = savedGraph._childNodes
+    g_graph._targets = savedGraph._targets
+    g_graph._hasGeneratedSplines = savedGraph._hasGeneratedSplines
+end

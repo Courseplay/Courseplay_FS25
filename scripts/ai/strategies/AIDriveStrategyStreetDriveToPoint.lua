@@ -80,7 +80,7 @@ function AIDriveStrategyStreetDriveToPoint:getDriveData(dt, vX, vY, vZ)
             local goal = State3D(targetVector.x, targetVector.y, 0, 0)
             CpUtil.info("Goal: %s", tostring(goal))
             local TestConstraints = CpObject(PathfinderConstraintInterface)
-            local result = pathfinder:start(start, goal, 1, false, TestConstraints(), 0)
+            local result = pathfinder:start(start, goal, AIUtil.getTurningRadius(self.vehicle), false, TestConstraints(), 0)
             while not result.done do
                 result = pathfinder:resume()
             end
