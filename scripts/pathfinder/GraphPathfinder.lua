@@ -18,8 +18,8 @@ GraphPathfinder = CpObject(HybridAStar)
 ---@class GraphPathfinder.GraphEdge : Polyline
 GraphPathfinder.GraphEdge = CpObject(Polyline)
 
-GraphPathfinder.GraphEdge.UNIDIRECTIONAL = {}
-GraphPathfinder.GraphEdge.BIDIRECTIONAL = {}
+GraphPathfinder.GraphEdge.UNIDIRECTIONAL = 1
+GraphPathfinder.GraphEdge.BIDIRECTIONAL = 2
 
 ---@param direction table GraphEdge.UNIDIRECTIONAL or GraphEdge.BIDIRECTIONAL
 ---@param vertices table[] array of tables with x, y (Vector, Vertex, State3D or just plain {x, y}
@@ -84,6 +84,14 @@ function GraphPathfinder.GraphEdge:rollUpIterator(entry)
         else
             return i, self[i]
         end
+    end
+end
+
+function GraphPathfinder.GraphEdge.getDirectionFromGameDirection(gameDirection)
+    if gameDirection == GraphSegmentDirection.FORWARD or gameDirection == GraphSegmentDirection.REVERSE then
+        return GraphPathfinder.GraphEdge.UNIDIRECTIONAL
+    else
+        return GraphPathfinder.GraphEdge.BIDIRECTIONAL
     end
 end
 
@@ -181,7 +189,15 @@ function GraphPathfinder:start(start, goal, turnRadius, ...)
     -- at each run, make a copy of the graph as we'll modify it
     self.graph = {}
     for _, e in ipairs(self.originalGraph) do
-        table.insert(self.graph, e:clone())
+        if #e > 1 then
+            table.insert(self.graph, e:clone())
+        elseif #e == 1 then
+            -- edges with one vertex put the pathfinder in an endless loop, so we skip them
+            self.logger:error('Skipping edge starting at x = %.1f, z = %.1f with a single vertex', e[1].x, -e[1].y)
+        else
+            -- this should not happen, an edge without vertices, but just in case, we skip it
+            self.logger:error('Skipping edge with no vertices.')
+        end
     end
     local graphEntry, graphExit = self:createGraphEntryAndExit(start, goal)
     local distance = (graphExit - graphEntry):length()
@@ -353,3 +369,26 @@ function GraphPathfinder.GraphMotionPrimitives:createSuccessor(node, primitive, 
     return GraphPathfinder.Node(primitive.x, primitive.y, node.g, node, node.d + primitive.d, primitive.edge, primitive.entry)
 end
 
+--- Load a graph from Courseplay.xml, for tests only.
+function GraphPathfinder.loadGraphEdgesFromXml(fileName)
+    local graph = {}
+    local edge
+    for line in io.lines(fileName) do
+        local direction = string.match(line, '<Segment.*direction="(%d+)"')
+        if direction then
+            -- new segment starts
+            edge = GraphPathfinder.GraphEdge(GraphPathfinder.GraphEdge.getDirectionFromGameDirection(tonumber(direction)))
+        end
+        if string.find(line, '</Segment>') then
+            -- segment ends
+            edge:calculateProperties()
+            table.insert(graph, edge) -- add the edge to the graph
+            Logger():info('Loaded edge %d direction: %s, length: %.1f', #graph, tostring(edge:getDirection()), edge:getLength())
+        end
+        local x, z = string.match(line, '<Point.+pos="([%d%.-]+) [%d%.-]+ ([%d%.-]+)"')
+        if x and z then
+            edge:append(Vertex(tonumber(x), -tonumber(z)))
+        end
+    end
+    return graph
+end
