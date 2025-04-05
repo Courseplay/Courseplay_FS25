@@ -19,6 +19,9 @@ require('State3D')
 require('Vertex')
 require('Polyline')
 require('Polygon')
+require('Slider')
+require('WraparoundIndex') -- for the test cases
+require('AnalyticHelper') -- for the test cases
 require('PathfinderUtil')
 require('HybridAStar')
 require('GraphPathfinder')
@@ -27,9 +30,24 @@ local GraphEdge = GraphPathfinder.GraphEdge
 local TestConstraints = CpObject(PathfinderConstraintInterface)
 local pathfinder, start, goal, done, path, goalNodeInvalid
 
+local splitEdges, ensureMinimumRadius = Polyline.splitEdges, Polyline.ensureMinimumRadius
+
+local function setup()
+    -- these create the curves between the graph edges, resulting in many vertices which we don't want to test,
+    -- so disable and work with just the edges
+    Polyline.splitEdges = function()  end
+    Polyline.ensureMinimumRadius = function() end
+end
+
+local function teardown()
+    -- restore the Polyline functions
+    Polyline.splitEdges = splitEdges
+    Polyline.ensureMinimumRadius = ensureMinimumRadius
+end
+
 local function printPath()
-    for _, p in ipairs(path) do
-        print(Vector.__tostring(p))
+    for i, p in ipairs(path) do
+        print(i, Vector.__tostring(p))
     end
 end
 
@@ -42,6 +60,7 @@ local function runPathfinder()
 end
 
 function testDirection()
+    setup()
     local graph = {
         GraphEdge(GraphEdge.UNIDIRECTIONAL,
                 {
@@ -74,9 +93,11 @@ function testDirection()
     path[1]:assertAlmostEquals(Vector(120, 105))
     path[2]:assertAlmostEquals(Vector(110, 105))
     path[#path]:assertAlmostEquals(Vector(100, 105))
+    teardown()
 end
 
 function testBidirectional()
+    setup()
     local graph = {
         GraphEdge(GraphEdge.BIDIRECTIONAL,
                 {
@@ -109,9 +130,11 @@ function testBidirectional()
     path[1]:assertAlmostEquals(Vector(120, 105))
     path[2]:assertAlmostEquals(Vector(110, 105))
     path[#path]:assertAlmostEquals(Vector(100, 105))
+    teardown()
 end
 
 function testShorterPath()
+    setup()
     local graph = {
         GraphEdge(GraphEdge.UNIDIRECTIONAL,
                 {
@@ -136,9 +159,11 @@ function testShorterPath()
     path[1]:assertAlmostEquals(Vector(100, 100))
     path[2]:assertAlmostEquals(Vector(110, 100))
     path[#path]:assertAlmostEquals(Vector(120, 100))
+    teardown()
 end
 
 function testRange()
+    setup()
     local graph = {
         GraphEdge(GraphEdge.UNIDIRECTIONAL,
                 {
@@ -164,7 +189,6 @@ function testRange()
     start = State3D(90, 105, 0, 0)
     goal = State3D(150, 105, 0, 0)
     done, path, _ = runPathfinder()
-    printPath()
     lu.assertIsTrue(done)
     lu.assertEquals(#path, 6)
     path[1]:assertAlmostEquals(Vector(100, 100))
@@ -173,9 +197,11 @@ function testRange()
     pathfinder = GraphPathfinder(math.huge, 500, 9, graph)
     done, path, _ = runPathfinder()
     lu.assertIsNil(path)
+    teardown()
 end
 
 function testStartInTheMiddle()
+    setup()
     local graph = {
         GraphEdge(GraphEdge.BIDIRECTIONAL,
                 {
@@ -217,14 +243,15 @@ function testStartInTheMiddle()
     pathfinder = GraphPathfinder(math.huge, 500, 10, graph)
     start, goal = goal, start
     done, path, _ = runPathfinder()
-    printPath()
     lu.assertIsTrue(done)
     lu.assertEquals(#path, 2)
     path[1]:assertAlmostEquals(Vector(100, 100))
     path[2]:assertAlmostEquals(Vector(150, 100))
+    teardown()
 end
 
 function testTwoPointSegments()
+    setup()
     local graph = {
         GraphEdge(GraphEdge.UNIDIRECTIONAL,
                 {
@@ -252,9 +279,11 @@ function testTwoPointSegments()
     lu.assertEquals(#path, 2)
     path[1]:assertAlmostEquals(Vector(120, 105))
     path[#path]:assertAlmostEquals(Vector(100, 105))
+    teardown()
 end
 
 function testEntryExit()
+    setup()
     local graph = {
         GraphEdge(GraphEdge.UNIDIRECTIONAL,
                 {
@@ -294,16 +323,18 @@ function testEntryExit()
     path[#path]:assertAlmostEquals(Vector(100, 105))
     -- start/goal far away, middle entry
     start = State3D(110, 0, 0, 0)
-    goal = State3D(130, 0, 0, 0)
+    goal = State3D(130, 100, 0, 0)
     done, path, _ = runPathfinder()
     lu.assertIsTrue(done)
     lu.assertEquals(#path, 2)
     path[1]:assertAlmostEquals(Vector(110, 100))
     path[#path]:assertAlmostEquals(Vector(120, 100))
+    teardown()
 end
 
 function testGoalWithinRange()
     -- goal too close to start (graph entry too close to graph exit)
+    setup()
     local graph = {
         GraphEdge(GraphEdge.UNIDIRECTIONAL,
                 {
@@ -319,9 +350,11 @@ function testGoalWithinRange()
     lu.assertIsTrue(done)
     lu.assertIsTrue(goalNodeInvalid)
     lu.assertIsNil(path)
+    teardown()
 end
 
 function testTwoWayStreet()
+    setup()
     local graph = {
         -- lane to the right, closer to the start location
         GraphEdge(GraphEdge.UNIDIRECTIONAL,
@@ -359,6 +392,38 @@ function testTwoWayStreet()
     lu.assertEquals(#path, 2)
     path[1]:assertAlmostEquals(Vector(0, 20))
     path[#path]:assertAlmostEquals(Vector(-100, 20))
+    teardown()
 end
+
+function testTransition()
+    local graph = {
+        GraphEdge(GraphEdge.UNIDIRECTIONAL,
+                {
+                    Vertex(0, 0),
+                    Vertex(100, 0),
+                    Vertex(200, 0)
+                }),
+        GraphEdge(
+                GraphEdge.UNIDIRECTIONAL,
+                {
+                    Vertex(210, 10),
+                    Vertex(210, 100),
+                    Vertex(210, 200),
+                }),
+    }
+    pathfinder = GraphPathfinder(math.huge, 500, 20, graph)
+    start = State3D(-5, 0, 0, 0)
+    goal = State3D(210, 205, 0, 0)
+    done, path, _ = runPathfinder()
+    lu.assertIsTrue(done)
+    lu.assertEquals(#path, 90)
+    -- path contains all points of the edge it goes through
+    path[1]:assertAlmostEquals(Vector(0, 0))
+    path[41]:assertAlmostEquals(Vector(200, 0))
+    -- here's the arch
+    path[52]:assertAlmostEquals(Vector(210, 10))
+    path[#path]:assertAlmostEquals(Vector(210, 200))
+end
+
 
 os.exit(lu.LuaUnit.run())

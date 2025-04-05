@@ -127,13 +127,10 @@ end
 ---@param graph GraphPathfinder.GraphEdge[] Array of edges, the graph as described in the file header
 function GraphPathfinder:init(yieldAfter, maxIterations, range, graph)
     HybridAStar.init(self, { }, yieldAfter, maxIterations)
-    self.logger = Logger('GraphPathfinder', Logger.level.trace, CpDebug.DBG_PATHFINDER)
+    self.logger = Logger('GraphPathfinder', Logger.level.debug, CpDebug.DBG_PATHFINDER)
     self.range = range
-    -- make a copy of the graph as we'll modify it
-    self.graph = {}
-    for _, e in ipairs(graph) do
-        table.insert(self.graph, e:clone())
-    end
+    self.transitionRange = range
+    self.originalGraph = graph
     self.deltaPosGoal = self.range
     self.deltaThetaDeg = 181
     self.deltaThetaGoal = math.rad(self.deltaThetaDeg)
@@ -154,36 +151,48 @@ end
 
 --- Override path roll up since here, the path also includes all edges of the graph, not just the pathfinder nodes
 ---@param lastNode GraphPathfinder.Node
-function GraphPathfinder:rollUpPath(lastNode, goal, path)
-    path = path or {}
+function GraphPathfinder:rollUpPath(lastNode, goal)
+    local edges = {}
     local currentNode = lastNode
     self:debug('Goal node at %.2f/%.2f, cost %.1f (%.1f - %.1f)', goal.x, goal.y, lastNode.cost,
             self.nodes.lowestCost, self.nodes.highestCost)
     while currentNode.pred and currentNode ~= currentNode.pred do
         -- add the edge leading to the node
+        local edge = Polyline()
         for _, node in currentNode.edge:rollUpIterator(currentNode.entry) do
-            if node ~= path[1] then
+            if node ~= edge[1] then
                 -- don't insert the same node twice (we'll have the same node twice when we split edges)
-                table.insert(path, 1, node)
+                edge:prepend(node)
             end
+        end
+        if #edge > 0 then
+            edge:calculateProperties()
+            table.insert(edges, 1, edge)
         end
         currentNode = currentNode.pred
     end
+    local path = self:addTransitions(edges)
     self:debug('Nodes %d, iterations %d, yields %d, deltaTheta %.1f', #path, self.iterations, self.yields,
             math.deg(self.deltaThetaGoal))
     return path
 end
 
-function GraphPathfinder:initRun(start, goal, ...)
+function GraphPathfinder:start(start, goal, turnRadius, ...)
+    -- at each run, make a copy of the graph as we'll modify it
+    self.graph = {}
+    for _, e in ipairs(self.originalGraph) do
+        table.insert(self.graph, e:clone())
+    end
     local graphEntry, graphExit = self:createGraphEntryAndExit(start, goal)
     local distance = (graphExit - graphEntry):length()
     if distance <= self.range then
         -- if the distance between the entry and exit is less than the range, we can just return the entry as the exit
         self.logger:error('Graph entry and exit are closer than %.1f meters (%.1f), no point in running the pathfinder.',
                 self.range, distance)
-        return PathfinderResult(true, nil, true)
+        self.goalNodeInvalid = true
+        return self:finishRun(true, nil)
     end
-    return HybridAStar.initRun(self, start, goal, ...)
+    return HybridAStar.start(self, start, goal, turnRadius, ...)
 end
 
 --- Create the entry and exit edges for the graph.
@@ -274,6 +283,30 @@ function GraphPathfinder:createGraphEntryAndExit(start, goal)
     end
     return State3D(entryEdges[1].vertex.x, entryEdges[1].vertex.y, 0, 0),
     State3D(exitEdges[1].vertex.x, exitEdges[1].vertex.y, 0, 0)
+end
+
+---@param edges GraphPathfinder.GraphEdge[]
+function GraphPathfinder:addTransitions(edges)
+    local path = Polyline()
+    for i = 1, #edges - 1 do
+        local lastVertex = edges[i][#edges[i]]
+        local exitEdge = lastVertex:getEntryEdge()
+        local firstVertex = edges[i + 1][1]
+        local entryEdge = firstVertex:getExitEdge()
+        CourseGenerator.LineSegment.connect(exitEdge, entryEdge, 1, true)
+        local corner = entryEdge:getBase()
+        if (corner - lastVertex):length() < self.transitionRange and
+                (corner - firstVertex):length() < self.transitionRange then
+            edges[i + 1][1] = Vertex.fromVector(entryEdge:getBase())
+            table.remove(edges[i])
+        end
+        path:appendMany(edges[i])
+    end
+    path:appendMany(edges[#edges]) -- append the last edge, this will be the exit edge
+    path:calculateProperties()
+    path:splitEdges(5)
+    path:ensureMinimumRadius(self.turnRadius, false, 0.5)
+    return path
 end
 
 --- Motion primitives to use with the graph pathfinder, providing the entries
