@@ -122,9 +122,12 @@ function AIDriveStrategyStreetDriveToPoint:limitSpeed()
             -- we do not slow down over 50 m radius, but slow down to turning speed at the turningRadius,
             -- proportionally in between
             local slowDownFactor = math.min(50, math.max(self.turningRadius, r - self.turningRadius)) / 50
+            local oldLimitedSpeed = self.limitedSpeed
             self.limitedSpeed = self.settings.turnSpeed:getValue() +
                     (self.settings.streetSpeed:getValue() - self.settings.turnSpeed:getValue()) * slowDownFactor
-            self:debug('Limiting speed to %.2f (r=%.2f, slowDownFactor=%.2f)', self.limitedSpeed, r, slowDownFactor)
+            if math.abs(self.limitedSpeed - oldLimitedSpeed) > 0.75 then
+                self:debug('Limiting speed to %.2f (r=%.2f, slowDownFactor=%.2f)', self.limitedSpeed, r, slowDownFactor)
+            end
         end
     end
     if self.limitedSpeed then
