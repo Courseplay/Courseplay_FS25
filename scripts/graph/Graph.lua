@@ -279,6 +279,10 @@ function Graph:getAllTargets()
     return self._targets
 end
 
+function Graph:getNumTargets()
+    return #self._targets
+end
+
 ---@param id number
 ---@return GraphTarget|nil
 function Graph:getTargetByUniqueID(id)
@@ -287,6 +291,23 @@ function Graph:getTargetByUniqueID(id)
             return target
         end
     end
+end
+
+---@param index number
+---@return GraphTarget|nil
+function Graph:getTargetByIndex(index)
+    return self._targets[index]
+end
+
+---@param id number
+---@return number index is -1 if not found!
+function Graph:getTargetIndexByUniqueId(id)
+    for index, target in ipairs(self._targets) do 
+        if target:getUniqueID() == id then 
+            return index
+        end
+    end
+    return -1
 end
 
 ---@return GraphPathfinder.GraphEdge[]

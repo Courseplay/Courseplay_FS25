@@ -10,16 +10,14 @@
 		<Setting classType="CpAIParameterPositionAngle" name="startPosition" 
 			positionParameterType="DRIVE_TO" isVisible="isGiantsForStreetActive"/>
 		<Setting classType="CpAIParameterTargetPoint" name="startTargetPoint" 
-			generateValuesFunction="generateTargets" isVisible="isStreetModeActive" 
-			onChangeCallback="onChangeStartTargetPoint"/>
+			isVisible="isStreetModeActive" onChangeCallback="onChangeStartTargetPoint"/>
 	</SettingSubTitle>
 	<SettingSubTitle title="CP_fieldWorkJobParameters_fieldPosition_title" prefix="false">
 		<Setting classType="CpAIParameterPosition" name="fieldPosition" positionParameterType="FIELD_OR_SILO"/>
 	</SettingSubTitle>
 	<SettingSubTitle title="unloadTargetPoint">
 		<Setting classType="CpAIParameterTargetPoint" name="unloadTargetPoint" 
-			generateValuesFunction="generateTargets" isDisabled="isUnloadTargetPointDisabled" 
-			isVisible="isStreetModeActive" />
+			isDisabled="isUnloadTargetPointDisabled" isVisible="isStreetModeActive" />
 	</SettingSubTitle>
 	<SettingSubTitle title="baleWrapType">
 		<Setting classType="AIParameterSettingList" name="baleWrapType" isVisible="hasBaleLoader" 

@@ -777,16 +777,21 @@ function CpCourseGeneratorFrame:onClickMultiTextOptionParameter(index, element)
 end
 
 function CpCourseGeneratorFrame:onClickMultiTextOptionCenterParameter(element)
-	local param = element.aiParameter
 	if self.currentJob ~= nil then
-		if param and param:getType() == AIParameterType.TEXT_BUTTON then 
-			param.fillType:setNextItem()
-			print("onclick")
+		local param = element.aiParameter	
+		if param then
+			if param:isa(CpAIParameterTargetPoint) then 
+				local settings = self.currentJob:getCpJobParameters():getTargetPointSettings()
+				TargetPointSelectionDialog.show(settings, function()
+					self.currentJob:onParameterValueChanged(param)
+					self:updateParameterValueTexts()
+					self:validateParameters()
+				end)
+			elseif param:isa(CpAIParameterFillTypeSetting) then
+				
+			end
 		end
-		self.currentJob:onParameterValueChanged(element.aiParameter)
-		self:updateParameterValueTexts()
 	end
-	self:validateParameters()
 end
 
 function CpCourseGeneratorFrame:executePickingCallback(...)

@@ -233,6 +233,23 @@ function AIParameterSettingList:getTextsForValues(values)
 	return texts
 end
 
+---@return number
+function AIParameterSettingList:getNumberOfElements()
+	return #self.values
+end
+
+---@param index number
+---@return any|nil
+function AIParameterSettingList:getValueByIndex(index)
+	return self.values[index]
+end
+
+---@param index number
+---@return string|nil
+function AIParameterSettingList:getTextByIndex(index)
+	return self.texts[index]
+end
+
 function AIParameterSettingList:validateCurrentValue()
 	local new = self:checkAndSetValidValue(self.current)
 	if new ~= self.current then

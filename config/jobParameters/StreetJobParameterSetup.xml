@@ -2,7 +2,8 @@
 
 <Settings prefixText="CP_streetJobParameters_">
 	<SettingSubTitle title="loadUnloadTargetMode" >
-		<Setting classType="AIParameterSettingList" name="loadUnloadTargetMode" onChangeCallback="onChangeTargetPoints">
+		<Setting classType="AIParameterSettingList" name="loadUnloadTargetMode" 
+			onChangeCallback="onChangeTargetPoints">
 			<Values>
 				<Value name="DRIVE_TO">0</Value>
 				<Value name="UNLOAD_AT_TARGET" isDisabled="hasNoValidTrailerAttached">1</Value>
@@ -16,17 +17,23 @@
 		</Setting>
 	</SettingSubTitle>
 	<SettingSubTitle title="unloadTargetPoint" >
-		<Setting classType="CpAIParameterTargetPoint" name="unloadTargetPoint" generateValuesFunction="generateTargets" onChangeCallback="onChangeTargetPoints"/>
+		<Setting classType="CpAIParameterTargetPoint" name="unloadTargetPoint" 
+			onChangeCallback="onChangeTargetPoints"/>
 	</SettingSubTitle>
 	<SettingSubTitle title="loadTargetPoint" >
-		<Setting classType="CpAIParameterTargetPoint" name="loadTargetPoint" isDisabled="isLoadTargetPointDisabled" generateValuesFunction="generateTargets" onChangeCallback="onChangeTargetPoints"/>
+		<Setting classType="CpAIParameterTargetPoint" name="loadTargetPoint" 
+			isDisabled="isLoadTargetPointDisabled" onChangeCallback="onChangeTargetPoints"/>
 	</SettingSubTitle>
 	<SettingSubTitle title="loadingMultipleFruitTypesAllowed" >
-		<Setting classType="AIParameterBooleanSetting" name="loadingMultipleFruitTypesAllowed" isDisabled="isLoadTargetPointDisabled"/>
+		<Setting classType="AIParameterBooleanSetting" name="loadingMultipleFruitTypesAllowed" 
+			isDisabled="isLoadTargetPointDisabled"/>
 	</SettingSubTitle>
 	<SettingSubTitle title="fillTypes" isDisabled="isLoadTargetPointDisabled">
-		<Setting classType="CpAIParameterFillTypeSetting" name="fillTypeSelection1" title="CP_streetJobParameters_fillTypeSelection_title"/>
-		<Setting classType="CpAIParameterFillTypeSetting" name="fillTypeSelection2" title="CP_streetJobParameters_fillTypeSelection_title"/>
-		<Setting classType="CpAIParameterFillTypeSetting" name="fillTypeSelection3" title="CP_streetJobParameters_fillTypeSelection_title"/>
+		<Setting classType="CpAIParameterFillTypeSetting" name="fillTypeSelection1" 
+			title="CP_streetJobParameters_fillTypeSelection_title"/>
+		<Setting classType="CpAIParameterFillTypeSetting" name="fillTypeSelection2" 
+			title="CP_streetJobParameters_fillTypeSelection_title"/>
+		<Setting classType="CpAIParameterFillTypeSetting" name="fillTypeSelection3" 
+			title="CP_streetJobParameters_fillTypeSelection_title"/>
 	</SettingSubTitle>
 </Settings>

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<GUI onOpen="onOpen" onClose="onClose" onCreate="onCreate">
+    <GuiElement profile="newLayer" />
+    <Bitmap profile="dialogFullscreenBg" id="dialogBg" />
+    <GuiElement profile="fs25_dialogBg" id="dialogElement" size="1200px 600px">
+        <ThreePartBitmap profile="fs25_dialogBgMiddleSmall" />
+        <ThreePartBitmap profile="fs25_dialogBgTopSmall" />
+        <ThreePartBitmap profile="fs25_dialogBgBottom" />
+        <GuiElement profile="fs25_dialogContentContainer">
+            <Text profile="fs25_dialogTitle" id="titleText" text="$l10n_ui_aiSettingsTitle"
+                position="0px -40px" />
+            
+            <GuiElement profile="fs25_unBanDialogListBox">
+                <GuiElement profile="fs25_pricesProductList" >
+                    <BoxLayout with="anchorBottomStretchingX" autoValidateLayout="true" elementSpacing="2dp" absoluteSizeOffset="40px 0">
+                        <GuiElement>
+                            <Text profile="fs25_dialogTitle" id="listHeaders[1]" text="$l10n_ui_aiSettingsTitle"
+                                position="0px 40px" />
+                            <SmoothList id="lists[1]" listSectionHeader="section" 
+                                focusChangeTop="nil" focusChangeBottom="nil" 
+                                focusChangeRight="list_middle" focusId="list_left">
+                                <ListItem profile="fs25_pricesProductListItem">
+                                    <!-- <Bitmap profile="fs25_pricesProductListItemIcon" name="icon" /> -->
+                                    <Text profile="fs25_pricesProductListItemName" name="title" />
+                                    <!-- <Text profile="fs25_pricesProductListItemStorage" name="storage" /> -->
+                                </ListItem>
+                                <ListItem profile="fs25_pricesProductListSection" name="section">
+                                    <Text profile="fs25_pricesProductListSectionTitle" name="title" />
+                                </ListItem>
+                            </SmoothList>
+                        </GuiElement>
+                        <Bitmap profile="fs25_dialogButtonBoxSeparator" />
+                        <GuiElement>
+                            <Text profile="fs25_dialogTitle" id="listHeaders[2]" text="$l10n_ui_aiSettingsTitle"
+                                position="0px 40px" />
+                            <SmoothList id="lists[2]" listSectionHeader="section" focusChangeTop="nil" focusChangeBottom="nil" 
+                                focusChangeLeft="list_left" focusChangeRight="list_right" focusId="list_middle">
+                                <Text profile="fs25_dialogTitle" name="title" text="$l10n_ui_aiSettingsTitle"
+                                    position="0px 40px" />
+                                <ListItem profile="fs25_pricesProductListItem">
+                                    <!-- <Bitmap profile="fs25_pricesProductListItemIcon" name="icon" /> -->
+                                    <Text profile="fs25_pricesProductListItemName" name="title" />
+                                    <!-- <Text profile="fs25_pricesProductListItemStorage" name="storage" /> -->
+                                </ListItem>
+                                <ListItem profile="fs25_pricesProductListSection" name="section">
+                                    <Text profile="fs25_pricesProductListSectionTitle" name="title" />
+                                </ListItem>
+                            </SmoothList>
+                        </GuiElement>
+                        <Bitmap profile="fs25_dialogButtonBoxSeparator" />
+                        <GuiElement>
+                            <Text profile="fs25_dialogTitle" id="listHeaders[3]" text="$l10n_ui_aiSettingsTitle"
+                                position="0px 40px" />
+                            <SmoothList id="lists[3]" listSectionHeader="section" focusChangeTop="nil" focusChangeBottom="nil" 
+                                focusChangeLeft="list_middle" focusId="list_right">
+                                <Text profile="fs25_dialogTitle" name="title" text="$l10n_ui_aiSettingsTitle"
+                                    position="0px 40px" />
+                                <ListItem profile="fs25_pricesProductListItem">
+                                    <!-- <Bitmap profile="fs25_pricesProductListItemIcon" name="icon" /> -->
+                                    <Text profile="fs25_pricesProductListItemName" name="title" />
+                                    <!-- <Text profile="fs25_pricesProductListItemStorage" name="storage" /> -->
+                                </ListItem>
+                                <ListItem profile="fs25_pricesProductListSection" name="section">
+                                    <Text profile="fs25_pricesProductListSectionTitle" name="title" />
+                                </ListItem>
+                            </SmoothList>
+                        </GuiElement>
+                    </BoxLayout>
+                </GuiElement>
+            </GuiElement>
+        </GuiElement>
+        <BoxLayout profile="fs25_dialogButtonBox">
+            <Button profile="buttonBack" id="okButton" onClick="onClickBack"
+                text="$l10n_button_back" />
+            <Bitmap profile="fs25_dialogButtonBoxSeparator" />
+            <Button profile="buttonOK" text="$l10n_button_ok" onClick="onClickOk" />
+        </BoxLayout>
+    </GuiElement>
+    <GUIProfiles>
+        <Profile name="fs25_modHubScreenshotDialogList" extends="baseReference"
+            with="anchorStretchingYStretchingX pivotTopCenter">
+            <isHorizontalList value="true" />
+            <selectOnScroll value="true" />
+            <itemizedScrollDelta value="1" />
+            <listSmoothingDisabled value="true" />
+        </Profile>
+        <Profile name="fs25_modHubScreenshotDialogItem" extends="emptyPanel"
+            with="anchorStretchingYStretchingX" />
+        <Profile name="fs25_modHubScreenshotDialogImage" extends="baseReference"
+            with="anchorStretchingYStretchingX">
+            <imageSliceId value="noSlice" />
+            <imageIsWebOverlay value="true" />
+            <imageMaskFilename value="dataS/menu/mask_modhubDetail2.png" />
+            <imagePreviewFilename value="dataS/menu/modHubPreview_default.png" />
+            <overlayMaskSize value="2048px 1024px" />
+            <overlayMaskPos value="-296px -102px" />
+        </Profile>
+        <!-- <Profile name="fs25_aiSettingsMapContainer" extends="emptyPanel" with="anchorBottomRight">
+            <size value="440px 350px" />
+            <position value="-40px 25px" />
+        </Profile>
+        <Profile name="fs25_aiSettingsIngameMap" extends="baseReference"
+            with="anchorStretchingYStretchingX" />
+        <Profile name="fs25_aiSettingsModeBox" extends="emptyPanel" with="anchorTopCenter">
+            <size value="80% 50px" />
+            <position value="0px -70px" />
+            <alignmentY value="middle" />
+            <alignmentX value="center" />
+            <elementSpacing value="20px" />
+        </Profile>
+        <Profile name="fs25_aiSettingsModeText" extends="fs25_textDefault">
+            <textSize value="18px" />
+            <textBold value="true" />
+            <textUpperCase value="true" />
+            <textAutoWidth value="true" />
+        </Profile>
+        <Profile name="fs25_aiSettingsHeaderBinaryOption" extends="fs25_binaryOption"
+            with="anchorMiddleRight">
+            <width value="400px" />
+            <position value="-12px 0px" />
+            <focusOnHighlight value="true" />
+        </Profile>
+        <Profile name="fs25_aiSettingsBoxContainer" extends="emptyPanel">
+            <size value="580px 350px" />
+            <position value="40px 25px" />
+        </Profile>
+        <Profile name="fs25_aiSettingsBox" extends="emptyPanel" with="anchorStretchingYStretchingX">
+            <flowDirection value="vertical" />
+        </Profile>
+        <Profile name="fs25_aiSettingsContainer" extends="baseReference" with="anchorTopStretchingX">
+            <height value="50px" />
+        </Profile>
+        <Profile name="fs25_aiSettingsTemplateText" extends="fs25_textDefault"
+            with="anchorMiddleLeft">
+            <position value="20px 0px" />
+            <textSize value="18px" />
+            <textLayoutMode value="scrolling" />
+        </Profile>
+        <Profile name="fs25_aiSettingsNoFieldFound" extends="fs25_textDefault"
+            with="anchorMiddleCenter">
+            <textSize value="15px" />
+            <textAlignment value="center" />
+            <textMaxNumLines value="2" />
+        </Profile>
+        <Profile name="fs25_aiSettingsLoadingAnimation" extends="baseReference"
+            with="anchorMiddleCenter pivotMiddleCenter">
+            <size value="127px 127px" />
+            <imageSliceId value="gui.loadingAnimation" />
+            <imageColor value="$preset_fs25_colorMainHighlight" />
+            <animationMode value="rotate" />
+            <animationSpeed value="1000" />
+        </Profile>
+        <Profile name="fs25_aiSettingsWorkDirection" extends="baseReference"
+            with="anchorMiddleCenter pivotBottomRight">
+            <position value="-20px 13px" />
+            <size value="16px 31px" />
+            <imageSliceId value="gui.HelperDirection" />
+            <imageColor value="$preset_fs25_colorMainHighlight" />
+        </Profile>
+        <Profile name="fs25_aiSettingsBinaryOption" extends="fs25_binaryOption"
+            with="anchorMiddleRight">
+            <position value="-10px 0px" />
+            <useYesNoTexts value="nil" />
+        </Profile>
+        <Profile name="fs25_aiSettingsMultiTextOption" extends="fs25_multiTextOption"
+            with="anchorMiddleRight">
+            <position value="-10px 0px" />
+        </Profile>
+        <Profile name="fs25_aiSettingsSliderContainer" extends="baseReference"
+            with="anchorTopStretchingX">
+            <height value="70px" />
+        </Profile>
+        <Profile name="fs25_aiSettingsOptionSlider" extends="fs25_optionSlider"
+            with="anchorTopRight">
+            <position value="-15px -0px" />
+        </Profile> -->
+    </GUIProfiles>
+</GUI>

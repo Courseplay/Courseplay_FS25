@@ -8,10 +8,9 @@
 <Settings prefixText="CP_siloLoaderJobParameters_">
 	<SettingSubTitle title="ai_parameterGroupTitlePosition" prefix="false">
 		<Setting classType="CpAIParameterPositionAngle" name="startPosition" 
-			positionParameterType="DRIVE_TO" isDisabled="isGiantsForStreetActive"/>
+			positionParameterType="DRIVE_TO" isVisible="isStreetModeActive"/>
 		<Setting classType="CpAIParameterTargetPoint" name="startTargetPoint" 
-			generateValuesFunction="generateTargets" isDisabled="isStreetModeActive" 
-			onChangeCallback="onChangeStartTargetPoint"/>
+			isVisible="isGiantsForStreetActive" onChangeCallback="onChangeStartTargetPoint"/>
 	</SettingSubTitle>
 	<SettingSubTitle title="loadPosition">
 		<Setting classType="CpAIParameterPositionAngle" name="loadPosition" positionParameterType="LOAD"/>

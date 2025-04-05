@@ -161,19 +161,18 @@ function CpJobParameters:getFillTypeSelectionSettings()
     return parameters
 end
 
-function CpJobParameters:generateTargets()
-    local targets = g_graph:getAllTargets()
-    local values, texts = {}, {}
-    for _, t in ipairs(targets) do 
-        table.insert(values, t:getUniqueID())
-        table.insert(texts, t:getName())
+--- Crawls through the parameters and collects all CpAITargetPointSetting settings.
+---@return table
+function CpJobParameters:getTargetPointSettings()
+    local parameters = {}
+    for i, setting in ipairs(self.settings) do
+        if setting:is_a(CpAIParameterTargetPoint) then
+            table.insert(parameters, setting)
+        end
     end
-    if #values <=0 then 
-        table.insert(values, -1)
-        table.insert(texts, "---")
-    end
-    return values, texts
+    return parameters
 end
+
 
 --- Are the setting values roughly equal.
 ---@param otherParameters CpJobParameters

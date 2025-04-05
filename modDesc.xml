@@ -295,6 +295,7 @@ Changelog 8.0.0.0:
 		<sourceFile filename="scripts/gui/CourseDisplay.lua"/>
 		<sourceFile filename="scripts/gui/elements/CpBinaryOptionElement.lua"/>
 		<sourceFile filename="scripts/gui/elements/CpOptionToggleElement.lua"/>
+		<sourceFile filename="scripts/gui/dialog/TargetPointSelectionDialog.lua"/>
 		<sourceFile filename="scripts/gui/pages/CpCourseManagerFrame.lua"/>
 		<sourceFile filename="scripts/gui/pages/CpCourseGeneratorFrame.lua"/>
 		<sourceFile filename="scripts/gui/pages/CpVehicleSettingsFrame.lua"/>
