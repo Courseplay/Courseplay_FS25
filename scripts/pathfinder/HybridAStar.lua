@@ -457,7 +457,7 @@ HybridAStar.defaultMaxIterations = 40000
 function HybridAStar:init(vehicle, yieldAfter, maxIterations, mustBeAccurate)
     self.logger = Logger('HybridAStar', Logger.level.error, CpDebug.DBG_PATHFINDER)
     self.vehicle = vehicle
-    self.count = 0
+    self.iterationsSinceYield = 0
     self.yields = 0
     self.yieldAfter = yieldAfter or 200
     self.maxIterations = maxIterations or HybridAStar.defaultMaxIterations
@@ -567,7 +567,9 @@ end
 --- Wrap up this run, clean up timer, reset initialized flag so next run will start cleanly
 function HybridAStar:finishRun(result, path)
     self.initialized = false
-    self.constraints:showStatistics()
+    if self.constraints then
+        self.constraints:showStatistics()
+    end
     closeIntervalTimer(self.timer)
     return PathfinderResult(result, path, self.goalNodeInvalid)
 end
@@ -583,7 +585,14 @@ function HybridAStar:run(start, goal, turnRadius, allowReverse, constraints, hit
     end
     self.timer = openIntervalTimer()
     while self.openList:size() > 0 and self.iterations < self.maxIterations do
-        -- pop lowest cost node from queue
+        -- yield after the configured iterations or after 20 ms
+        self.iterationsSinceYield = self.iterationsSinceYield + 1
+        if (self.iterationsSinceYield % self.yieldAfter == 0 or readIntervalTimerMs(self.timer) > 20) then
+            self.yields = self.yields + 1
+            closeIntervalTimer(self.timer)
+            -- if we had the coroutine package, we would coursePlayCoroutine.yield(false) here
+            return PathfinderResult(false)
+        end        -- pop lowest cost node from queue
         ---@type State3D
         local pred = State3D.pop(self.openList)
         self.logger:trace('pop %s', tostring(pred))
@@ -593,14 +602,7 @@ function HybridAStar:run(start, goal, turnRadius, allowReverse, constraints, hit
             self:debug('Popped the goal (%d).', self.iterations)
             return self:finishRun(true, self:rollUpPath(pred, self.goal))
         end
-        self.count = self.count + 1
-        -- yield after the configured iterations or after 20 ms
-        if (self.count % self.yieldAfter == 0 or readIntervalTimerMs(self.timer) > 20) then
-            self.yields = self.yields + 1
-            closeIntervalTimer(self.timer)
-            -- if we had the coroutine package, we would coursePlayCoroutine.yield(false) here
-            return PathfinderResult(false)
-        end
+
         if not pred:isClosed() then
             -- analytical expansion: try a Dubins/Reeds-Shepp path from here randomly, more often as we getting closer to the goal
             -- also, try it before we start with the pathfinding
@@ -613,7 +615,7 @@ function HybridAStar:run(start, goal, turnRadius, allowReverse, constraints, hit
                         self:debug('Found collision free analytic path (%s) at iteration %d', pathType, self.iterations)
                         -- remove first node of returned analytic path as it is the same as pred
                         table.remove(analyticPath, 1)
-                        -- TODO why are we calling rollUpPath here?
+                        -- roll up the path from the start of the analytic path back to start
                         return self:finishRun(true, self:rollUpPath(pred, self.goal, analyticPath))
                     end
                 end

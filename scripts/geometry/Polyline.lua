@@ -464,7 +464,9 @@ end
 --- as a turn waypoint.
 ---@param r number turning radius
 ---@param makeCorners boolean if true, make corners for turn maneuvers instead of rounding them.
-function Polyline:ensureMinimumRadius(r, makeCorners)
+---@param maxCrossTrackError number|nil maximum cross track error allowed before we start adjusting corners,
+---defaults to CourseGenerator.cMaxCrossTrackError
+function Polyline:ensureMinimumRadius(r, makeCorners, maxCrossTrackError)
 
     ---@param entry CourseGenerator.Slider
     ---@param exit CourseGenerator.Slider
@@ -492,8 +494,9 @@ function Polyline:ensureMinimumRadius(r, makeCorners)
         nextIx = currentIx + 1
         local xte = self:at(currentIx):getXte(r)
         local radius = self:at(currentIx):getRadius()
-        if xte > CourseGenerator.cMaxCrossTrackError then
-            self.logger:debug('ensureMinimumRadius (%s): found a corner at %d with r: %.1f, r: %.1f, xte: %.1f', debugId, currentIx, radius, r, xte)
+        if xte > (maxCrossTrackError or CourseGenerator.cMaxCrossTrackError) then
+            self.logger:debug('ensureMinimumRadius (%s): found a corner at %d with r: %.1f, r: %.1f, xte: %.1f',
+                    debugId, currentIx, radius, r, xte)
             -- looks like we can't make this turn without deviating too much from the course,
             local entry = CourseGenerator.Slider(self, currentIx, 0)
             local exit = CourseGenerator.Slider(self, currentIx, 0)
@@ -868,7 +871,7 @@ end
 function Polyline:__tostring()
     local result = ''
     for i, v in ipairs(self) do
-        result = result .. string.format('%d %s\n', i, v)
+        result = result .. string.format('%d %s %s\n', i, v, v.xte)
     end
     return result
 end
