@@ -92,13 +92,19 @@ function TargetPointSelectionDialog:getNumberOfItemsInSection(list, section)
 	return g_graph:getNumTargets()
 end
 
+function TargetPointSelectionDialog:applySettingValue(setting, target)
+    if setting and not setting:getIsDisabled() and target then 
+        setting:setValue(target:getUniqueID())
+    end
+end
+
 function TargetPointSelectionDialog:populateCellForItemInSection(list, section, index, cell)
     local target = g_graph:getTargetByIndex(index)
     cell:getAttribute("title"):setText(target and target:getName() or "????")
     cell.onClickCallback = function ()
         for i=1, 3 do 
-            if list == self.lists[i] and self.settings[i] and target then 
-                self.settings[i]:setValue(target:getUniqueID())
+            if list == self.lists[i] then
+                self:applySettingValue(self.settings[i], target) 
             end
         end 
     end
@@ -111,8 +117,8 @@ end
 function TargetPointSelectionDialog:onListSelectionChanged(list, section, index)
     local target = g_graph:getTargetByIndex(index)
 	for i=1, 3 do 
-        if list == self.lists[i] and self.settings[i] and target then 
-            self.settings[i]:setValue(target:getUniqueID())
+        if list == self.lists[i] then 
+            self:applySettingValue(self.settings[i], target)
         end
     end 
 end
