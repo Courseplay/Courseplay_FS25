@@ -285,6 +285,9 @@ function GraphPathfinder:createGraphEntryAndExit(start, goal)
     State3D(exitEdges[1].vertex.x, exitEdges[1].vertex.y, 0, 0)
 end
 
+--- Add the transitions between the edges in the graph. These are the road crossings where the path
+--- between two edges is missing: they are either too far apart or too close and not connected with a proper
+--- arc of the vehicle's turning radius.
 ---@param edges GraphPathfinder.GraphEdge[]
 function GraphPathfinder:addTransitions(edges)
     local path = Polyline()
