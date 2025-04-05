@@ -216,6 +216,7 @@ function AIDriveStrategyUnloadCombine:init(task, job)
     self.movingAwayDelay = CpTemporaryObject(false)
     self.checkForTrailerToUnloadTo = CpTemporaryObject(true)
     self.unloadTargetType = self.UNLOAD_TYPES.COMBINE
+    self.useStreetUnload = false
     --- Register all active unloaders here to access them fast.
     AIDriveStrategyUnloadCombine.activeUnloaders[self] = self.vehicle
 end
@@ -257,7 +258,7 @@ end
 
 function AIDriveStrategyUnloadCombine:setJobParameterValues(jobParameters)
     self.jobParameters = jobParameters
-    if jobParameters.useFieldUnload:getValue() and not jobParameters.useFieldUnload:getIsDisabled() then
+    if jobParameters.unloadWith:getValue() == CpCombineUnloaderJobParameters.UNLOAD_ON_FIELD then 
         local fieldUnloadPosition = jobParameters.fieldUnloadPosition
         if fieldUnloadPosition ~= nil and fieldUnloadPosition.x ~= nil and fieldUnloadPosition.z ~= nil and fieldUnloadPosition.angle ~= nil then
             --- Valid field unload position found and allowed.
@@ -266,6 +267,8 @@ function AIDriveStrategyUnloadCombine:setJobParameterValues(jobParameters)
             self.fieldUnloadTurnEndNode = CpUtil.createNode("Reverse field unload turn end position", fieldUnloadPosition.x, fieldUnloadPosition.z, fieldUnloadPosition.angle, nil)
             self.unloadTipSideID = jobParameters.unloadingTipSide:getValue()
         end
+    elseif jobParameters.unloadWith:getValue() ~= CpCombineUnloaderJobParameters.DEACTIVATED then
+        self.useStreetUnload = true
     end
     --- Setup the unload target mode.
     if jobParameters.unloadTarget:getValue() == CpCombineUnloaderJobParameters.UNLOAD_COMBINE then
@@ -276,8 +279,6 @@ function AIDriveStrategyUnloadCombine:setJobParameterValues(jobParameters)
         self:debug("Unload target is a silo loader.")
     end
 
-    self.useUnloadOnField = jobParameters.useFieldUnload:getValue() and not jobParameters.useFieldUnload:getIsDisabled()
-    self.useGiantsUnload = jobParameters.useGiantsUnload:getValue() and not jobParameters.useGiantsUnload:getIsDisabled()
 end
 
 --- Gets the unload target drive strategy target.
@@ -1339,7 +1340,7 @@ function AIDriveStrategyUnloadCombine:startUnloadingTrailers()
 end
 
 function AIDriveStrategyUnloadCombine:onTrailerFull()
-    if self.useGiantsUnload then
+    if self.useStreetUnload then
         self:setCurrentTaskFinished()
     else
         self.vehicle:stopCurrentAIJob(AIMessageErrorIsFull.new())

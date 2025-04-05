@@ -9,7 +9,6 @@ function CpAIJobStreet:init(isServer)
 end
 
 function CpAIJobStreet:setupTasks(isServer)
-	-- CpAIJob.setupTasks(self, isServer)
 	self.driveToPointTask = CpAITaskDriveToPoint(isServer, self)
 	self:addTask(self.driveToPointTask)
 end
@@ -27,6 +26,10 @@ end
 
 function CpAIJobStreet:getCanStartJob()
 	return true
+end
+
+function CpAIJobStreet:getStartTaskIndex()
+	return 1
 end
 
 function CpAIJobStreet:applyCurrentState(vehicle, mission, farmId, isDirectStart, isStartPositionInvalid)

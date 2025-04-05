@@ -17,6 +17,8 @@ function CpAIJobCombineUnloader:init(isServer)
 	self.heapNode = CpUtil.createNode("siloNode", 0, 0, 0, nil)
 	--- Giants unload
 	self.dischargeNodeInfos = {}
+
+	self.useGiantsUnload = false
 end
 
 function CpAIJobCombineUnloader:delete()
@@ -29,13 +31,16 @@ function CpAIJobCombineUnloader:setupTasks(isServer)
 	self.combineUnloaderTask = CpAITaskCombineUnloader(isServer, self)
 	self:addTask(self.combineUnloaderTask)
 
-	--- Giants unload
-	self.waitForFillingTask = self.combineUnloaderTask
-	self.driveToUnloadingTask = AITaskDriveTo.new(isServer, self)
-	self.dischargeTask = AITaskDischarge.new(isServer, self)
-	self:addTask(self.driveToUnloadingTask)
-	self:addTask(self.dischargeTask)
-	
+	if self.useGiantsUnload then 
+		--- Giants unload
+		self.waitForFillingTask = self.combineUnloaderTask
+		self.driveToUnloadingTask = AITaskDriveTo.new(isServer, self)
+		self.dischargeTask = AITaskDischarge.new(isServer, self)
+		self:addTask(self.driveToUnloadingTask)
+		self:addTask(self.dischargeTask)
+	else 
+
+	end	
 end
 
 function CpAIJobCombineUnloader:setupJobParameters()
@@ -43,8 +48,10 @@ function CpAIJobCombineUnloader:setupJobParameters()
     self:setupCpJobParameters(CpCombineUnloaderJobParameters(self))
 	self.cpJobParameters.fieldUnloadPosition:setSnappingAngle(math.pi/8) -- AI menu snapping angle of 22.5 degree.
 	--- Giants unload
-	self.unloadingStationParameter = self.cpJobParameters.unloadingStation
-	self.waitForFillingTask = self.combineUnloaderTask
+	if self.useGiantsUnload then
+		self.unloadingStationParameter = self.cpJobParameters.unloadingStation
+		self.waitForFillingTask = self.combineUnloaderTask
+	end
 end
 
 function CpAIJobCombineUnloader:getIsAvailableForVehicle(vehicle, cpJobsAllowed)
@@ -104,7 +111,9 @@ function CpAIJobCombineUnloader:setValues()
 	CpAIJob.setValues(self)
 	local vehicle = self.vehicleParameter:getVehicle()
 	self.combineUnloaderTask:setVehicle(vehicle)
-	self:setupGiantsUnloaderData(vehicle)
+	if self.useGiantsUnload then
+		self:setupGiantsUnloaderData(vehicle)
+	end
 end
 
 --- Called when parameters change, scan field
@@ -290,7 +299,7 @@ function CpAIJobCombineUnloader:canContinueWork()
 		return canContinueWork, errorMessage
 	end
 	--- Giants unload, checks if the unloading station is still available and not full.
-	if self.cpJobParameters.useGiantsUnload:getValue() then 
+	if self.useGiantsUnload then 
 		
 		local canContinue, errorMessage = AIJobDeliver.canContinueWork(self)
 		if not canContinue then 
@@ -319,9 +328,11 @@ end
 
 function CpAIJobCombineUnloader:startTask(task)
 	--- Giants unload, reset the discharge nodes before unloading.
-	if task == self.driveToUnloadingTask then
-		for _, dischargeNodeInfo in ipairs(self.dischargeNodeInfos) do
-			dischargeNodeInfo.dirty = true
+	if self.useGiantsUnload then
+		if task == self.driveToUnloadingTask then
+			for _, dischargeNodeInfo in ipairs(self.dischargeNodeInfos) do
+				dischargeNodeInfo.dirty = true
+			end
 		end
 	end
 	CpAIJob.startTask(self, task)
@@ -333,7 +344,7 @@ end
 ---@return number
 function CpAIJobCombineUnloader:getStartTaskIndex()
 	local startTask = CpAIJob.getStartTaskIndex(self)
-	if not self.cpJobParameters.useGiantsUnload:getValue() then 
+	if not self.useGiantsUnload then 
 		return startTask
 	end
 	local vehicle = self:getVehicle()

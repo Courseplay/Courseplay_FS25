@@ -38,7 +38,7 @@
 			<Texts>
 				<Text prefix="false">CP_deactivated</Text>
 				<Text>giants</Text>
-				<Text>autoDrive</Text>
+				<Text>streetMode</Text>
 				<Text>field</Text>
 			</Texts>
 		</Setting>

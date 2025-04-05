@@ -37,7 +37,11 @@ end
 
 --- Setup all tasks.
 function CpAIJob:setupTasks(isServer)
-	self.driveToTask = AITaskDriveTo.new(isServer, self)
+	if true then 
+		self.driveToTask = CpAITaskDriveToPoint(isServer, self)
+	else 
+		self.driveToTask = AITaskDriveTo.new(isServer, self)
+	end
 	self:addTask(self.driveToTask)
 end
 
@@ -68,43 +72,37 @@ end
 
 --- Gets the first task to start with.
 function CpAIJob:getStartTaskIndex()
-	if not self.driveToTask then 
-		return 1
-	end
-	if self.currentTaskIndex ~= 0 or self.isDirectStart or self:isTargetReached() then
-		-- skip Giants driveTo
-		-- TODO: this isn't very nice as we rely here on the derived classes to add more tasks
+	if self.driveToTask and (self:isTargetReached() or self.isDirectStart) then 
 		return 2
 	end
-	if self.driveToTask.x == nil then 
-		CpUtil.info("Drive to task was skipped, as no valid start position is set!")
-		return 2
-	end
+
+	-- if self.currentTaskIndex ~= 0 or self.isDirectStart or self:isTargetReached() then
+	-- 	-- skip Giants driveTo
+	-- 	-- TODO: this isn't very nice as we rely here on the derived classes to add more tasks
+	-- 	return 2
+	-- end
+	-- if self.driveToTask:isa(AITaskDriveTo) and self.driveToTask.x == nil then 
+	-- 	CpUtil.info("Drive to task was skipped, as no valid start position is set!")
+	-- 	return 2
+	-- end
 	return 1
 end
 
-function CpAIJob:getNextTaskIndex()
-	if self:getIsLooping() and self.currentTaskIndex >= #self.tasks then 
-		--- Makes sure the giants task is skipped
-		return self:getStartTaskIndex()
-	end
-	return AIJob.getNextTaskIndex(self)
-end
+-- function CpAIJob:getNextTaskIndex()
+-- 	if self:getIsLooping() and self.currentTaskIndex >= #self.tasks then 
+-- 		--- Makes sure the giants task is skipped
+-- 		return self:getStartTaskIndex()
+-- 	end
+-- 	return AIJob.getNextTaskIndex(self)
+-- end
 
---- Should the giants path finder job be skipped?
+--- Are we near the target point anyway or do we want to skip the inital street drive?
 function CpAIJob:isTargetReached()
-	if not self.cpJobParameters or not self.cpJobParameters.startPosition then 
+	if not self.cpJobParameters or not self.cpJobParameters.startTargetPoint then 
 		return true
 	end
-	local vehicle = self.vehicleParameter:getVehicle()
-	local x, _, z = getWorldTranslation(vehicle.rootNode)
-	local tx, tz = self.cpJobParameters.startPosition:getPosition()
-	if tx == nil or tz == nil then 
-		return true
-	end
-	local targetReached = MathUtil.vector2Length(x - tx, z - tz) < 3
-
-	return targetReached
+	--- Override by sub classes
+	return false
 end
 
 function CpAIJob:onPreStart()
@@ -227,14 +225,16 @@ function CpAIJob:setValues()
 
 	if self.driveToTask then 
 		self.driveToTask:setVehicle(vehicle)
+		self.driveToTask:setTarget(
+			g_graph:getTargetByUniqueID(self.cpJobParameters.startTargetPoint:getValue()))
 
-		local angle = self.cpJobParameters.startPosition:getAngle()
-		local x, z = self.cpJobParameters.startPosition:getPosition()
-		if angle ~= nil and x ~= nil then
-			local dirX, dirZ = MathUtil.getDirectionFromYRotation(angle)
-			self.driveToTask:setTargetDirection(dirX, dirZ)
-			self.driveToTask:setTargetPosition(x, z)
-		end
+		-- local angle = self.cpJobParameters.startPosition:getAngle()
+		-- local x, z = self.cpJobParameters.startPosition:getPosition()
+		-- if angle ~= nil and x ~= nil then
+		-- 	local dirX, dirZ = MathUtil.getDirectionFromYRotation(angle)
+		-- 	self.driveToTask:setTargetDirection(dirX, dirZ)
+		-- 	self.driveToTask:setTargetPosition(x, z)
+		-- end
 	end
 end
 
