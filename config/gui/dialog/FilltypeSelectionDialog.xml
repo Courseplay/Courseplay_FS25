@@ -16,11 +16,11 @@
                         <GuiElement>
                             <Text profile="fs25_dialogTitle" id="listHeaders[1]" text="$l10n_CP_ingameMenu_street_tragetPointSelectionDialog_title"
                                 position="0px 40px" />
-                            <SmoothList id="lists[1]" listSectionHeader="section" 
+                            <SmoothList id="fillTypeList" listSectionHeader="section" 
                                 focusChangeTop="nil" focusChangeBottom="nil" 
                                 focusChangeRight="list_middle" focusId="list_left">
                                 <ListItem profile="fs25_pricesProductListItem">
-                                    <!-- <Bitmap profile="fs25_pricesProductListItemIcon" name="icon" /> -->
+                                    <Bitmap profile="fs25_pricesProductListItemIcon" name="icon" />
                                     <Text profile="fs25_pricesProductListItemName" name="title" />
                                     <!-- <Text profile="fs25_pricesProductListItemStorage" name="storage" /> -->
                                 </ListItem>
@@ -33,33 +33,68 @@
                         <GuiElement>
                             <Text profile="fs25_dialogTitle" id="listHeaders[2]"
                                 position="0px 40px" />
-                            <SmoothList id="lists[2]" listSectionHeader="section" focusChangeTop="nil" focusChangeBottom="nil" 
+                            <BoxLayout profile="fs25_aiCreateJobLayout">
+                                <GuiElement id="minFillLevel" size="100% 70px">
+                                    <Text profile="fs25_aiCreateJobParameterTitle" name="title"
+                                        text="Group title"  size="100% 30px" position="0 30px"/>
+                                    <OptionToggle profile="fs25_aiCreateJobMultiTextOption"
+                                        name="option" onClick="onClickMultiTextOptionParameter" 
+                                        onClickCenter="onClickMultiTextOptionCenterParameter">
+                                        <Bitmap profile="fs25_aiCreateJobParameterInvalid" name="invalid" />
+                                    </OptionToggle>
+                                </GuiElement>
+                                <GuiElement id="maxFillLevel" size="100% 70px">
+                                    <Text profile="fs25_aiCreateJobParameterTitle" name="title"
+                                        text="Group title"  size="100% 30px" position="0 30px"/>
+                                    <OptionToggle profile="fs25_aiCreateJobMultiTextOption"
+                                        name="option" onClick="onClickMultiTextOptionParameter" 
+                                        onClickCenter="onClickMultiTextOptionCenterParameter">
+                                        <Bitmap profile="fs25_aiCreateJobParameterInvalid" name="invalid" />
+                                    </OptionToggle>
+                                 </GuiElement>
+                                 <GuiElement id="counter" size="100% 70px">
+                                    <Text profile="fs25_aiCreateJobParameterTitle" name="title"
+                                        text="Group title"  size="100% 30px" position="0 30px"/>
+                                    <OptionToggle profile="fs25_aiCreateJobMultiTextOption"
+                                        name="option" onClick="onClickMultiTextOptionParameter" 
+                                        onClickCenter="onClickMultiTextOptionCenterParameter">
+                                        <Bitmap profile="fs25_aiCreateJobParameterInvalid" name="invalid" />
+                                    </OptionToggle>
+                                 </GuiElement>
+
+                            <!-- <SmoothList id="lists[2]" listSectionHeader="section" focusChangeTop="nil" focusChangeBottom="nil" 
                                 focusChangeLeft="list_left" focusChangeRight="list_right" focusId="list_middle">
                                 <ListItem profile="fs25_pricesProductListItem">
-                                    <!-- <Bitmap profile="fs25_pricesProductListItemIcon" name="icon" /> -->
+                  
                                     <Text profile="fs25_pricesProductListItemName" name="title" />
-                                    <!-- <Text profile="fs25_pricesProductListItemStorage" name="storage" /> -->
+
                                 </ListItem>
                                 <ListItem profile="fs25_pricesProductListSection" name="section">
                                     <Text profile="fs25_pricesProductListSectionTitle" name="title" />
                                 </ListItem>
-                            </SmoothList>
+                            </SmoothList> -->
+                            </BoxLayout>
                         </GuiElement>
                         <Bitmap profile="fs25_dialogButtonBoxSeparator" />
                         <GuiElement>
-                            <Text profile="fs25_dialogTitle" id="listHeaders[3]"
+                            <!-- <Text profile="fs25_dialogTitle" id="listHeaders[3]"
                                 position="0px 40px" />
-                            <SmoothList id="lists[3]" listSectionHeader="section" focusChangeTop="nil" focusChangeBottom="nil" 
+                            <OptionToggle profile="fs25_aiCreateJobMultiTextOption"
+                                id="counter" onClick="onClickMultiTextOptionParameter" 
+                                onClickCenter="onClickMultiTextOptionCenterParameter">
+                                <Bitmap profile="fs25_aiCreateJobParameterInvalid" name="invalid" />
+                            </OptionToggle> -->
+                            <!-- <SmoothList id="lists[3]" listSectionHeader="section" focusChangeTop="nil" focusChangeBottom="nil" 
                                 focusChangeLeft="list_middle" focusId="list_right">
                                 <ListItem profile="fs25_pricesProductListItem">
-                                    <!-- <Bitmap profile="fs25_pricesProductListItemIcon" name="icon" /> -->
+                              
                                     <Text profile="fs25_pricesProductListItemName" name="title" />
-                                    <!-- <Text profile="fs25_pricesProductListItemStorage" name="storage" /> -->
+      
                                 </ListItem>
                                 <ListItem profile="fs25_pricesProductListSection" name="section">
                                     <Text profile="fs25_pricesProductListSectionTitle" name="title" />
                                 </ListItem>
-                            </SmoothList>
+                            </SmoothList> -->
                         </GuiElement>
                     </BoxLayout>
                 </GuiElement>

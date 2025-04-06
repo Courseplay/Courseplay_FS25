@@ -97,24 +97,15 @@ function CpAIParameterFillTypeSetting:getTitleForSectionHeader(list, section)
 end
 
 function CpAIParameterFillTypeSetting:populateCellForItemInSection(list, section, index, cell)
-	cell:getAttribute("name"):setText(self.fillType:getTextByIndex(index))
-	-- if g_Courseplay.globalSettings:isAutoDriveForStreetActive() then
-	-- 	if g_Courseplay.adSortedGroups then 
-	-- 		cell:getAttribute("name"):setText(g_Courseplay.adSortedGroups[section + g_Courseplay.adOffsetIndex][index].name)
-	-- 		cell.target = self.aiFrame
-	-- 		cell:setCallback("onClickCallback", "onClickStreetTargetList")
-	-- 	else 
-	-- 		cell:getAttribute("name"):setText("---")
-	-- 		cell.target = self.aiFrame
-	-- 		cell:setCallback("onClickCallback", "onClickStreetTargetList")
-	-- 	end
-	-- else 
-	-- 	if self.aiFrame.streetTargetPointParameter then
-	-- 		cell:getAttribute("name"):setText(self.aiFrame.streetTargetPointParameter:getTextByIndex(index))
-	-- 		cell.target = self.aiFrame
-	-- 		cell:setCallback("onClickCallback", "onClickStreetTargetList")
-	-- 	end
-	-- end
+	cell:getAttribute("title"):setText(self.fillType:getTextByIndex(index))
+	local fillType = g_fillTypeManager:getFillTypeByIndex(self.fillType:getValueByIndex(index))
+	if fillType then
+		cell:getAttribute("icon"):setImageFilename(fillType.hudOverlayFilename)
+	end
+	cell:getAttribute("icon"):setVisible(fillType ~= nil)
+	cell.onClickCallback = function ()
+		self.fillType:setValue(self.fillType:getValueByIndex(index))
+	end
 end
 
 function CpAIParameterFillTypeSetting:onListSelectionChanged(list, section, index)
@@ -122,7 +113,18 @@ function CpAIParameterFillTypeSetting:onListSelectionChanged(list, section, inde
 end
 
 function CpAIParameterFillTypeSetting:getString()
-	return self.fillType:getString()
+	if self.fillType:getValue() < 0 then 
+		return self.fillType:getString()
+	end
+	local string = string.format("%s | min: %s | max: %s", 
+		self.fillType:getString(), 
+		self.minFillLevel:getString(),
+		self.maxFillLevel:getString())
+
+	if not self.counter:getIsDisabled() then 
+		string = string.format("%s | counter: %s", string, self.counter:getString())
+	end
+	return string
 end
 
 function CpAIParameterFillTypeSetting:__tostring()

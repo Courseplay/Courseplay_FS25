@@ -788,7 +788,11 @@ function CpCourseGeneratorFrame:onClickMultiTextOptionCenterParameter(element)
 					self:validateParameters()
 				end)
 			elseif param:isa(CpAIParameterFillTypeSetting) then
-				
+				FilltypeSelectionDialog.show(param, function()
+					self.currentJob:onParameterValueChanged(param)
+					self:updateParameterValueTexts()
+					self:validateParameters()
+				end)
 			end
 		end
 	end

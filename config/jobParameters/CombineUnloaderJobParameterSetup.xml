@@ -43,9 +43,11 @@
 			</Texts>
 		</Setting>
 		<Setting classType="CpAIParameterUnloadingStation" name="unloadingStation" 
-			isVisible="isGiantsForStreetActive" generateValuesFunction="generateUnloadingStations"/>
+			isVisible="isGiantsForStreetActive" isDisabled ="isUnloadWithStreetModeDisabled"
+			generateValuesFunction="generateUnloadingStations"/>
 		<Setting classType="CpAIParameterTargetPoint" name="unloadTargetPoint" 
-			isVisible="isStreetModeActive" onChangeCallback="onChangeUnloadTargetPoint"/>
+			isVisible="isStreetModeActive" isDisabled ="isUnloadWithStreetModeDisabled"
+			onChangeCallback="onChangeUnloadTargetPoint"/>
 		<Setting classType="CpAIParameterPositionAngle" name="fieldUnloadPosition" 
 			positionParameterType="UNLOAD" isDisabled ="isFieldUnloadDisabled"/>
 		<Setting classType="AIParameterSettingList" name="unloadingTipSide" 

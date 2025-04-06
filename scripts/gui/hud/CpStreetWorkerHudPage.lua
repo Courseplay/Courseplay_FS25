@@ -10,6 +10,29 @@ end
 
 function CpStreetWorkerHudPageElement:setupElements(baseHud, vehicle, lines, wMargin, hMargin)
 
+	--- Starting point 
+    self.loadUnloadTargetModeBtn = baseHud:addLeftLineTextButton(self, 5, CpBaseHud.defaultFontSize, 
+        function (vehicle)
+            vehicle:getCpStreetWorkerJobParameters().loadUnloadTargetMode:setNextItem()
+        end, vehicle)
+	--- Starting point 
+    self.unloadTargetPointBtn = baseHud:addLineTextButton(self, 4, 
+		CpBaseHud.defaultFontSize, vehicle:getCpStreetWorkerJobParameters().unloadTargetPoint,
+        function()
+            TargetPointSelectionDialog.show(
+				{vehicle:getCpStreetWorkerJobParameters().unloadTargetPoint,
+				vehicle:getCpStreetWorkerJobParameters().loadTargetPoint})
+        end)
+	--- Starting point 
+    self.loadTargetPointBtn = baseHud:addLineTextButton(self, 3, 
+		CpBaseHud.defaultFontSize, vehicle:getCpStreetWorkerJobParameters().loadTargetPoint,
+        function()
+            TargetPointSelectionDialog.show(
+				{vehicle:getCpStreetWorkerJobParameters().unloadTargetPoint,
+				vehicle:getCpStreetWorkerJobParameters().loadTargetPoint})
+        end)
+
+
 	-- local x, y = unpack(lines[5].left)
 	-- self.loadMultipleFillTypesSetting = CpTextHudElement.new(self, 
 	-- 	x, y, baseHud.defaultFontSize)
@@ -97,14 +120,17 @@ end
 ---@param vehicle table
 ---@param status CpStatus
 function CpStreetWorkerHudPageElement:updateContent(vehicle, status)
-    -- local workWidth = vehicle:getCpSettings().bunkerSiloWorkWidth
-    -- self.workWidthBtn:setTextDetails(workWidth:getTitle(), workWidth:getString())
-    -- self.workWidthBtn:setVisible(workWidth:getIsVisible())
-
-    -- local loadingHeightOffset = vehicle:getCpSettings().loadingShovelHeightOffset
-    -- self.loadingShovelHeightOffsetBtn:setTextDetails(loadingHeightOffset:getTitle(), loadingHeightOffset:getString())
-    -- self.loadingShovelHeightOffsetBtn:setVisible(loadingHeightOffset:getIsVisible())
-    -- self.loadingShovelHeightOffsetBtn:setDisabled(loadingHeightOffset:getIsDisabled())
+	
+    local jobParameters = vehicle:getCpStreetWorkerJobParameters()
+    self.loadUnloadTargetModeBtn:setTextDetails(jobParameters.loadUnloadTargetMode:getString())
+    self.unloadTargetPointBtn:setTextDetails(
+		jobParameters.unloadTargetPoint:getTitle(),
+		jobParameters.unloadTargetPoint:getString())
+	self.unloadTargetPointBtn:setDisabled(jobParameters.unloadTargetPoint:getIsDisabled())
+	self.loadTargetPointBtn:setTextDetails(
+		jobParameters.loadTargetPoint:getTitle(),
+		jobParameters.loadTargetPoint:getString())
+	self.loadTargetPointBtn:setVisible(not jobParameters.loadTargetPoint:getIsDisabled())
 
     -- self.fillLevelProgressText:setTextDetails(status:getSiloFillLevelPercentageLeftOver())
 	-- local jobParameters = vehicle:getCpStreetWorkerJob():getCpJobParameters()

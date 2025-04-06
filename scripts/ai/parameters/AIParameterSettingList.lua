@@ -250,6 +250,11 @@ function AIParameterSettingList:getTextByIndex(index)
 	return self.texts[index]
 end
 
+---@return number
+function AIParameterSettingList:getCurrentIndex()
+	return self.current
+end
+
 function AIParameterSettingList:validateCurrentValue()
 	local new = self:checkAndSetValidValue(self.current)
 	if new ~= self.current then

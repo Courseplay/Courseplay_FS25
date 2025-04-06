@@ -253,7 +253,9 @@ Changelog 8.0.0.0:
 		<sourceFile filename="scripts/ai/strategies/AIDriveStrategySiloLoader.lua"/>
 		<sourceFile filename="scripts/ai/strategies/AIDriveStrategyShovelSiloLoader.lua"/>
 		<sourceFile filename="scripts/ai/strategies/AIDriveStrategyStreetDriveToPoint.lua"/>
-
+		<sourceFile filename="scripts/ai/strategies/AIDriveStrategyStreetDriveUnloading.lua"/>
+		<sourceFile filename="scripts/ai/strategies/AIDriveStrategyStreetDriveLoading.lua"/>
+		
 		<sourceFile filename="scripts/ai/parameters/AIParameterSettingInterface.lua"/>
 		<sourceFile filename="scripts/ai/parameters/AIParameterSetting.lua"/>
 		<sourceFile filename="scripts/ai/parameters/AIParameterSettingList.lua"/>
@@ -282,6 +284,8 @@ Changelog 8.0.0.0:
 		<sourceFile filename="scripts/ai/tasks/CpAITaskBunkerSilo.lua"/>
 		<sourceFile filename="scripts/ai/tasks/CpAITaskSiloLoader.lua"/>
 		<sourceFile filename="scripts/ai/tasks/CpAITaskDriveToPoint.lua"/>
+		<sourceFile filename="scripts/ai/tasks/CpAITaskDriveToPointLoad.lua"/>
+		<sourceFile filename="scripts/ai/tasks/CpAITaskDriveToPointUnload.lua"/>
 
 		<sourceFile filename="scripts/gui/plots/CoursePlot.lua"/>
 		<sourceFile filename="scripts/gui/plots/FieldPlot.lua"/>
@@ -296,6 +300,8 @@ Changelog 8.0.0.0:
 		<sourceFile filename="scripts/gui/elements/CpBinaryOptionElement.lua"/>
 		<sourceFile filename="scripts/gui/elements/CpOptionToggleElement.lua"/>
 		<sourceFile filename="scripts/gui/dialog/TargetPointSelectionDialog.lua"/>
+		<sourceFile filename="scripts/gui/dialog/FilltypeSelectionDialog.lua"/>
+
 		<sourceFile filename="scripts/gui/pages/CpCourseManagerFrame.lua"/>
 		<sourceFile filename="scripts/gui/pages/CpCourseGeneratorFrame.lua"/>
 		<sourceFile filename="scripts/gui/pages/CpVehicleSettingsFrame.lua"/>

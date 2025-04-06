@@ -240,3 +240,8 @@ function AIDriveStrategyStreetDriveToPoint:onStreetPathfindingDone(controller, s
         self:startCourse(course, ix)
     end
 end
+
+function AIDriveStrategyStreetDriveToPoint:onStartDrivingCourse(course, ix)
+    self.state = self.states.DRIVING_COURSE
+    self:startCourse(course, ix)
+end

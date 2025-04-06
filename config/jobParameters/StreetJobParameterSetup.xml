@@ -6,8 +6,8 @@
 			onChangeCallback="onChangeTargetPoints">
 			<Values>
 				<Value name="DRIVE_TO">0</Value>
-				<Value name="UNLOAD_AT_TARGET" isDisabled="hasNoValidTrailerAttached">1</Value>
-				<Value name="LOAD_AND_UNLOAD" isDisabled="hasNoValidTrailerAttached" >2</Value>
+				<Value name="UNLOAD_AT_TARGET" isDisabled="isUnloadAtTargetDisabled">1</Value>
+				<Value name="LOAD_AND_UNLOAD" isDisabled="isLoadAtTargetDisabled" >2</Value>
 			</Values>
 			<Texts>
 				<Text>driveTo</Text>

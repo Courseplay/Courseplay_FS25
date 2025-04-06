@@ -364,8 +364,8 @@
 			<Text language="en"><![CDATA[Mode]]></Text>
 		</Translation>
 		<Translation name="CP_streetJobParameters_loadUnloadTargetMode_driveTo">
-			<Text language="de"><![CDATA[Fahre zu]]></Text>
-			<Text language="en"><![CDATA[Drive to]]></Text>
+			<Text language="de"><![CDATA[Fahre zu Punkt]]></Text>
+			<Text language="en"><![CDATA[Drive to point]]></Text>
 		</Translation>
 		<Translation name="CP_streetJobParameters_loadUnloadTargetMode_unloadAtTarget">
 			<Text language="de"><![CDATA[Abladen am Ziel]]></Text>
@@ -2144,6 +2144,10 @@ The course is saved automatically on closing of the editor and overrides the sel
 		<Translation name="CP_ingameMenu_map_title">
 			<Text language="de"><![CDATA[Karte]]></Text>
 			<Text language="en"><![CDATA[Map]]></Text>
+		</Translation>
+		<Translation name="CP_ingameMenu_street_tragetPointSelectionDialog_title">
+			<Text language="de"><![CDATA[Zielpunkteauswahl]]></Text>
+			<Text language="en"><![CDATA[Target point selection]]></Text>
 		</Translation>
 	</Category>
 	<Category name="Help menu">	

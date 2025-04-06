@@ -554,47 +554,54 @@ function CpStreetJobParameters:init(job)
 end
 
 function CpStreetJobParameters:hasNoValidTrailerAttached()
-    return true
-    -- local vehicle = self.job:getVehicle()
-    -- if vehicle then
-    --     return not AIUtil.hasChildVehicleWithSpecialization(vehicle, Dischargeable) 
-    --         or not AIUtil.hasChildVehicleWithSpecialization(vehicle, Trailer) 
-    -- end
-    -- return false
+    local vehicle = self.job:getVehicle()
+    if vehicle then
+        return not AIUtil.hasChildVehicleWithSpecialization(vehicle, Dischargeable) 
+            or not AIUtil.hasChildVehicleWithSpecialization(vehicle, Trailer) 
+    end
+    return false
 end
+
 
 function CpStreetJobParameters:isUnloadTargetPointDisabled()
     return false
---    return self:hasNoValidTrailerAttached() or self.loadUnloadTargetMode:getValue() == CpStreetJobParameters.DRIVE_TO
 end
 
 function CpStreetJobParameters:isLoadTargetPointDisabled()
-    return true
-    -- return self:hasNoValidTrailerAttached() or self.loadUnloadTargetMode:getValue() ~= CpStreetJobParameters.LOAD_AND_UNLOAD
+    return self.loadUnloadTargetMode:getValue() ~= CpStreetJobParameters.LOAD_AND_UNLOAD
+end
+
+function CpStreetJobParameters:isUnloadAtTargetDisabled()
+    return self:hasNoValidTrailerAttached()
+end
+
+function CpStreetJobParameters:isLoadAtTargetDisabled()
+    return self:hasNoValidTrailerAttached()
 end
 
 function CpStreetJobParameters:isRunCounterDisabled()
     return false
 end
+
 function CpStreetJobParameters:generateFillTypes()
     local fillTypes = {}
     local texts = {}
-    -- local vehicle = self.job and self.job:getVehicle()
-    -- if vehicle then
-    --     fillTypes = FillLevelUtil.getAllValidFillTypes(vehicle, function()
-    --         return true
-    --     end)
-    --     for _, f in pairs(fillTypes) do 
-    --         table.insert(texts, g_fillTypeManager:getFillTypeTitleByIndex(f))
-    --     end
-    -- else 
-    --     for ix, _ in pairs(g_fillTypeManager:getFillTypes()) do 
-    --         if ix ~= FillType.UNKNOWN then
-    --             table.insert(fillTypes, ix)
-    --             table.insert(texts, g_fillTypeManager:getFillTypeTitleByIndex(f))
-    --         end
-    --     end
-    -- end
+    local vehicle = self.job and self.job:getVehicle()
+    if vehicle then
+        fillTypes = FillLevelUtil.getAllValidFillTypes(vehicle, function()
+            return true
+        end)
+        for _, f in pairs(fillTypes) do 
+            table.insert(texts, g_fillTypeManager:getFillTypeTitleByIndex(f))
+        end
+    else 
+        for ix, _ in pairs(g_fillTypeManager:getFillTypes()) do 
+            if ix ~= FillType.UNKNOWN then
+                table.insert(fillTypes, ix)
+                table.insert(texts, g_fillTypeManager:getFillTypeTitleByIndex(ix))
+            end
+        end
+    end
     table.insert(fillTypes, 1, -1)
     table.insert(texts, 1, "---")
     return fillTypes, texts
@@ -602,38 +609,5 @@ end
 
 ---@param setting CpAIParameterTargetPoint
 function CpStreetJobParameters:onChangeTargetPoints(setting)
-    -- if setting:getIsDisabled() then 
-    --     return
-    -- end
-    -- local vehicle = self.job:getVehicle()
-    -- if not vehicle then
-    --     return
-    -- end 
-    -- local startId 
-    -- if self:isLoadTargetPointDisabled() then
-    --     g_graphCourseManager:generateCourseFromVehicleToStart(vehicle, 
-    --     function(toUnloadCourse)
-    --         if self:isLoadTargetPointDisabled() then 
-    --             self.job:onCourseGenerated(setting, toUnloadCourse, nil)
-    --         else 
-    --             g_graphCourseManager:generateCourseBetweenPoints(vehicle,
-    --                 function(fromUnloadCourse)
-    --                     self.job:onCourseGenerated(setting, toUnloadCourse, fromUnloadCourse)
-    --                 end, self.unloadTargetPoint:getValue(), startId)
-    --         end
-    --     end, self.unloadTargetPoint:getValue())
-    -- else
-    --     startId = self.loadTargetPoint:getValue()
-    --     g_graphCourseManager:generateCourseBetweenPoints(vehicle, 
-    --     function(toUnloadCourse)
-    --         if self:isLoadTargetPointDisabled() then 
-    --             self.job:onCourseGenerated(setting, toUnloadCourse, nil)
-    --         else 
-    --             g_graphCourseManager:generateCourseBetweenPoints(vehicle,
-    --                 function(fromUnloadCourse)
-    --                     self.job:onCourseGenerated(setting, toUnloadCourse, fromUnloadCourse)
-    --                 end, self.unloadTargetPoint:getValue(), startId)
-    --         end
-    --     end, startId, self.unloadTargetPoint:getValue())
-    -- end
+    
 end

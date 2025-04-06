@@ -356,7 +356,7 @@ function CpBaseHud:addRightLineTextButton(parent, line, textSize, callbackFunc, 
     return element
 end
 
-function CpBaseHud:addLineTextButton(parent, line, textSize, setting)
+function CpBaseHud:addLineTextButton(parent, line, textSize, setting, customCallback)
     local x, y = unpack(self.lines[line].left)
     local dx, dy = unpack(self.lines[line].right)
     local btnYOffset = self.hMargin*0.1
@@ -373,7 +373,20 @@ function CpBaseHud:addLineTextButton(parent, line, textSize, setting)
         class =  setting,
         func =  setting.setNextItem,
     }
-    element:setCallback(callbackLabel, callbackText)
+    if customCallback then 
+        element:setCallback({
+            callbackStr = "onClickPrimary",
+            class =  setting,
+            func  =  customCallback,
+        },
+        {
+            callbackStr = "onClickPrimary",
+            class =  setting,
+            func  =  customCallback,
+        })
+    else 
+        element:setCallback(callbackLabel, callbackText)
+    end
     return element
 end
 
