@@ -608,6 +608,7 @@ La course est automatiquement sauvegardée à la fermeture de l'éditeur et remp
     <!--CP ingame menu-->
     <!---->
     <text name="CP_ingameMenu_map_title" text="Map"/>
+    <text name="CP_ingameMenu_street_tragetPointSelectionDialog_title" text="Target point selection"/>
     <!---->
     <!--Help menu-->
     <!---->

@@ -607,6 +607,7 @@
     <!--CP ingame menu-->
     <!---->
     <text name="CP_ingameMenu_map_title" text="지도"/>
+    <text name="CP_ingameMenu_street_tragetPointSelectionDialog_title" text="Target point selection"/>
     <!---->
     <!--Help menu-->
     <!---->

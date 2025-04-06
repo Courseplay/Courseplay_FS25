@@ -608,6 +608,7 @@ Kurs jest automatycznie zapisywany po zamknięciu edytora i nadpisuje wybrany ku
     <!--CP ingame menu-->
     <!---->
     <text name="CP_ingameMenu_map_title" text="Mapa"/>
+    <text name="CP_ingameMenu_street_tragetPointSelectionDialog_title" text="Target point selection"/>
     <!---->
     <!--Help menu-->
     <!---->

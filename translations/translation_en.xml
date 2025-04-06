@@ -111,7 +111,7 @@
     <!---->
     <text name="CP_streetJobParameters_subTitle_loadUnloadTargetMode" text="Mode"/>
     <text name="CP_streetJobParameters_loadUnloadTargetMode_title" text="Mode"/>
-    <text name="CP_streetJobParameters_loadUnloadTargetMode_driveTo" text="Drive to"/>
+    <text name="CP_streetJobParameters_loadUnloadTargetMode_driveTo" text="Drive to point"/>
     <text name="CP_streetJobParameters_loadUnloadTargetMode_unloadAtTarget" text="Unloading at goal"/>
     <text name="CP_streetJobParameters_loadUnloadTargetMode_loadAndUnload" text="Loading and unloading"/>
     <text name="CP_streetJobParameters_subTitle_unloadTargetPoint" text="Goal waypoint"/>
@@ -608,6 +608,7 @@ The course is saved automatically on closing of the editor and overrides the sel
     <!--CP ingame menu-->
     <!---->
     <text name="CP_ingameMenu_map_title" text="Map"/>
+    <text name="CP_ingameMenu_street_tragetPointSelectionDialog_title" text="Target point selection"/>
     <!---->
     <!--Help menu-->
     <!---->

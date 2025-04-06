@@ -608,6 +608,7 @@ The course is saved automatically on closing of the editor and overrides the sel
     <!--CP ingame menu-->
     <!---->
     <text name="CP_ingameMenu_map_title" text="Map"/>
+    <text name="CP_ingameMenu_street_tragetPointSelectionDialog_title" text="Target point selection"/>
     <!---->
     <!--Help menu-->
     <!---->

@@ -608,6 +608,7 @@ Düzenleyici kapatıldığında rota otomatik olarak kaydedilir ve önceki rotay
     <!--CP ingame menu-->
     <!---->
     <text name="CP_ingameMenu_map_title" text="Harita"/>
+    <text name="CP_ingameMenu_street_tragetPointSelectionDialog_title" text="Target point selection"/>
     <!---->
     <!--Help menu-->
     <!---->

@@ -111,7 +111,7 @@
     <!---->
     <text name="CP_streetJobParameters_subTitle_loadUnloadTargetMode" text="Modus"/>
     <text name="CP_streetJobParameters_loadUnloadTargetMode_title" text="Modus"/>
-    <text name="CP_streetJobParameters_loadUnloadTargetMode_driveTo" text="Fahre zu"/>
+    <text name="CP_streetJobParameters_loadUnloadTargetMode_driveTo" text="Fahre zu Punkt"/>
     <text name="CP_streetJobParameters_loadUnloadTargetMode_unloadAtTarget" text="Abladen am Ziel"/>
     <text name="CP_streetJobParameters_loadUnloadTargetMode_loadAndUnload" text="Beladen und entladen"/>
     <text name="CP_streetJobParameters_subTitle_unloadTargetPoint" text="Zielwegpunkt"/>
@@ -608,6 +608,7 @@ Der Kurs wird beim Schließen automatisch gespeichert und überschrieben.
     <!--CP ingame menu-->
     <!---->
     <text name="CP_ingameMenu_map_title" text="Karte"/>
+    <text name="CP_ingameMenu_street_tragetPointSelectionDialog_title" text="Zielpunkteauswahl"/>
     <!---->
     <!--Help menu-->
     <!---->

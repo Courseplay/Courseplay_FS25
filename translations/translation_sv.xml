@@ -608,6 +608,7 @@ Banan sparas automatiskt vid stängning av editorn och åsidosätter den valda b
     <!--CP ingame menu-->
     <!---->
     <text name="CP_ingameMenu_map_title" text="Map"/>
+    <text name="CP_ingameMenu_street_tragetPointSelectionDialog_title" text="Target point selection"/>
     <!---->
     <!--Help menu-->
     <!---->
