@@ -90,7 +90,7 @@ function AIDriveStrategyStreetDriveLoading:updateLoading()
     for _, fillTypeSetting in pairs(self.fillTypeSettings) do 
         local fillType = fillTypeSetting.fillType:getValue()
         local data = fillLevels[fillType]
-        if fillType > FillType.UNKNOWN and data ~= nil then 
+        if fillType > FillType.UNKNOWN and data ~= nil and data.allowedCapacity > 0 then 
             if (100 * data.allowedFillLevel / data.allowedCapacity)
                 <= fillTypeSetting.minFillLevel:getValue() then 
                 missingFillTypes[fillType] = true

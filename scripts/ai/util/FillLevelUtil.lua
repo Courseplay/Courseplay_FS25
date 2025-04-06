@@ -42,7 +42,7 @@ function FillLevelUtil.getAllFillLevels(vehicle)
                     end
                     fillLevelsByFillType[fillType].fillLevel = fillLevelsByFillType[fillType].fillLevel + v:getFillUnitFillLevel(index)
                     fillLevelsByFillType[fillType].capacity = fillLevelsByFillType[fillType].capacity + v:getFillUnitCapacity(index)
-                    if v:getFillUnitAllowsFillType(fillType) then
+                    if v:getFillUnitAllowsFillType(index, fillType) then
                         fillLevelsByFillType[fillType].allowedFillLevel = fillLevelsByFillType[fillType].allowedFillLevel + v:getFillUnitFillLevel(index)
                         fillLevelsByFillType[fillType].allowedCapacity = fillLevelsByFillType[fillType].allowedCapacity + v:getFillUnitCapacity(index)
                     end

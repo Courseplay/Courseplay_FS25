@@ -17,20 +17,20 @@ end
 function CpSiloLoaderWorkerHudPageElement:setupElements(baseHud, vehicle, lines, wMargin, hMargin)
 	
     --- Work width
-    self.workWidthBtn = baseHud:addLineTextButtonWithIncrementalButtons(self, 3, CpBaseHud.defaultFontSize, 
+    self.workWidthBtn = baseHud:addLineTextButtonWithIncrementalButtons(self, CpBaseHud.numLines - 5, CpBaseHud.defaultFontSize, 
                                                 vehicle:getCpSettings().bunkerSiloWorkWidth) 
 
 
     --- Displays the fill level of current worked on heap.
-    local x, y = unpack(lines[4].left)
+    local x, y = unpack(lines[CpBaseHud.numLines - 4].left)
     self.fillLevelProgressLabel = CpTextHudElement.new(self , x , y, CpBaseHud.defaultFontSize)
     self.fillLevelProgressLabel:setTextDetails(g_i18n:getText("CP_siloLoader_fillLevelProgress"))
     --- Displays the fill level of current worked on heap.
-    local x, y = unpack(lines[4].right)
+    local x, y = unpack(lines[CpBaseHud.numLines - 4].right)
     self.fillLevelProgressText = CpTextHudElement.new(self, x, y, CpBaseHud.defaultFontSize, RenderText.ALIGN_RIGHT)
     
     --- Shovel loading height offset.
-    self.loadingShovelHeightOffsetBtn = baseHud:addLineTextButtonWithIncrementalButtons(self, 2, CpBaseHud.defaultFontSize, 
+    self.loadingShovelHeightOffsetBtn = baseHud:addLineTextButtonWithIncrementalButtons(self, CpBaseHud.numLines - 6, CpBaseHud.defaultFontSize, 
         vehicle:getCpSettings().loadingShovelHeightOffset) 
 
     CpGuiUtil.addCopyAndPasteButtons(self, baseHud, 

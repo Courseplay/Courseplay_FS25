@@ -18,19 +18,19 @@ end
 function CpCombineUnloaderHudPageElement:setupElements(baseHud, vehicle, lines, wMargin, hMargin)
 
     --- Tool offset x
-    self.combineOffsetXBtn = baseHud:addLineTextButtonWithIncrementalButtons(self, 3, CpBaseHud.defaultFontSize, 
+    self.combineOffsetXBtn = baseHud:addLineTextButtonWithIncrementalButtons(self, CpBaseHud.numLines - 5, CpBaseHud.defaultFontSize, 
         vehicle:getCpSettings().combineOffsetX)
 
     --- Tool offset z
-    self.combineOffsetZBtn = baseHud:addLineTextButtonWithIncrementalButtons(self, 2, CpBaseHud.defaultFontSize, 
+    self.combineOffsetZBtn = baseHud:addLineTextButtonWithIncrementalButtons(self, CpBaseHud.numLines - 6, CpBaseHud.defaultFontSize, 
         vehicle:getCpSettings().combineOffsetZ)
 
     --- Full threshold 
-    self.fullThresholdBtn = baseHud:addLineTextButtonWithIncrementalButtons(self, 4, CpBaseHud.defaultFontSize, 
+    self.fullThresholdBtn = baseHud:addLineTextButtonWithIncrementalButtons(self, CpBaseHud.numLines - 4, CpBaseHud.defaultFontSize, 
         vehicle:getCpSettings().fullThreshold)              
 
     --- Unloading combine or silo loader ?
-    self.unloadModeBtn = baseHud:addLineTextButton(self, 5, CpBaseHud.defaultFontSize, 
+    self.unloadModeBtn = baseHud:addLineTextButton(self, CpBaseHud.numLines - 3, CpBaseHud.defaultFontSize, 
         vehicle:getCpCombineUnloaderJobParameters().unloadTarget)
 
     --- Drive now button
@@ -43,7 +43,7 @@ function CpCombineUnloaderHudPageElement:setupElements(baseHud, vehicle, lines, 
         CpBaseHud.alignments.bottomRight)
 
     self.driveNowBtn = CpHudButtonElement.new(driveNowOverlay, self)
-    local x, y = unpack(lines[8].right)
+    local x, y = unpack(lines[CpBaseHud.numLines].right)
     y = y - hMargin/4
     local driveNowBtnX = x - 2*width - wMargin/2 - wMargin/8
     self.driveNowBtn:setPosition(driveNowBtnX, y)

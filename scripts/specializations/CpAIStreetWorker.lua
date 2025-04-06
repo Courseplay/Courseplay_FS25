@@ -32,6 +32,7 @@ function CpAIStreetWorker.registerEventListeners(vehicleType)
     SpecializationUtil.registerEventListener(vehicleType, 'onLoadFinished', CpAIStreetWorker)
     SpecializationUtil.registerEventListener(vehicleType, 'onReadStream', CpAIStreetWorker)
     SpecializationUtil.registerEventListener(vehicleType, 'onWriteStream', CpAIStreetWorker)
+    SpecializationUtil.registerEventListener(vehicleType, 'onUpdate', CpAIStreetWorker)
 end
 
 function CpAIStreetWorker.registerFunctions(vehicleType)
@@ -68,15 +69,23 @@ end
 
 function CpAIStreetWorker:onLoadFinished(savegame)
     local spec = self.spec_cpAIStreetWorker
-    spec.cpJob:getCpJobParameters():validateSettings()
     if savegame ~= nil then 
-        spec.cpJob:getCpJobParameters():loadFromXMLFile(savegame.xmlFile, savegame.key.. CpAIStreetWorker.KEY..".cpJob")
+        spec.cpJob:loadFromXMLFile(savegame.xmlFile, savegame.key.. CpAIStreetWorker.KEY..".cpJob")
+    end
+end
+
+function CpAIStreetWorker:onUpdate()
+    local spec = self.spec_cpAIStreetWorker
+    if not spec.finishedFirstUpdate then
+        spec.cpJob:getCpJobParameters():validateSettings()
+        spec.cpJob:getCpJobParameters():resetToLoadedValue()
+        spec.finishedFirstUpdate = true
     end
 end
 
 function CpAIStreetWorker:saveToXMLFile(xmlFile, baseKey, usedModNames)
     local spec = self.spec_cpAIStreetWorker
-    spec.cpJob:getCpJobParameters():saveToXMLFile(xmlFile, baseKey.. ".cpJob")
+    spec.cpJob:saveToXMLFile(xmlFile, baseKey.. ".cpJob")
 end
 
 function CpAIStreetWorker:onReadStream(streamId, connection)

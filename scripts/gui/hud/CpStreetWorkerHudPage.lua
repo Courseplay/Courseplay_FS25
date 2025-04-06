@@ -10,27 +10,46 @@ end
 
 function CpStreetWorkerHudPageElement:setupElements(baseHud, vehicle, lines, wMargin, hMargin)
 
-	--- Starting point 
-    self.loadUnloadTargetModeBtn = baseHud:addLeftLineTextButton(self, 5, CpBaseHud.defaultFontSize, 
+    self.loadUnloadTargetModeBtn = baseHud:addLeftLineTextButton(self, CpBaseHud.numLines - 3, CpBaseHud.defaultFontSize, 
         function (vehicle)
             vehicle:getCpStreetWorkerJobParameters().loadUnloadTargetMode:setNextItem()
         end, vehicle)
-	--- Starting point 
-    self.unloadTargetPointBtn = baseHud:addLineTextButton(self, 4, 
+
+    self.unloadTargetPointBtn = baseHud:addLineTextButton(self, CpBaseHud.numLines - 4, 
 		CpBaseHud.defaultFontSize, vehicle:getCpStreetWorkerJobParameters().unloadTargetPoint,
         function()
             TargetPointSelectionDialog.show(
 				{vehicle:getCpStreetWorkerJobParameters().unloadTargetPoint,
 				vehicle:getCpStreetWorkerJobParameters().loadTargetPoint})
         end)
-	--- Starting point 
-    self.loadTargetPointBtn = baseHud:addLineTextButton(self, 3, 
-		CpBaseHud.defaultFontSize, vehicle:getCpStreetWorkerJobParameters().loadTargetPoint,
-        function()
-            TargetPointSelectionDialog.show(
-				{vehicle:getCpStreetWorkerJobParameters().unloadTargetPoint,
-				vehicle:getCpStreetWorkerJobParameters().loadTargetPoint})
-        end)
+
+	self.loadTargetPointBtn = baseHud:addLineTextButton(self, CpBaseHud.numLines - 5, 
+	CpBaseHud.defaultFontSize, vehicle:getCpStreetWorkerJobParameters().loadTargetPoint,
+	function()
+		TargetPointSelectionDialog.show(
+			{vehicle:getCpStreetWorkerJobParameters().unloadTargetPoint,
+			vehicle:getCpStreetWorkerJobParameters().loadTargetPoint})
+	end)
+
+    self.fillTypeButtons = {
+		baseHud:addLineTextButton(self, CpBaseHud.numLines - 6, 
+			CpBaseHud.defaultFontSize, vehicle:getCpStreetWorkerJobParameters().loadTargetPoint,
+			function()
+				FilltypeSelectionDialog.show(
+					vehicle:getCpStreetWorkerJobParameters().fillTypeSelection1)
+			end),
+		baseHud:addLineTextButton(self, CpBaseHud.numLines - 7, 
+			CpBaseHud.defaultFontSize, vehicle:getCpStreetWorkerJobParameters().loadTargetPoint,
+			function()
+				FilltypeSelectionDialog.show(
+					vehicle:getCpStreetWorkerJobParameters().fillTypeSelection2)
+			end),
+		baseHud:addLineTextButton(self, CpBaseHud.numLines - 8, 
+			CpBaseHud.defaultFontSize, vehicle:getCpStreetWorkerJobParameters().loadTargetPoint,
+			function()
+				FilltypeSelectionDialog.show(
+					vehicle:getCpStreetWorkerJobParameters().fillTypeSelection3)
+			end)}
 
 
 	-- local x, y = unpack(lines[5].left)
@@ -61,29 +80,29 @@ function CpStreetWorkerHudPageElement:setupElements(baseHud, vehicle, lines, wMa
 	-- 		lines, wMargin, hMargin)
 	-- }
 
-	-- CpGuiUtil.addCopyAndPasteButtons(self, baseHud, 
-	-- 	vehicle, lines, wMargin, hMargin, 1)
+	CpGuiUtil.addCopyAndPasteButtons(self, baseHud, 
+		vehicle, lines, wMargin, hMargin, 1)
 
-	-- self.copyButton:setCallback("onClickPrimary", vehicle, function (vehicle)
-	-- 	if not CpBaseHud.copyPasteCache.hasVehicle and vehicle.getCpStreetWorkerJob then 
-	-- 		CpBaseHud.copyPasteCache.streetWorkerVehicle = vehicle
-	-- 		CpBaseHud.copyPasteCache.hasVehicle = true
-	-- 	end
-	-- end)
+	self.copyButton:setCallback("onClickPrimary", vehicle, function (vehicle)
+		if not CpBaseHud.copyPasteCache.hasVehicle and vehicle.getCpStreetWorkerJob then 
+			CpBaseHud.copyPasteCache.streetWorkerVehicle = vehicle
+			CpBaseHud.copyPasteCache.hasVehicle = true
+		end
+	end)
 
 
-	-- self.pasteButton:setCallback("onClickPrimary", vehicle, function (vehicle)
-	-- 	if CpBaseHud.copyPasteCache.hasVehicle and not vehicle:getIsCpActive() then 
-	-- 		if CpBaseHud.copyPasteCache.streetWorkerVehicle then 
-	-- 			vehicle:applyCpStreetWorkerJobParameters(CpBaseHud.copyPasteCache.streetWorkerVehicle:getCpStreetWorkerJob())
-	-- 		end
-	-- 	end
-	-- end)
+	self.pasteButton:setCallback("onClickPrimary", vehicle, function (vehicle)
+		if CpBaseHud.copyPasteCache.hasVehicle and not vehicle:getIsCpActive() then 
+			if CpBaseHud.copyPasteCache.streetWorkerVehicle then 
+				vehicle:applyCpStreetWorkerJobParameters(CpBaseHud.copyPasteCache.streetWorkerVehicle:getCpStreetWorkerJob())
+			end
+		end
+	end)
 
-	-- self.clearCacheBtn:setCallback("onClickPrimary", vehicle, function (vehicle)
-	-- 	CpBaseHud.copyPasteCache.hasVehicle = false
-	-- 	CpBaseHud.copyPasteCache.streetWorkerVehicle = nil 
-	-- end)
+	self.clearCacheBtn:setCallback("onClickPrimary", vehicle, function (vehicle)
+		CpBaseHud.copyPasteCache.hasVehicle = false
+		CpBaseHud.copyPasteCache.streetWorkerVehicle = nil 
+	end)
 end
 
 function CpStreetWorkerHudPageElement:addFillTypeSelection(line, baseHud, vehicle, lines, wMargin, hMargin)
@@ -131,27 +150,15 @@ function CpStreetWorkerHudPageElement:updateContent(vehicle, status)
 		jobParameters.loadTargetPoint:getTitle(),
 		jobParameters.loadTargetPoint:getString())
 	self.loadTargetPointBtn:setVisible(not jobParameters.loadTargetPoint:getIsDisabled())
-
-    -- self.fillLevelProgressText:setTextDetails(status:getSiloFillLevelPercentageLeftOver())
-	-- local jobParameters = vehicle:getCpStreetWorkerJob():getCpJobParameters()
-	-- --self.loadMultipleFillTypesSetting:setTextDetails(jobParameters.loadingMultipleFruitTypesAllowed:getString())
-	-- for i, setting in ipairs(jobParameters:getFillTypeSelectionSettings()) do 
-	-- 	if self.fillTypeSettings[i] and setting.fillType:getValue() > FillType.UNKNOWN then 
-	-- 		self.fillTypeSettings[i].fillType:setTextDetails(setting.fillType:getString())
-	-- 		self.fillTypeSettings[i].min:setTextDetails(setting.minFillLevel:getString())
-	-- 		self.fillTypeSettings[i].max:setTextDetails(setting.maxFillLevel:getString())
-	-- 		local counter = string.format("%d/%d", 
-	-- 			setting:getCounter(), setting.counter:getValue())
-	-- 		self.fillTypeSettings[i].counter:setTextDetails(counter)
-	-- 	end
-	-- end
-
-    --- Update copy and paste buttons
-	-- self:updateCopyButtons(vehicle)
+	local fillTypeSettings = jobParameters:getFillTypeSelectionSettings()
+	for ix, fillTypeBtn in ipairs(self.fillTypeButtons) do 
+		fillTypeBtn:setDisabled(fillTypeSettings[ix]:getIsDisabled())
+		fillTypeBtn:setTextDetails(fillTypeSettings[ix]:getTitle(), fillTypeSettings[ix]:getString())
+		fillTypeBtn:setVisible(not jobParameters.loadTargetPoint:getIsDisabled())
+	end
+	self:updateCopyButtons(vehicle)
 end
 
-
---- Updates the copy, paste and clear buttons.
 function CpStreetWorkerHudPageElement:updateCopyButtons(vehicle)
     if CpBaseHud.copyPasteCache.hasVehicle then 
         self.clearCacheBtn:setVisible(true)

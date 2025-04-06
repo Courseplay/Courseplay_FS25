@@ -13,7 +13,7 @@ end
 function CpFieldWorkHudPageElement:setupElements(baseHud, vehicle, lines, wMargin, hMargin)
 	
     --- Time remaining text
-    local x, y = unpack(lines[7].right)
+    local x, y = unpack(lines[CpBaseHud.numLines - 1].right)
     self.timeRemainingText = CpTextHudElement.new(self, x - 2 * baseHud.wMargin, y, 
         CpBaseHud.defaultFontSize, RenderText.ALIGN_RIGHT)
     
@@ -25,7 +25,7 @@ function CpFieldWorkHudPageElement:setupElements(baseHud, vehicle, lines, wMargi
         CpBaseHud.OFF_COLOR,
         CpBaseHud.alignments.bottomRight)
     self.courseVisibilityBtn = CpHudButtonElement.new(courseVisibilityOverlay, self)
-    local x, y = unpack(lines[8].right)
+    local x, y = unpack(lines[CpBaseHud.numLines].right)
     y = y - hMargin/8
     local courseVisibilityBtnX = x - width - wMargin/4
     self.courseVisibilityBtn:setPosition(courseVisibilityBtnX, y)
@@ -46,34 +46,34 @@ function CpFieldWorkHudPageElement:setupElements(baseHud, vehicle, lines, wMargi
     end)
 
     --- Starting point 
-    self.startingPointBtn = baseHud:addLeftLineTextButton(self, 5, CpBaseHud.defaultFontSize, 
+    self.startingPointBtn = baseHud:addLeftLineTextButton(self, CpBaseHud.numLines - 3, CpBaseHud.defaultFontSize, 
         function (vehicle)
             vehicle:getCpStartingPointSetting():setNextItem()
         end, vehicle)
    
     --- Work width
-    self.workWidthBtn = baseHud:addLineTextButtonWithIncrementalButtons(self, 3, CpBaseHud.defaultFontSize, 
+    self.workWidthBtn = baseHud:addLineTextButtonWithIncrementalButtons(self, CpBaseHud.numLines - 5, CpBaseHud.defaultFontSize, 
         vehicle:getCourseGeneratorSettings().workWidth)
 
     --- Tool offset x
-    self.toolOffsetXBtn = baseHud:addLineTextButtonWithIncrementalButtons(self, 2, CpBaseHud.defaultFontSize, 
+    self.toolOffsetXBtn = baseHud:addLineTextButtonWithIncrementalButtons(self, CpBaseHud.numLines - 6, CpBaseHud.defaultFontSize, 
         vehicle:getCpSettings().toolOffsetX)
 
     --- Lane offset
-    self.laneOffsetBtn = baseHud:addRightLineTextButton(self, 5, CpBaseHud.defaultFontSize, 
+    self.laneOffsetBtn = baseHud:addRightLineTextButton(self, CpBaseHud.numLines - 3, CpBaseHud.defaultFontSize, 
     function (vehicle)
         vehicle:getCpLaneOffsetSetting():setNextItem()
     end, vehicle)
 
 
      --- Course name
-    self.courseNameBtn = baseHud:addLeftLineTextButton(self, 4, CpBaseHud.defaultFontSize, 
+    self.courseNameBtn = baseHud:addLeftLineTextButton(self, CpBaseHud.numLines - 4, CpBaseHud.defaultFontSize, 
                                                         function(vehicle)
                                                             baseHud:openCourseGeneratorGui(vehicle)
                                                         end, vehicle)              
 
 	--- Waypoint progress
-	self.waypointProgressBtn = baseHud:addRightLineTextButton(self, 4, CpBaseHud.defaultFontSize, 
+	self.waypointProgressBtn = baseHud:addRightLineTextButton(self, CpBaseHud.numLines - 4, CpBaseHud.defaultFontSize, 
 														function(vehicle)
 															baseHud:openCourseManagerGui(vehicle)
 														end, vehicle)

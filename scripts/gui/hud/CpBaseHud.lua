@@ -29,14 +29,14 @@ CpBaseHud.basePosition = {
 
 CpBaseHud.baseSize = {
     x = 360,
-    y = 230
+    y = 290
 }
 
 CpBaseHud.headerFontSize = 14
 CpBaseHud.titleFontSize = 20
 CpBaseHud.defaultFontSize = 16
 
-CpBaseHud.numLines = 8
+CpBaseHud.numLines = 10
 
 --- Vertical + horizontal overlay alignment
 CpBaseHud.alignments = {
@@ -158,7 +158,7 @@ function CpBaseHud:init(vehicle)
                                                     self.BASE_COLOR,
                                                     self.alignments.bottomLeft)
     self.cpIcon = CpHudButtonElement.new(cpIconOverlay, self.baseHud)
-    local x, y = unpack(self.lines[8].left)
+    local x, y = unpack(self.lines[self.numLines].left)
     y = y - self.hMargin/4
     self.cpIcon:setPosition(x, y)
     self.cpIcon:setCallback("onClickPrimary", self.vehicle, function (vehicle)
@@ -166,7 +166,7 @@ function CpBaseHud:init(vehicle)
                             end)
 
     --- Title 
-    local x, y = unpack(self.lines[8].left)
+    local x, y = unpack(self.lines[self.numLines].left)
     x = x + cpIconWidth + self.wMargin/2
     self.vehicleNameBtn = CpTextHudElement.new(self.baseHud ,x ,y + self.hMargin/8, self.defaultFontSize)
     self.vehicleNameBtn:setCallback("onClickPrimary", self.vehicle, 
@@ -174,12 +174,12 @@ function CpBaseHud:init(vehicle)
                                     self:openVehicleSettingsGui(self.vehicle)
                                 end)
                                 
-    self.selectedJobBtn = self:addLeftLineTextButton(self.baseHud, 7, self.defaultFontSize, 
+    self.selectedJobBtn = self:addLeftLineTextButton(self.baseHud, self.numLines - 1, self.defaultFontSize, 
                             function (vehicle)
                                 vehicle:cpGetHudSelectedJobSetting():setNextItem()
                             end, self.vehicle)
      
-    local x, y = unpack(self.lines[6].left)
+    local x, y = unpack(self.lines[self.numLines - 2].left)
     local spacerLineOverlay = Overlay.new('dataS/menu/base/graph_pixel.dds', 
         x, y, self.width - 2 * self.wMargin, self.hMargin/8)
     spacerLineOverlay:setColor(unpack(self.OFF_COLOR))
@@ -228,7 +228,7 @@ function CpBaseHud:init(vehicle)
         self.alignments.bottomRight)
 
     self.onOffButton = CpHudButtonElement.new(onOffIndicatorOverlay, self.baseHud)
-    local x, y = unpack(self.lines[8].right)
+    local x, y = unpack(self.lines[self.numLines].right)
     self.onOffButton:setPosition(x, y - self.hMargin/8)
     self.onOffButton:setCallback("onClickPrimary", self.vehicle, function(vehicle)
         vehicle:cpStartStopDriver(true)
@@ -242,7 +242,7 @@ function CpBaseHud:init(vehicle)
         self.OFF_COLOR,
         self.alignments.bottomRight)
     self.startStopRecordingBtn = CpHudButtonElement.new(circleOverlay, self.baseHud)
-    local x, y = unpack(self.lines[8].right)
+    local x, y = unpack(self.lines[self.numLines].right)
     x = x - onOffBtnWidth - self.wMargin/2
     self.startStopRecordingBtn:setPosition(x, y - self.hMargin/16)
     self.startStopRecordingBtn:setCallback("onClickPrimary", self.vehicle, function (vehicle)
@@ -260,7 +260,7 @@ function CpBaseHud:init(vehicle)
         self.OFF_COLOR,
         self.alignments.bottomRight)
     self.pauseRecordingBtn = CpHudButtonElement.new(pauseOverlay, self.baseHud)
-    local x, y = unpack(self.lines[8].right)
+    local x, y = unpack(self.lines[self.numLines].right)
     self.pauseRecordingBtn:setPosition(x, y)
     self.pauseRecordingBtn:setCallback("onClickPrimary", self.vehicle, function (vehicle)
         if vehicle:getIsCpCourseRecorderActive() then 
@@ -276,7 +276,7 @@ function CpBaseHud:init(vehicle)
         self.OFF_COLOR,
         self.alignments.bottomRight)
     self.clearCourseBtn = CpHudButtonElement.new(clearCourseOverlay, self.baseHud)
-    local x, y = unpack(self.lines[8].right)
+    local x, y = unpack(self.lines[self.numLines].right)
     x = x - 2*width - self.wMargin/2 - self.wMargin/4
     self.clearCourseBtn:setPosition(x, y)
     self.clearCourseBtn:setCallback("onClickPrimary", self.vehicle, function (vehicle)
@@ -294,7 +294,7 @@ function CpBaseHud:init(vehicle)
         self.alignments.bottomRight)
     
     self.goalBtn = CpHudButtonElement.new(goalOverlay, self.baseHud)
-    local x, y = unpack(self.lines[7].right)
+    local x, y = unpack(self.lines[self.numLines-1].right)
     self.goalBtn:setPosition(x + self.wMargin/4, y - self.hMargin/3)
     self.goalBtn:setCallback("onClickPrimary", vehicle, function (vehicle)
         self:openCourseGeneratorGui(vehicle)

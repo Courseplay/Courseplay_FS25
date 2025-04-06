@@ -44,6 +44,12 @@ function CpJobParameters:validateSettings(includeDisabledValues)
     end
 end
 
+function CpJobParameters:resetToLoadedValue(includeDisabledValues)
+    for i, setting in ipairs(self.settings) do 
+        setting:resetToLoadedValue()
+    end
+end
+
 function CpJobParameters:writeStream(streamId, connection)
     for i, setting in ipairs(self.settings) do 
         setting:writeStream(streamId, connection)

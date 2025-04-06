@@ -26,7 +26,6 @@ function CpAIParameterFillTypeSetting:init(data, vehicle, class)
 	---@type AIParameterSettingList
 	self.counter = childrenData.counter:clone(vehicle, class)
 	self.counter:setParent(self)
-
 	self.currentCounterValue = 0
 end
 
@@ -116,13 +115,13 @@ function CpAIParameterFillTypeSetting:getString()
 	if self.fillType:getValue() < 0 then 
 		return self.fillType:getString()
 	end
-	local string = string.format("%s | min: %s | max: %s", 
+	local string = string.format("%s | %s | %s", 
 		self.fillType:getString(), 
 		self.minFillLevel:getString(),
 		self.maxFillLevel:getString())
 
 	if not self.counter:getIsDisabled() then 
-		string = string.format("%s | counter: %s", string, self.counter:getString())
+		string = string.format("%s | %s", string, self.counter:getString())
 	end
 	return string
 end

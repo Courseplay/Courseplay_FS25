@@ -14,6 +14,14 @@ function CpAIParameterTargetPoint:clone(...)
 	return CpAIParameterTargetPoint(self.data,...)
 end
 
+function CpAIParameterTargetPoint:saveToXMLFile(xmlFile, key, usedModNames)
+	xmlFile:setInt(key .. "#currentValue", self.uniqueID)
+end
+
+function CpAIParameterTargetPoint:loadFromXMLFile(xmlFile, key)
+	self.uniqueID = xmlFile:getInt(key .. "#currentValue", self.uniqueID)
+end
+
 function CpAIParameterTargetPoint:getString()
 	local target = g_graph:getTargetByUniqueID(self.uniqueID) 
 	return target and target:getName() or "???"
