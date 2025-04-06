@@ -75,15 +75,15 @@ function AIDriveStrategyStreetDriveToPoint:getDriveData(dt, vX, vY, vZ)
             self.vehicle:prepareForAIDriving()
             local targetVector = self.target:toVector()
             local extension = self:getTargetExtension()
-            if extension > 0 then 
-                --- TODO move this to the graph pathfiner 
-                --- Basically we want to move the goal node 
+            if extension > 0 then
+                --- TODO move this to the graph pathfiner
+                --- Basically we want to move the goal node
                 --- by X meter ahead of the inital target.
                 local p = self.target:getPoint()
                 local seg = p:getParentNode()
-                for _, n in ipairs(seg:getChildNodesBetweenIndex(p:getID(), seg:getNumChildNodes())) do 
+                for _, n in ipairs(seg:getChildNodesBetweenIndex(p:getID(), seg:getNumChildNodes())) do
                     targetVector = n:toVector()
-                    if p:getDistance2DToPoint(n) > extension then 
+                    if p:getDistance2DToPoint(n) > extension then
                         break
                     end
                 end
@@ -136,7 +136,7 @@ function AIDriveStrategyStreetDriveToPoint:limitSpeed()
             -- we do not slow down over 50 m radius, but slow down to turning speed at the turningRadius,
             -- proportionally in between
             local slowDownFactor = math.min(50, math.max(self.turningRadius, r - self.turningRadius)) / 50
-            local oldLimitedSpeed = self.limitedSpeed
+            local oldLimitedSpeed = self.limitedSpeed or 0
             self.limitedSpeed = self.settings.turnSpeed:getValue() +
                     (self.settings.streetSpeed:getValue() - self.settings.turnSpeed:getValue()) * slowDownFactor
             if math.abs(self.limitedSpeed - oldLimitedSpeed) > 0.75 then

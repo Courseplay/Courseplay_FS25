@@ -337,7 +337,7 @@ GraphPathfinder.GraphMotionPrimitives = CpObject(HybridAStar.MotionPrimitives)
 --- two edges are considered as connected (and thus can traverse from one to the other)
 ---@param graph Vector[] the graph as described in the file header
 function GraphPathfinder.GraphMotionPrimitives:init(range, graph)
-    self.logger = Logger('GraphMotionPrimitives', Logger.level.trace, CpDebug.DBG_PATHFINDER)
+    self.logger = Logger('GraphMotionPrimitives', Logger.level.debug, CpDebug.DBG_PATHFINDER)
     self.range = range
     self.graph = graph
 end
