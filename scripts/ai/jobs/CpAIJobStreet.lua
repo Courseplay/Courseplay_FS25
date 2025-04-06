@@ -10,14 +10,29 @@ end
 
 function CpAIJobStreet:setupTasks(isServer)
 	self.driveToPointTask = CpAITaskDriveToPoint(isServer, self)
-	self:addTask(self.driveToPointTask)
+	self.driveToLoadingTask = CpAITaskDriveToPointLoad(isServer, self)
+	self.driveToUnloadingTask = CpAITaskDriveToPointUnload(isServer, self)
 end
 
 function CpAIJobStreet:onPreStart()
+	self:removeTask(self.driveToPointTask)
+	self:removeTask(self.driveToLoadingTask)
+	self:removeTask(self.driveToLoadingTask)
+	if self.cpJobParameters.loadUnloadTargetMode:getValue() == CpStreetJobParameters.UNLOAD_AT_TARGET then 
+		self:addTask(self.driveToUnloadingTask)
+	elseif self.cpJobParameters.loadUnloadTargetMode:getValue() == CpStreetJobParameters.LOAD_AND_UNLOAD then
+		self:addTask(self.driveToLoadingTask)
+		self:addTask(self.driveToUnloadingTask)
+	else
+		self:addTask(self.driveToPointTask)
+	end
 	self.driveToPointTask:setTarget(
 		g_graph:getTargetByUniqueID(self.cpJobParameters.unloadTargetPoint:getValue()))
+	self.driveToUnloadingTask:setTarget(
+		g_graph:getTargetByUniqueID(self.cpJobParameters.unloadTargetPoint:getValue()))
+	self.driveToLoadingTask:setTarget(
+		g_graph:getTargetByUniqueID(self.cpJobParameters.loadTargetPoint:getValue()))
 end
-
 
 function CpAIJobStreet:setupJobParameters()
 	CpAIJob.setupJobParameters(self)
@@ -29,6 +44,7 @@ function CpAIJobStreet:getCanStartJob()
 end
 
 function CpAIJobStreet:getStartTaskIndex()
+	--- TODO Filltype check ??
 	return 1
 end
 
@@ -44,6 +60,8 @@ function CpAIJobStreet:setValues()
 	CpAIJob.setValues(self)
 	local vehicle = self.vehicleParameter:getVehicle()
 	self.driveToPointTask:setVehicle(vehicle)
+	self.driveToUnloadingTask:setVehicle(vehicle)
+	self.driveToLoadingTask:setVehicle(vehicle)
 end
 
 --- Called when parameters change, scan field
@@ -58,6 +76,13 @@ function CpAIJobStreet:validate(farmId)
 	end
 	if self.cpJobParameters.unloadTargetPoint:getValue() < 0 then 
 		return false, g_i18n:getText("CP_error_no_target_selected")
+	end
+	if self.cpJobParameters.loadUnloadTargetMode:getValue() == CpStreetJobParameters.LOAD_AND_UNLOAD then 
+		if self.cpJobParameters.unloadTargetPoint:getValue() < 0 then 
+			return false, g_i18n:getText("CP_error_no_target_selected")
+		end
+	elseif self.cpJobParameters.loadUnloadTargetMode:getValue() == CpStreetJobParameters.UNLOAD_AT_TARGET then 
+		--- TODO fillelvel 
 	end
 	return isValid or isRunning, errorMessage
 end
