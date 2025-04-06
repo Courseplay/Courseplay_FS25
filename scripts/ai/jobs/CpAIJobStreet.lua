@@ -17,7 +17,7 @@ end
 function CpAIJobStreet:onPreStart()
 	self:removeTask(self.driveToPointTask)
 	self:removeTask(self.driveToLoadingTask)
-	self:removeTask(self.driveToLoadingTask)
+	self:removeTask(self.driveToUnloadingTask)
 	if self.cpJobParameters.loadUnloadTargetMode:getValue() == CpStreetJobParameters.UNLOAD_AT_TARGET then 
 		self:addTask(self.driveToUnloadingTask)
 	elseif self.cpJobParameters.loadUnloadTargetMode:getValue() == CpStreetJobParameters.LOAD_AND_UNLOAD then
@@ -78,11 +78,11 @@ function CpAIJobStreet:validate(farmId)
 		return false, g_i18n:getText("CP_error_no_target_selected")
 	end
 	if self.cpJobParameters.loadUnloadTargetMode:getValue() == CpStreetJobParameters.LOAD_AND_UNLOAD then 
-		if self.cpJobParameters.unloadTargetPoint:getValue() < 0 then 
+		if self.cpJobParameters.loadTargetPoint:getValue() < 0 then 
 			return false, g_i18n:getText("CP_error_no_target_selected")
 		end
 	elseif self.cpJobParameters.loadUnloadTargetMode:getValue() == CpStreetJobParameters.UNLOAD_AT_TARGET then 
-		--- TODO fillelvel 
+		--- TODO filllevel check
 	end
 	return isValid or isRunning, errorMessage
 end
