@@ -30,6 +30,8 @@ function CpAIJobCombineUnloader:setupTasks(isServer)
 	CpAIJob.setupTasks(self, isServer)
 	self.combineUnloaderTask = CpAITaskCombineUnloader(isServer, self)
 	self:addTask(self.combineUnloaderTask)
+	self.driveToUnloadingTask = CpAITaskCombineUnloader(isServer, self)
+	self:addTask(self.driveToUnloadingTask)
 
 	if self.useGiantsUnload then 
 		--- Giants unload
@@ -150,6 +152,15 @@ function CpAIJobCombineUnloader:validate(farmId)
 		isValid, errorMessage = self.cpJobParameters.startPosition:validate()
 		if not isValid then
 			return false, errorMessage
+		end
+	end
+
+	---------------------------------------------
+	--- Validate street unload target if needed
+	---------------------------------------------
+	if useStreetModeUnload then
+		if self.cpJobParameters.unloadTargetPoint:getValue() < 0 then 
+			return false, g_i18n:getText("CP_error_no_target_selected")
 		end
 	end
 
@@ -288,6 +299,9 @@ function CpAIJobCombineUnloader:setupGiantsUnloaderData(vehicle)
 end
 
 function CpAIJobCombineUnloader:getNextTaskIndex(isSkipTask)
+	if not self.useGiantsUnload then
+		return CpAIJob.getNextTaskIndex(self, isSkipTask)
+	end
 	--- Giants unload, sets the correct dischargeNode and vehicle and unload target information.
 	local index = AIJobDeliver.getNextTaskIndex(self, isSkipTask)
 	return index
@@ -300,7 +314,6 @@ function CpAIJobCombineUnloader:canContinueWork()
 	end
 	--- Giants unload, checks if the unloading station is still available and not full.
 	if self.useGiantsUnload then 
-		
 		local canContinue, errorMessage = AIJobDeliver.canContinueWork(self)
 		if not canContinue then 
 			return canContinue, errorMessage
@@ -322,7 +335,6 @@ function CpAIJobCombineUnloader:canContinueWork()
 			end
 		end
 	end
-
 	return true, nil
 end
 

@@ -8,6 +8,8 @@ function TriggerManager:init()
 	self.unloadTriggers = {}
 	---@type table<number,CpTrigger>
 	self.dischargeableUnloadTriggers = {}
+	---@type table<number,CpTrigger>
+	self.loadTriggers = {}
 end
 
 --- Adds an unload trigger.
@@ -33,11 +35,53 @@ function TriggerManager:removeUnloadingSilo(silo)
 	end
 end
 
+--- Adds an load trigger.
+---@param silo table LoadTrigger
+function TriggerManager:addLoadingSilo(silo)
+	if silo.triggerNode ~= nil then 
+		self.loadTriggers[silo.triggerNode] = CpTrigger(silo, silo.triggerNode)
+	end
+end
+
+
+--- Removes the unload trigger, as it got removed for example sold.
+---@param silo table LoadTrigger
+function TriggerManager:removeLoadingSilo(silo)
+	if silo.triggerNode ~= nil then 
+		if self.loadTriggers[silo.triggerNode] then
+			self.loadTriggers[silo.triggerNode]:delete()
+			self.loadTriggers[silo.triggerNode] = nil
+		end
+	end
+end
+
+---@return table<number, CpTrigger>
+function TriggerManager:getLoadTriggers()
+	return self.loadTriggers
+end
+
+---@return table<number, CpTrigger>
+function TriggerManager:getUnloadTriggers()
+	return self.unloadTriggers
+end
+
+---@return table<number, CpTrigger>
+function TriggerManager:getDischargeableUnloadTriggers()
+	return self.dischargeableUnloadTriggers
+end
+
 --- Gets the unload trigger from the exactFillRootNode.
 ---@param node number exactFillRootNode
 ---@return CpTrigger
 function TriggerManager:getUnloadTriggerForNode(node)
 	return self.unloadTriggers[node]
+end
+
+--- Gets the load trigger from the trigger node.
+---@param node number trigger node
+---@return CpTrigger
+function TriggerManager:getLoadTriggerForNode(node)
+	return self.loadTriggers[node]
 end
 
 --- Gets the first trigger found in the defined area.
@@ -102,6 +146,20 @@ function TriggerManager:getUnloadTriggerAt(x, z, dirX, dirZ, width, length)
 	return self:getTriggerAt(self.unloadTriggers, x, z, dirX, dirZ, width, length)
 end
 
+--- Gets the first load trigger found in the defined area.
+---@param x number
+---@param z number
+---@param dirX number
+---@param dirZ number
+---@param width number
+---@param length number
+---@return boolean found?
+---@return CpTrigger|nil load trigger 
+---@return table|nil load station/placeable
+function TriggerManager:getLoadTriggerAt(x, z, dirX, dirZ, width, length)
+	return self:getTriggerAt(self.loadTriggers, x, z, dirX, dirZ, width, length)
+end
+
 --- Gets the first dischargeable unload trigger found in the defined area.
 ---@param x number
 ---@param z number
@@ -155,13 +213,23 @@ local function addUnloadingSilo(silo, superFunc, ...)
 	g_triggerManager:addUnloadingSilo(silo)
 	return ret
 end
-
 UnloadTrigger.load = Utils.overwrittenFunction(UnloadTrigger.load, addUnloadingSilo)
 
 
 local function removeUnloadingSilo(silo, ...)
 	g_triggerManager:removeUnloadingSilo(silo)
 end
-
 UnloadTrigger.delete = Utils.prependedFunction(UnloadTrigger.delete, removeUnloadingSilo)
 
+local function addLoadingSilo(silo, superFunc, ...)
+	local ret = superFunc(silo, ...)
+	g_triggerManager:addLoadingSilo(silo)
+	return ret
+end
+LoadTrigger.load = Utils.overwrittenFunction(LoadTrigger.load, addLoadingSilo)
+
+
+local function removeLoadingSilo(silo, ...)
+	g_triggerManager:removeLoadingSilo(silo)
+end
+LoadTrigger.delete = Utils.prependedFunction(LoadTrigger.delete, removeLoadingSilo)

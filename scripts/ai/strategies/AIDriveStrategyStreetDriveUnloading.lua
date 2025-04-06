@@ -12,12 +12,6 @@ function AIDriveStrategyStreetDriveUnloading:init(task, job)
 
 end
 
-
-function AIDriveStrategyStreetDriveUnloading:onStartDrivingCourse(course, ix)
-    course:extend(self.COURSE_EXTENSION)
-    AIDriveStrategyStreetDriveToPoint.onStartDrivingCourse(self, course, ix)
-end
-
 function AIDriveStrategyStreetDriveUnloading:initializeImplementControllers(vehicle)
     AIDriveStrategyStreetDriveToPoint.initializeImplementControllers(self, vehicle)
 
@@ -60,4 +54,9 @@ function AIDriveStrategyStreetDriveUnloading:updateUnloading()
             targetObject:setDischargeState(Dischargeable.DISCHARGE_STATE_OBJECT)
         end
     end
+end
+
+function AIDriveStrategyStreetDriveUnloading:getTargetExtension()
+    local length = AIUtil.getLength(self.vehicle)
+    return length + self.COURSE_EXTENSION
 end

@@ -22,29 +22,35 @@ FillLevelUtil = {}
 ------------------------------------------------------------------------------------------------------------------------
 --- Fill Levels
 ---------------------------------------------------------------------------------------------------------------------------
-function FillLevelUtil.getAllFillLevels(object, fillLevelInfo)
-    -- get own fill levels
-    if object.getFillUnits then
-        for index, fillUnit in pairs(object:getFillUnits()) do
-            local supportedFillTypes = object:getFillUnitSupportedFillTypes(index)
-            for fillType, _ in pairs(supportedFillTypes) do
-                local fillTypeName = g_fillTypeManager:getFillTypeNameByIndex(fillType)
-                --FillLevelUtil:debugSparse('%s: Fill levels: %s: %.1f/%.1f', object:getName(), fillTypeName, fillUnit.fillLevel, fillUnit.capacity)
-                if not fillLevelInfo[fillType] then fillLevelInfo[fillType] = {fillLevel = 0, capacity = 0} end
-                fillLevelInfo[fillType].fillLevel = fillLevelInfo[fillType].fillLevel + fillUnit.fillLevel
-                fillLevelInfo[fillType].capacity = fillLevelInfo[fillType].capacity + fillUnit.capacity
-                --used to check treePlanter fillLevel
-                local treePlanterSpec = object.spec_treePlanter
-                if treePlanterSpec then
-                    fillLevelInfo[fillType].treePlanterSpec = object.spec_treePlanter
+
+--- Gets the fill level of all fill units sorted by the fill type. 
+---@param vehicle table
+---@return table
+function FillLevelUtil.getAllFillLevels(vehicle)    
+    local fillLevelsByFillType = {}
+    for _, v in pairs(vehicle:getChildVehicles()) do 
+        if v.getFillUnits then 
+            for index, _ in pairs(v:getFillUnits()) do
+                local supportedFillTypes = v:getFillUnitSupportedFillTypes(index)
+                for fillType, _ in pairs(supportedFillTypes) do
+                    if not fillLevelsByFillType[fillType] then fillLevelsByFillType[fillType] = {
+                            fillLevel = 0, 
+                            capacity = 0,
+                            allowedFillLevel = 0,
+                            allowedCapacity = 0,
+                        } 
+                    end
+                    fillLevelsByFillType[fillType].fillLevel = fillLevelsByFillType[fillType].fillLevel + v:getFillUnitFillLevel(index)
+                    fillLevelsByFillType[fillType].capacity = fillLevelsByFillType[fillType].capacity + v:getFillUnitCapacity(index)
+                    if v:getFillUnitAllowsFillType(fillType) then
+                        fillLevelsByFillType[fillType].allowedFillLevel = fillLevelsByFillType[fillType].allowedFillLevel + v:getFillUnitFillLevel(index)
+                        fillLevelsByFillType[fillType].allowedCapacity = fillLevelsByFillType[fillType].allowedCapacity + v:getFillUnitCapacity(index)
+                    end
                 end
             end
         end
     end
-    -- collect fill levels from all attached implements recursively
-    for _,impl in pairs(object:getAttachedImplements()) do
-        FillLevelUtil.getAllFillLevels(impl.object, fillLevelInfo)
-    end
+    return fillLevelsByFillType
 end
 
 function FillLevelUtil.getFillTypeFromFillUnit(fillUnit)
@@ -65,10 +71,7 @@ end
 ---@return number totalFillLevel
 ---@return number totalCapacity
 function FillLevelUtil.getTotalFillLevelAndCapacity(object)
-
-    local fillLevelInfo = {}
-    FillLevelUtil.getAllFillLevels(object, fillLevelInfo)
-
+    local fillLevelInfo = FillLevelUtil.getAllFillLevels(object)
     local totalFillLevel = 0
     local totalCapacity = 0
     for fillType, data in pairs(fillLevelInfo) do
@@ -85,11 +88,8 @@ end
 ---@param fillTypeToFilter number fillTypeIndex to check for
 ---@return number totalFillLevel
 ---@return number totalCapacity
-
 function FillLevelUtil.getTotalFillLevelAndCapacityForFillType(object, fillTypeToFilter)
-    local fillLevelInfo = {}
-    FillLevelUtil.getAllFillLevels(object, fillLevelInfo)
-
+    local fillLevelInfo = FillLevelUtil.getAllFillLevels(object)
     local totalFillLevel = 0
     local totalCapacity = 0
     for fillType, data in pairs(fillLevelInfo) do

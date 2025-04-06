@@ -68,6 +68,7 @@ end
 
 function CpAIStreetWorker:onLoadFinished(savegame)
     local spec = self.spec_cpAIStreetWorker
+    spec.cpJob:getCpJobParameters():validateSettings()
     if savegame ~= nil then 
         spec.cpJob:getCpJobParameters():loadFromXMLFile(savegame.xmlFile, savegame.key.. CpAIStreetWorker.KEY..".cpJob")
     end

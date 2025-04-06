@@ -54,3 +54,8 @@ function GraphTarget:toVector()
     local x, z = self._point:getPosition2D()
     return Vector(x, -z)
 end
+
+---@return GraphPoint
+function GraphTarget:getPoint()
+    return self._point
+end

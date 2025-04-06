@@ -74,6 +74,20 @@ function AIDriveStrategyStreetDriveToPoint:getDriveData(dt, vX, vY, vZ)
         if self.target then
             self.vehicle:prepareForAIDriving()
             local targetVector = self.target:toVector()
+            local extension = self:getTargetExtension()
+            if extension > 0 then 
+                --- TODO move this to the graph pathfiner 
+                --- Basically we want to move the goal node 
+                --- by X meter ahead of the inital target.
+                local p = self.target:getPoint()
+                local seg = p:getParentNode()
+                for _, n in ipairs(seg:getChildNodesBetweenIndex(p:getID(), seg:getNumChildNodes())) do 
+                    targetVector = n:toVector()
+                    if p:getDistance2DToPoint(n) > extension then 
+                        break
+                    end
+                end
+            end
             local goal = State3D(targetVector.x, targetVector.y, 0, 0)
             local context = PathfinderContext(self.vehicle)
             self.pathfinderController:findPathOnStreet(context, goal, 0)
@@ -156,8 +170,7 @@ function AIDriveStrategyStreetDriveToPoint:onWaypointPassed(ix, course)
     if course:isLastWaypointIx(ix) then
         if self.state == self.states.DRIVING_TO_COURSE_START then
             local course, ix = self:getRememberedCourseAndIx()
-            self:startCourse(course, ix)
-            self.state = self.states.DRIVING_COURSE
+            self:startDrivingCourse(course, ix)
         elseif self.state == self.states.DRIVING_COURSE then
             self:onCourseEndReached()
         end
@@ -236,12 +249,15 @@ function AIDriveStrategyStreetDriveToPoint:onStreetPathfindingDone(controller, s
     if isNeeded then
         self:startPathfindingToStart(course, ix)
     else
-        self.state = self.states.DRIVING_COURSE
-        self:startCourse(course, ix)
+        self:startDrivingCourse(course, ix)
     end
 end
 
-function AIDriveStrategyStreetDriveToPoint:onStartDrivingCourse(course, ix)
+function AIDriveStrategyStreetDriveToPoint:startDrivingCourse(course, ix)
     self.state = self.states.DRIVING_COURSE
     self:startCourse(course, ix)
+end
+
+function AIDriveStrategyStreetDriveToPoint:getTargetExtension()
+    return 0
 end

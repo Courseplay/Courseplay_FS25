@@ -25,11 +25,6 @@ function AIDriveStrategyStreetDriveLoading:setAllStaticParameters()
     self.currentLoadTrigger = nil
 end
 
-function AIDriveStrategyStreetDriveLoading:onStartDrivingCourse(course, ix)
-    course:extend(self.COURSE_EXTENSION)
-    AIDriveStrategyStreetDriveToPoint.onStartDrivingCourse(self, course, ix)
-end
-
 function AIDriveStrategyStreetDriveLoading:initializeImplementControllers(vehicle)
     AIDriveStrategyStreetDriveToPoint.initializeImplementControllers(self, vehicle)
     self:addImplementController(vehicle, CoverController, Cover, {})
@@ -53,7 +48,7 @@ function AIDriveStrategyStreetDriveLoading:drivingCourse()
     end
     if self.hasCourseEndReached then 
         local missingFillTypes = {}
-        local fillLevels = FillLevelUtil.getAllFillLevels(self.vehicle) or {}
+        local fillLevels = FillLevelUtil.getAllFillLevels(self.vehicle)
         --- Check min fill levels
         for _, fillTypeSetting in pairs(self.fillTypeSettings) do 
             local fillType = fillTypeSetting.fillType:getValue()
@@ -83,9 +78,14 @@ function AIDriveStrategyStreetDriveLoading:onCourseEndReached()
     self.hasCourseEndReached = true
 end
 
+function AIDriveStrategyStreetDriveLoading:getTargetExtension()
+    local length = AIUtil.getLength(self.vehicle)
+    return length + self.COURSE_EXTENSION
+end
+
 function AIDriveStrategyStreetDriveLoading:updateLoading()
     local missingFillTypes = {}
-    local fillLevels = FillLevelUtil.getAllFillLevels(self.vehicle) or {}
+    local fillLevels = FillLevelUtil.getAllFillLevels(self.vehicle)
     --- Check min fill levels
     for _, fillTypeSetting in pairs(self.fillTypeSettings) do 
         local fillType = fillTypeSetting.fillType:getValue()
@@ -97,7 +97,6 @@ function AIDriveStrategyStreetDriveLoading:updateLoading()
             end
         end
     end
-
     local validTriggers, isLoading = {}, false
     if not self.isLoading then
         for _, loadTrigger in pairs(g_triggerManager:getLoadTriggers()) do 
