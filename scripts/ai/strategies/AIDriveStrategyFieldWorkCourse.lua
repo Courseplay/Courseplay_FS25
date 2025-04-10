@@ -613,6 +613,9 @@ function AIDriveStrategyFieldWorkCourse:startConnectingPath(ix)
         self:debug('Connecting path has %d waypoints, start pathfinding to target waypoint %d, zOffset %.1f',
                 #connectingPath, targetWaypointIx, zOffset)
         self.state = self.states.WAITING_FOR_PATHFINDER
+        -- to have a course set while waiting for the pathfinder and make sure that the course known to the PPC
+        -- is the same as the one we are using
+        self:startCourse(self.rawConnectingPath, 1)
         self.pathfinderController:findPathToNode(context, targetNode, 0, zOffset, 1)
     end
 end
