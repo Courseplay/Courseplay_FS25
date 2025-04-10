@@ -15,9 +15,10 @@
 	<SettingSubTitle title="CP_fieldWorkJobParameters_fieldPosition_title" prefix="false">
 		<Setting classType="CpAIParameterPosition" name="fieldPosition" positionParameterType="FIELD_OR_SILO"/>
 	</SettingSubTitle>
-	<SettingSubTitle title="unloadTargetPoint">
+	<SettingSubTitle title="unloadTargetPoint" isVisible="isStreetModeActive" isDisabled="hasNoBaleLoader">
+		<Setting classType="AIParameterBooleanSetting" name="unloadTargetPointEnabled"/>
 		<Setting classType="CpAIParameterTargetPoint" name="unloadTargetPoint" 
-			isDisabled="isUnloadTargetPointDisabled" isVisible="isStreetModeActive" />
+			isDisabled="isUnloadTargetPointDisabled" />
 	</SettingSubTitle>
 	<SettingSubTitle title="baleWrapType">
 		<Setting classType="AIParameterSettingList" name="baleWrapType" isVisible="hasBaleLoader" 

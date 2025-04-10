@@ -12,12 +12,12 @@ end
 
 function CpBaleFinderHudPageElement:setupElements(baseHud, vehicle, lines, wMargin, hMargin)
 	--- Tool offset x
-	self.toolOffsetXBtn = baseHud:addLineTextButtonWithIncrementalButtons(self, CpBaseHud.numLines - 2, CpBaseHud.defaultFontSize, 
+	self.toolOffsetXBtn = baseHud:addLineTextButtonWithIncrementalButtons(self, CpBaseHud.numLines - 3, CpBaseHud.defaultFontSize, 
 												vehicle:getCpSettings().baleCollectorOffset)
 
     --- Bale finder fill type
-    local x, y = unpack(lines[CpBaseHud.numLines - 3].left)
-    local xRight,_ = unpack(lines[CpBaseHud.numLines - 3].right)
+    local x, y = unpack(lines[CpBaseHud.numLines - 4].left)
+    local xRight,_ = unpack(lines[CpBaseHud.numLines - 4].right)
     self.baleFinderFillTypeBtn = CpHudTextSettingElement.new(self, x, y,
                                      xRight, CpBaseHud.defaultFontSize)
     local callback = {
@@ -28,13 +28,13 @@ function CpBaleFinderHudPageElement:setupElements(baseHud, vehicle, lines, wMarg
     self.baleFinderFillTypeBtn:setCallback(callback, callback)             
     
     --- Bale progress of how much bales have bin worked on, similar to waypoint progress.
-	self.balesProgressBtn = baseHud:addRightLineTextButton(self, CpBaseHud.numLines - 4, CpBaseHud.defaultFontSize, 
+	self.balesProgressBtn = baseHud:addRightLineTextButton(self, CpBaseHud.numLines - 5, CpBaseHud.defaultFontSize, 
         function(vehicle)
             baseHud:openCourseManagerGui(vehicle)
         end, vehicle)
     
     --- Bale progress of how much bales have bin worked on, similar to waypoint progress.
-    local x, y = unpack(lines[CpBaseHud.numLines - 4].left)
+    local x, y = unpack(lines[CpBaseHud.numLines - 5].left)
     self.balesProgressLabel = CpTextHudElement.new(self, x, y, CpBaseHud.defaultFontSize)
     self.balesProgressLabel:setTextDetails(g_i18n:getText("CP_baleFinder_balesLeftover"))
     

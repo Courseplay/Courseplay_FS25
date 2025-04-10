@@ -35,9 +35,9 @@
 	</SettingSubTitle>
 	<SettingSubTitle title="unloadRefillTargetPoint" isVisible="isStreetModeActive">
 		<Setting classType="AIParameterBooleanSetting" name="unloadRefillActivated" 
-			isDisabled="isUnloadRefillTargetDisabled" onChangeCallback="onChangeStartUnloadRefillTargetPoint"/>
+			isDisabled="isUnloadRefillModeDisabled" onChangeCallback="onChangeStartUnloadRefillTargetPoint"/>
 		<Setting classType="CpAIParameterTargetPoint" name="unloadRefillTargetPoint" 
-			isDisabled="isUnloadRefillDisabled" onChangeCallback="onChangeStartUnloadRefillTargetPoint"/>
+			isDisabled="isUnloadOrRefillingDisabled" onChangeCallback="onChangeStartUnloadRefillTargetPoint"/>
 		<Setting classType="CpAIParameterFillTypeSetting" name="fillTypeSelection" 
 			isDisabled="isUnloadRefillFillTypeDisabled" generateValuesFunction="generateFillTypes" 
 			title="CP_streetJobParameters_fillTypeSelection_title" />

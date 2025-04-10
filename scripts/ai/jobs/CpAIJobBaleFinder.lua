@@ -15,6 +15,9 @@ function CpAIJobBaleFinder:setupTasks(isServer)
 	CpAIJob.setupTasks(self, isServer)
 	self.baleFinderTask = CpAITaskBaleFinder(isServer, self)
 	self:addTask(self.baleFinderTask)
+	self.unloadTask = CpAITaskDriveToPointUnload(isServer, self)
+	self:addTask(self.unloadTask)
+	
 end
 
 function CpAIJobBaleFinder:setupJobParameters()
@@ -47,6 +50,7 @@ function CpAIJobBaleFinder:setValues()
 	CpAIJob.setValues(self)
 	local vehicle = self.vehicleParameter:getVehicle()
 	self.baleFinderTask:setVehicle(vehicle)
+	self.unloadTask:setVehicle(vehicle)
 end
 
 --- Called when parameters change, scan field
@@ -63,6 +67,15 @@ function CpAIJobBaleFinder:validate(farmId)
 	--- Validate field setup
 	--------------------------------------------------------------
 	isValid, isRunning, errorMessage = self:detectFieldBoundary(isValid, errorMessage)
+	--------------------------------------------------------------
+	--- Validate Unload target point
+	--------------------------------------------------------------
+	if self.cpJobParameters.unloadTargetPointEnabled:getValue() then 
+		if self.cpJobParameters.unloadTargetPoint:getValue() < 0 then 
+			return false, g_i18n:getText("CP_error_no_target_selected")
+		end
+	end
+	
 	-- if the field detection is still running, it's ok
 	return isValid or isRunning, errorMessage
 end

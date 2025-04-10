@@ -30,8 +30,6 @@ function CpAIJobCombineUnloader:setupTasks(isServer)
 	CpAIJob.setupTasks(self, isServer)
 	self.combineUnloaderTask = CpAITaskCombineUnloader(isServer, self)
 	self:addTask(self.combineUnloaderTask)
-	self.driveToUnloadingTask = CpAITaskCombineUnloader(isServer, self)
-	self:addTask(self.driveToUnloadingTask)
 
 	if self.useGiantsUnload then 
 		--- Giants unload
@@ -41,7 +39,8 @@ function CpAIJobCombineUnloader:setupTasks(isServer)
 		self:addTask(self.driveToUnloadingTask)
 		self:addTask(self.dischargeTask)
 	else 
-
+		self.driveToUnloadingTask = CpAITaskDriveToPointUnload(isServer, self)
+		self:addTask(self.driveToUnloadingTask)
 	end	
 end
 

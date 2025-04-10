@@ -278,7 +278,7 @@ function CpFieldWorkJobParameters:isLaneOffsetDisabled()
     return self:noMultiToolsCourseSelected() or vehicle and vehicle:getIsCpActive()
 end
 
-function CpFieldWorkJobParameters:isUnloadRefillTargetDisabled()
+function CpFieldWorkJobParameters:isUnloadRefillModeDisabled()
     return false --- TODO: Added check for refill/unload possibilities ...
 end
 
@@ -308,7 +308,7 @@ function CpFieldWorkJobParameters:generateFillTypes()
 end
 
 function CpFieldWorkJobParameters:isLoadingDisabled()
-    if self:isUnloadRefillTargetDisabled() then 
+    if self:isUnloadRefillModeDisabled() then 
         return true
     end
 
@@ -316,26 +316,27 @@ function CpFieldWorkJobParameters:isLoadingDisabled()
     if not vehicle then 
         return false
     end
-    return not AIUtil.hasChildVehicleWithSpecialization(vehicle, Sprayer) and not 
-        AIUtil.hasChildVehicleWithSpecialization(vehicle, SowingMachine)
+    return not AIUtil.hasChildVehicleWithSpecialization(vehicle, Sprayer) and 
+        not AIUtil.hasChildVehicleWithSpecialization(vehicle, SowingMachine)
 end
 
 function CpFieldWorkJobParameters:isUnloadingDisabled()
-    if self:isUnloadRefillTargetDisabled() then 
+    if self:isUnloadRefillModeDisabled() then 
         return true
     end
     local vehicle = self.job:getVehicle()
     if not vehicle then 
         return false
     end
-    return not AIUtil.hasChildVehicleWithSpecialization(vehicle, ForageWagon)
+    return not AIUtil.hasChildVehicleWithSpecialization(vehicle, ForageWagon) and 
+        not AIUtil.hasChildVehicleWithSpecialization(vehicle, BaleLoader) 
 end
 
 function CpFieldWorkJobParameters:isRunCounterDisabled()
     return true
 end
 
-function CpFieldWorkJobParameters:isUnloadRefillDisabled()
+function CpFieldWorkJobParameters:isUnloadOrRefillingDisabled()
 
     local vehicle = self.job:getVehicle()
     if not vehicle then 
@@ -348,7 +349,7 @@ function CpFieldWorkJobParameters:isUnloadRefillDisabled()
 end
 
 function CpFieldWorkJobParameters:isUnloadRefillFillTypeDisabled()
-    return self:isUnloadRefillDisabled() or self:isLoadingDisabled()
+    return self:isUnloadOrRefillingDisabled() or self:isLoadingDisabled()
 end
 
 function CpFieldWorkJobParameters:isUnloadRefillExtraDisabled()
@@ -356,7 +357,7 @@ function CpFieldWorkJobParameters:isUnloadRefillExtraDisabled()
     if not vehicle then 
         return false
     end
-    return self:isUnloadRefillDisabled() or 
+    return self:isUnloadOrRefillingDisabled() or 
         not (AIUtil.hasChildVehicleWithSpecialization(vehicle, Sprayer) and 
         AIUtil.hasChildVehicleWithSpecialization(vehicle, SowingMachine))
 end
@@ -386,8 +387,12 @@ function CpBaleFinderJobParameters:hasBaleLoader()
     return true
 end
 
-function CpBaleFinderJobParameters:isUnloadTargetPointDisabled()
+function CpBaleFinderJobParameters:hasNoBaleLoader()
     return not self:hasBaleLoader()
+end
+
+function CpBaleFinderJobParameters:isUnloadTargetPointDisabled()
+    return not self.unloadTargetPointEnabled:getValue()
 end
 
 function CpBaleFinderJobParameters:isBaleWrapSettingVisible()

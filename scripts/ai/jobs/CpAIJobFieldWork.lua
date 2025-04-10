@@ -25,6 +25,9 @@ function CpAIJobFieldWork:setupTasks(isServer)
     self.attachHeaderTask = CpAITaskAttachHeader(isServer, self)
     self.driveToFieldWorkStartTask = CpAITaskDriveTo(isServer, self)
     self.fieldWorkTask = CpAITaskFieldWork(isServer, self)
+    self.unloadTask = CpAITaskDriveToPointUnload(isServer, self)
+    self.refillTask = CpAITaskDriveToPointLoad(isServer, self)
+    self.refillTaskExtra = CpAITaskDriveToPointLoad(isServer, self)
 end
 
 function CpAIJobFieldWork:onPreStart()
@@ -32,6 +35,10 @@ function CpAIJobFieldWork:onPreStart()
     self:removeTask(self.attachHeaderTask)
     self:removeTask(self.driveToFieldWorkStartTask)
     self:removeTask(self.fieldWorkTask)
+    self:removeTask(self.unloadTask)
+    self:removeTask(self.refillTask)
+    self:removeTask(self.refillTaskExtra)
+    
     local vehicle = self:getVehicle()
     if vehicle and (AIUtil.hasCutterOnTrailerAttached(vehicle)
         or AIUtil.hasCutterAsTrailerAttached(vehicle)) then
@@ -40,6 +47,14 @@ function CpAIJobFieldWork:onPreStart()
     end
     self:addTask(self.driveToFieldWorkStartTask)
     self:addTask(self.fieldWorkTask)
+    if not self.cpJobParameters:isUnloadingDisabled() then 
+        self:addTask(self.unloadTask)
+    elseif not self.cpJobParameters:isLoadingDisabled() then  
+        self:addTask(self.refillTask)
+        if not self.cpJobParameters:isUnloadRefillExtraDisabled() then
+            self:addTask(self.refillTaskExtra)
+        end
+    end
 end
 
 function CpAIJobFieldWork:setupJobParameters()
@@ -49,7 +64,7 @@ end
 
 function CpAIJobFieldWork:isFinishingAllowed(message)
     local nextTaskIndex = self:getNextTaskIndex()
-	if message:isa(AIMessageErrorOutOfFill) then
+	if message:isa(AIMessageErrorOutOfFill) and self.cpJobParameters:isUnloadOrRefillingDisabled() then
         --- At least one implement type needs to be refilled.
 
         local vehicle = self:getVehicle()
@@ -145,6 +160,18 @@ function CpAIJobFieldWork:validate(farmId)
             return isValid, errorMessage
         end
         self.cpJobParameters:validateSettings()
+    end
+
+    if not self.cpJobParameters:isUnloadOrRefillingDisabled() then
+        if self.cpJobParameters.unloadRefillTargetPoint:getValue() < 0 then 
+			return false, g_i18n:getText("CP_error_no_target_selected")
+		end
+        if not self.cpJobParameters:isUnloadRefillExtraDisabled() then
+            if self.cpJobParameters.unloadRefillTargetPointExtra:getValue() < 0 then 
+                return false, g_i18n:getText("CP_error_no_target_selected")
+            end
+        end
+        --- TODO fill type evaluation
     end
 
     if not vehicle:hasCpCourse() then
