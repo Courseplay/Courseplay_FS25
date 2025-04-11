@@ -20,14 +20,25 @@ end
 
 function GraphTarget.registerXmlSchema(xmlSchema, baseKey)
     xmlSchema:register(XMLValueType.STRING, baseKey .. "#name", "Target name")
+    xmlSchema:register(XMLValueType.INT, baseKey .. "#oldUniqueID", "Old unique ID")
 end
 
 function GraphTarget:loadFromXMLFile(xmlFile, baseKey)
     self._name = xmlFile:getValue(baseKey .. "#name", "")
+    self._oldUniqueID = xmlFile:getValue(baseKey .. "#oldUniqueID", -1)
 end
 
 function GraphTarget:saveToXMLFile(xmlFile, baseKey)
     xmlFile:setValue(baseKey .. "#name", self._name)
+    xmlFile:setValue(baseKey .. "#oldUniqueID", self._uniqueID)
+end
+
+function GraphTarget:writeStream(streamId, connection)
+    streamWriteString(streamId, self._name)
+end
+
+function GraphTarget:readStream(streamId, connection)
+    self._name = streamReadString(streamId)
 end
 
 ---@param otherTarget GraphTarget
@@ -47,6 +58,15 @@ end
 ---@param name string
 function GraphTarget:setName(name)
     self._name = name
+end
+
+---@param name string
+---@param noEventSend boolean|nil
+function GraphTarget:rename(name, noEventSend)
+    self:setName(name)
+    if not noEventSend then 
+        GraphRenameTargetEvent.sendEvent(self._point, name)
+    end
 end
 
 ---@return Vector

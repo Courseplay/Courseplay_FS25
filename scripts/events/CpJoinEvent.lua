@@ -28,7 +28,8 @@ function CpJoinEvent:readStream(streamId, connection)
 	for i = 1, #CpDebug.channels do 
 		CpDebug:setChannelActive(i, streamReadBool(streamId))
 	end
-	
+	g_graph:readStream(streamId, connection)
+
 	self:run(connection);
 end
 
@@ -43,7 +44,7 @@ function CpJoinEvent:writeStream(streamId, connection)
 	for i = 1, #CpDebug.channels do 
 		streamWriteBool(streamId, CpDebug:isChannelActive(i))
 	end
-
+	g_graph:writeStream(streamId, connection)
 end
 
 --- Runs the event on the receiving end of the event.

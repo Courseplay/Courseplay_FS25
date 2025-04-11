@@ -346,6 +346,7 @@ Changelog 8.0.0.0:
 		<sourceFile filename="scripts/editor/CourseEditor.lua"/>
 		<sourceFile filename="scripts/editor/EditorGraphWrapper.lua"/>
 		<sourceFile filename="scripts/editor/GraphEditor.lua"/>
+
 		<sourceFile filename="scripts/events/CoursesEvent.lua"/>
 		<sourceFile filename="scripts/events/CpJoinEvent.lua"/>
 		<sourceFile filename="scripts/events/GlobalSettingsEvent.lua"/>
@@ -357,6 +358,9 @@ Changelog 8.0.0.0:
 		<sourceFile filename="scripts/events/DriveNowRequestEvent.lua"/>
 		<sourceFile filename="scripts/events/PlowCenterTurnEvent.lua"/>
 		<sourceFile filename="scripts/events/FieldPolygonChangedEvent.lua"/>
+		<sourceFile filename="scripts/events/graph/GraphSegmentEvents.lua"/>
+		<sourceFile filename="scripts/events/graph/GraphTargetEvents.lua"/>
+		
 
 		<sourceFile filename="scripts/dev/DevHelper.lua"/>
 

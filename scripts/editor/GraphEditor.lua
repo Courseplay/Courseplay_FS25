@@ -5,6 +5,7 @@ GraphEditor.TRANSLATION_PREFIX = "CP_editor_graph_"
 
 function GraphEditor:init()
     CourseEditor.init(self)
+    ---@type EditorGraphWrapper
     self.graphWrapper = EditorGraphWrapper(g_graph)
     self.title = string.format("TODO: CP GraphEditor")
 
@@ -59,4 +60,5 @@ function GraphEditor:updateChangesBetween(firstIx, lastIx)
 	-- self.courseDisplay:updateChangesBetween(firstIx, lastIx)
 end
 
+---@type GraphEditor
 g_graphEditor = GraphEditor()

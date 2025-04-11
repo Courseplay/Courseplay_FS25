@@ -13,10 +13,7 @@ end
 
 function MovePointBrush:onButtonPrimary(isDown, isDrag, isUp)
 	if isDown then
-		local id = self:getHoveredNodeId()
-		if id then 
-			self.graphWrapper:setSelected(id)
-		end
+		self.graphWrapper:setSelected(self:getHoveredNodeId())
 	end
 	if isDrag and self.graphWrapper:hasSelectedNode() then 
 		local id = self.graphWrapper:getFirstSelectedNodeID()
@@ -24,6 +21,11 @@ function MovePointBrush:onButtonPrimary(isDown, isDrag, isUp)
 		self.graphWrapper:movePointByIndex(id, x, y, z)
 	end
 	if isUp then
+		local id = self.graphWrapper:getFirstSelectedNodeID()
+		local segment = self.graphWrapper:getSegmentByIndex(id)
+		if segment then 
+			GraphRebuildSegmentEvent.sendEvent(segment)
+		end
 		self.graphWrapper:resetSelected()
 	end
 end
@@ -33,6 +35,11 @@ function MovePointBrush:activate()
 end
 
 function MovePointBrush:deactivate()
+	local id = self.graphWrapper:getFirstSelectedNodeID()
+	local segment = self.graphWrapper:getSegmentByIndex(id)
+	if segment then 
+		GraphRebuildSegmentEvent.sendEvent(segment)
+	end
 	self.graphWrapper:resetSelected()
 end
 

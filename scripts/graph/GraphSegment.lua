@@ -57,6 +57,34 @@ function GraphSegment:saveToXMLFile(xmlFile, baseKey)
     end
 end
 
+function GraphSegment:writeStream(streamId, connection)
+    streamWriteUInt32(streamId, self:getNumChildNodes())
+    for point in ipairs(self._childNodes) do 
+        point:writeStream(streamId, connection)
+    end
+    self:writeStreamAttributes(streamId, connection)
+end
+
+function GraphSegment:writeStreamAttributes(streamId, connection)
+    streamWriteUInt8(streamId, self._direction)
+    streamWriteBool(streamId, self._isGeneratedBySpline or false)
+end
+
+function GraphSegment:readStream(streamId, connection)
+    local numElements = streamReadUInt32(streamId)
+    for i=1, numElements do 
+        local point = GraphPoint()
+        point:readStream(streamId, connection)
+        self:appendChildNode(point)
+    end
+    self:readStreamAttributes(streamId, connection)
+end
+
+function GraphSegment:readStreamAttributes(streamId, connection)
+    self._direction = streamReadUInt8(streamId)
+    self._isGeneratedBySpline = streamReadBool(streamId)
+end
+
 ---@param newNode GraphSegment
 ---@param unlink boolean|nil
 function GraphSegment:copyTo(newNode, unlink)
@@ -151,7 +179,16 @@ function GraphSegment:changeDirection(newDirection)
             newDirection = 1
         end
     end
+    self:setDirection(newDirection)
+end
+
+---@param newDirection number
+---@param noEventSend boolean|nil
+function GraphSegment:setDirection(newDirection, noEventSend)
     self._direction = newDirection
+    if not noEventSend then 
+        GraphSegmentChangedAttributesEvent.sendEvent(self)
+    end
 end
 
 ---@return string

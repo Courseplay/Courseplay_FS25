@@ -95,7 +95,7 @@ end
 
 ---@param segment GraphSegment
 function EditorGraphWrapper:addSegment(segment)
-	self.graph:appendChildNode(segment)
+	self.graph:addNewSegment(segment)
 end
 
 ---@param id string|nil
@@ -106,24 +106,32 @@ function EditorGraphWrapper:removePointByIndex(id)
 	if point == nil then
 		return false, err
 	end
+	local segment, err = self:getSegmentByIndex(id)
+	if segment == nil then 
+		return false, err
+	end
 	point:unlink(function(p, segment)
 		if not segment:hasChildNodes() then 
 			segment:unlink()
 		end
 	end)
+	GraphRebuildSegmentEvent.sendEvent(segment)
 	return true
 end
 
 ---@param id string|nil
+---@param noEventSend boolean|nil
 ---@return boolean
 ---@return string|nil
-function EditorGraphWrapper:removeSegmentByPointIndex(id)
+function EditorGraphWrapper:removeSegmentByPointIndex(id, noEventSend)
 	local segment, err = self:getSegmentByIndex(id)
 	if segment == nil then 
 		return false, err
 	end
-	segment:clearChildNodes()
-	segment:unlink()
+	if not noEventSend then 
+		GraphRemoveSegmentEvent.sendEvent(segment)
+	end
+	g_graph:removeSegment(segment)
 	return true
 end
 
@@ -145,7 +153,9 @@ function EditorGraphWrapper:insertPointBehindIndex(id, newPoint)
 		return false, "err_min_distance_to_small"
 	end
 	local ix = segment:getChildNodeIndex(point)
-	return true, nil, segment:insertChildNodeAtIndex(newPoint, ix + 1)
+	local newIx = segment:insertChildNodeAtIndex(newPoint, ix + 1)
+	GraphRebuildSegmentEvent.sendEvent(segment)
+	return true, nil, newIx
 end
 
 ---@param id string
@@ -166,7 +176,9 @@ function EditorGraphWrapper:insertPointAheadOfIndex(id, newPoint)
 		return false, "err_min_distance_to_small"
 	end
 	local ix = segment:getChildNodeIndex(point)
-	return true, nil, segment:insertChildNodeAtIndex(newPoint, ix)
+	local newIx = segment:insertChildNodeAtIndex(newPoint, ix)
+	GraphRebuildSegmentEvent.sendEvent(segment)
+	return true, nil, newIx
 end
 
 ---@param id string|nil
@@ -317,8 +329,8 @@ function EditorGraphWrapper:mergeSegments(idA, idB)
 			segmentA:extendByChildren(segmentB, true)
 		end
 	end
-	segmentB:clearChildNodes()
-	segmentB:unlink()
+	g_graph:removeSegment(segmentB)
+	GraphRebuildSegmentEvent.sendEvent(segmentA)
 	return true
 end
 
@@ -340,11 +352,12 @@ function EditorGraphWrapper:splitSegment(id)
 	end
 	local ix = segment:getChildNodeIndex(node)
 	local postNodes = segment:getChildNodesBetweenIndex(ix + 1, segment:getNumChildNodes())
-	--@type GraphSegment
+
 	local newSegment = GraphSegment()
 	newSegment:extendByChildNodes(postNodes, false)
-	self.graph:appendChildNode(newSegment)
+	g_graph:addNewSegment(newSegment)
 	segment:removeChildNodesBetweenIndex(ix + 1, segment:getNumChildNodes())
+	GraphRebuildSegmentEvent.sendEvent(segment)
 	return true
 end
 
@@ -516,7 +529,7 @@ function EditorGraphWrapper:createTargetForIndex(id, name)
 	if not point:createTarget(name) then 
 		return false, "err_already_has_target"
 	end
-	return point:createTarget(name)
+	return true
 end
 
 ---@param id string|nil

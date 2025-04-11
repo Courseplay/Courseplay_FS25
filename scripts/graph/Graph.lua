@@ -177,6 +177,8 @@ function Graph:loadFromXMLFile(xmlFile, baseKey)
         baseKey .. self.XML_KEY .. "#hasGeneratedSplines", false)
     self._loadedMapId = xmlFile:getValue(
         baseKey .. self.XML_KEY .. "#mapId", "")
+    -- TODO fix old unique target ids to new ids ..
+
 end
 
 function Graph:saveToXMLFile(xmlFile, baseKey)
@@ -216,6 +218,26 @@ end
 
 function Graph:update(dt)
 
+end
+
+function Graph:writeStream(streamId, connection)
+    streamWriteUInt32(streamId, self:getNumChildNodes())
+    for segment in ipairs(self._childNodes) do 
+        segment:writeStream(streamId, connection)
+    end
+    streamWriteBool(streamId, self._hasGeneratedSplines or false)
+    streamWriteString(streamId, self._loadedMapId or "")
+end
+
+function Graph:readStream(streamId, connection)
+    local numElements = streamReadUInt32(streamId)
+    for i=1, numElements do 
+        local segment = GraphSegment()
+        segment:readStream(streamId, connection)
+        self:appendChildNode(segment)
+    end
+    self._hasGeneratedSplines = streamReadBool(streamId)
+    self._loadedMapId = streamReadString(streamId)
 end
 
 ---@return GraphSegment[]
@@ -258,6 +280,14 @@ function Graph:getPointByIndex(index)
     end
 end
 
+function Graph:addNewSegment(segment, noEventSend)
+    self:appendChildNode(segment)
+    if not noEventSend then 
+        GraphCreateSegmentEvent.sendEvent(segment)
+    end
+    return segment
+end
+
 ---@param x number
 ---@param y number
 ---@param z number
@@ -267,8 +297,18 @@ function Graph:createSegmentWithPoint(x, y, z)
     local point = GraphPoint()
     point:setPosition(x, y, z)
     segment:appendChildNode(point)
-    self:appendChildNode(segment)
+    self:addNewSegment(segment)
     return segment
+end
+
+---@param segment GraphSegment
+---@param noEventSend boolean|nil
+function Graph:removeSegment(segment, noEventSend)
+    if not noEventSend then 
+        GraphRemoveSegmentEvent.sendEvent(segment)
+    end
+    segment:clearChildNodes()
+	segment:unlink()
 end
 
 ---@param target GraphTarget

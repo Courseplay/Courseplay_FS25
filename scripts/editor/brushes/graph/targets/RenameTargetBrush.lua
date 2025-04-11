@@ -19,7 +19,7 @@ function RenameTargetBrush:onButtonPrimary()
 		end
 		self:openTextInput(function(self, text, clickOk, target)
 			if clickOk then 
-				target:setName(text)
+				target:rename(text)
 			end
 		end, self:getTranslation(self.inputTitle, target:getName()), target)
 	end

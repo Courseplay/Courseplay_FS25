@@ -42,6 +42,26 @@ function GraphPoint:saveToXMLFile(xmlFile, key)
     end
 end
 
+function GraphPoint:writeStream(streamId, connection)
+    streamWriteFloat32(streamId, self._x)
+    streamWriteFloat32(streamId, self._y)
+    streamWriteFloat32(streamId, self._z)
+    streamWriteBool(streamId, self._target ~= nil)
+    if self._target then 
+        self._target:writeStream(streamId, connection)
+    end
+end
+
+function GraphPoint:readStream(streamId, connection)
+    self._x = streamReadFloat32(streamId)
+    self._y = streamReadFloat32(streamId)
+    self._z = streamReadFloat32(streamId)
+    if streamReadBool(streamId) then 
+        local target = GraphTarget(self)
+        target:readStream(streamId, connection)
+    end
+end
+
 ---@param newNode GraphPoint
 ---@param unlink boolean|nil
 function GraphPoint:copyTo(newNode, unlink)
@@ -205,19 +225,27 @@ function GraphPoint:getTarget()
 end
 
 ---@param name string
+---@param noEventSend boolean|nil
 ---@return boolean
-function GraphPoint:createTarget(name)
+function GraphPoint:createTarget(name, noEventSend)
     if self:hasTarget() then 
         return false
+    end
+    if not noEventSend then 
+        GraphCreateTargetEvent.sendEvent(self, name)
     end
     self._target = GraphTarget(self, name)
     return true
 end
 
+---@param noEventSend boolean|nil
 ---@return boolean
-function GraphPoint:removeTarget()
+function GraphPoint:removeTarget(noEventSend)
     if not self:hasTarget() then 
         return false
+    end
+    if not noEventSend then 
+        GraphRemoveTargetEvent.sendEvent(self)
     end
     self._target:delete()
     self._target = nil
