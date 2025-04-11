@@ -63,13 +63,18 @@ function CpAIJobFieldWork:setupJobParameters()
 end
 
 function CpAIJobFieldWork:isFinishingAllowed(message)
-    local nextTaskIndex = self:getNextTaskIndex()
-	if message:isa(AIMessageErrorOutOfFill) and self.cpJobParameters:isUnloadOrRefillingDisabled() then
+    if not self.cpJobParameters:isUnloadOrRefillingDisabled() then
+        if message:isa(AIMessageErrorOutOfFill) or 
+            message:isa(AIMessageErrorIsFull) then
+            --- Street refill
+            self.fieldWorkTask:skip()
+            return false
+        end
+    end
+	if message:isa(AIMessageErrorOutOfFill) then
         --- At least one implement type needs to be refilled.
-
         local vehicle = self:getVehicle()
         local setting = vehicle:getCpSettings().refillOnTheField
-
         if setting:getValue() == CpVehicleSettings.REFILL_ON_FIELD_DISABLED then
             return true
         elseif setting:getValue() == CpVehicleSettings.REFILL_ON_FIELD_WAITING then
@@ -92,6 +97,7 @@ end
 ---@param resetToVehiclePosition boolean resets the drive to target position by giants and the field position to the vehicle position.
 function CpAIJobFieldWork:applyCurrentState(vehicle, mission, farmId, isDirectStart, resetToVehiclePosition)
     CpAIJob.applyCurrentState(self, vehicle, mission, farmId, isDirectStart)
+    self:copyFrom(vehicle:getCpFieldWorkerJob())
     if resetToVehiclePosition then
         -- set the start and the field position to the vehicle's position (
         local x, _, z = getWorldTranslation(vehicle.rootNode)
@@ -142,6 +148,15 @@ function CpAIJobFieldWork:setValues()
     self.driveToFieldWorkStartTask:setVehicle(vehicle)
     self.attachHeaderTask:setVehicle(vehicle)
     self.fieldWorkTask:setVehicle(vehicle)
+    self.refillTask:setVehicle(vehicle)
+    self.refillTask:setTarget(
+        g_graph:getTargetByUniqueID(self.cpJobParameters.unloadRefillTargetPoint:getValue()))
+    self.unloadTask:setVehicle(vehicle)
+    self.unloadTask:setTarget(
+			g_graph:getTargetByUniqueID(self.cpJobParameters.unloadRefillTargetPoint:getValue()))
+    self.refillTaskExtra:setVehicle(vehicle)
+    self.refillTaskExtra:setTarget(
+			g_graph:getTargetByUniqueID(self.cpJobParameters.unloadRefillTargetPointExtra:getValue()))
 end
 
 --- Called when parameters change, scan field
@@ -152,6 +167,9 @@ function CpAIJobFieldWork:validate(farmId)
         return isValid, errorMessage
     end
     local vehicle = self.vehicleParameter:getVehicle()
+	if vehicle then 
+		vehicle:applyCpFieldWorkerJobParameters(self)
+	end
 
     --- Only check the valid field position in the in game menu.
     if not self.isDirectStart then
@@ -307,4 +325,8 @@ function CpAIJobFieldWork:getDescription()
 		desc = desc .. " - " .. g_i18n:getText("CP_ai_taskDescriptionAttachHeader")
 	end
 	return desc
+end
+
+function CpAIJobFieldWork:getIsLooping()
+	return not self.cpJobParameters:isUnloadOrRefillingDisabled()
 end

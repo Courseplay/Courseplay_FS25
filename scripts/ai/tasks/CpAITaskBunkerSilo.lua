@@ -13,7 +13,6 @@ end
 
 function CpAITaskBunkerSilo:start()
 	if self.isServer then
-		self:debug("CP bunker silo task started.")
 		self.vehicle:resetCpCoursesFromGui()
 		local strategy = AIDriveStrategyBunkerSilo(self, self.job)
 		strategy:setSilo(self.silo)
@@ -25,8 +24,11 @@ end
 
 function CpAITaskBunkerSilo:stop(wasJobStopped)
 	if self.isServer then
-		self:debug("CP bunker silo task stopped.")
 		self.vehicle:stopCpDriver(wasJobStopped)
 	end
 	CpAITask.stop(self)
+end
+
+function CpAITaskBunkerSilo:__tostring()
+	return "CpAITaskBunkerSilo"
 end

@@ -13,7 +13,6 @@ end
 
 function CpAITaskDriveToPoint:start()
     if self.isServer then
-        self:debug('CP drive to target point task started')
         local strategy = AIDriveStrategyStreetDriveToPoint(self, self.job)
         strategy:setTarget(self.target)
         strategy:setAIVehicle(self.vehicle, self.job:getCpJobParameters())
@@ -24,8 +23,11 @@ end
 
 function CpAITaskDriveToPoint:stop(wasJobStopped)
     if self.isServer then
-        self:debug('CP drive to target point task stopped')
         self.vehicle:stopCpDriver(wasJobStopped)
     end
     CpAITask.stop(self)
+end
+
+function CpAITaskDriveToPoint:__tostring()
+	return "CpAITaskDriveToPoint"
 end

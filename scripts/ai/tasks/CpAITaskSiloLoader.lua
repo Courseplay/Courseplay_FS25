@@ -40,3 +40,7 @@ function CpAITaskSiloLoader:stop(wasJobStopped)
 	end
 	CpAITask.stop(self)
 end
+
+function CpAITaskSiloLoader:__tostring()
+	return "CpAITaskSiloLoader"
+end

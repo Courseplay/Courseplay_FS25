@@ -16,7 +16,7 @@
 		<Setting classType="CpAIParameterPosition" name="fieldPosition" positionParameterType="FIELD_OR_SILO"/>
 	</SettingSubTitle>
 	<SettingSubTitle title="startAt">
-		<Setting classType="AIParameterSettingList" name="startAt" default="2">
+		<Setting classType="AIParameterSettingList" name="startAt" default="2" isCopyValueDisabled="true">
 			<Values>
 				<Value name="START_AT_NEAREST_POINT" isDisabled="isFieldWorkHudModeDisabled">1</Value>
 				<Value name="START_AT_FIRST_POINT" isDisabled="isFieldWorkHudModeDisabled">2</Value>

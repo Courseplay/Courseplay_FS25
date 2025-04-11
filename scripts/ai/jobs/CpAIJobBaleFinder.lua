@@ -51,6 +51,8 @@ function CpAIJobBaleFinder:setValues()
 	local vehicle = self.vehicleParameter:getVehicle()
 	self.baleFinderTask:setVehicle(vehicle)
 	self.unloadTask:setVehicle(vehicle)
+	self.unloadTask:setTarget(
+		g_graph:getTargetByUniqueID(self.cpJobParameters.unloadTargetPoint:getValue()))
 end
 
 --- Called when parameters change, scan field
@@ -113,4 +115,8 @@ function CpAIJobBaleFinder:getDescription()
 		end
 	end
 	return desc
+end
+
+function CpAIJobBaleFinder:getIsLooping()
+	return self.cpJobParameters.unloadTargetPointEnabled:getValue()
 end

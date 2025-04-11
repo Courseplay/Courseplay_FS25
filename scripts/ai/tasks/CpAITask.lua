@@ -25,6 +25,7 @@ function CpAITask:update(dt)
 end
 
 function CpAITask:start()
+	self:debug("started.")
 	self.isFinished = false
 	self.isRunning = true
 
@@ -35,6 +36,7 @@ function CpAITask:start()
 end
 
 function CpAITask:skip()
+	self:debug("skipped.")
 	if self.isRunning then
 		self.isFinished = true
 	else
@@ -43,6 +45,7 @@ function CpAITask:skip()
 end
 
 function CpAITask:stop(wasJobStopped)
+	self:debug("stopped.")
 	self.isRunning = false
 	self.markAsFinished = false
 end
@@ -68,10 +71,14 @@ function CpAITask:getVehicle()
 	return self.vehicle
 end
 
-function CpAITask:debug(...)
+function CpAITask:__tostring()
+	return "CpAITask"
+end
+
+function CpAITask:debug(str, ...)
 	if self.vehicle then 
-		CpUtil.debugVehicle(self.debugChannel, self.vehicle, ...)
+		CpUtil.debugVehicle(self.debugChannel, self.vehicle, string.format("%s: %s", tostring(self), str), ...)
 	else 
-		CpUtil.debugFormat(self.debugChannel, ...)
+		CpUtil.debugFormat(self.debugChannel, string.format("%s: %s", tostring(self), str),...)
 	end
 end

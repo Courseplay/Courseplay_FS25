@@ -114,6 +114,10 @@ function CpAIJobCombineUnloader:setValues()
 	self.combineUnloaderTask:setVehicle(vehicle)
 	if self.useGiantsUnload then
 		self:setupGiantsUnloaderData(vehicle)
+	else
+		self.driveToUnloadingTask:setVehicle(vehicle)
+		self.driveToUnloadingTask:setTarget(
+			g_graph:getTargetByUniqueID(self.cpJobParameters.unloadTargetPoint:getValue()))
 	end
 end
 

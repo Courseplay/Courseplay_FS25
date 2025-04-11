@@ -78,6 +78,9 @@ function CpAIParameterPosition:clone(...)
 end
 
 function CpAIParameterPosition:copy(setting)
+	if self.data.isCopyValueDisabled then 
+		return
+	end
 	self.x = setting.x 
 	self.z = setting.z
 end
@@ -138,6 +141,9 @@ function CpAIParameterPositionAngle:clone(...)
 end
 
 function CpAIParameterPositionAngle:copy(setting)
+	if self.data.isCopyValueDisabled then 
+		return
+	end
 	CpAIParameterPosition.copy(self, setting)
 	self.angle = setting.angle
 	self.snappingAngle = setting.snappingAngle

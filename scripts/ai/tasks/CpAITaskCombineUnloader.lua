@@ -4,7 +4,6 @@ CpAITaskCombineUnloader = CpObject(CpAITask)
 
 function CpAITaskCombineUnloader:start()
 	if self.isServer then
-		self:debug("CP combine unloader task started.")
 		local strategy = AIDriveStrategyUnloadCombine(self, self.job)
 		strategy:setAIVehicle(self.vehicle, self.job:getCpJobParameters())
 		self.vehicle:startCpWithStrategy(strategy)
@@ -14,8 +13,11 @@ end
 
 function CpAITaskCombineUnloader:stop(wasJobStopped)
 	if self.isServer then
-		self:debug("CP combine unloader task stopped.")
 		self.vehicle:stopCpDriver(wasJobStopped)
 	end
 	CpAITask.stop(self)
+end
+
+function CpAITaskCombineUnloader:__tostring()
+	return "CpAITaskCombineUnloader"
 end

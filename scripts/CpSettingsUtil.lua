@@ -31,6 +31,7 @@ CpSettingsUtil = {}
 				- textInput(bool) : is text input allowed ? (optional), every automatic generated number sequence is automatically allowed.
 				- isUserSetting(bool): should the setting be saved in the game settings and not in the savegame dir.
 				- isExpertModeOnly(bool): is the setting visible in the expert version?, default = false
+				- isCopyValueDisabled(bool): is the setting value being copy by a copy function call?, default false
 
 				- generateValuesFunction(string): dynamically adds value, when the setting is created.
 				- min (float): min value
@@ -85,6 +86,7 @@ function CpSettingsUtil.init()
 	schema:register(XMLValueType.BOOL, key .. "#textInput", "Setting input text allowed.") --optional
 	schema:register(XMLValueType.BOOL, key .. "#isUserSetting", "Setting will be saved in the gameSettings file.", false) --optional
 	schema:register(XMLValueType.BOOL, key.."#isExpertModeOnly", "Is enabled in simple mode?", false) -- optional
+	schema:register(XMLValueType.BOOL, key.."#isCopyValueDisabled", "Is value copied by copy()?", false) -- optional
 
 	schema:register(XMLValueType.STRING, key .. "#generateValuesFunction", "Function to generate values.")
 	schema:register(XMLValueType.FLOAT, key.."#min", "Setting min value")
@@ -198,6 +200,7 @@ function CpSettingsUtil.loadSettingsFromSetup(class, filePath)
 			settingParameters.textInputAllowed = xmlFile:getValue(baseKey.."#textInput", false)
 			settingParameters.isUserSetting = xmlFile:getValue(baseKey.."#isUserSetting", false)
 			settingParameters.isExpertModeOnly = xmlFile:getValue(baseKey.."#isExpertModeOnly", false)
+			settingParameters.isCopyValueDisabled = xmlFile:getValue(baseKey.."#isCopyValueDisabled", false)
 
 			settingParameters.generateValuesFunction = xmlFile:getValue(baseKey.."#generateValuesFunction")
 			settingParameters.min = xmlFile:getValue(baseKey.."#min")

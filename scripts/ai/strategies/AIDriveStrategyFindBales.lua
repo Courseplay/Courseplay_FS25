@@ -340,23 +340,36 @@ end
 --- Finishes the job with the correct stop reason, as
 --- the correct reason is needed for a possible AD takeover.
 function AIDriveStrategyFindBales:finishJob()
+    local stopClosure = function (message)
+        self.vehicle:stopCurrentAIJob(message)
+    end
+    if self.jobParameters.unloadTargetPointEnabled:getValue() then 
+        stopClosure = function (message)
+            if self:hasBalesLoaded() then
+                self.currentTask:skip()
+            else 
+                self.vehicle:stopCurrentAIJob(message)
+            end
+        end
+    end
+
     if self:areBaleLoadersFull() then
         self:debug('All the bale loaders are full, so stopping the job.')
-        self.vehicle:stopCurrentAIJob(AIMessageErrorIsFull.new())
+        stopClosure(AIMessageErrorIsFull.new())
     elseif self:hasBalesLoaded() then
         if self.baleLoaderController and self.baleLoaderController:isChangingBaleSize() then
             self:debug('There really are no more bales on the field, so stopping the job')
             self.vehicle:stopCurrentAIJob(AIMessageSuccessFinishedJob.new())
         else
             self:debug('No more bales found on the field, so stopping the job and sending the loader to unload the bales.')
-            self.vehicle:stopCurrentAIJob(AIMessageErrorIsFull.new())
+            stopClosure(AIMessageErrorIsFull.new())
         end
     elseif self.baleLoader and self.wrongWrapTypeFound then
         self:debug('Only bales with a wrong wrap type are left on the field.')
-        self.vehicle:stopCurrentAIJob(AIMessageErrorWrongBaleWrapType.new())
+        stopClosure(AIMessageErrorWrongBaleWrapType.new())
     else
         self:debug('No more bales left on the field and no bales are loader and so on ..')
-        self.vehicle:stopCurrentAIJob(AIMessageSuccessFinishedJob.new())
+        stopClosure(AIMessageSuccessFinishedJob.new())
     end
 end
 
@@ -624,9 +637,11 @@ function AIDriveStrategyFindBales:isPositionOk()
                     or CpMathUtil.isWithinDistanceToPolygon(self.vehicle:cpGetFieldPolygon(), x, z,
                     2 * AIDriveStrategyFindBales.minStartDistanceToField) then
                 --- Goal position marker set in the ai menu rotated by 180 degree.
-                self.invertedStartPositionMarkerNode = CpUtil.createNode("Inverted Start position marker",
-                        x, z, angle + math.pi)
-                self:debug("Valid goal position marker was set.")
+                if not self.jobParameters.unloadTargetPointEnabled:getValue() then
+                    self.invertedStartPositionMarkerNode = CpUtil.createNode("Inverted Start position marker",
+                            x, z, angle + math.pi)
+                    self:debug("Valid goal position marker was set.")
+                end
             else
                 self:debug("Start position is too far away from the field for a valid goal position!")
             end

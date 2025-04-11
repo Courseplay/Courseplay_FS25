@@ -70,6 +70,9 @@ function CpAIParameterFillTypeSetting:clone(...)
 end
 
 function CpAIParameterFillTypeSetting:copy(otherSetting)
+	if self.data.isCopyValueDisabled then 
+		return
+	end
 	self.fillType:copy(otherSetting.fillType)
 	self.maxFillLevel:copy(otherSetting.maxFillLevel)
 	self.minFillLevel:copy(otherSetting.minFillLevel)

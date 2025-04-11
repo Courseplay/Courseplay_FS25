@@ -558,6 +558,10 @@ end
 
 --- Copy the value to another setting.
 function AIParameterSettingList:copy(setting)
+	if self.data.isCopyValueDisabled then 
+		return
+	end
+
 	if self.data.incremental and self.data.incremental ~= 1 then 
 		self:setFloatValue(setting.values[setting.current], nil, true)
 	else 

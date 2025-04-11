@@ -126,3 +126,7 @@ function CpAITaskFieldWork:stop(wasJobStopped)
 	end
 	CpAITask.stop(self, wasJobStopped)
 end
+
+function CpAITaskFieldWork:__tostring()
+	return "CpAITaskFieldWork"
+end

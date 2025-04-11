@@ -44,6 +44,9 @@ function CpAIParameterTargetPoint:setValue(uniqueID, noEventSend)
 end
 
 function CpAIParameterTargetPoint:copy(setting)
+	if self.data.isCopyValueDisabled then 
+		return
+	end
 	self:setValue(setting:getValue())
 end
 
