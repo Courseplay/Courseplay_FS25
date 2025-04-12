@@ -88,6 +88,10 @@ function GraphPathfinder.GraphEdge:rollUpIterator(entry)
 end
 
 function GraphPathfinder.GraphEdge.getDirectionFromGameDirection(gameDirection)
+    -- for forward compatibility until we get GraphSegment merged
+    if not GraphSegmentDirection then
+        GraphSegmentDirection = {FORWARD = 1, REVERSE = 2}
+    end
     if gameDirection == GraphSegmentDirection.FORWARD or gameDirection == GraphSegmentDirection.REVERSE then
         return GraphPathfinder.GraphEdge.UNIDIRECTIONAL
     else
