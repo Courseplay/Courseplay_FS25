@@ -448,6 +448,48 @@ function HybridAStar.NodeList:iterator()
     end
 end
 
+--- Cache penalties for nodes to avoid calling getNodePenalty() multiple times for the same node
+--- This is a 2D grid discretized to the gridSize, anything falling in the same grid cell will have the same
+--- penalty. This also assumes the penalty is the same for all theta values in the cell, that is, getNodePenalty()
+--- is not theta dependent.
+---@class HybridAStar.PenaltyCache
+HybridAStar.PenaltyCache = CpObject()
+
+---@param gridSize number size of the cell in the x/y dimensions
+function HybridAStar.PenaltyCache:init(gridSize)
+    self.nodes = {}
+    self.gridSize = gridSize
+end
+
+---@param node State3D
+function HybridAStar.PenaltyCache:getNodeIndexes(node)
+    local x = math.floor(node.x / self.gridSize)
+    local y = math.floor(node.y / self.gridSize)
+    return x, y
+end
+
+function HybridAStar.PenaltyCache:inSameCell(n1, n2)
+    local x1, y1 = self:getNodeIndexes(n1)
+    local x2, y2 = self:getNodeIndexes(n2)
+    return x1 == x2 and y1 == y2
+end
+
+---@param node State3D
+function HybridAStar.PenaltyCache:get(node)
+    local x, y, t = self:getNodeIndexes(node)
+    return self.nodes[x] and self.nodes[x][y]
+end
+
+---@param node State3D
+function HybridAStar.PenaltyCache:add(node, penalty)
+    local x, y, t = self:getNodeIndexes(node)
+    if not self.nodes[x] then
+        self.nodes[x] = {}
+    end
+    self.nodes[x][y] = penalty
+end
+
+
 --- A reasonable default maximum iterations that works for the majority of our use cases
 HybridAStar.defaultMaxIterations = 40000
 
@@ -524,6 +566,8 @@ function HybridAStar:initRun(start, goal, turnRadius, allowReverse, constraints,
     -- create the configuration space
     ---@type HybridAStar.NodeList closedList
     self.nodes = HybridAStar.NodeList(self.deltaPos, self.deltaThetaDeg)
+    ---@type HybridAStar.NodeList penaltyCache is not direction dependent
+    self.penaltyCache = HybridAStar.PenaltyCache(self.deltaPos)
     if allowReverse then
         self.analyticSolver = self.analyticSolver or ReedsSheppSolver()
     else
@@ -637,7 +681,12 @@ function HybridAStar:run(start, goal, turnRadius, allowReverse, constraints, hit
                     -- we end up being in overlap with another vehicle when we start the pathfinding and all we need is
                     -- an iteration or two to bring us out of that position
                     if (self.ignoreValidityAtStart and self.iterations < 3) or self.constraints:isValidNode(succ) then
-                        succ:updateG(primitive, self.constraints:getNodePenalty(succ))
+                        local penalty = self.penaltyCache:get(succ)
+                        if penalty == nil then
+                            penalty = self.constraints:getNodePenalty(succ)
+                            self.penaltyCache:add(succ, penalty)
+                        end
+                        succ:updateG(primitive, penalty)
                         local analyticSolutionCost = 0
                         if self.analyticSolverEnabled then
                             local analyticSolution = self.analyticSolver:solve(succ, self.goal, self.turnRadius)
