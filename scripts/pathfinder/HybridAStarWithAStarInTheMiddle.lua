@@ -232,7 +232,7 @@ function DummyAStar:init(vehicle, path)
 end
 
 function DummyAStar:run()
-    return true, self.path
+    return PathfinderResult(true, self.path)
 end
 
 --- Similar to HybridAStarWithAStarInTheMiddle, but the middle section is not calculated using the A*, instead

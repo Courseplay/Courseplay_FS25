@@ -76,7 +76,7 @@ function PathfinderConstraints:init(context)
     self:resetCounts()
     local areaToAvoidText = self.areaToAvoid and
             string.format('are to avoid %.1f x %.1f m', self.areaToAvoid.length, self.areaToAvoid.width) or 'none'
-    self.logger:debug('off field penalty %.1f, max fruit percent: %.1f, field number %d, %s, ignore fruit %s, ignore off-field penalty %s',
+    self.logger:debug(self.vehicle, 'off field penalty %.1f, max fruit percent: %.1f, field number %d, %s, ignore fruit %s, ignore off-field penalty %s',
             self.offFieldPenalty, self.maxFruitPercent, self.fieldNum, areaToAvoidText,
             self.areaToIgnoreFruit or 'none', self.areaToIgnoreOffFieldPenalty or 'none')
 end
@@ -172,7 +172,7 @@ function PathfinderConstraints:isValidAnalyticSolutionNode(node, log)
     local analyticLimit = self.maxFruitPercent * 2
     if hasFruit and fruitValue > analyticLimit then
         if log then
-            self.logger:debug('isValidAnalyticSolutionNode: fruitValue %.1f, max %.1f @ %.1f, %.1f',
+            self.logger:debug(self.vehicle, 'isValidAnalyticSolutionNode: fruitValue %.1f, max %.1f @ %.1f, %.1f',
                     fruitValue, analyticLimit, node.x, -node.y)
         end
         return false
@@ -239,10 +239,10 @@ function PathfinderConstraints:resetStrictMode()
 end
 
 function PathfinderConstraints:showStatistics()
-    self.logger:debug('Nodes: %d, Penalties: fruit: %d, off-field: %d, not owned field: %d, collisions: %d, trailer collisions: %d, area to avoid: %d, preferred path: %d',
+    self.logger:debug(self.vehicle, 'Nodes: %d, Penalties: fruit: %d, off-field: %d, not owned field: %d, collisions: %d, trailer collisions: %d, area to avoid: %d, preferred path: %d',
             self.totalNodeCount, self.fruitPenaltyNodeCount, self.offFieldPenaltyNodeCount, self.notOwnedFieldPenaltyNodeCount,
             self.collisionNodeCount, self.trailerCollisionNodeCount, self.areaToAvoidPenaltyCount, self.preferredPathPenaltyCount)
-    self.logger:debug('  max fruit %.1f %%, off-field penalty: %.1f',
+    self.logger:debug(self.vehicle, '  max fruit %.1f %%, off-field penalty: %.1f',
             self.maxFruitPercent, self.offFieldPenalty)
 end
 
