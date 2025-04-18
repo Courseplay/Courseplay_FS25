@@ -63,6 +63,7 @@ end
 --
 -- After start(), call resume() until it returns done == true.
 ---@see PathfinderInterface#run also on how to use.
+---@return PathfinderResult
 function PathfinderInterface:start(...)
     if not self.coroutine then
         self.coroutine = coursePlayCoroutine.create(self.run)
@@ -83,19 +84,17 @@ function PathfinderInterface:isActive()
 end
 
 --- Resume the pathfinding
----@return boolean true if the pathfinding is done, false if it isn't ready. In this case you'll have to call resume() again
----@return Polyline path if the path found or nil if none found.
--- @return array of the points of the grid used for the pathfinding, for test purposes only
+---@return PathfinderResult
 function PathfinderInterface:resume(...)
-    local ok, done, path, goalNodeInvalid = coursePlayCoroutine.resume(self.coroutine, self, ...)
-    if not ok or done then
+    local ok, result = coursePlayCoroutine.resume(self.coroutine, self, ...)
+    if not ok or result.done then
         if not ok then
-            print(done)
+            print(result.done)
         end
         self.coroutine = nil
-        return true, path, goalNodeInvalid
+        return result
     end
-    return false
+    return PathfinderResult(false)
 end
 
 function PathfinderInterface:debug(...)
@@ -449,6 +448,48 @@ function HybridAStar.NodeList:iterator()
     end
 end
 
+--- Cache penalties for nodes to avoid calling getNodePenalty() multiple times for the same node
+--- This is a 2D grid discretized to the gridSize, anything falling in the same grid cell will have the same
+--- penalty. This also assumes the penalty is the same for all theta values in the cell, that is, getNodePenalty()
+--- is not theta dependent.
+---@class HybridAStar.PenaltyCache
+HybridAStar.PenaltyCache = CpObject()
+
+---@param gridSize number size of the cell in the x/y dimensions
+function HybridAStar.PenaltyCache:init(gridSize)
+    self.nodes = {}
+    self.gridSize = gridSize
+end
+
+---@param node State3D
+function HybridAStar.PenaltyCache:getNodeIndexes(node)
+    local x = math.floor(node.x / self.gridSize)
+    local y = math.floor(node.y / self.gridSize)
+    return x, y
+end
+
+function HybridAStar.PenaltyCache:inSameCell(n1, n2)
+    local x1, y1 = self:getNodeIndexes(n1)
+    local x2, y2 = self:getNodeIndexes(n2)
+    return x1 == x2 and y1 == y2
+end
+
+---@param node State3D
+function HybridAStar.PenaltyCache:get(node)
+    local x, y, t = self:getNodeIndexes(node)
+    return self.nodes[x] and self.nodes[x][y]
+end
+
+---@param node State3D
+function HybridAStar.PenaltyCache:add(node, penalty)
+    local x, y, t = self:getNodeIndexes(node)
+    if not self.nodes[x] then
+        self.nodes[x] = {}
+    end
+    self.nodes[x][y] = penalty
+end
+
+
 --- A reasonable default maximum iterations that works for the majority of our use cases
 HybridAStar.defaultMaxIterations = 40000
 
@@ -456,8 +497,9 @@ HybridAStar.defaultMaxIterations = 40000
 ---@param maxIterations number
 ---@param mustBeAccurate boolean|nil
 function HybridAStar:init(vehicle, yieldAfter, maxIterations, mustBeAccurate)
+    self.logger = Logger('HybridAStar', Logger.level.error, CpDebug.DBG_PATHFINDER)
     self.vehicle = vehicle
-    self.count = 0
+    self.iterationsSinceYield = 0
     self.yields = 0
     self.yieldAfter = yieldAfter or 200
     self.maxIterations = maxIterations or HybridAStar.defaultMaxIterations
@@ -504,7 +546,7 @@ end
 ---                              when we search for a valid analytic solution we use this instead of isValidNode()
 ---@param hitchLength number hitch length of a trailer (length between hitch on the towing vehicle and the
 --- rear axle of the trailer), can be nil
----@return boolean, {}|nil, boolean done, path, goal node invalid
+---@return PathfinderResult
 function HybridAStar:initRun(start, goal, turnRadius, allowReverse, constraints, hitchLength)
     self:debug('Start pathfinding between %s and %s', tostring(start), tostring(goal))
     self:debug('  turnRadius = %.1f, allowReverse: %s', turnRadius, tostring(allowReverse))
@@ -524,6 +566,8 @@ function HybridAStar:initRun(start, goal, turnRadius, allowReverse, constraints,
     -- create the configuration space
     ---@type HybridAStar.NodeList closedList
     self.nodes = HybridAStar.NodeList(self.deltaPos, self.deltaThetaDeg)
+    ---@type HybridAStar.NodeList penaltyCache is not direction dependent
+    self.penaltyCache = HybridAStar.PenaltyCache(self.deltaPos)
     if allowReverse then
         self.analyticSolver = self.analyticSolver or ReedsSheppSolver()
     else
@@ -533,12 +577,12 @@ function HybridAStar:initRun(start, goal, turnRadius, allowReverse, constraints,
     -- ignore trailer for the first check, we don't know its heading anyway
     if not constraints:isValidNode(goal, true) then
         self:debug('Goal node is invalid, abort pathfinding.')
-        return true, nil, true
+        return PathfinderResult(true, nil, true)
     end
 
     if not constraints:isValidAnalyticSolutionNode(goal, true) then
         -- goal node is invalid (for example in fruit), does not make sense to try analytic solutions
-        self.goalNodeIsInvalid = true
+        self.goalNodeInvalid = true
         self:debug('Goal node is invalid for analytical path.')
     end
 
@@ -548,7 +592,7 @@ function HybridAStar:initRun(start, goal, turnRadius, allowReverse, constraints,
         if self:isPathValid(analyticPath) then
             self:debug('Found collision free analytic path (%s) from start to goal', pathType)
             CourseGenerator.addDebugPolyline(Polyline(analyticPath))
-            return true, analyticPath
+            return PathfinderResult(true, analyticPath, self.goalNodeInvalid)
         end
         self:debug('Length of analytic solution is %.1f', analyticSolutionLength)
     end
@@ -561,50 +605,53 @@ function HybridAStar:initRun(start, goal, turnRadius, allowReverse, constraints,
     self.expansions = 0
     self.yields = 0
     self.initialized = true
-    return false
+    return PathfinderResult(false)
 end
 
 --- Wrap up this run, clean up timer, reset initialized flag so next run will start cleanly
 function HybridAStar:finishRun(result, path)
     self.initialized = false
-    self.constraints:showStatistics()
+    if self.constraints then
+        self.constraints:showStatistics()
+    end
     closeIntervalTimer(self.timer)
-    return result, path
+    return PathfinderResult(result, path, self.goalNodeInvalid)
 end
 
 --- Reentry-safe pathfinder runner
+---@return PathfinderResult
 function HybridAStar:run(start, goal, turnRadius, allowReverse, constraints, hitchLength)
     if not self.initialized then
-        local done, path, goalNodeInvalid = self:initRun(start, goal, turnRadius, allowReverse, constraints, hitchLength)
-        if done then
-            return done, path, goalNodeInvalid
+        local result = self:initRun(start, goal, turnRadius, allowReverse, constraints, hitchLength)
+        if result.done then
+            return result
         end
     end
     self.timer = openIntervalTimer()
     while self.openList:size() > 0 and self.iterations < self.maxIterations do
-        -- pop lowest cost node from queue
+        -- yield after the configured iterations or after 20 ms
+        self.iterationsSinceYield = self.iterationsSinceYield + 1
+        if (self.iterationsSinceYield % self.yieldAfter == 0 or readIntervalTimerMs(self.timer) > 20) then
+            self.yields = self.yields + 1
+            closeIntervalTimer(self.timer)
+            -- if we had the coroutine package, we would coursePlayCoroutine.yield(false) here
+            return PathfinderResult(false)
+        end        -- pop lowest cost node from queue
         ---@type State3D
         local pred = State3D.pop(self.openList)
-        --self:debug('pop %s', tostring(pred))
+        self.logger:trace('pop %s', tostring(pred))
 
         if pred:equals(self.goal, self.deltaPosGoal, self.deltaThetaGoal) then
             -- done!
             self:debug('Popped the goal (%d).', self.iterations)
             return self:finishRun(true, self:rollUpPath(pred, self.goal))
         end
-        self.count = self.count + 1
-        -- yield after the configured iterations or after 20 ms
-        if (self.count % self.yieldAfter == 0 or readIntervalTimerMs(self.timer) > 20) then
-            self.yields = self.yields + 1
-            closeIntervalTimer(self.timer)
-            -- if we had the coroutine package, we would coursePlayCoroutine.yield(false) here
-            return false
-        end
+
         if not pred:isClosed() then
             -- analytical expansion: try a Dubins/Reeds-Shepp path from here randomly, more often as we getting closer to the goal
             -- also, try it before we start with the pathfinding
             if pred.h then
-                if self.analyticSolverEnabled and not self.goalNodeIsInvalid and
+                if self.analyticSolverEnabled and not self.goalNodeInvalid and
                         math.random() > 2 * pred.h / self.distanceToGoal then
                     self:debug('Check analytic solution at iteration %d, %.1f, %.1f', self.iterations, pred.h, pred.h / self.distanceToGoal)
                     local analyticPath, _, pathType = self:getAnalyticPath(pred, self.goal, self.turnRadius, self.allowReverse, self.hitchLength)
@@ -612,7 +659,7 @@ function HybridAStar:run(start, goal, turnRadius, allowReverse, constraints, hit
                         self:debug('Found collision free analytic path (%s) at iteration %d', pathType, self.iterations)
                         -- remove first node of returned analytic path as it is the same as pred
                         table.remove(analyticPath, 1)
-                        -- TODO why are we calling rollUpPath here?
+                        -- roll up the path from the start of the analytic path back to start
                         return self:finishRun(true, self:rollUpPath(pred, self.goal, analyticPath))
                     end
                 end
@@ -624,6 +671,7 @@ function HybridAStar:run(start, goal, turnRadius, allowReverse, constraints, hit
                 if succ:equals(self.goal, self.deltaPosGoal, self.deltaThetaGoal) then
                     succ.pred = succ.pred
                     self:debug('Successor at the goal (%d).', self.iterations)
+                    self:debug('%s', succ)
                     return self:finishRun(true, self:rollUpPath(succ, self.goal))
                 end
 
@@ -633,23 +681,28 @@ function HybridAStar:run(start, goal, turnRadius, allowReverse, constraints, hit
                     -- we end up being in overlap with another vehicle when we start the pathfinding and all we need is
                     -- an iteration or two to bring us out of that position
                     if (self.ignoreValidityAtStart and self.iterations < 3) or self.constraints:isValidNode(succ) then
-                        succ:updateG(primitive, self.constraints:getNodePenalty(succ))
+                        local penalty = self.penaltyCache:get(succ)
+                        if penalty == nil then
+                            penalty = self.constraints:getNodePenalty(succ)
+                            self.penaltyCache:add(succ, penalty)
+                        end
+                        succ:updateG(primitive, penalty)
                         local analyticSolutionCost = 0
                         if self.analyticSolverEnabled then
                             local analyticSolution = self.analyticSolver:solve(succ, self.goal, self.turnRadius)
                             analyticSolutionCost = analyticSolution:getLength(self.turnRadius)
                             succ:updateH(self.goal, analyticSolutionCost)
                         else
-                            succ:updateH(self.goal, 0, succ:distance(self.goal) * 1.5)
+                            succ:updateH(self.goal, 0, succ:distance(self.goal) * 1.0)
                         end
 
-                        --self:debug('     %s', tostring(succ))
+                        self.logger:trace('     %s', tostring(succ))
                         if existingSuccNode then
-                            --self:debug('   existing node %s', tostring(existingSuccNode))
+                            self.logger:trace('   existing node %s', tostring(existingSuccNode))
                             -- there is already a node at this (discretized) position
                             -- add a small number before comparing to adjust for floating point calculation differences
                             if existingSuccNode:getCost() + 0.001 >= succ:getCost() then
-                                --self:debug('%.6f replacing %s with %s', succ:getCost() - existingSuccNode:getCost(),  tostring(existingSuccNode), tostring(succ))
+                                self.logger:trace('%.6f replacing %s with %s', succ:getCost() - existingSuccNode:getCost(),  tostring(existingSuccNode), tostring(succ))
                                 if self.openList:valueByPayload(existingSuccNode) then
                                     -- existing node is on open list already, remove it here, will replace with
                                     existingSuccNode:remove(self.openList)
@@ -659,7 +712,7 @@ function HybridAStar:run(start, goal, turnRadius, allowReverse, constraints, hit
                                 -- add to open list
                                 succ:insert(self.openList)
                             else
-                                --self:debug('insert existing node back %s (iteration %d), diff %s', tostring(succ), self.iterations, tostring(succ:getCost() - existingSuccNode:getCost()))
+                                self.logger:trace('insert existing node back %s (iteration %d), diff %s', tostring(succ), self.iterations, tostring(succ:getCost() - existingSuccNode:getCost()))
                             end
                         else
                             -- successor cell does not yet exist
@@ -668,13 +721,13 @@ function HybridAStar:run(start, goal, turnRadius, allowReverse, constraints, hit
                             succ:insert(self.openList)
                         end
                     else
-                        --self:debug('Invalid node %s (iteration %d)', tostring(succ), self.iterations)
+                        self.logger:trace('Invalid node %s (iteration %d)', tostring(succ), self.iterations)
                         succ:close()
                     end -- valid node
                 end
             end
             -- node as been expanded, close it to prevent expansion again
-            --self:debug(tostring(pred))
+            self.logger:trace(tostring(pred))
             pred:close()
             self.expansions = self.expansions + 1
         end
