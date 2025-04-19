@@ -38,7 +38,7 @@ function CpAIJobFieldWork:onPreStart()
         --- Only add the attach header task, if needed.
         self:addTask(self.attachHeaderTask)
     end
-    self:addTask(self.driveToFieldWorkStartTask)
+    -- self:addTask(self.driveToFieldWorkStartTask)
     self:addTask(self.fieldWorkTask)
 end
 

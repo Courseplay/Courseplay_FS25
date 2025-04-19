@@ -64,14 +64,14 @@ function CpAITaskFieldWork:start()
 	self:debug("Field work task started.")
 	local spec = self.vehicle.spec_aiFieldWorker
 	spec.isActive = true
-	self.vehicle:raiseAIEvent("onAIFieldWorkerStart", "onAIImplementStart")
 	if self.isServer then
 		self.vehicle:updateAIFieldWorkerImplementData()
-		if self.vehicle:getAINeedsTrafficCollisionBox() and (AIFieldWorker.TRAFFIC_COLLISION ~= nil and 
+		if self.vehicle:getAINeedsTrafficCollisionBox() and (AIFieldWorker.TRAFFIC_COLLISION ~= nil and
 			(AIFieldWorker.TRAFFIC_COLLISION ~= 0 and spec.aiTrafficCollision == nil)) then
 
 			spec.aiTrafficCollision = clone(AIFieldWorker.TRAFFIC_COLLISION, true, false, true)
 		end
+		self.vehicle:raiseAIEvent("onAIFieldWorkerStart", "onAIImplementStart")
 		local cpSpec = self.vehicle.spec_cpAIFieldWorker
 		--- Remembers the last lane offset setting value that was used.
         cpSpec.cpJobStartAtLastWp:getCpJobParameters().laneOffset:setValue(self.job:getCpJobParameters().laneOffset:getValue())
@@ -119,9 +119,9 @@ function CpAITaskFieldWork:stop(wasJobStopped)
 		cpSpec.driveStrategy:raiseControllerEvent(
 				AIDriveStrategyCourse.onStopRefillingEvent)
 	end
+	self.vehicle:stopFieldWorker()
 	if self.isServer then 
 		self:debug("Field work task stopped.")
-		self.vehicle:stopFieldWorker()
 		self.vehicle:cpBrakeToStop()
 	end
 	CpAITask.stop(self, wasJobStopped)
