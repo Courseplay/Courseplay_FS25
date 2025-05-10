@@ -466,7 +466,7 @@ function CpUtil.getAllRootVegetables()
         local preparedGrowthState = fruitTypeData.preparedGrowthState
         local name = fruitTypeData.name
 
-        -- check if fruit is needs herb removement to be harvested
+        -- check if fruit is needs herb removal to be harvested
         if minPreparingGrowthState ~= -1 and preparedGrowthState ~= -1 and name ~= "SUGARCANE" then
 			local fruitType = g_fruitTypeManager:getFruitTypeByName(name)
             if fruitType ~= nil then

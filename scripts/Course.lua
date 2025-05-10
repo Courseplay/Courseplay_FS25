@@ -915,13 +915,13 @@ function Course:extend(length, dx, dz)
     for i = first, last, step do
         local x = lastWp.x + dx * i
         local z = lastWp.z + dz * i
-        self:appendWaypoint({ x = x, z = z })
+        self:appendWaypoint({ x = x, z = z, rev = lastWp.rev })
     end
     if length % step > 0 then
         -- add the remainder to make sure we extend all the way up to length
         local x = lastWp.x + dx * length
         local z = lastWp.z + dz * length
-        self:appendWaypoint({ x = x, z = z })
+        self:appendWaypoint({ x = x, z = z, rev = lastWp.rev })
     end
     -- enrich the waypoints we added
     self:enrichWaypointData(nWaypoints)

@@ -80,7 +80,7 @@ You can define the following custom settings:
 - lowerEarly: boolean
     Similar to the above, the default behavior when starting to work is lower the implement when the back of the
     work area reaches to row start/field edge. Setting this to true will make Courseplay lower the implement as
-    soon as the the front reaches the row start/field edge, avoiding unworked patches with irregular implement
+    soon as the front reaches the row start/field edge, avoiding unworked patches with irregular implement
     work areas such as a plow.
 
 - useVehicleSizeForMarkers: boolean

@@ -378,7 +378,6 @@ function KTurn:onWaypointPassed(ix, course)
 end
 
 function KTurn:startTurn()
-    AITurn.startTurn(self)
     self.state = self.states.FORWARD
 end
 
@@ -433,87 +432,6 @@ function KTurn:turn(dt)
             -- we can make the turn from here
             self:debug('K Turn ending turn')
             endTurn(self.endingTurnCourse)
-        end
-    end
-    return gx, gz, moveForwards, maxSpeed
-end
-
---[[
-  Headland turn for combines:
-  1. drive forward to the field edge or the headland path edge
-  2. start turning forward
-  3. reverse straight and then align with the direction after the
-     corner while reversing
-  4. forward to the turn start to continue on headland
-]]
----@class CombineHeadlandTurn : AITurn
-CombineHeadlandTurn = CpObject(AITurn)
-
----@param driveStrategy AIDriveStrategyFieldWorkCourse
----@param turnContext TurnContext
-function CombineHeadlandTurn:init(vehicle, driveStrategy, ppc, proximityController, turnContext)
-    AITurn.init(self, vehicle, driveStrategy, ppc, proximityController, turnContext, 'CombineHeadlandTurn')
-    self:addState('FORWARD')
-    self:addState('REVERSE_STRAIGHT')
-    self:addState('REVERSE_ARC')
-    self.turningRadius = AIUtil.getTurningRadius(self.vehicle)
-    self.cornerAngleToTurn = turnContext:getCornerAngleToTurn()
-    -- half the turn angle but not less than 45
-    self.angleToTurnInReverse = math.max(math.pi / 4, math.abs(self.cornerAngleToTurn / 2))
-    self.dxToStartReverseTurn = self.turningRadius - math.abs(self.turningRadius - self.turningRadius * math.cos(self.cornerAngleToTurn))
-end
-
-function CombineHeadlandTurn:startTurn()
-    self.state = self.states.FORWARD
-    self:debug('Starting combine headland turn')
-end
-
-function CombineHeadlandTurn:onWaypointChange(ix, course)
-    -- nothing to do
-end
-
-function CombineHeadlandTurn:onWaypointPassed(ix, course)
-    -- nothing to do, especially because the row finishing course is still active in the PPC and we may
-    -- pass the last waypoint which causes the turn to end and return to field work
-end
-
-function CombineHeadlandTurn:turn(dt)
-    local gx, gz, moveForwards, maxSpeed = AITurn.turn(self)
-    local dx, _, dz = self.turnContext:getLocalPositionFromTurnEnd(self.vehicle:getAIDirectionNode())
-    local angleToTurnEnd = math.abs(self.turnContext:getAngleToTurnEndDirection(self.vehicle:getAIDirectionNode()))
-    if self.state == self.states.FORWARD then
-        maxSpeed = self:getForwardSpeed()
-        moveForwards = true
-        if angleToTurnEnd > self.angleToTurnInReverse then
-            --and not self.turnContext:isLateralDistanceLess(dx, self.dxToStartReverseTurn) then
-            -- full turn towards the turn end direction
-            gx, gz = self:getGoalPointForTurn(moveForwards, self.turnContext:isLeftTurn())
-        else
-            -- reverse until we can make turn to the turn end point
-            self.state = self.states.REVERSE_STRAIGHT
-            self:debug('Combine headland turn start reversing straight')
-        end
-
-    elseif self.state == self.states.REVERSE_STRAIGHT then
-        maxSpeed = self:getReverseSpeed()
-        moveForwards = false
-        gx, gz = self:getGoalPointForTurn(moveForwards, nil)
-        if math.abs(dx) < 0.2 then
-            self.state = self.states.REVERSE_ARC
-            self:debug('Combine headland turn start reversing arc')
-        end
-
-    elseif self.state == self.states.REVERSE_ARC then
-        maxSpeed = self:getReverseSpeed()
-        moveForwards = false
-        gx, gz = self:getGoalPointForTurn(moveForwards, not self.turnContext:isLeftTurn())
-        if angleToTurnEnd < math.rad(20) then
-            self.state = self.states.ENDING_TURN
-            self:debug('Combine headland turn forwarding again')
-            -- lower implements here unconditionally (regardless of the direction, self:endTurn() would wait until we
-            -- are pointing to the turn target direction)
-            self.driveStrategy:lowerImplements()
-            self:resumeFieldworkAfterTurn(self.turnContext.turnEndWpIx)
         end
     end
     return gx, gz, moveForwards, maxSpeed
@@ -586,7 +504,6 @@ end
 --      = if turn on field setting is off, use pathfinder turns if enabled in settings, calculated turns otherwise
 --
 function CourseTurn:startTurn()
-    AITurn.startTurn(self)
     local canTurnOnField = AITurn.canTurnOnField(self.turnContext, self.vehicle, self.workWidth, self.turningRadius)
     if self.turnContext:isHeadlandCorner() then
         self:debug('Starting a headland corner turn')
@@ -750,7 +667,7 @@ function CourseTurn:generateCalculatedTurn()
             self.enableTightTurnOffset = true
         else
             turnManeuver = HeadlandCornerTurnManeuver(self.vehicle, self.turnContext, self.vehicle:getAIDirectionNode(),
-                self.turningRadius, self.workWidth, self.reversingImplement, self.steeringLength)
+                    self.turningRadius, self.workWidth, self.reversingImplement, self.steeringLength)
             -- adjust turn course for tight turns only for headland corners by default
             self.forceTightTurnOffset = self.steeringLength > 0
         end
@@ -824,6 +741,32 @@ function CourseTurn:drawDebug()
     if self.turnCourse and self.turnCourse:isTemporary() and CpDebug:isChannelActive(CpDebug.DBG_TURN, self.vehicle) then
         self.turnCourse:draw()
     end
+end
+
+--[[
+  Headland turn for combines:
+  1. drive forward to the field edge or the headland path edge
+  2. start turning forward
+  3. reverse straight and then align with the direction after the
+     corner while reversing
+  4. forward to the turn start to continue on headland
+]]
+---@class CombineHeadlandTurn : CourseTurn
+CombineHeadlandTurn = CpObject(CourseTurn)
+
+function CombineHeadlandTurn:init(vehicle, driveStrategy, ppc, proximityController, turnContext, fieldWorkCourse,
+                                  workWidth, name)
+    CourseTurn.init(self, vehicle, driveStrategy, ppc, proximityController, turnContext, fieldWorkCourse,
+            workWidth, name or 'CombineHeadlandTurn')
+end
+
+function CombineHeadlandTurn:startTurn()
+    self:debug('Starting a combine headland turn')
+    self.turnCourse = ReedsSheppHeadlandTurnManeuver(self.vehicle, self.turnContext,
+            self.vehicle:getAIDirectionNode(), self.turningRadius):getCourse()
+    self.state = self.states.TURNING
+    self.ppc:setCourse(self.turnCourse)
+    self.ppc:initialize(1)
 end
 
 --- A turn maneuver to recover when the vehicle is blocked by an object (tree, fence, etc) during the turn
