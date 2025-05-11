@@ -481,6 +481,9 @@ You can define the following custom settings:
              shovelMovingToolIx = "1"
     />
 
+    <Vehicle name="highDumpBucket.xml"
+             shovelMovingToolIx="1"/>
+
     <!--[DLC]-->
 
     <!--Harvester-->
