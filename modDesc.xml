@@ -38,6 +38,15 @@ Many thanks to our translators and to our community for reporting bugs, giving u
 Changelog 8.0.0.0:
 - Initial FS25 migration
 
+Changelog 8.1.0.0
+- UI rework
+- All FS22 functions are back and running
+- Universal Autoload support added
+- Course Editor got it's own construction screen
+- New loop turn for headland for towed tools that can't be driven in reverse, like a seeder with grain cart (can be turned on in the vehicle settings)
+- New Pathfinder algorithm, jump point search
+- Latest modDesc that requiers the latest game patch
+
 ]]>
 
 </en>
@@ -68,6 +77,15 @@ Vielen Dank an unsere Community für die zahlreichen Übersetzungen, Bug Reports
 
 Changelog 8.0.0.0:
 - Initiale FS25 Konvertierung.
+
+Changelog 8.1.0.0
+- UI überarbeitet
+- Alle FS22 Funktionen sind wieder vorhanden
+- Universal Autoload wird wieder unterstützt
+- Kurseditor hat einen eigenes Baumenü bekommen
+- Neues Wendemanöver für Vorgewendeecken für zum Beispiel Saatmaschinen mit einem gezogenem Saatgut Wagen (kann in den Fahrzeueinstellungen aktiviert werden)
+- Neuer Wegfindungs Algorithmus, jump point search
+- Neueste modDesc, welche die aktuelle Spielversion erfordert
 
 ]]>
 </de>
