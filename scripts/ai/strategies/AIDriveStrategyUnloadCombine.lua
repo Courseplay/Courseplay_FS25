@@ -204,7 +204,7 @@ function AIDriveStrategyUnloadCombine:init(task, job)
     self.debugChannel = CpDebug.DBG_UNLOAD_COMBINE
     ---@type ImplementController[]
     self.controllers = {}
-    self.combineOffset = 0
+    self.followingCourseOffset = 0
     self.distanceToCombine = math.huge
     self.distanceToFront = 0
     self.combineToUnloadReversing = 0
@@ -690,8 +690,8 @@ end
 function AIDriveStrategyUnloadCombine:unloadMovingChopper()
 
     -- recalculate offset, just in case
-    self.combineOffset = self:getPipeOffset(self.combineToUnload)
-    self.followCourse:setOffset(-self.combineOffset, 0)
+    self.followingCourseOffset = self:getFollowingCourseOffset(self.combineToUnload)
+    self.followCourse:setOffset(self.followingCourseOffset, 0)
 
     if self:changeToUnloadWhenTrailerFull() then
         return
@@ -1094,6 +1094,13 @@ function AIDriveStrategyUnloadCombine:getPipeOffset(combine)
     end
 end
 
+---@return number offset X for the course to follow the combine, this is the pipe offset and the combine courser offset
+function AIDriveStrategyUnloadCombine:getFollowingCourseOffset(combine)
+    local pipeOffset = self:getPipeOffset(combine)
+    local courseOffset = combine:getCpDriveStrategy():getFieldworkCourse():getOffset()
+    return -pipeOffset + courseOffset
+end
+
 function AIDriveStrategyUnloadCombine:getAutoAimPipeOffsetX()
     return self.autoAimPipeOffsetX and self.autoAimPipeOffsetX:get() or 0
 end
@@ -1402,8 +1409,8 @@ end
 function AIDriveStrategyUnloadCombine:startCourseFollowingCombine()
     local startIx
     self.followCourse, startIx = self:setupFollowCourse()
-    self.combineOffset = self:getPipeOffset(self.combineToUnload)
-    self.followCourse:setOffset(-self.combineOffset, 0)
+    self.followingCourseOffset = self:getFollowingCourseOffset(self.combineToUnload)
+    self.followCourse:setOffset(self.followingCourseOffset, 0)
     self.reverseForTurnCourse = nil
     self:debug('Will follow combine\'s course at waypoint %d, side offset %.1f', startIx, self.followCourse.offsetX)
     self:startCourse(self.followCourse, startIx)
@@ -1988,8 +1995,8 @@ end
 function AIDriveStrategyUnloadCombine:unloadMovingCombine()
 
     -- allow on the fly offset changes
-    self.combineOffset = self:getPipeOffset(self.combineToUnload)
-    self.followCourse:setOffset(-self.combineOffset, 0)
+    self.followingCourseOffset = self:getFollowingCourseOffset(self.combineToUnload)
+    self.followCourse:setOffset(self.followingCourseOffset, 0)
 
     if self:changeToUnloadWhenTrailerFull() then
         return
@@ -2046,8 +2053,8 @@ function AIDriveStrategyUnloadCombine:unloadMovingCombine()
                 self.followCourse:getCurrentWaypointIx(),
                 self.followCourse:getCurrentWaypointIx() - 10,
                 true)
-        self.followCourse = Course.createStraightForwardCourse(self.vehicle, 20, -self.combineOffset)
-        self.followCourse:setOffset(-self.combineOffset, 0)
+        self.followCourse = Course.createStraightForwardCourse(self.vehicle, 20, self.followingCourseOffset)
+        self.followCourse:setOffset(self.followingCourseOffset, 0)
         self:startCourse(self.followCourse, 1)
     elseif not self:isBehindAndAlignedToCombine() and not self:isInFrontAndAlignedToMovingCombine() then
         -- call these again just to log the reason
@@ -2344,7 +2351,7 @@ function AIDriveStrategyUnloadCombine:startMakingRoomForCombineTurningOnHeadland
     self.ppc:setNormalLookaheadDistance()
     if self.reverseForTurnCourse then
         -- if we have a follow course from before the turn, then use that
-        self.reverseForTurnCourse:setOffset(-self.combineOffset, 0)
+        self.reverseForTurnCourse:setOffset(self.followingCourseOffset, 0)
         self:startCourse(self.reverseForTurnCourse, 1)
     else
         local reverseCourse = Course.createStraightReverseCourse(self.vehicle,
