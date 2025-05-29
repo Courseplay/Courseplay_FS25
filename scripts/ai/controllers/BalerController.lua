@@ -26,6 +26,7 @@ function BalerController:init(vehicle, baler)
     self.slowDownStartSpeed = 20
     self.balerSpec = self.baler.spec_baler
     self.baleWrapperSpec = self.baler.spec_baleWrapper
+    self.baleLoaderSpec = self.baler.spec_baleLoader
     self.lastDroppedBale = CpTemporaryObject()
     self:debug('Baler controller initialized')
     local additives = self.balerSpec.additives
@@ -124,11 +125,20 @@ function BalerController:onStart()
     end
 end
 
-function BalerController:onFinished(hasFinished)
-    -- TODO: not working, as this probably needs to be called, before the drive is released.
-    -- if hasFinished and not self.balerSpec.automaticDrop or not self.balerSpec.platformAutomaticDrop then
-    --     Baler.actionEventUnloading(self.implement)
-    -- end
+function BalerController:onPreFinished(hasFinished)
+    if hasFinished then 
+        Baler.actionEventUnloading(self.baler)
+        if self.balerSpec.platformDropInProgress then 
+            return
+        end
+        if self.balerSpec.isBaleUnloading then 
+            return
+        end
+        if self.balerSpec.unloadingState ~= Baler.UNLOADING_CLOSED then 
+            return
+        end
+    end
+    return true
 end
 
 function BalerController:isThisMyBale(baleObject)
