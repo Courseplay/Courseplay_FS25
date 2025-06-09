@@ -26,12 +26,16 @@ AIDriveStrategyCourse.myStates = {
     INITIAL = {},
     WAITING_FOR_PATHFINDER = {},
     WAITING_FOR_FIELD_BOUNDARY_DETECTION = {},
+    PRE_FINISHED = {},
+    WAITING_FOR_FINISHED = {},
+    FINISHED = {}
 }
 
 --- Implement controller events.
 --- TODO_25 a more generic implementation
 AIDriveStrategyCourse.onRaisingEvent = "onRaising"
 AIDriveStrategyCourse.onLoweringEvent = "onLowering"
+AIDriveStrategyCourse.onPreFinishedEvent = "onPreFinished"
 AIDriveStrategyCourse.onFinishedEvent = "onFinished"
 AIDriveStrategyCourse.onStartEvent = "onStart"
 AIDriveStrategyCourse.onStartRefillingEvent = "onStartRefilling"
@@ -59,6 +63,11 @@ function AIDriveStrategyCourse:init(task, job)
 
     self.currentTask = task
     self.job = job
+    self.stopRequestData = {
+        reason = nil,
+        waitForFolding = false,
+        prepareTimeout = CpTemporaryObject(true)
+    }
 end
 
 function AIDriveStrategyCourse:setCurrentTaskFinished()
@@ -279,6 +288,10 @@ end
 
 --- Called in the low frequency function for the helper.
 function AIDriveStrategyCourse:updateLowFrequencyImplementControllers()
+    if self:hasFinished() then 
+        --- Small hack so every ai drive strategy waits during finished.
+        self:setMaxSpeed(0)
+    end
     for _, controller in pairs(self.controllers) do
         ---@type ImplementController
         if controller:isEnabled() then
@@ -435,8 +448,57 @@ function AIDriveStrategyCourse:update(dt)
     self.pathfinderController:update(dt)
     self:updatePathfinding()
     self:updateInfoTexts()
+    self:updateFinishing()
 end
 
+function AIDriveStrategyCourse:updateFinishing()
+    local function finishStrategy()
+        if self.stopRequestData.stopReason then 
+            g_currentMission.aiSystem:stopJob(self.job, self.stopRequestData.stopReason)
+            return
+        end
+        self.currentTask:skip()
+    end
+    if self.state == self.states.PRE_FINISHED then
+        --- Every implement controller gets the chance to 
+        --- prepare for the driver release. 
+        --- For example balers can unload their bales
+        --- before we can fold them and so on.
+        local finished = true
+        for _, controller in ipairs(self.controllers) do 
+            finished = finished and controller:onPreFinished()
+        end
+        if finished then 
+            self:debug("Precondition for stopping the strategy are reached.")
+            self.state = self.states.FINISHED
+        end
+    elseif self.state == self.states.FINISHED then 
+        self:raiseControllerEvent(self.onFinishedEvent, self.stopRequestData.waitForFolding)
+        if self.stopRequestData.waitForFolding then
+            self:debug("Starting to fold implements and so on...")
+            self.vehicle:prepareForAIDriving()
+            self.stopRequestData.prepareTimeout:set(false, 15000)
+            self.state = self.states.WAITING_FOR_FINISHED
+        else 
+            finishStrategy()
+        end
+    elseif self.state == self.states.WAITING_FOR_FINISHED then
+        if not self.vehicle:getIsAIPreparingToDrive() or self.stopRequestData.prepareTimeout:get() then
+            if self.stopRequestData.prepareTimeout:get() then 
+                self:debug("Failed to prepare ai drive, aborting ..")
+            end
+            finishStrategy()
+        end
+    end
+end
+
+--- Job has finished and we are now waiting to release the driver.
+---@return boolean
+function AIDriveStrategyCourse:hasFinished()
+    return self.state == self.states.PRE_FINISHED or 
+        self.state == self.states.WAITING_FOR_FINISHED or
+        self.state == self.states.FINISHED
+end
 
 function AIDriveStrategyCourse:getDriveData(dt, vX, vY, vZ)
     local moveForwards = not self.ppc:isReversing()
@@ -664,15 +726,35 @@ function AIDriveStrategyCourse:isCloseToCourseStart(distance)
     return self.course:getDistanceFromFirstWaypoint(self.ppc:getCurrentWaypointIx()) < distance
 end
 
+--- Possiblity to override the vehicle:stopCurrentAIJob(), 
+--- if for example refilling on the field is active.
+function AIDriveStrategyCourse:handleFinishedRequest(stopReason)
+    --- override
+    return false
+end
+
 --- Event raised when the driver was stopped.
 ---@param hasFinished boolean|nil flag passed by the info text
-function AIDriveStrategyCourse:onFinished(hasFinished)
-    self:raiseControllerEvent(self.onFinishedEvent, hasFinished)
-    if hasFinished and self.settings.foldImplementAtEnd:getValue() then
-        --- Folds implements at the end if the setting is active.
-        self:debug("Finished with folding implements of the implements.")
-        self.vehicle:prepareForAIDriving()
+---@param stopReason table
+function AIDriveStrategyCourse:onFinished(hasFinished, stopReason)
+    if self:handleFinishedRequest(stopReason) then 
+        --- Stop request ignored
+        return
     end
+    if self:hasFinished() then
+        --- Driver is already stopping and still waiting for folding and so on ...
+        return
+    end
+    self:setFinished(hasFinished and self.settings.foldImplementAtEnd:getValue(), stopReason)
+end
+
+--- Internal stop request
+---@param waitForFolding boolean|nil wait until for the folding and so on ..
+---@param stopReason table|nil if nil is given, then the task will be skipped
+function AIDriveStrategyCourse:setFinished(waitForFolding, stopReason)
+    self.stopRequestData.stopReason = stopReason
+    self.stopRequestData.waitForFolding = waitForFolding
+    self.state = self.states.PRE_FINISHED
 end
 
 --- This is to set the offsets on the course at start, or update those values

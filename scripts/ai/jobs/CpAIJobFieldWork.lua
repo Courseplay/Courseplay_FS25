@@ -47,29 +47,6 @@ function CpAIJobFieldWork:setupJobParameters()
     self:setupCpJobParameters(CpFieldWorkJobParameters(self))
 end
 
-function CpAIJobFieldWork:isFinishingAllowed(message)
-    local nextTaskIndex = self:getNextTaskIndex()
-	if message:isa(AIMessageErrorOutOfFill) then
-        --- At least one implement type needs to be refilled.
-
-        local vehicle = self:getVehicle()
-        local setting = vehicle:getCpSettings().refillOnTheField
-
-        if setting:getValue() == CpVehicleSettings.REFILL_ON_FIELD_DISABLED then
-            return true
-        elseif setting:getValue() == CpVehicleSettings.REFILL_ON_FIELD_WAITING then
-            if self.currentTaskIndex == self.fieldWorkTask.taskIndex then
-                self.fieldWorkTask:setWaitingForRefillingActive()
-            end
-        elseif setting:getValue() == CpVehicleSettings.REFILL_ON_FIELD_ACTIVE then
-            --- TODO_25 Add driving to trailer for refilling here and so on ..
-            self.fieldWorkTask:skip()
-        end
-        return false
-    end
-    return CpAIJob.isFinishingAllowed(self, message)
-end
-
 ---@param vehicle table
 ---@param mission table
 ---@param farmId number
