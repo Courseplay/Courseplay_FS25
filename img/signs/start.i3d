@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<i3D name="Start" version="1.6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://i3d.giants.ch/schema/i3d-1.6.xsd">
+<i3D name="start.i3d" version="1.6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://i3d.giants.ch/schema/i3d-1.6.xsd">
   <Asset>
-    <Export program="GIANTS Editor 64bit" version="9.0.2"/>
+    <Export program="GIANTS Editor 64bit" version="10.0.5"/>
   </Asset>
 
   <Files>
@@ -15,11 +15,10 @@
   <Materials>
     <Material name="diamond" materialId="4" customShaderId="2">
       <Emissivemap fileId="1"/>
-      <CustomParameter name="shapeColor" value="1 0.212 0 1"/>
     </Material>
     <Material name="line" materialId="5" customShaderId="2">
       <Emissivemap fileId="1"/>
-      <CustomParameter name="shapeColor" value="0 1 1 1"/>
+      <CustomParameter name="shapeColor" value="0 1 1"/>
     </Material>
     <Material name="Sign" materialId="6" specularColor="0.247059 1 0.247059">
       <Texture fileId="3"/>
@@ -30,19 +29,15 @@
   <Shapes externalShapesFile="start.i3d.shapes">
   </Shapes>
 
-
-  <Dynamics>
-  </Dynamics>
-
   <Scene>
-      <Shape shapeId="1" name="diamond" clipDistance="175" nodeId="12" materialIds="4" castsShadows="true" receiveShadows="true">
-        <Shape shapeId="2" name="Line" clipDistance="100" nodeId="13" materialIds="5" castsShadows="true" receiveShadows="true"/>
-        <Shape shapeId="2" name="LineDown" rotation="90 0 0" visibility="false" clipDistance="100" nodeId="19" materialIds="5" castsShadows="true" receiveShadows="true"/>
-        <TransformGroup name="StartSign" nodeId="14">
-          <Shape shapeId="3" name="Front" nodeId="15" materialIds="6" castsShadows="true" receiveShadows="true"/>
-          <Shape shapeId="4" name="Back" nodeId="16" materialIds="6" castsShadows="true" receiveShadows="true"/>
-        </TransformGroup>
-      </Shape>
+    <Shape name="diamond" shapeId="1" clipDistance="175" nodeId="12" castsShadows="true" receiveShadows="true" materialIds="4">
+      <Shape name="Line" shapeId="2" clipDistance="100" nodeId="13" castsShadows="true" receiveShadows="true" materialIds="5"/>
+      <Shape name="LineDown" rotation="90 0 0" shapeId="2" visibility="false" clipDistance="100" nodeId="14" castsShadows="true" receiveShadows="true" materialIds="5"/>
+      <TransformGroup name="StartSign" nodeId="15">
+        <Shape name="Front" shapeId="3" nodeId="16" castsShadows="true" receiveShadows="true" materialIds="6"/>
+        <Shape name="Back" shapeId="4" nodeId="17" castsShadows="true" receiveShadows="true" materialIds="6"/>
+      </TransformGroup>
+    </Shape>
   </Scene>
 
 </i3D>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<i3D name="Stop" version="1.6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://i3d.giants.ch/schema/i3d-1.6.xsd">
+<i3D name="stop.i3d" version="1.6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://i3d.giants.ch/schema/i3d-1.6.xsd">
   <Asset>
-    <Export program="GIANTS Editor 64bit" version="9.0.2"/>
+    <Export program="GIANTS Editor 64bit" version="10.0.5"/>
   </Asset>
 
   <Files>
@@ -13,15 +13,14 @@
 
 
   <Materials>
-    <Material name="diamond" materialId="4" customShaderId="2">
+    <Material name="diamond" materialId="43" customShaderId="2">
       <Emissivemap fileId="1"/>
-      <CustomParameter name="shapeColor" value="1 0.212 0 1"/>
     </Material>
-    <Material name="line" materialId="17" customShaderId="2">
+    <Material name="line" materialId="44" customShaderId="2">
       <Emissivemap fileId="1"/>
-      <CustomParameter name="shapeColor" value="0 1 1 1"/>
+      <CustomParameter name="shapeColor" value="0 1 1"/>
     </Material>
-    <Material name="Sign" materialId="5" specularColor="0.247059 1 0.247059">
+    <Material name="Sign" materialId="45" specularColor="0.247059 1 0.247059">
       <Texture fileId="3"/>
     </Material>
   </Materials>
@@ -30,19 +29,15 @@
   <Shapes externalShapesFile="stop.i3d.shapes">
   </Shapes>
 
-
-  <Dynamics>
-  </Dynamics>
-
   <Scene>
-      <Shape shapeId="1" name="Waypoint" clipDistance="175" nodeId="10" materialIds="4" castsShadows="true" receiveShadows="true">
-        <TransformGroup name="dummy" nodeId="11"/>
-        <Shape shapeId="2" name="LineDown" rotation="90 0 0" visibility="false" nodeId="24" materialIds="17" castsShadows="true"/>
-        <TransformGroup name="StopSign" nodeId="12">
-          <Shape shapeId="3" name="Front" nodeId="13" materialIds="5" castsShadows="true" receiveShadows="true"/>
-          <Shape shapeId="4" name="Back" nodeId="14" materialIds="5" castsShadows="true" receiveShadows="true"/>
-        </TransformGroup>
-      </Shape>
+    <Shape name="Waypoint" shapeId="1" clipDistance="175" nodeId="51" castsShadows="true" receiveShadows="true" materialIds="43">
+      <TransformGroup name="dummy" nodeId="52"/>
+      <Shape name="LineDown" rotation="90 0 0" shapeId="2" visibility="false" nodeId="53" castsShadows="true" receiveShadows="false" materialIds="44"/>
+      <TransformGroup name="StopSign" nodeId="54">
+        <Shape name="Front" shapeId="3" nodeId="55" castsShadows="true" receiveShadows="true" materialIds="45"/>
+        <Shape name="Back" shapeId="4" nodeId="56" castsShadows="true" receiveShadows="true" materialIds="45"/>
+      </TransformGroup>
+    </Shape>
   </Scene>
 
 </i3D>
