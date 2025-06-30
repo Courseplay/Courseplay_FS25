@@ -125,3 +125,7 @@ end
 function BaleLoaderController:isReadyToLoadNextBale()
     return false
 end
+
+function BaleLoaderController:onPreFinished()
+    return self:canBeFolded()
+end
