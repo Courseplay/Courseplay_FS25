@@ -356,7 +356,8 @@ function AIDriveStrategyShovelSiloLoader:getDriveData(dt, vX, vY, vZ)
             self:setMaxSpeed(0)
         else 
             if self.shovelController:isHighDumpShovel() and 
-                not self.shovelController:isDischarging() then
+                not self.shovelController:isDischarging() and 
+                self.targetTrailer ~= nil then
                 --- Makes sure we move slightly forwards, 
                 --- as the high dump offset might not work for
                 --- unloading of the complete shovel.
