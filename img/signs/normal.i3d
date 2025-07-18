@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<i3D name="CourseplayWaypointSign" version="1.6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://i3d.giants.ch/schema/i3d-1.6.xsd">
+<i3D name="normal.i3d" version="1.6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://i3d.giants.ch/schema/i3d-1.6.xsd">
   <Asset>
-    <Export program="GIANTS Editor 64bit" version="9.0.3"/>
+    <Export program="GIANTS Editor 64bit" version="10.0.5"/>
   </Asset>
 
   <Files>
@@ -12,13 +12,12 @@
 
 
   <Materials>
-    <Material name="diamond" materialId="4" customShaderId="2">
+    <Material name="diamond" materialId="31" customShaderId="2">
       <Emissivemap fileId="1"/>
-      <CustomParameter name="shapeColor" value="1 0.212 0 1"/>
     </Material>
-    <Material name="line" materialId="5" customShaderId="2">
+    <Material name="line" materialId="32" customShaderId="2">
       <Emissivemap fileId="1"/>
-      <CustomParameter name="shapeColor" value="0 1 1 1"/>
+      <CustomParameter name="shapeColor" value="0 1 1"/>
     </Material>
   </Materials>
 
@@ -26,15 +25,11 @@
   <Shapes externalShapesFile="normal.i3d.shapes">
   </Shapes>
 
-
-  <Dynamics>
-  </Dynamics>
-
   <Scene>
-      <Shape shapeId="1" name="Waypoint" clipDistance="100" nodeId="9" materialIds="4">
-        <Shape shapeId="2" name="Line" nodeId="10" materialIds="5" castsShadows="true"/>
-        <Shape shapeId="2" name="LineDown" rotation="90 0 0" visibility="false" nodeId="11" materialIds="5" castsShadows="true"/>
-      </Shape>
+    <Shape name="Waypoint" shapeId="1" clipDistance="100" nodeId="36" castsShadows="false" receiveShadows="false" materialIds="31">
+      <Shape name="Line" shapeId="2" nodeId="37" castsShadows="true" receiveShadows="false" materialIds="32"/>
+      <Shape name="LineDown" rotation="90 0 0" shapeId="2" visibility="false" nodeId="38" castsShadows="true" receiveShadows="false" materialIds="32"/>
+    </Shape>
   </Scene>
 
 </i3D>
