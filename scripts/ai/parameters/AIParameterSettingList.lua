@@ -394,7 +394,7 @@ end
 ---@return boolean value is not valid and could not be set.
 function AIParameterSettingList:setFloatValue(value, epsilon, noEventSend)
 	local failed = setValueInternal(self, value, function(a, b)
-		local epsilon = epsilon or self.data.incremental or 0.1
+		epsilon = epsilon or self.data.incremental or 0.1
 		if a == nil or b == nil then return false end
 		return a > b - epsilon / 2 and a <= b + epsilon / 2 end)
 	if not failed and not noEventSend then
@@ -450,7 +450,7 @@ function AIParameterSettingList:setDefault(noEventSend)
 				local value = g_vehicleConfigurations:get(object, configName)
 				if value then 
 					if tonumber(value) then 
-						self:setFloatValue(value, noEventSend)
+						self:setFloatValue(value, nil, noEventSend)
 					else
 						self:setValue(value, noEventSend)
 					end
@@ -462,7 +462,7 @@ function AIParameterSettingList:setDefault(noEventSend)
 	end
 	--- If default values were setup use these.
 	if self.data.default ~=nil then
-		AIParameterSettingList.setFloatValue(self, self.data.default, noEventSend)
+		AIParameterSettingList.setFloatValue(self, self.data.default, nil, noEventSend)
 		self:debug("set to default %s", self.data.default)
 		return
 	end

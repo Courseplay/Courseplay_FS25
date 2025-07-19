@@ -492,6 +492,10 @@ function CpUtil.getDefaultCollisionFlags()
 		CollisionFlag.VEHICLE + CollisionFlag.BUILDING + CollisionFlag.STATIC_OBJECT
 end
 
+function CpUtil.getVehicleCollisionFlags()
+	return CollisionFlag.VEHICLE
+end
+
 --- Removes all event listeners of a given Spec Class.
 function CpUtil.removeEventListenersBySpecialization(vehicle, specClass)
 	for _, listeners in pairs(vehicle.eventListeners) do

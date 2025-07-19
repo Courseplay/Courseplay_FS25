@@ -45,7 +45,7 @@ local function setBackMarkerNode(vehicle, measuredBackDistance)
         lastImplement, backMarkerOffset = AIUtil.getLastAttachedImplement(vehicle)
         referenceNode = AIUtil.getDirectionNode(vehicle)
         CpUtil.debugVehicle(CpDebug.DBG_IMPLEMENTS, vehicle, 'Using the last implement\'s rear distance for the back marker node, %d m from root node', backMarkerOffset)
-    elseif measuredBackDistance then
+    elseif measuredBackDistance and measuredBackDistance ~= 0 then
         referenceNode = AIUtil.getDirectionNode(vehicle)
         backMarkerOffset = -measuredBackDistance
         CpUtil.debugVehicle(CpDebug.DBG_IMPLEMENTS, vehicle, 'back marker node on measured back distance %.1f', measuredBackDistance)

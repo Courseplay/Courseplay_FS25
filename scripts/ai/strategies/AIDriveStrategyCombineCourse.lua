@@ -234,6 +234,7 @@ end
 
 function AIDriveStrategyCombineCourse:getDriveData(dt, vX, vY, vZ)
     self:handlePipe(dt)
+    self:measureBackDistance()
     Markers.refreshMarkerNodes(self.vehicle, self.measuredBackDistance)
     if self.temporaryHold:get() then
         self:setMaxSpeed(0)
@@ -2058,34 +2059,48 @@ end
 --- Proximity
 ------------------------------------------------------------------------------------------------------------------------
 
-AIDriveStrategyCombineCourse.maxBackDistance = 10
+AIDriveStrategyCombineCourse.maxBackDistance = 20
 
 function AIDriveStrategyCombineCourse:getMeasuredBackDistance()
     return self.measuredBackDistance
 end
 
 --- Determine how far the back of the combine is from the direction node
--- TODO: attached/towed harvesters
 function AIDriveStrategyCombineCourse:measureBackDistance()
-    self.measuredBackDistance = 0
-    -- raycast from a point behind the vehicle forward towards the direction node
-    local nx, ny, nz = localDirectionToWorld(AIUtil.getDirectionNode(self.vehicle), 0, 0, 1)
-    local x, y, z = localToWorld(AIUtil.getDirectionNode(self.vehicle), 0, 1.5, -self.maxBackDistance)
-    raycastAll(x, y, z, nx, ny, nz, self.maxBackDistance, 'raycastBackCallback', self)
+    -- check and adjust every 10 seconds, mainly for the towed harvesters which may be at an angle when
+    -- the driver starts and our raycast may miss it.
+    if not self.lastBackMeasurementDue then
+        self.lastBackMeasurementDue = CpTemporaryObject(true)
+    end
+    if not self.lastBackMeasurementDue:get() then
+        return
+    end
+    self.lastBackMeasurementDue:set(false, 10000)
+    self.measuredBackDistance = self.measuredBackDistance or 0
+    local previousMeasuredBackDistance = self.measuredBackDistance
+    -- raycast from a point behind the vehicle forward towards the direction node, in different heights as harvesters
+    -- can be very tricky, such as the Oxbo, which we'll get no hits at all at exactly 1.5 meters...
+    for height = 1.3, 2.5, 0.2 do
+        local nx, ny, nz = localDirectionToWorld(AIUtil.getDirectionNode(self.vehicle), 0, 0, 1)
+        -- use the tool offset, that should cover offset towed harvesters as well
+        local x, y, z = localToWorld(AIUtil.getDirectionNode(self.vehicle),
+                self.settings.toolOffsetX:getValue(), height, -self.maxBackDistance)
+        raycastAll(x, y, z, nx, ny, nz, self.maxBackDistance, 'raycastBackCallback', self, CpUtil.getVehicleCollisionFlags())
+    end
+    if previousMeasuredBackDistance ~= self.measuredBackDistance then
+        self:debug('Measured back distance changed from %.1f to %.1f m', previousMeasuredBackDistance, self.measuredBackDistance)
+    end
 end
 
 -- I believe this tries to figure out how far the back of a combine is from its direction node.
 function AIDriveStrategyCombineCourse:raycastBackCallback(hitObjectId, x, y, z, distance, nx, ny, nz, subShapeIndex)
     if hitObjectId ~= 0 then
         local object = g_currentMission:getNodeObject(hitObjectId)
-        if object and object == self.vehicle then
+        if object and object.getRootVehicle and object:getRootVehicle() == self.vehicle then
             local d = self.maxBackDistance - distance
             if d > self.measuredBackDistance then
                 self.measuredBackDistance = d
-                self:debug('Measured back distance is %.1f m', self.measuredBackDistance)
             end
-        else
-            return true
         end
     end
 end

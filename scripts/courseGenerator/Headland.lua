@@ -190,7 +190,7 @@ function Headland:connectTo(other, ix, workingWidth, turningRadius, headlandFirs
                         length, transitionEndIx, i)
                 return transitionEndIx
             else
-                self.logger:warning('Generated path to next headland too long (%.1f > %.1f), try %d.',
+                self.logger:debug('Generated path to next headland too long (%.1f > %.1f), try %d.',
                         length, maxPlausiblePathLength, i)
             end
             if 0.8 * radius > turningRadius then
