@@ -610,7 +610,12 @@ function AIDriveStrategyFieldWorkCourse:startConnectingPath(ix)
         local targetNode, zOffset = self.turnContext:getTurnEndNodeAndOffsets(steeringLength)
         local context = PathfinderContext(self.vehicle):allowReverse(self:getAllowReversePathfinding())
         context:preferredPath(connectingPath):mustBeAccurate(true)
-        self.rawConnectingPath = Course(self.vehicle, connectingPath, true)
+        if #connectingPath < 2 then
+            self:debug('Connecting path has only %d waypoint, use an alignment course instead', #connectingPath)
+            self.workStarterCourse = self:createAlignmentCourse(self.fieldWorkCourse, targetWaypointIx)
+        else
+            self.workStarterCourse = Course(self.vehicle, connectingPath, true)
+        end
         self.pathfinderController:registerListeners(self, self.onPathfindingDoneToConnectingPathEnd,
                 self.onPathfindingFailedToConnectingPathEnd)
         self:debug('Connecting path has %d waypoints, start pathfinding to target waypoint %d, zOffset %.1f',
@@ -618,15 +623,15 @@ function AIDriveStrategyFieldWorkCourse:startConnectingPath(ix)
         self.state = self.states.WAITING_FOR_PATHFINDER
         -- to have a course set while waiting for the pathfinder and make sure that the course known to the PPC
         -- is the same as the one we are using
-        self:startCourse(self.rawConnectingPath, 1)
+        self:startCourse(self.workStarterCourse, 1)
         self.pathfinderController:findPathToNode(context, targetNode, 0, zOffset, 1)
     end
 end
 
 function AIDriveStrategyFieldWorkCourse:onPathfindingFailedToConnectingPathEnd(controller, lastContext, wasLastRetry, currentRetryAttempt)
     if wasLastRetry then
-        self:debug('Pathfinding to end of connecting path failed again, use the connecting path as is')
-        self:startCourseToWorkStart(self.rawConnectingPath)
+        self:debug('Pathfinding to end of connecting path failed again, use the connecting path/alignment course instead')
+        self:startCourseToWorkStart(self.workStarterCourse)
     else
         self:debug('Pathfinding to end of connecting path failed once, retry with disabled collisions')
         lastContext:collisionMask(0)
@@ -639,8 +644,8 @@ function AIDriveStrategyFieldWorkCourse:onPathfindingDoneToConnectingPathEnd(con
         self:debug('Pathfinding to end of connecting path finished')
         self:startCourseToWorkStart(course)
     else
-        self:debug('Pathfinding to end of connecting path failed, use the connecting path as is')
-        self:startCourseToWorkStart(self.rawConnectingPath)
+        self:debug('Pathfinding to end of connecting path failed, use the connecting path/alignment course instead')
+        self:startCourseToWorkStart(self.workStarterCourse)
     end
 end
 
