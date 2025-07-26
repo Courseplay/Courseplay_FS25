@@ -14,21 +14,20 @@
     <description>
 <en>
 <![CDATA[Courseplay FS25
-Courseplay takes the AI worker to the next level. Sow, harvest and plow smarter:
-- use headlands
-- work on irregularly shaped fields, not just rectangles
-- work around islands in the field (like power lines)
-- save auto-generated courses to use a forage wagon to collect what a mower or harvester cut before
-- find and collect or wrap all bales on a field
-- work on vines
-- let up to 5 helpers work on the same field in a group
-- combines find a trailer to self-unload when full
-- unload combines with trailer or auger wagon
-- use loaders or vehicles with a shovel to pick up heaps on the field or to empty bunker silos
-- set up your own fields wherever you like
-- works great together with AutoDrive, let Courseplay do the fieldwork and AutoDrive to refill a sower or unload a forage wagon
-- customize the automatically created fieldwork courses to your liking with the course editor
-- work in bunker silo to push and compact
+Courseplay for Farming Simulator 25 is a long-standing and powerful automation mod that has been a staple in the Farming Simulator community for nearly 15 years.
+Originally developed for earlier versions of the game, Courseplay has continually evolved, offering features far beyond the capabilities of the base game’s AI.
+
+- Fully customizable course generation and editing,
+- Multiple vehicles work together on the same field,
+- Automated harvesting and unloading,
+- Bale collection and wrapping,
+- Support for vineyards and specialty crops,
+- Harvester self-unload,
+- Pick up heaps on the field or empty bunker silos with loaders or shovels,
+- Bunker silo push and compaction.
+
+It also integrates seamlessly with other mods like AutoDrive, making it ideal for managing large-scale farms.
+Despite improvements to the in-game AI over the years, Courseplay remains the gold standard for automation in Farming Simulator, thanks to its flexibility, reliability, and active development community.
 
 For a link to our latest release, Help page and GitHub page where you can find more information, help, and report issues please visit <a href="https://courseplay.dev/">Courseplay Website</a>
 or go directly to our <a href="https://github.com/Courseplay/Courseplay_FS25">GitHub page</a>.
@@ -38,28 +37,36 @@ Many thanks to our translators and to our community for reporting bugs, giving u
 Changelog 8.0.0.0:
 - Initial FS25 migration
 
+Changelog 8.1.0.0
+- UI rework
+- Same great functionality as in FS22
+- Course Editor got its own construction screen
+- New loop turn for headland for towed tools that can't be driven in reverse, like a seeder with grain cart (can be turned on in the vehicle settings)
+- Faster pathfinding using jump point search
+- Requires the latest game patch
+
 ]]>
 
 </en>
 <de>
 <![CDATA[Courseplay FS25
-Courseplay hebt den Helfer auf ein ganz neues Level. Säe, ernte und pflüge intelligenter:
-- Nutze Vorgewende
-- Arbeite auf nicht rechteckigen Feldern
-- Arbeite um Feldinseln (z.B. Strommasten) umher
-- Speichere die generierten Kurse von z.B. einem Drescher ab, um diese zum Aufsammeln mit einem Ladewagen oder einer Ballenpresse zu nutzen.
-- Ballen auf einem Feld automatisch sammeln oder wickeln
-- Arbeite auf und zwischen den Weinreben
-- Lasse bis zu 5 Helfer auf dem gleichen Feld in einer Gruppe zusammenarbeiten
-- Lasse deinen Drescher automatisch zu einem Anhänger am Feld fahren und dort abtanken.
-- Drescher abtanken mit Anhänger oder Überladewagen.
-- Erstelle deine eigenen Felder, wo immer du möchtest
-- Im Bunkersilo schieben und verdichten.
-- Erstelle Haufen auf einem Feld, für z.B. eine Rübenmiete, durch den Drescher Abtank Modus.
-- Nutze einen Lader wie den Ropa Maus 5 oder ein Fahrzeug mit einer Schaufel, um Haufen auf dem Feld auf zu nehmen oder um einen Bunker zu leeren.
-- Arbeitet super mit AutoDrive zusammen, lasse Courseplay die Feldarbeit erledigen und
-AutoDrive erledigt das Abtanken eines Ladewagens oder Auffüllen einer Sämaschine.
-- Verändere die generierten Kurse mit dem Kurseditor.
+Courseplay für Farming Simulator 25 ist mehr als nur eine Mod – es ist ein Herzstück der Farming Simulator-Community. Seit fast 15 Jahren begleitet uns dieses leistungsstarke Tool, gewachsen aus gemeinsamer Begeisterung für virtuelle Landwirtschaft und dem Streben nach Perfektion.
+
+Was einst als Zusatz für frühe Spielversionen begann, hat sich heute zu einem unverzichtbaren Werkzeug weiterentwickelt – mit smarten Funktionen, die die KI des Basisspiels weit hinter sich lassen. Mehr Präzision, mehr Kontrolle, mehr Spielspaß: Mit Courseplay wird jeder Arbeitsschritt zum Kinderspiel!
+
+Mit Courseplay können Spieler komplexe Aufgaben automatisieren, wie zum Beispiel:
+
+- Vollständig anpassbare Kurs-Erstellung und -Bearbeitung,
+- Mehrere Fahrzeuge arbeiten gemeinsam auf demselben Feld,
+- Automatisierte Ernte und Entladung,
+- Ballensammeln und -wickeln,
+- Unterstützung für Weinberge und Sonderkulturen,
+- Selbstentladung von Erntemaschinen,
+- Aufnahme von Haufen auf dem Feld oder Entleerung von Fahrsilos mit Ladern oder Schaufeln,
+- Fahrsilo-Verteilung und Verdichtung.
+
+Außerdem lässt sich Courseplay nahtlos mit anderen Mods wie AutoDrive integrieren, was es ideal für die Verwaltung großer Farmen macht.
+Trotz der Verbesserungen der In-Game-KI im Laufe der Jahre bleibt Courseplay dank seiner Flexibilität, Zuverlässigkeit und der aktiven Entwickler-Community der Goldstandard für Automatisierung im Farming Simulator.
 
 Ein Link zu der neuesten Version, der Hilfe Seite und Github, wo du mehr Informationen und Hilfe findest, sowie Probleme und Bugs melden kannst, findest du auf unserer <a href="https://courseplay.dev/">Courseplay Webseite</a>
 oder du gehst direkt auf unsere <a href="https://github.com/Courseplay/Courseplay_FS25">GitHub Webseite</a>.
@@ -68,6 +75,15 @@ Vielen Dank an unsere Community für die zahlreichen Übersetzungen, Bug Reports
 
 Changelog 8.0.0.0:
 - Initiale FS25 Konvertierung.
+
+Changelog 8.1.0.0
+- UI überarbeitet
+- Alle FS22 Funktionen sind wieder vorhanden
+- Universal Autoload wird wieder unterstützt
+- Kurseditor hat einen eigenes Konstruktionsmenü bekommen
+- Neues Wendemanöver für Vorgewendeecken für zum Beispiel Saatmaschinen mit einem gezogenem Saatgut Wagen (kann in den Fahrzeueinstellungen aktiviert werden)
+- Neuer Wegfindungs Algorithmus, jump point search
+- Benötigt die neueste Spielversion
 
 ]]>
 </de>

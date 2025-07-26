@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<i3D name="Wait" version="1.6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://i3d.giants.ch/schema/i3d-1.6.xsd">
+<i3D name="wait.i3d" version="1.6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://i3d.giants.ch/schema/i3d-1.6.xsd">
   <Asset>
-    <Export program="GIANTS Editor 64bit" version="9.0.1"/>
+    <Export program="GIANTS Editor 64bit" version="10.0.5"/>
   </Asset>
 
   <Files>
@@ -13,14 +13,13 @@
 
 
   <Materials>
-    <Material name="diamond" materialId="5" customShaderId="2">
-      <Emissivemap fileId="1"/>
-      <CustomParameter name="shapeColor" value="1 0.212 0 1"/>
-    </Material>
-    <Material name="line" materialId="4">
+    <Material name="diamond" materialId="78" customShaderId="2">
       <Emissivemap fileId="1"/>
     </Material>
-    <Material name="Sign" materialId="6" specularColor="0.247059 1 0.247059">
+    <Material name="line" materialId="79">
+      <Emissivemap fileId="1"/>
+    </Material>
+    <Material name="Sign" materialId="80" specularColor="0.247059 1 0.247059">
       <Texture fileId="3"/>
     </Material>
   </Materials>
@@ -29,18 +28,14 @@
   <Shapes externalShapesFile="wait.i3d.shapes">
   </Shapes>
 
-
-  <Dynamics>
-  </Dynamics>
-
   <Scene>
-      <Shape shapeId="1" name="Waypoint" clipDistance="175" nodeId="12" materialIds="5" castsShadows="true" receiveShadows="true">
-        <Shape shapeId="2" name="Line" clipDistance="100" nodeId="13" materialIds="4" castsShadows="true" receiveShadows="true"/>
-        <TransformGroup name="WaitSign" nodeId="14">
-          <Shape shapeId="3" name="Front" nodeId="15" materialIds="6" castsShadows="true" receiveShadows="true"/>
-          <Shape shapeId="4" name="Back" nodeId="16" materialIds="6" castsShadows="true" receiveShadows="true"/>
-        </TransformGroup>
-      </Shape>
+    <Shape name="Waypoint" shapeId="1" clipDistance="175" nodeId="86" castsShadows="true" receiveShadows="true" materialIds="78">
+      <Shape name="Line" shapeId="2" clipDistance="100" nodeId="87" castsShadows="true" receiveShadows="true" materialIds="79"/>
+      <TransformGroup name="WaitSign" nodeId="88">
+        <Shape name="Front" shapeId="3" nodeId="89" castsShadows="true" receiveShadows="true" materialIds="80"/>
+        <Shape name="Back" shapeId="4" nodeId="90" castsShadows="true" receiveShadows="true" materialIds="80"/>
+      </TransformGroup>
+    </Shape>
   </Scene>
 
 </i3D>

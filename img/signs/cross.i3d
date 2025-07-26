@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 
-<i3D name="Crossing" version="1.6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://i3d.giants.ch/schema/i3d-1.6.xsd">
+<i3D name="cross.i3d" version="1.6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://i3d.giants.ch/schema/i3d-1.6.xsd">
   <Asset>
-    <Export program="GIANTS Editor 64bit" version="9.0.1"/>
+    <Export program="GIANTS Editor 64bit" version="10.0.5"/>
   </Asset>
 
   <Files>
@@ -11,7 +11,7 @@
 
 
   <Materials>
-    <Material name="Sign" materialId="4" specularColor="0.247059 1 0.247059">
+    <Material name="Sign" materialId="22" specularColor="0.247059 1 0.247059">
       <Texture fileId="1"/>
     </Material>
   </Materials>
@@ -20,15 +20,11 @@
   <Shapes externalShapesFile="cross.i3d.shapes">
   </Shapes>
 
-
-  <Dynamics>
-  </Dynamics>
-
   <Scene>
-      <TransformGroup name="CrossingSign" clipDistance="175" nodeId="8">
-        <Shape shapeId="1" name="Front" nodeId="9" materialIds="4" castsShadows="true" receiveShadows="true"/>
-        <Shape shapeId="2" name="Back" nodeId="10" materialIds="4" castsShadows="true" receiveShadows="true"/>
-      </TransformGroup>
+    <TransformGroup name="CrossingSign" clipDistance="175" nodeId="26">
+      <Shape name="Front" shapeId="1" nodeId="27" castsShadows="true" receiveShadows="true" materialIds="22"/>
+      <Shape name="Back" shapeId="2" nodeId="28" castsShadows="true" receiveShadows="true" materialIds="22"/>
+    </TransformGroup>
   </Scene>
 
 </i3D>
