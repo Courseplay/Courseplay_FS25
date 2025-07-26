@@ -12,7 +12,7 @@
     <text name="CP_deactivated" text="Neaktivní"/>
     <text name="CP_automatic" text="Auto"/>
     <text name="CP_unit_meter" text="m"/>
-    <text name="CP_unit_foot" text="st"/>
+    <text name="CP_unit_foot" text="ft"/>
     <text name="CP_copy" text="Kopírovat trasu: "/>
     <text name="CP_infoText" text="Courseplay(%s): Pro pomoc, chyby nebo poznámky o opravách navštivte: https://github.com/Courseplay/Courseplay_FS25. Překlad: SniperKittenCZ aktualizoval LadikSmyth"/>
     <text name="CP_error_no_course" text="Před zahájením práce vygenerujte trasu."/>
@@ -207,8 +207,8 @@
     <text name="CP_vehicle_setting_toolOffsetX_tooltip" text="Nastaví horizontální odsazení nástroje."/>
     <text name="CP_vehicle_setting_baleCollectorOffset_title" text="Odsazení pro nakládání balíků"/>
     <text name="CP_vehicle_setting_baleCollectorOffset_tooltip" text="Odsazení pro sběrač balíků."/>
-    <text name="CP_vehicle_setting_combineOffsetX_title" text="Odsazení dopředu/dozadu"/>
-    <text name="CP_vehicle_setting_combineOffsetX_tooltip" text="Odsazení pro rouru kombajnu dopředu(+) a dozadu(-)"/>
+    <text name="CP_vehicle_setting_combineOffsetX_title" text="Odsazení vlevo/vpravo"/>
+    <text name="CP_vehicle_setting_combineOffsetX_tooltip" text="Odsazení pro rouru kombajnu vlevo(+) a vpravo(-)"/>
     <text name="CP_vehicle_setting_combineOffsetZ_title" text="Odsazení dopředu/dozadu"/>
     <text name="CP_vehicle_setting_combineOffsetZ_tooltip" text="Odsazení pro rouru kombajnu dopředu(+) a dozadu(-)"/>
     <text name="CP_vehicle_setting_fullThreshold_title" text="Vyprázdnit po naplnění:"/>
