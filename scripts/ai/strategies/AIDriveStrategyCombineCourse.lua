@@ -1405,7 +1405,7 @@ function AIDriveStrategyCombineCourse:startTurn(ix)
 
     self.turnContext = TurnContext(self.vehicle, self.course, ix, ix + 1, self.turnNodes, self:getWorkWidth(),
             self.frontMarkerDistance, self.backMarkerDistance,
-            self:getTurnEndSideOffset(), self:getTurnEndForwardOffset())
+            self:getTurnEndSideOffset(self.course:isHeadlandTurnAtIx(ix + 1)), self:getTurnEndForwardOffset())
 
     -- Combines drive special headland corner maneuvers, except potato and sugarbeet harvesters
     if self.turnContext:isHeadlandCorner() then

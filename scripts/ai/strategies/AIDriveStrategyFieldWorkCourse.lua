@@ -392,7 +392,7 @@ function AIDriveStrategyFieldWorkCourse:startTurn(ix)
     local fm, bm = self:getFrontAndBackMarkers()
     self.ppc:setShortLookaheadDistance()
     self.turnContext = TurnContext(self.vehicle, self.course, ix, ix + 1, self.turnNodes, self:getWorkWidth(), fm, bm,
-            self:getTurnEndSideOffset(), self:getTurnEndForwardOffset())
+            self:getTurnEndSideOffset(self.course:isHeadlandTurnAtIx(ix + 1)), self:getTurnEndForwardOffset())
     if AITurn.canMakeKTurn(self.vehicle, self.turnContext, self.workWidth, self:isTurnOnFieldActive()) then
         self.aiTurn = KTurn(self.vehicle, self, self.ppc, self.proximityController, self.turnContext, self.workWidth)
     else
@@ -488,7 +488,7 @@ function AIDriveStrategyFieldWorkCourse:startAlignmentTurn(fieldWorkCourse, star
     if alignmentCourse then
         local fm, bm = self:getFrontAndBackMarkers()
         self.turnContext = RowStartOrFinishContext(self.vehicle, fieldWorkCourse, startIx, startIx, self.turnNodes,
-                self:getWorkWidth(), fm, bm, self:getTurnEndSideOffset(), self:getTurnEndForwardOffset())
+                self:getWorkWidth(), fm, bm, self:getTurnEndSideOffset(false), self:getTurnEndForwardOffset())
         self.workStarter = StartRowOnly(self.vehicle, self, self.ppc, self.turnContext, alignmentCourse)
         self.state = self.states.DRIVING_TO_WORK_START_WAYPOINT
         self:startCourse(self.workStarter:getCourse(), 1)
@@ -542,7 +542,7 @@ function AIDriveStrategyFieldWorkCourse:startPathfindingToNextWaypoint(ix)
     self:debug('start pathfinding to waypoint %d', ix + 1)
     local fm, bm = self:getFrontAndBackMarkers()
     self.turnContext = RowStartOrFinishContext(self.vehicle, self.fieldWorkCourse, ix + 1, ix + 1,
-            self.turnNodes, self:getWorkWidth(), fm, bm, self:getTurnEndSideOffset(), self:getTurnEndForwardOffset())
+            self.turnNodes, self:getWorkWidth(), fm, bm, self:getTurnEndSideOffset(false), self:getTurnEndForwardOffset())
     local _, steeringLength = AIUtil.getSteeringParameters(self.vehicle)
     local targetNode, zOffset = self.turnContext:getTurnEndNodeAndOffsets(steeringLength)
     local context = PathfinderContext(self.vehicle):allowReverse(self:getAllowReversePathfinding())
@@ -605,7 +605,7 @@ function AIDriveStrategyFieldWorkCourse:startConnectingPath(ix)
         -- set up the turn context for the work starter to use when the pathfinding succeeds
         local fm, bm = self:getFrontAndBackMarkers()
         self.turnContext = RowStartOrFinishContext(self.vehicle, self.fieldWorkCourse, targetWaypointIx, targetWaypointIx,
-                self.turnNodes, self:getWorkWidth(), fm, bm, self:getTurnEndSideOffset(), self:getTurnEndForwardOffset())
+                self.turnNodes, self:getWorkWidth(), fm, bm, self:getTurnEndSideOffset(false), self:getTurnEndForwardOffset())
         local _, steeringLength = AIUtil.getSteeringParameters(self.vehicle)
         local targetNode, zOffset = self.turnContext:getTurnEndNodeAndOffsets(steeringLength)
         local context = PathfinderContext(self.vehicle):allowReverse(self:getAllowReversePathfinding())
@@ -670,7 +670,7 @@ end
 -----------------------------------------------------------------------------------------------------------------------
 --- Dynamic parameters (may change while driving)
 -----------------------------------------------------------------------------------------------------------------------
-function AIDriveStrategyFieldWorkCourse:getTurnEndSideOffset()
+function AIDriveStrategyFieldWorkCourse:getTurnEndSideOffset(isHeadlandTurn)
     return 0
 end
 

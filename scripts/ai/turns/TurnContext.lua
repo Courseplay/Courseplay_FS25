@@ -89,7 +89,8 @@ function TurnContext:init(vehicle, course, turnStartIx, turnEndIx, turnNodes, wo
 
     self.dx, _, self.dz = localToLocal(self.turnEndWpNode.node, self.workEndNode, 0, 0, 0)
     self.leftTurn = self.dx > 0
-    self.nextTurnLeft = course:isNextTurnLeft(turnEndIx)
+    self.cornerOffsetX, _ = course:getOffset()
+    self.plowShouldBeOnTheLeft = course:shouldPlowBeOnTheLeft(self.turnEndWpIx)
     self:debug('start ix = %d, back marker = %.1f, front marker = %.1f',
             turnStartIx, self.backMarkerDistance, self.frontMarkerDistance)
 end
@@ -238,10 +239,6 @@ function TurnContext:getHeadlandAngle()
     return math.abs(CpMathUtil.getDeltaAngle(math.rad(self.turnEndWp.angle), math.rad(self.turnStartWp.angle)))
 end
 
-function TurnContext:isNextTurnLeft()
-    return self.nextTurnLeft
-end
-
 function TurnContext:isHeadlandCorner()
 	-- in headland turns there's no significant direction change at the turn start waypoint, as the turn end waypoint
 	-- marks the actual corner. In a non-headland turn (usually 180) there is about 90 degrees direction change at
@@ -280,6 +277,11 @@ function TurnContext:isLeftTurn()
     else
         return self.leftTurn
     end
+end
+
+--- Should the plow be rotated to the left after the turn?
+function TurnContext:shouldPlowBeOnTheLeft()
+    return self.plowShouldBeOnTheLeft
 end
 
 ---@return number offset of the turn end in meters forward (>0) or back (<0)
@@ -363,8 +365,8 @@ function TurnContext:createCorner(vehicle, r)
     local endAngleDeg = self:getAverageEndAngleDeg()
     CpUtil.debugVehicle(CpDebug.DBG_TURN, vehicle, 'start angle: %.1f, end angle: %.1f (from %.1f and %.1f)', self.beforeTurnStartWp.angle,
             endAngleDeg, self.turnEndWp.angle, self.afterTurnEndWp.angle)
-    return Corner(vehicle, self.beforeTurnStartWp.angle, self.turnStartWp, endAngleDeg, self.turnEndWp, r,
-            vehicle:getCpSettings().toolOffsetX:getValue())
+    -- use the course X offset as that's the best indication of the current, actual offset X the vehicle is using
+    return Corner(vehicle, self.beforeTurnStartWp.angle, self.turnStartWp, endAngleDeg, self.turnEndWp, r, self.cornerOffsetX)
 end
 
 

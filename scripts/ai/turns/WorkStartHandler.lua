@@ -58,7 +58,7 @@ function WorkStartHandler:lowerImplementsAsNeeded(workStartNode, reversing)
         -- this must be called before the implement is lowered, for instance to rotate the plow before lowering it.
         -- ideally, this should all be in the PlowController since it is internal to the plow.
         self.driveStrategy:raiseControllerEvent(AIDriveStrategyCourse.onTurnEndProgressEvent,
-                workStartNode, reversing, shouldLowerThis, self.turnContext:isLeftTurn())
+                workStartNode, reversing, shouldLowerThis, self.turnContext:shouldPlowBeOnTheLeft())
         if reversing then
             dz = math.max(dz, thisDz)
             allShouldBeLowered = allShouldBeLowered and shouldLowerThis

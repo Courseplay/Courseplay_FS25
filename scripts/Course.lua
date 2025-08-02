@@ -635,6 +635,29 @@ function Course:isNextTurnLeft(ix)
     end
 end
 
+--- Should the plow be rotated to the left at the waypoint ix?
+--- On the headland just check which side was worked last, on the center, check the direction of the next turn
+--- as at the first pass both sides are unworked and need some other indication on which side the plow should be
+function Course:shouldPlowBeOnTheLeft(ix)
+    local plowShouldBeOnTheLeft
+    if self:isOnHeadland(ix) then
+        local clockwise = self:isOnClockwiseHeadland(ix)
+        plowShouldBeOnTheLeft = not clockwise
+        CpUtil.debugVehicle(CpDebug.DBG_TURN, self.vehicle, 'On a headland (clockwise %s), plow should be on the left %s', tostring(clockwise), tostring(plowShouldBeOnTheLeft))
+    else
+        local isNextTurnLeft = self:isNextTurnLeft(ix)
+        if isNextTurnLeft == nil then
+            -- don't know if left or right, so just use the last worked side
+            plowShouldBeOnTheLeft = self:isLeftSideWorked(ix)
+            CpUtil.debugVehicle(CpDebug.DBG_TURN, self.vehicle, 'On the center, next turn direction unknown, plow should be on the left %s', tostring(plowShouldBeOnTheLeft))
+        else
+            plowShouldBeOnTheLeft = not isNextTurnLeft
+            CpUtil.debugVehicle(CpDebug.DBG_TURN, self.vehicle, 'On the center, plow should be on the left %s', tostring(plowShouldBeOnTheLeft))
+        end
+    end
+    return plowShouldBeOnTheLeft
+end
+
 function Course:getIxRollover(ix)
     if ix > #self.waypoints then
         return ix - #self.waypoints
@@ -1455,7 +1478,7 @@ end
 local function calculateYRot(waypoints, i)
     local x1, z1 = waypoints[i].x, waypoints[i].z
     local x2, z2 = waypoints[i + 1].x, waypoints[i + 1].z
-    if (x1 - x2) == 0 and (z1 - z2) == 0 then 
+    if (x1 - x2) == 0 and (z1 - z2) == 0 then
         -- Divide by zero fix ..
         return 0
     end
@@ -1810,13 +1833,13 @@ function Course.MultiVehicleData.createFromStream(stream, nVehicles)
 end
 
 function Course.MultiVehicleData.getAllowedPositions(nMultiToolVehicles)
-    if nMultiToolVehicles == 2 then 
+    if nMultiToolVehicles == 2 then
         return {-1,1}
-    elseif nMultiToolVehicles == 3 then 
+    elseif nMultiToolVehicles == 3 then
         return {-1,0,1}
-    elseif nMultiToolVehicles == 4 then 
+    elseif nMultiToolVehicles == 4 then
         return {-2,-1,1,2}
-    elseif nMultiToolVehicles == 5 then 
+    elseif nMultiToolVehicles == 5 then
         return {-2,-1,0,1,2}
     end
     return {0}

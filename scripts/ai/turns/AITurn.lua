@@ -1000,8 +1000,6 @@ function StartRowOnly:getDriveData()
                 TurnManeuver.LOWER_IMPLEMENT_AT_TURN_END) then
             self.state = self.states.APPROACHING_ROW
             self:debug('Approaching row')
-            self.driveStrategy:raiseControllerEvent(AIDriveStrategyCourse.onTurnEndProgressEvent,
-                    self:getLowerImplementNode(), self.ppc:isReversing(), true, not self.turnContext:isNextTurnLeft())
         end
     elseif self.state == self.states.APPROACHING_ROW then
         self.workStartHandler:lowerImplementsAsNeeded(self:getLowerImplementNode(), self.ppc:isReversing())

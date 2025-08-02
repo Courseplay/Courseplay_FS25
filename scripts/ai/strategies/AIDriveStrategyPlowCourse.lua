@@ -50,15 +50,15 @@ function AIDriveStrategyPlowCourse:getDriveData(dt, vX, vY, vZ)
             --- we still need to check if the rotation 
             --- is in correct direction, as the course generator directed.
             self:rotatePlows()
-			self:debug("Needs to wait until the plow has finished rotating.")
-			self.state = self.states.ROTATING_PLOW
-		else 
+            self:debug("Needs to wait until the plow has finished rotating.")
+            self.state = self.states.ROTATING_PLOW
+        else
             --- The plow can not be rotated, 
             --- so we check if the plow is unfolded
             --- and try again to rotate the plow in the correct direction.
             self:debug("Plows have to be unfolded first!")
-			self.state = self.states.UNFOLDING_PLOW
-		end
+            self.state = self.states.UNFOLDING_PLOW
+        end
     elseif self.state == self.states.ROTATING_PLOW then
         self:setMaxSpeed(0)
         if not self:isPlowRotating() then
@@ -70,13 +70,13 @@ function AIDriveStrategyPlowCourse:getDriveData(dt, vX, vY, vZ)
         end
     elseif self.state == self.states.UNFOLDING_PLOW then
         self:setMaxSpeed(0)
-        if self:isPlowRotationAllowed() then 
+        if self:isPlowRotationAllowed() then
             --- The Unfolding has finished and 
             --- we need to check if the rotation is correct.
             self:rotatePlows()
             self:debug("Plow was unfolded and rotation can begin")
-			self.state = self.states.ROTATING_PLOW
-        elseif self:getCanContinueWork() then 
+            self.state = self.states.ROTATING_PLOW
+        elseif self:getCanContinueWork() then
             --- Unfolding has finished and no extra rotation is needed.
             self:updatePlowOffset()
             self:startWaitingForLower()
@@ -104,7 +104,7 @@ end
 --- Updates the X Offset based on the plows attached.
 function AIDriveStrategyPlowCourse:updatePlowOffset()
     local xOffset = 0
-    for _, controller in pairs(self.controllers) do 
+    for _, controller in pairs(self.controllers) do
         if controller.getAutomaticXOffset then
             local autoOffset = controller:getAutomaticXOffset()
             if autoOffset == nil then
@@ -127,8 +127,8 @@ end
 --- Is a plow currently rotating?
 ---@return boolean
 function AIDriveStrategyPlowCourse:isPlowRotating()
-    for _, controller in pairs(self.controllers) do 
-        if controller.isRotationActive and controller:isRotationActive() then 
+    for _, controller in pairs(self.controllers) do
+        if controller.isRotationActive and controller:isRotationActive() then
             return true
         end
     end
@@ -139,8 +139,8 @@ end
 ---@return boolean
 function AIDriveStrategyPlowCourse:isPlowRotationAllowed()
     local allowed = true
-    for _, controller in pairs(self.controllers) do 
-        if controller.getIsPlowRotationAllowed and not controller:getIsPlowRotationAllowed() then 
+    for _, controller in pairs(self.controllers) do
+        if controller.getIsPlowRotationAllowed and not controller:getIsPlowRotationAllowed() then
             allowed = false
         end
     end
@@ -150,49 +150,48 @@ end
 --- Initial plow rotation based on the ridge marker side selection by the course generator.
 function AIDriveStrategyPlowCourse:rotatePlows()
     self:debug('Starting work: check if plow needs to be turned.')
-    -- on the headland just check which side was worked last, on the center, check the direction of the next turn
-    -- as at the first pass both sides are unworked and need some other indication on which side the plow should be
     local ix = self.ppc:getCurrentWaypointIx()
-    local plowShouldBeOnTheLeft
-    if self.course:isOnHeadland(ix) then
-        local clockwise = self.course:isOnClockwiseHeadland(ix)
-        plowShouldBeOnTheLeft = not clockwise
-        self:debug('On a headland (clockwise %s), plow should be on the left %s', tostring(clockwise), tostring(plowShouldBeOnTheLeft))
-    else
-        local isNextTurnLeft = self.course:isNextTurnLeft(ix)
-        if isNextTurnLeft == nil then
-            -- don't know if left or right, so just use the last worked side
-            plowShouldBeOnTheLeft = self.course:isLeftSideWorked(ix)
-            self:debug('On the center, next turn direction unknown, plow should be on the left %s', tostring(plowShouldBeOnTheLeft))
-        else
-            plowShouldBeOnTheLeft = not isNextTurnLeft
-            self:debug('On the center, plow should be on the left %s', tostring(plowShouldBeOnTheLeft))
-        end
-    end
+    local plowShouldBeOnTheLeft = self.course:shouldPlowBeOnTheLeft(ix)
     for _, controller in pairs(self.controllers) do
-        if controller.rotate then 
+        if controller.rotate then
             controller:rotate(plowShouldBeOnTheLeft)
         end
     end
 end
 
+--- Do we have at least one plow that can be rotated?
+---@return boolean
+function AIDriveStrategyPlowCourse:haveRotatablePlow()
+    for _, controller in pairs(self.controllers) do
+        if controller.isRotatablePlow and controller:isRotatablePlow() then
+            return true
+        end
+    end
+    return false
+end
+
 -----------------------------------------------------------------------------------------------------------------------
 --- Dynamic parameters (may change while driving)
 -----------------------------------------------------------------------------------------------------------------------
-function AIDriveStrategyPlowCourse:getTurnEndSideOffset()
-    if self:isWorking() then
+function AIDriveStrategyPlowCourse:getTurnEndSideOffset(isHeadlandTurn)
+    -- on headland turns we do not rotate the plow, and since the course already has the offset, nothing to do,
+    -- the context will calculate with the offset of the course already, no additional side offset is needed
+    if self:isWorking() and not isHeadlandTurn and self:haveRotatablePlow() then
         self:updatePlowOffset()
-        -- need the double tool offset as the turn end still has the current offset, after the rotation it'll be
-        -- on the other side, (one toolOffsetX would put it to 0 only)
+        -- need the double tool offset as the turn end waypoint still has the current offset, but after rotating,
+        -- the plow will be on the other side, (one toolOffsetX would put it to 0 only)
+        self:debug('Setting turn end side offset to %.2f for the plow', 2 * self.aiOffsetX)
         return 2 * self.aiOffsetX
     else
+        self:debug('No turn end side offset, working: %s, headland turn %s, have rotatable plow %s ',
+                tostring(self:isWorking()), tostring(isHeadlandTurn), tostring(self:haveRotatablePlow()))
         return 0
     end
 end
 
 function AIDriveStrategyPlowCourse:updateFieldworkOffset(course)
-	--- Ignore the tool offset setting.
-	course:setOffset((self.aiOffsetX or 0), (self.aiOffsetZ or 0))
+    --- Ignore the tool offset setting.
+    course:setOffset((self.aiOffsetX or 0), (self.aiOffsetZ or 0))
 end
 
 --- When we return from a turn, the offset is reverted and should immediately set, not waiting
