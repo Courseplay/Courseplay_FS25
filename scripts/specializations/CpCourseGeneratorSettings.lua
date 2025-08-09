@@ -60,38 +60,41 @@ function CpCourseGeneratorSettings.registerFunctions(vehicleType)
     SpecializationUtil.registerFunction(vehicleType, 'validateCourseGeneratorSettings', CpCourseGeneratorSettings.validateSettings)
 end
 
+-- shortcut to access the spec
+function CpCourseGeneratorSettings.getSpec(self)
+    return self["spec_" .. CpCourseGeneratorSettings.SPEC_NAME]
+end
+
 --- Gets all settings.
 ---@return table
 function CpCourseGeneratorSettings:getSettings()
-    local spec = self.spec_cpCourseGeneratorSettings
+    local spec = CpCourseGeneratorSettings.getSpec(self)  
     return spec
 end
 
 --- Gets all settings.
 ---@return table
 function CpCourseGeneratorSettings:getSettingsTable()
-    local spec = self.spec_cpCourseGeneratorSettings
+    local spec = CpCourseGeneratorSettings.getSpec(self)  
     return spec.settings
 end
 
 --- Gets all vine settings.
 ---@return table
 function CpCourseGeneratorSettings:getCpVineSettings()
-    local spec = self.spec_cpCourseGeneratorSettings
+    local spec = CpCourseGeneratorSettings.getSpec(self)  
     return spec.vineSettings
 end
 
 --- Gets all settings.
 ---@return table
 function CpCourseGeneratorSettings:getCpVineSettingsTable()
-    local spec = self.spec_cpCourseGeneratorSettings
+    local spec = CpCourseGeneratorSettings.getSpec(self)  
     return spec.vineSettings.settings
 end
 
 function CpCourseGeneratorSettings:onLoad(savegame)
-	--- Register the spec: spec_cpCourseGeneratorSettings
-    self.spec_cpCourseGeneratorSettings = self["spec_" .. CpCourseGeneratorSettings.SPEC_NAME]
-    local spec = self.spec_cpCourseGeneratorSettings
+    local spec = CpCourseGeneratorSettings.getSpec(self) 
 
     --- Clones the generic settings to create different settings containers for each vehicle. 
     CpSettingsUtil.cloneSettingsTable(spec,CpCourseGeneratorSettings.settings,self,CpCourseGeneratorSettings)
@@ -114,7 +117,7 @@ function CpCourseGeneratorSettings:onUpdate(savegame)
     if self.propertyState == VehiclePropertyState.SHOP_CONFIG then 
         return
     end
-    local spec = self.spec_cpCourseGeneratorSettings
+    local spec = CpCourseGeneratorSettings.getSpec(self)  
     if not spec.finishedFirstUpdate then
         spec.workWidth:resetToLoadedValue()
     end
@@ -122,45 +125,45 @@ function CpCourseGeneratorSettings:onUpdate(savegame)
 end
 
 function CpCourseGeneratorSettings:onReadStream(streamId, connection)
-    local spec = self.spec_cpCourseGeneratorSettings
+    local spec = CpCourseGeneratorSettings.getSpec(self)  
     for i, setting in ipairs(spec.settings) do 
         setting:readStream(streamId, connection)
     end
 end
 
 function CpCourseGeneratorSettings:onWriteStream(streamId, connection)
-    local spec = self.spec_cpCourseGeneratorSettings
+    local spec = CpCourseGeneratorSettings.getSpec(self)  
     for i, setting in ipairs(spec.settings) do 
         setting:writeStream(streamId, connection)
     end
 end
 
 function CpCourseGeneratorSettings:isRowsToSkipVisible()
-    local spec = self.spec_cpCourseGeneratorSettings
+    local spec = CpCourseGeneratorSettings.getSpec(self)  
     local rowPatternNumber = spec.centerMode:getValue()
     return rowPatternNumber == CourseGenerator.RowPattern.ALTERNATING
 end
 
 function CpCourseGeneratorSettings:isNumberOfCirclesVisible()
-    local spec = self.spec_cpCourseGeneratorSettings
+    local spec = CpCourseGeneratorSettings.getSpec(self)  
     local rowPatternNumber = spec.centerMode:getValue()
     return rowPatternNumber == CourseGenerator.RowPattern.RACETRACK
 end
 
 function CpCourseGeneratorSettings:isRowsPerLandVisible()
-    local spec = self.spec_cpCourseGeneratorSettings
+    local spec = CpCourseGeneratorSettings.getSpec(self)  
     local rowPatternNumber = spec.centerMode:getValue()
     return rowPatternNumber == CourseGenerator.RowPattern.LANDS
 end
 
 function CpCourseGeneratorSettings:isSpiralFromInsideVisible()
-    local spec = self.spec_cpCourseGeneratorSettings
+    local spec = CpCourseGeneratorSettings.getSpec(self)  
     local rowPatternNumber = spec.centerMode:getValue()
     return rowPatternNumber == CourseGenerator.RowPattern.SPIRAL
 end
 
 function CpCourseGeneratorSettings:isManualRowAngleVisible()
-    local spec = self.spec_cpCourseGeneratorSettings
+    local spec = CpCourseGeneratorSettings.getSpec(self)  
     return spec.autoRowAngle:getValue() == false
 end
 
@@ -168,14 +171,14 @@ end
 function CpCourseGeneratorSettings.onVariableWorkWidthSectionChanged(object)
     --- Object could be an implement, so make sure we use the root vehicle.
     local self = object.rootVehicle
-    if self:getIsSynchronized() and self.spec_cpCourseGeneratorSettings then
+    if self:getIsSynchronized() then
         CpCourseGeneratorSettings.setAutomaticWorkWidthAndOffset(self)
     end
 end
 VariableWorkWidth.updateSections = Utils.appendedFunction(VariableWorkWidth.updateSections,CpCourseGeneratorSettings.onVariableWorkWidthSectionChanged)
 
 function CpCourseGeneratorSettings:setAutomaticWorkWidthAndOffset()
-    local spec = self.spec_cpCourseGeneratorSettings
+    local spec = CpCourseGeneratorSettings.getSpec(self)  
     local width, offset, _, _ = WorkWidthUtil.getAutomaticWorkWidthAndOffset(self)
     spec.workWidth:refresh()
     spec.workWidth:setFloatValue(width, nil, true)
@@ -183,7 +186,7 @@ function CpCourseGeneratorSettings:setAutomaticWorkWidthAndOffset()
 end
 
 function CpCourseGeneratorSettings:setDefaultTurningRadius()
-    local spec = self.spec_cpCourseGeneratorSettings
+    local spec = CpCourseGeneratorSettings.getSpec(self)  
     spec.turningRadius:setFloatValue(AIUtil.getTurningRadius(self), nil, true)
 end
 
@@ -208,7 +211,7 @@ end
 
 function CpCourseGeneratorSettings:loadSettings(savegame)
     if savegame == nil or savegame.resetVehicles then return end
-    local spec = self.spec_cpCourseGeneratorSettings
+    local spec = CpCourseGeneratorSettings.getSpec(self)  
     --- Old save format
 	savegame.xmlFile:iterate(savegame.key..CpCourseGeneratorSettings.KEY, function (ix, key)
 		local name = savegame.xmlFile:getValue(key.."#name")
@@ -229,7 +232,7 @@ function CpCourseGeneratorSettings:loadSettings(savegame)
 end
 
 function CpCourseGeneratorSettings:saveToXMLFile(xmlFile, baseKey, usedModNames)
-    local spec = self.spec_cpCourseGeneratorSettings
+    local spec = CpCourseGeneratorSettings.getSpec(self)  
 
     --- Saves the normal course generator settings.
     CpSettingsUtil.saveToXmlFile(spec.settings, xmlFile, 
@@ -253,7 +256,7 @@ function CpCourseGeneratorSettings:raiseDirtyFlag(setting)
 end 
 
 function CpCourseGeneratorSettings:validateSettings()
-    local spec = self.spec_cpCourseGeneratorSettings
+    local spec = CpCourseGeneratorSettings.getSpec(self)  
     for i,setting in ipairs(spec.settings) do 
         setting:refresh()
     end
@@ -263,7 +266,7 @@ function CpCourseGeneratorSettings:validateSettings()
 end
 
 function CpCourseGeneratorSettings:onCpUnitChanged()
-    local spec = self.spec_cpCourseGeneratorSettings
+    local spec = CpCourseGeneratorSettings.getSpec(self)  
     for i,setting in ipairs(spec.settings) do 
         setting:validateTexts()
     end
@@ -276,12 +279,12 @@ end
 --- Callbacks for the settings to manipulate the gui elements.
 ------------------------------------------------------------------------------------------------------------------------
 function CpCourseGeneratorSettings:hasMoreThenOneVehicle()
-    local spec = self.spec_cpCourseGeneratorSettings
+    local spec = CpCourseGeneratorSettings.getSpec(self)  
     return spec.multiTools:getValue() > 1
 end
 
 function CpCourseGeneratorSettings:hasHeadlandsSelected()
-    local spec = self.spec_cpCourseGeneratorSettings
+    local spec = CpCourseGeneratorSettings.getSpec(self)  
     return spec.numberOfHeadlands:getValue() > 0
 end
 
@@ -292,7 +295,7 @@ function CpCourseGeneratorSettings:isNarrowFieldEnabled()
 end
 
 function CpCourseGeneratorSettings:canStartOnRows()
-    local spec = self.spec_cpCourseGeneratorSettings
+    local spec = CpCourseGeneratorSettings.getSpec(self)  
     -- start on rows does not work for narrow field patterns
     return spec.numberOfHeadlands:getValue() > 0 and not spec.narrowField:getValue()
 end
@@ -333,7 +336,7 @@ function CpCourseGeneratorSettings:consoleCommandPrintSetting(name)
         CpUtil.info("Not entered a valid vehicle!")
         return
     end
-    local spec = vehicle.spec_cpCourseGeneratorSettings
+    local spec = CpCourseGeneratorSettings.getSpec(self) 
     if not spec then 
         CpUtil.infoVehicle(vehicle, "has no course generator settings!")
         return

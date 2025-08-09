@@ -33,12 +33,15 @@ function CpCourseGenerator.registerFunctions(vehicleType)
     SpecializationUtil.registerFunction(vehicleType, 'cpDrawFieldPolygon', CpCourseGenerator.cpDrawFieldPolygon)
 end
 
+-- shortcut to access the spec
+function CpCourseGenerator.getSpec(self)
+    return self["spec_" .. CpCourseGenerator.SPEC_NAME]
+end
+
 function CpCourseGenerator:onLoad(savegame)
-    -- create shortcut to this spec
-    self.spec_cpCourseGenerator = self["spec_" .. CpCourseGenerator.SPEC_NAME]
-    self.spec_cpCourseGenerator.logger = Logger(CpCourseGenerator.SPEC_NAME, nil, CpDebug.DBG_COURSES)
+    CpCourseGenerator.getSpec(self).logger = Logger(CpCourseGenerator.SPEC_NAME, nil, CpDebug.DBG_COURSES)
     -- make sure cpGetFieldPosition always has spec.position
-    self.spec_cpCourseGenerator.position = {}
+    CpCourseGenerator.getSpec(self).position = {}
 end
 
 ---@param x number world X coordinate to start the detection at
@@ -46,7 +49,7 @@ end
 ---@param object table|nil optional object with callback
 ---@param onFinishedFunc function callback function to call when finished: onFinishedFunc([object,] vehicle, fieldPolygon, islandPolygons)
 function CpCourseGenerator:cpDetectFieldBoundary(x, z, object, onFinishedFunc)
-    local spec = self.spec_cpCourseGenerator
+    local spec = CpCourseGenerator.getSpec(self)
     if spec.isFieldBoundaryDetectionRunning then
         spec.logger:warning(self, 'Not starting field boundary detection for %.1f/%.1f, previous for %.1f/%.1f is still running',
                 x, z, spec.position.x, spec.position.z)
@@ -62,18 +65,18 @@ end
 ---@return boolean true if field boundary detection is running. Field and island polygons returned while running may
 --- be nil or invalid.
 function CpCourseGenerator:cpIsFieldBoundaryDetectionRunning()
-    return self.spec_cpCourseGenerator.isFieldBoundaryDetectionRunning
+    return CpCourseGenerator.getSpec(self).isFieldBoundaryDetectionRunning
 end
 
 ---@return number|nil, number|nil world X and Z coordinates of the last field boundary detection start position, nil
 --- if no previous detection was started
 function CpCourseGenerator:cpGetFieldPosition()
-    local spec = self.spec_cpCourseGenerator
+    local spec = CpCourseGenerator.getSpec(self)
     return spec.position.x, spec.position.z
 end
 
 function CpCourseGenerator:onUpdate(dt)
-    local spec = self.spec_cpCourseGenerator
+    local spec = CpCourseGenerator.getSpec(self)
     if spec.fieldBoundaryDetector then
         if not spec.fieldBoundaryDetector:update(dt) then
             -- done
@@ -95,17 +98,17 @@ end
 
 ---@return table|nil [{x, y, z}] field polygon with game vertices
 function CpCourseGenerator:cpGetFieldPolygon()
-    return self.spec_cpCourseGenerator.fieldPolygon
+    return CpCourseGenerator.getSpec(self).fieldPolygon
 end
 
 ---@return table|nil [[{x, y, z}]] array of island polygons with game vertices (x, y, z)
 function CpCourseGenerator:cpGetIslandPolygons()
-    return self.spec_cpCourseGenerator.islandPolygons
+    return CpCourseGenerator.getSpec(self).islandPolygons
 end
 
 -- For debug, if there is a field polygon or island polygons, draw them
 function CpCourseGenerator:cpDrawFieldPolygon()
-    local spec = self.spec_cpCourseGenerator
+    local spec= CpCourseGenerator.getSpec(self)  
     local function drawPolygon(polygon)
         for i = 2, #polygon do
             local p, n = polygon[i - 1], polygon[i]
@@ -124,7 +127,7 @@ function CpCourseGenerator:cpDrawFieldPolygon()
 end
 
 function CpCourseGenerator:onReadStream(streamId, connection)
-    local spec = self.spec_cpCourseGenerator
+    local spec= CpCourseGenerator.getSpec(self)  
     local numVertices = streamReadInt32(streamId)
     if numVertices == 0 then
         spec.fieldPolygon = nil
@@ -140,7 +143,7 @@ function CpCourseGenerator:onReadStream(streamId, connection)
 end
 
 function CpCourseGenerator:onWriteStream(streamId, connection)
-    local spec = self.spec_cpCourseGenerator
+    local spec= CpCourseGenerator.getSpec(self)  
     if spec.fieldPolygon then
         streamWriteInt32(streamId, #spec.fieldPolygon)
         for _, point in ipairs(spec.fieldPolygon) do
