@@ -93,6 +93,10 @@ function ImplementController:onFinished(hasFinished)
     --- override
 end
 
+function ImplementController:onPreFinished()
+    return true
+end
+
 function ImplementController:onFinishRow(isHeadlandTurn)
 end
 
