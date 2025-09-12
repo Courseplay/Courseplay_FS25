@@ -30,7 +30,7 @@ AIDriveStrategySiloLoader.myStates = {
     DRIVING_ALIGNMENT_COURSE = {},
     WAITING_FOR_PREPARING = {},
     WORKING = {},
-    FINISHED = {}
+    FINISHED_WORKING = {}
 }
 AIDriveStrategySiloLoader.distanceOverFieldEdgeAllowed = 25
 AIDriveStrategySiloLoader.siloAreaOffsetFieldUnload = 10
@@ -201,7 +201,7 @@ function AIDriveStrategySiloLoader:onWaypointPassed(ix, course)
             self.vehicle:raiseAIEvent("onAIFieldWorkerStart", "onAIImplementStart")
             self:lowerImplements()
         elseif self.state == self.states.WORKING then
-            self.state = self.states.FINISHED
+            self.state = self.states.FINISHED_WORKING
         end
     end
 end
@@ -243,11 +243,11 @@ function AIDriveStrategySiloLoader:getDriveData(dt, vX, vY, vZ)
             local isEndReached, maxSpeed = self.bunkerSiloController:isEndReached(self.shovelController:getShovelNode(), 0)
             if self.silo:isTheSameSilo(closestObject) or isEndReached then
                 self:debug("End wall detected or bunker silo end is reached.")
-                self.state = self.states.FINISHED
+                self.state = self.states.FINISHED_WORKING
             end
         end
 
-    elseif self.state == self.states.FINISHED then
+    elseif self.state == self.states.FINISHED_WORKING then
         self:setMaxSpeed(0)
         self:debugSparse("Waiting until the conveyor is empty.")
         if self.shovelController:isEmpty() then
