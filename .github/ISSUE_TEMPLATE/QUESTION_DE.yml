@@ -7,10 +7,10 @@ body:
   attributes:
     value: 'Bitte benutze diese Vorlage, um deine Frage zu stellen!
 
-      Lese dir bitte zuerst unsere [Wiki Seite](https://github.com/Courseplay/Courseplay_FS25/wiki)
+      Lies dir bitte zuerst unsere [Wiki-Seite](https://github.com/Courseplay/Courseplay_FS25/wiki)
       durch, bevor du ein neues Issue erstellst!
 
-      Unsere Hilfe aus dem Spiel, gibt es auch unter [Courseplay.dev]!(https://courseplay.github.io/Courseplay_FS22.github.io/),
+      Unsere Hilfe aus dem Spiel gibt es auch auf der [CP-Website](https://courseplay.github.io/CourseplayHelpFS25/de/),
       dort kannst du bereits vieles zu Courseplay erfahren!
 
       '
@@ -18,7 +18,7 @@ body:
   id: mod-version
   attributes:
     label: Version
-    description: Welche CP Version verwendest du?
+    description: Welche CP-Version verwendest du?
     options:
     - '0'
     - 8.0.0.0
@@ -64,11 +64,11 @@ body:
   id: about
   attributes:
     label: Um was geht es bei deiner Frage?
-    description: Bitte wähle was passendes aus.
+    description: Bitte wähle eine Kategorie aus.
     options:
     - Kurserstellung
-    - Fahrzeug Einstellungen
-    - Globale CP Einstellungen
+    - Fahrzeug-Einstellungen
+    - Globale CP-Einstellungen
     - weiteres später
     default: 0
   validations:
@@ -85,7 +85,7 @@ body:
   id: screenshots
   attributes:
     label: Screenshots
-    description: Ziehe deine Screenshots in das Textfeld, um diese hoch zu laden.
+    description: Ziehe deine Screenshots in das Textfeld, um diese hochzuladen.
     placeholder: Wenn du Screenshots hast, die helfen dein Frage zu beschreiben, füge
       sie hier ein.
   validations:

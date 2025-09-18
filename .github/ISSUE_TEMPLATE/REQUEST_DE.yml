@@ -7,15 +7,18 @@ body:
   attributes:
     value: 'Danke, dass du dir Zeit nimmst, diesen Report auszufüllen.
 
-      Lese dir bitte zuerst unsere [Wiki Seite](https://github.com/Courseplay/Courseplay_FS25/wiki)
+      Lies dir bitte zuerst unsere [Wiki-Seite](https://github.com/Courseplay/Courseplay_FS25/wiki)
       durch, bevor du ein neues Issue erstellst!
+
+      Unsere Hilfe aus dem Spiel gibt es auch auf der [CP-Website](https://courseplay.github.io/CourseplayHelpFS25/de/),
+      dort kannst du bereits vieles zu Courseplay erfahren!
 
       '
 - type: dropdown
   id: mod-version
   attributes:
     label: Version
-    description: Welche CP Version verwendest du?
+    description: Welche CP-Version verwendest du?
     options:
     - '0'
     - 8.0.0.0
@@ -68,7 +71,7 @@ body:
 - type: textarea
   id: how-to
   attributes:
-    label: Wie könntest du dir vorstellen, wie deine Idee in CP aussehen könnte.
+    label: Wie könnte deine Idee in Courseplay aussehen?
     description: Beschreibe bitte, wie es in CP passen könnte.
     placeholder: Beschreibe es so gut es geht.
   validations:
@@ -85,7 +88,7 @@ body:
   id: screenshots
   attributes:
     label: Screenshots
-    description: Ziehe deine Screenshots in das Textfeld, um diese hoch zu laden.
+    description: Ziehe deine Screenshots in das Textfeld, um diese hochzuladen.
     placeholder: Wenn du Screenshots hast, die helfen deine Idee besser zu verstehen,
       füge sie bitte hier ein.
   validations:
