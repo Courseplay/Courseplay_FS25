@@ -138,12 +138,12 @@ function ReedsShepp.ActionSet:addAction(steer, gear, length)
 end
 
 function ReedsShepp.ActionSet:calculateCost(unit, reverseCostMultiplier, gearSwitchCost)
-    if reverseCostMultiplier == 1 and gearSwitchCost == 0 then return self.Length * unit end
-    if self.Length == math.huge or #self.ctions == 0 then return math.huge end
+    if reverseCostMultiplier == 1 and gearSwitchCost == 0 then return self.length * unit end
+    if self.length == math.huge or #self.actions == 0 then return math.huge end
     local cost = 0
     local prevGear = self.actions[1].gear
     for _, a in ipairs(self.actions) do
-        local actionCost = a.Length * unit
+        local actionCost = a.length * unit
         if a.gear == Gear.Backward then
             actionCost = actionCost * reverseCostMultiplier
         end
@@ -174,7 +174,9 @@ function ReedsShepp.ActionSet:getWaypoints(start, turnRadius)
     local waypoints = {}
     table.insert(waypoints, prev)
     for _, action in ipairs(self.actions) do
-        local n = math.ceil(action.length * turnRadius)
+        -- waypoints are 1 m apart, but make sure there are at least 12 waypoints per half circle
+        -- even with very small radii
+        local n = math.ceil(math.max(action.length * turnRadius, action.length / math.pi * 12))
         if action.steer ~= Steer.Straight then
             local pieceAngle = action.length / n
 
