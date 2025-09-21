@@ -145,7 +145,7 @@ function Courseplay:setupGui()
 			g_messageCenter:publishDelayed(MessageType.GUI_CP_INGAME_OPEN)
 		end, false, true, false, true)
 		g_inputBinding:setActionEventTextVisibility(id, false)
-		-- CpDebug.registerEvents()
+		CpDebug.registerEvents()
 	end
 	PlayerInputComponent.registerGlobalPlayerActionEvents = Utils.overwrittenFunction(
 		PlayerInputComponent.registerGlobalPlayerActionEvents, addPlayerActionEvents)

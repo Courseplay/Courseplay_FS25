@@ -9,6 +9,8 @@ CpAIFieldWorker.NAME = ".cpAIFieldWorker"
 CpAIFieldWorker.SPEC_NAME = CpAIFieldWorker.MOD_NAME .. CpAIFieldWorker.NAME
 CpAIFieldWorker.KEY = "."..CpAIFieldWorker.MOD_NAME..CpAIFieldWorker.NAME
 
+local profilers = {}
+
 -- shortcut to access the spec
 function CpAIFieldWorker.getSpec(self)
     return self["spec_" .. CpAIFieldWorker.SPEC_NAME]
@@ -311,7 +313,16 @@ end
 --- Makes sure a callstack is printed, when an error appeared.
 --- TODO: Might be a good idea to stop the cp helper.
 local function onUpdate(vehicle, superFunc, ...)
+    if not profilers[vehicle] then
+        profilers[vehicle] = Profiler(vehicle)
+    end
+    profilers[vehicle]:start()
     CpUtil.try(superFunc, vehicle, ...)
+    profilers[vehicle]:stop()
+    profilers[vehicle]:render()
+    if g_updateLoopIndex % 100  == 0 then
+        profilers[vehicle]:log()
+    end
 end
 
 AIFieldWorker.onUpdate = Utils.overwrittenFunction(AIFieldWorker.onUpdate, onUpdate)

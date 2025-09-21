@@ -109,6 +109,7 @@ Changelog 8.1.0.0
 		<sourceFile filename="scripts/util/MovingAverage.lua"/>
 		<sourceFile filename="scripts/util/CpRemainingTime.lua"/>
 		<sourceFile filename="scripts/util/HelperNode.lua"/>
+		<sourceFile filename="scripts/util/Profiler.lua"/>
 
 		<sourceFile filename="scripts/geometry/Vector.lua"/>
 		<sourceFile filename="scripts/geometry/Vertex.lua"/>

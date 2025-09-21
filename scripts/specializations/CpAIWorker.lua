@@ -10,6 +10,8 @@ CpAIWorker.SPEC_NAME = CpAIWorker.MOD_NAME .. CpAIWorker.NAME
 CpAIWorker.KEY = "." .. CpAIWorker.MOD_NAME .. CpAIWorker.NAME .. "."
 CpAIWorker.LAST_JOB_KEY = "vehicles.vehicle(?).aiJobVehicle.lastJob"
 
+local logger = Logger('CpAIWorker', Logger.level.debug, CpUtil.DBG_AI_DRIVER)
+
 function CpAIWorker.initSpecialization()
     local schema = Vehicle.xmlSchemaSavegame
     --- Registers the last job key.
@@ -248,15 +250,15 @@ end
 
 --- Directly starts a cp job or stops a currently active job.
 function CpAIWorker:cpStartStopDriver(isStartedByHud)
-    CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, self, "Start/stop cp helper")
+    logger:debug(self, "Start/stop cp helper")
     if self:getIsAIActive() then
         self:stopCurrentAIJob(AIMessageSuccessStoppedByUser.new())
-        CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, self, "Stopped current helper.")
+        logger:debug(self, "Stopped current helper.")
     else
         self:updateAIFieldWorkerImplementData()
         local job = self:getCpStartableJob(isStartedByHud)
         if job == nil then
-            CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, self, "Could not find a CP job to start!")
+            logger:debug(self, "Could not find a CP job to start!")
             return
         end
         if self:getCanStartCp() and job then
@@ -266,15 +268,15 @@ function CpAIWorker:cpStartStopDriver(isStartedByHud)
             local success, message = job:validate()
             if success then
                 g_client:getServerConnection():sendEvent(AIJobStartRequestEvent.new(job, self:getOwnerFarmId()))
-                CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, self, "Cp helper started.")
+                logger:debug(self, "Cp helper started.")
             else
-                CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, self, "Could not start CP helper: %s", tostring(message))
+                logger:debug(self, "Could not start CP helper: %s", tostring(message))
                 if message then
                     g_currentMission:showBlinkingWarning("CP: " .. message, 5000)
                 end
             end
         else
-            CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, self, "Could not start CP helper!")
+            logger:debug(self, "Could not start CP helper!")
         end
     end
 end
@@ -352,10 +354,10 @@ function CpAIWorker:stopCurrentAIJob(superFunc, message, ...)
                         -- since we often stop for instance in convoy mode when waiting for another vehicle to turn
                         -- (when we do this, we set our maxSpeed to 0). So we also check our maxSpeed, this way the Giants timer will
                         -- fire if we are blocked (thus have a maxSpeed > 0 but not moving)
-                        CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, self, 'Overriding the Giants did not move timer, with speed: %.2f', maxSpeed)
+                        logger:debug(self, 'Overriding the Giants did not move timer, with speed: %.2f', maxSpeed)
                         return
                     else
-                        CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, self, 'Giants did not move timer triggered, with speed: %.2f!', maxSpeed)
+                        logger:debug(self, 'Giants did not move timer triggered, with speed: %.2f!', maxSpeed)
                     end
                 end
             end
@@ -364,7 +366,7 @@ function CpAIWorker:stopCurrentAIJob(superFunc, message, ...)
             return
         end
     end
-    CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, self, "stop message: %s", message:getI18NText())
+    logger:debug(self, "stop message: %s", message:getI18NText())
     superFunc(self, message,...)
 end
 
@@ -385,6 +387,7 @@ function CpAIWorker:onUpdate(dt)
             return
         end
         local tX, tZ, moveForwards, maxSpeedStrategy = spec.driveStrategy:getDriveData(dt)
+        logger:debug('Speed %.1f', maxSpeedStrategy)
         local maxSpeed = math.min(maxSpeedStrategy or math.huge, self:getCruiseControlMaxSpeed())
         if not spec.driveStrategy then
             return
@@ -533,13 +536,13 @@ end
 --- Auto drive stop
 function CpAIWorker:onStopAutoDrive(isPassingToCP, isStartingAIVE)
     if g_server then
-        CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, self, "isPassingToCP: %s, isStartingAIVE: %s", tostring(isPassingToCP), tostring(isStartingAIVE))
+        logger:debug(self, "isPassingToCP: %s, isStartingAIVE: %s", tostring(isPassingToCP), tostring(isStartingAIVE))
         if self.ad.restartCP then
             --- Is restarted for refilling or unloading.
-            CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, self, "Was refilled/unloaded by AD.")
+            logger:debug(self, "Was refilled/unloaded by AD.")
         else
             --- Is sent to a field.
-            CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, self, "Was sent to field by AD.")
+            logger:debug(self, "Was sent to field by AD.")
         end
     end
 end

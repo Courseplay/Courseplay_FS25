@@ -147,7 +147,6 @@ end
 
 --- This is the interface to the Giant's AIFieldWorker specialization, telling it the direction and speed
 function AIDriveStrategyFieldWorkCourse:getDriveData(dt, vX, vY, vZ)
-
     self:updateFieldworkOffset(self.course)
     self:updateLowFrequencyImplementControllers()
     Markers.refreshMarkerNodes(self.vehicle, self.measuredBackDistance)

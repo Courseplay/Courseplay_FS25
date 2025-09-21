@@ -20,5 +20,6 @@
 	<DebugChannel active="false" name="DBG_HUD" 			text="hud action"/>
 	<DebugChannel active="false" name="DBG_MULTIPLAYER" 	text="multiplayer"/>
 	<DebugChannel active="true"  name="DBG_IMPLEMENTS" 		text="implements"/>
-	<DebugChannel active="false" name="DBG_AI_DRIVER" 		text="AIDriver common"/>
+	<DebugChannel active="false" name="DBG_AI_DRIVER" 		text="ai common"/>
+	<DebugChannel active="false" name="DBG_PERF" 			text="perf"/>
 </DebugChannels>
