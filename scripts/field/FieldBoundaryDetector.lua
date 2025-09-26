@@ -22,7 +22,7 @@ function FieldBoundaryDetector:init(x, z, vehicle)
     self.updates = 0
     local customField = g_customFieldManager:getCustomField(x, z)
     if customField and g_Courseplay.globalSettings.preferCustomFields:getValue() then
-        self.logger:info( 'Found custom field %s at %.1f %.1f and custom fields are preferred',
+        self.logger:info( 'Foun d custom field %s at %.1f %.1f and custom fields are preferred',
                 customField:getName(), x, z)
         self:_useCustomField(customField)
         return
@@ -31,6 +31,7 @@ function FieldBoundaryDetector:init(x, z, vehicle)
     local fieldCourseSettings, implementData = FieldCourseSettings.generate(vehicle)
     self.courseField = FieldCourseField.generateAtPosition(x, z, fieldCourseSettings, function(courseField, success)
         if success then
+            self.done = true
             self.logger:info('Field boundary detection successful after %d updates, %d boundary points and %d islands',
                     self.updates, #courseField.fieldRootBoundary.boundaryLine, #courseField.islands)
             self.fieldPolygon = self:_getAsVertices(courseField.fieldRootBoundary.boundaryLine)
@@ -57,7 +58,11 @@ end
 ---@return boolean true if still in progress, false when done
 function FieldBoundaryDetector:update(dt)
     -- when we use the custom field, we are done immediately
-    if not self.useCustomField and self.courseField:update(dt, 0.00025) then
+    self.logger:info('status: %d', self.courseField.state)
+    -- FieldCourseField:update() returns true until it's state is FieldCourseDetectionState.FINISHED. Problem
+    -- is, it may never go to the FINISHED state, and then our indication of done is that the callback is called with
+    -- success == true, therefore use the self.done to indicate it.
+    if not self.useCustomField and not self.done and self.courseField:update(dt, 0.00025) then
         self.updates = self.updates + 1
         return true
     else
