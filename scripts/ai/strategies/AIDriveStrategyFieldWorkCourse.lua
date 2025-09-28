@@ -108,9 +108,26 @@ function AIDriveStrategyFieldWorkCourse:prepareForFieldWork()
 end
 
 --- Event raised when the driver has finished.
-function AIDriveStrategyFieldWorkCourse:onFinished(hasFinished)
-    AIDriveStrategyCourse.onFinished(self, hasFinished)
+function AIDriveStrategyFieldWorkCourse:onFinished(...)
+    AIDriveStrategyCourse.onFinished(self, ...)
     self.remainingTime:reset()
+end
+
+function AIDriveStrategyFieldWorkCourse:handleFinishedRequest(stopReason)
+    --- TODO consolidate this logic in the future ...
+    if stopReason:isa(AIMessageErrorOutOfFill) then
+        --- At least one implement type needs to be refilled.
+        local setting = self.settings.refillOnTheField
+        if setting:getValue() == CpVehicleSettings.REFILL_ON_FIELD_WAITING then
+            self.currentTask:setWaitingForRefillingActive()
+            return true
+        elseif setting:getValue() == CpVehicleSettings.REFILL_ON_FIELD_ACTIVE then
+            --- TODO_25 Add driving to trailer for refilling here and so on ..
+            self:setFinished(true, nil)
+            return true
+        end
+    end
+    return false
 end
 
 function AIDriveStrategyFieldWorkCourse:update(dt)

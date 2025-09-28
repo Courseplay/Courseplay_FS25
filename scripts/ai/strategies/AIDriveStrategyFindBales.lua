@@ -31,8 +31,7 @@ AIDriveStrategyFindBales.myStates = {
     WORKING_ON_BALE = {},
     REVERSING_AFTER_PATHFINDER_FAILURE = {},
     REVERSING_DUE_TO_OBSTACLE_AHEAD = {},
-    DRIVING_TO_START_MARKER = {},
-    WAITING_FOR_IMPLEMENTS_TO_FOLD = {}
+    DRIVING_TO_START_MARKER = {}
 }
 --- Offset to apply at the goal marker, so we don't crash with an empty unloader waiting there with the same position.
 AIDriveStrategyFindBales.invertedGoalPositionOffset = -4.5
@@ -85,7 +84,7 @@ function AIDriveStrategyFindBales:collectNextBale()
             self:findPathToNextBale()
             return
         end
-        self.state = self.states.WAITING_FOR_IMPLEMENTS_TO_FOLD
+        self.state = self.states.DRIVING_TO_START_MARKER
     end
 end
 
@@ -312,29 +311,6 @@ function AIDriveStrategyFindBales:getBaleTarget(bale)
     -- for now, just use the direction from our location towards the bale
     local xb, zb, yRot, d = bale:getPositionInfoFromNode(self.vehicle:getAIDirectionNode())
     return State3D(xb, -zb, CpMathUtil.angleFromGame(yRot))
-end
-
---- Sets the driver as finished, so either a path
---- to the start marker as a park position can be used
---- or the driver stops directly.
-function AIDriveStrategyFindBales:setFinished()
-    if not self:isReadyToFoldImplements() then
-        -- Waiting until the folding has finished..
-        self:debugSparse("Waiting until an animation has finish, so the driver can be released ..")
-        return
-    end
-    self.vehicle:prepareForAIDriving()
-    if not self.vehicle:getIsAIReadyToDrive() then
-        -- Waiting until the folding has finished..
-        self:debugSparse("Waiting until an animation has finish, so the driver can be released ..")
-        return
-    end
-    if self.invertedStartPositionMarkerNode then
-        self:debug("A valid start position is found, so the driver tries to finish at the inverted goal node")
-        self:startPathfindingToStartMarker()
-    else
-        self:finishJob()
-    end
 end
 
 --- Finishes the job with the correct stop reason, as
@@ -566,9 +542,6 @@ function AIDriveStrategyFindBales:getDriveData(dt, vX, vY, vZ)
         self:setMaxSpeed(self.settings.reverseSpeed:getValue())
     elseif self.state == self.states.DRIVING_TO_START_MARKER then
         self:setMaxSpeed(self.settings.fieldSpeed:getValue())
-    elseif self.state == self.states.WAITING_FOR_IMPLEMENTS_TO_FOLD then
-        self:setFinished()
-        self:setMaxSpeed(0) --- folding
     end
 
     local moveForwards = not self.ppc:isReversing()
@@ -685,10 +658,14 @@ function AIDriveStrategyFindBales:update(dt)
             self.ppc:getCourse():draw()
         end
     end
-    if self.state ~= self.states.DRIVING_TO_START_MARKER and
-            self.state ~= self.states.WAITING_FOR_IMPLEMENTS_TO_FOLD then
+    if self.state ~= self.states.DRIVING_TO_START_MARKER then
         if self:areBaleLoadersFull() then
-            self.state = self.states.WAITING_FOR_IMPLEMENTS_TO_FOLD
+            if self.invertedStartPositionMarkerNode then
+                self:debug("A valid start position is found, so the driver tries to finish at the inverted goal node")
+                self:startPathfindingToStartMarker()
+            else 
+                self:finishJob()
+            end
         end
     end
     --- Ignores the loaded auto loader bales.
