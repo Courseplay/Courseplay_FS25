@@ -1333,6 +1333,39 @@ function Course:getNearestWaypoints(node, startIx)
     local dClosest, dClosestRightDirection = math.huge, math.huge
     local ixClosest, ixClosestRightDirection = 1, 1
 
+    local nearestRange = 50
+    local p = self.waypoints[1]
+    local x, z = 0, 0
+    local d = math.huge
+    local waypointIDs = {}
+
+    for i = startIx or 1, #self.waypoints do
+        p = self.waypoints[i]
+        x, _, z = p:getPosition()
+        d = MathUtil.getPointPointDistance(x, z, nx, nz)
+        if d < nearestRange then
+            table.insert(waypointIDs, i)
+        end
+    end
+
+    if #waypointIDs > 9 then
+        for _, i in ipairs (waypointIDs) do
+            p = self.waypoints[i]
+            x, _, z = self:getWaypointPosition(i)
+            d = MathUtil.getPointPointDistance(x, z, nx, nz)
+            if d < dClosest then
+                dClosest = d
+                ixClosest = i
+            end
+            local deltaAngle = math.abs(CpMathUtil.getDeltaAngle(math.rad(p.angle), nodeAngle))
+            if d < dClosestRightDirection and deltaAngle < maxDeltaAngle then
+                dClosestRightDirection = d
+                ixClosestRightDirection = i
+            end
+        end
+        return ixClosest, dClosest, ixClosestRightDirection, dClosestRightDirection
+    end
+
     for i = startIx or 1, #self.waypoints do
         local p = self.waypoints[i]
         local x, _, z = self:getWaypointPosition(i)
