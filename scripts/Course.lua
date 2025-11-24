@@ -1466,6 +1466,76 @@ function Course:setPipeInFruitMap(pipeOffsetX, workWidth)
     return totalNonHeadlandWps, pipeInFruitWps
 end
 
+function Course:setPipeInFruitMapSegment(pipeOffsetX, workWidth, startIndex, count)
+    local pipeInFruitMapHelperWpNode = WaypointNode('pipeInFruitMapHelperWpNode')
+    
+    ---@param rowStartIx number index of the first waypoint of the row
+    local function createRowRectangle(rowStartIx)
+        -- find the end of the row
+        local rowEndIx = #self.waypoints
+        for i = rowStartIx, #self.waypoints do
+            if self:isTurnStartAtIx(i) then
+                rowEndIx = i
+                break
+            end
+        end
+        pipeInFruitMapHelperWpNode:setToWaypoint(self, rowStartIx, true)
+        local x, y, z = self:getWaypointPosition(rowEndIx)
+        local _, _, rowLength = worldToLocal(pipeInFruitMapHelperWpNode.node, x, y, z)
+        local row = {
+            startIx = rowStartIx,
+            length = rowLength
+        }
+        return row
+    end
+
+    local function setPipeInFruit(ix, pipeOffsetX, rows)
+        local halfWorkWidth = workWidth / 2
+        pipeInFruitMapHelperWpNode:setToWaypoint(self, ix, true)
+        local x, y, z = localToWorld(pipeInFruitMapHelperWpNode.node, pipeOffsetX, 0, 0)
+        for _, row in ipairs(rows) do
+            pipeInFruitMapHelperWpNode:setToWaypoint(self, row.startIx)
+            -- pipe's local position in the row start wp's system
+            local lx, _, lz = worldToLocal(pipeInFruitMapHelperWpNode.node, x, y, z)
+            -- add 20 m buffer to account for non-perpendicular headlands where technically the pipe
+            -- would not be in the fruit around the end of the row
+            if math.abs(lx) <= halfWorkWidth and lz >= -20 and lz <= row.length + 20 then
+                -- pipe is in the fruit at ix
+                return true
+            end
+        end
+        return false
+    end
+
+    -- The idea here is that we walk backwards on the course, remembering each row and adding them
+    -- to the list of unworked rows. This way, at any waypoint we have a list of rows the vehicle
+    -- wouldn't have finished if it was driving the course the right way (start to end).
+    -- Now check if the pipe would be in any of these unworked rows
+    local rowsNotDone = {}
+    -- start at the end of the course
+    local i = #self.waypoints - startIndex
+    while i> 1 and i > #self.waypoints - startIndex - count do
+        -- skip over the headland, we assume the headland is worked first and will always be harvested before
+        -- we get to the middle of the field. If not, your problem...
+        if not self:isOnHeadland(i) then
+            -- check if the pipe is in an unworked row
+            self.waypoints[i].pipeInFruit = setPipeInFruit(i, pipeOffsetX, rowsNotDone)
+            -- turn start waypoints point towards the turn end waypoint so setPipeInFruit magic won't work,
+            -- offset position is not towards to previous row, so here, just use the same setting as the
+            -- waypoint before the turn
+            if self.waypoints[i].pipeInFruit and i < #self.waypoints and self:isTurnStartAtIx(i + 1) then
+                self.waypoints[i + 1].pipeInFruit = true
+            end
+            if self:isTurnEndAtIx(i) then
+                -- we are at the start of a row (where the turn ends)
+                table.insert(rowsNotDone, createRowRectangle(i))
+            end
+        end
+        i = i - 1
+    end
+    pipeInFruitMapHelperWpNode:destroy()
+end
+
 ---@param ix number waypoint where we want to get the progress, when nil, uses the current waypoint
 ---@return number, number, boolean 0-1 progress, waypoint where the progress is calculated, true if last waypoint
 function Course:getProgress(ix)

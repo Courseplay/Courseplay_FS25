@@ -159,9 +159,12 @@ function AIDriveStrategyCombineCourse:setAllStaticParameters()
     --- if this is not nil, we have a pending rendezvous with our unloader
     ---@type CpTemporaryObject
     self.unloaderToRendezvous = CpTemporaryObject(nil)
-    local total, pipeInFruit = self.vehicle:getFieldWorkCourse():setPipeInFruitMap(self.pipeController:getPipeOffsetX(), self:getWorkWidth())
-    self:debug('Pipe in fruit map created, there are %d non-headland waypoints, of which at %d the pipe will be in the fruit',
-            total, pipeInFruit)
+    -- local total, pipeInFruit = self.vehicle:getFieldWorkCourse():setPipeInFruitMap(self.pipeController:getPipeOffsetX(), self:getWorkWidth())
+    -- self:debug('Pipe in fruit map created, there are %d non-headland waypoints, of which at %d the pipe will be in the fruit',
+            -- total, pipeInFruit)
+    self.pipeInFruitMapIndex = 0
+    self.pipeInFruitMapCountPerUpdate = 80
+    self.pipeInFruitMapFinished = false
     self.fillLevelFullPercentage = self.normalFillLevelFullPercentage
 end
 
@@ -222,6 +225,19 @@ function AIDriveStrategyCombineCourse:update(dt)
     AIDriveStrategyFieldWorkCourse.update(self, dt)
     self:updateChopperFillType()
     self:onDraw()
+
+    if not self.pipeInFruitMapFinished and self.course then
+        if self.pipeController and self.pipeController.getPipeOffsetX and self.pipeController:getPipeOffsetX() then
+            if self.getWorkWidth and self:getWorkWidth() then
+                if self.pipeInFruitMapIndex < self.course:getNumberOfWaypoints() + self.pipeInFruitMapCountPerUpdate then
+                    self.vehicle:getFieldWorkCourse():setPipeInFruitMapSegment(self.pipeController:getPipeOffsetX(), self:getWorkWidth(), self.pipeInFruitMapIndex, self.pipeInFruitMapCountPerUpdate)
+                    self.pipeInFruitMapIndex = self.pipeInFruitMapIndex + self.pipeInFruitMapCountPerUpdate
+                else
+                    self.pipeInFruitMapFinished = true
+                end
+            end
+        end
+    end
 end
 
 --- Hold the harvester for a period of periodMs milliseconds
