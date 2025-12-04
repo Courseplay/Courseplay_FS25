@@ -201,8 +201,8 @@
     <text name="CP_vehicle_setting_lowerImplementEarly_late" text="Después"/>
     <text name="CP_vehicle_setting_turnOnField_title" text="Solo giros dentro del campo"/>
     <text name="CP_vehicle_setting_turnOnField_tooltip" text="Puede no ser posible con todos las herramientas."/>
-    <text name="CP_vehicle_setting_restartCourseAtEnd_title" text="Restart course at the end"/>
-    <text name="CP_vehicle_setting_restartCourseAtEnd_tooltip" text="Restart the fieldwork course at the 1st waypoint."/>
+    <text name="CP_vehicle_setting_restartCourseAtEnd_title" text="Reiniciar el curso al final"/>
+    <text name="CP_vehicle_setting_restartCourseAtEnd_tooltip" text="Reinicia el curso de trabajo de campo en el 1er punto de ruta."/>
     <text name="CP_vehicle_setting_avoidFruit_title" text="Evitar conducir sobre los cultivos"/>
     <text name="CP_vehicle_setting_avoidFruit_tooltip" text="El conductor intentará evitar conducir sobre los cultivos"/>
     <text name="CP_vehicle_setting_toolOffsetX_title" text="Desplazamiento de Herramientas"/>
