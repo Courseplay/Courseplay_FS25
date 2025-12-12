@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="no" ?>
-<modDesc descVersion="100">
+<modDesc descVersion="105">
     <version>8.1.0.2</version>
 	<author><![CDATA[Courseplay.devTeam]]></author>
 	<title>
@@ -45,6 +45,10 @@ Changelog 8.1.0.0
 - Faster pathfinding using jump point search
 - Requires the latest game patch
 
+Changelog 8.1.0.3
+- MP fix when starting a helper with an implements that is already unfolded.
+- Several bugfixes.
+
 ]]>
 
 </en>
@@ -84,6 +88,10 @@ Changelog 8.1.0.0
 - Neues Wendemanöver für Vorgewendeecken für zum Beispiel Saatmaschinen mit einem gezogenem Saatgut Wagen (kann in den Fahrzeueinstellungen aktiviert werden)
 - Neuer Wegfindungs Algorithmus, jump point search
 - Benötigt die neueste Spielversion
+
+Changelog 8.1.0.3
+- Fix für den MP, wenn ein Helfer mit einem Geräte gestartet wird, welches bereits ausgeklappt ist.
+- Weitere kleine bugfixes.
 
 ]]>
 </de>
