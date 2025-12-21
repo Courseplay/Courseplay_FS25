@@ -201,8 +201,8 @@
     <text name="CP_vehicle_setting_lowerImplementEarly_late" text="із запізненням"/>
     <text name="CP_vehicle_setting_turnOnField_title" text="Розворот в межах поля"/>
     <text name="CP_vehicle_setting_turnOnField_tooltip" text="Розворот в межах поля. Доступний не з усіляким обладнання. Якщо вимкнути, обладнання не буде рухатися заднім ходом."/>
-    <text name="CP_vehicle_setting_restartCourseAtEnd_title" text="Restart course at the end"/>
-    <text name="CP_vehicle_setting_restartCourseAtEnd_tooltip" text="Restart the fieldwork course at the 1st waypoint."/>
+    <text name="CP_vehicle_setting_restartCourseAtEnd_title" text="Перезапустити курс в кінці"/>
+    <text name="CP_vehicle_setting_restartCourseAtEnd_tooltip" text="Перезапустити курс для польових робіт в 1 точці."/>
     <text name="CP_vehicle_setting_avoidFruit_title" text="Уникати посівів"/>
     <text name="CP_vehicle_setting_avoidFruit_tooltip" text="ШІ буде намагатися не їздити по посівам."/>
     <text name="CP_vehicle_setting_toolOffsetX_title" text="Поперечне зміщення"/>
