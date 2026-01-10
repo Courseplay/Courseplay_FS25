@@ -550,19 +550,24 @@ end
 --- Use pathfinder to next waypoint
 -----------------------------------------------------------------------------------------------------------------------
 function AIDriveStrategyFieldWorkCourse:startPathfindingToNextWaypoint(ix)
-    self:debug('start pathfinding to waypoint %d', ix + 1)
+    local targetIx = ix + 1
+    self:debug('start pathfinding to waypoint %d', targetIx)
+    if self.fieldWorkCourse:isHeadlandTurnAtIx(targetIx + 1) then
+        self:debug('waypoint after the next is headland turn, skip next and find path to the headland corner at waypoint %d', targetIx + 1)
+        targetIx = targetIx + 1
+    end
     local fm, bm = self:getFrontAndBackMarkers()
-    self.turnContext = RowStartOrFinishContext(self.vehicle, self.fieldWorkCourse, ix + 1, ix + 1,
+    self.turnContext = RowStartOrFinishContext(self.vehicle, self.fieldWorkCourse, targetIx, targetIx,
             self.turnNodes, self:getWorkWidth(), fm, bm, self:getTurnEndSideOffset(false), self:getTurnEndForwardOffset())
     local _, steeringLength = AIUtil.getSteeringParameters(self.vehicle)
     local targetNode, zOffset = self.turnContext:getTurnEndNodeAndOffsets(steeringLength)
     local context = PathfinderContext(self.vehicle)
             :allowReverse(self:getAllowReversePathfinding())
             :ignoreFruit(not self.settings.avoidFruit:getValue())
-    self.waypointToContinueOnFailedPathfinding = ix + 1
+    self.waypointToContinueOnFailedPathfinding = targetIx
     self.pathfinderController:registerListeners(self, self.onPathfindingDoneToNextWaypoint,
             self.onPathfindingFailedToNextWaypoint)
-    self:debug('Start pathfinding to target waypoint %d, zOffset %.1f', ix + 1, zOffset)
+    self:debug('Start pathfinding to target waypoint %d, zOffset %.1f', targetIx, zOffset)
     self.state = self.states.WAITING_FOR_PATHFINDER
     -- to have a course set while waiting for the pathfinder
     self:startCourse(self.fieldWorkCourse, self.waypointToContinueOnFailedPathfinding)

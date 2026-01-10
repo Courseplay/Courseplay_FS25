@@ -72,7 +72,7 @@ function WaypointAttributes:shouldUsePathfinderToNextWaypoint()
     return self.usePathfinderToNextWaypoint
 end
 
---- if this is true, the driver should use the pathfinder to navigate to the this waypoint from the previous.
+--- if this is true, the driver should use the pathfinder to navigate to this waypoint from the previous.
 --- One example of this is when row starts at a small island so the 180º turn must use the pathfinder to avoid the island.
 function WaypointAttributes:shouldUsePathfinderToThisWaypoint()
     return self.usePathfinderToThisWaypoint
