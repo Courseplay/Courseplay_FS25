@@ -31,7 +31,6 @@ function MotorController:update()
             self.vehicle:raiseAIEvent('onAIFieldWorkerContinue', 'onAIImplementContinue')
         end
         self.timerSet = false
-        return
     end
     if self:isFuelSaveDisabled() or self.driveStrategy:getMaxSpeed() >
         self.speedThreshold then
