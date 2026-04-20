@@ -29,7 +29,6 @@ end
 
 function CpAIBunkerSiloWorker.registerEventListeners(vehicleType)
     SpecializationUtil.registerEventListener(vehicleType, 'onLoad', CpAIBunkerSiloWorker)
-    SpecializationUtil.registerEventListener(vehicleType, 'onUpdate', CpAIBunkerSiloWorker)
     SpecializationUtil.registerEventListener(vehicleType, 'onLoadFinished', CpAIBunkerSiloWorker)
     SpecializationUtil.registerEventListener(vehicleType, 'onReadStream', CpAIBunkerSiloWorker)
     SpecializationUtil.registerEventListener(vehicleType, 'onWriteStream', CpAIBunkerSiloWorker)
@@ -49,13 +48,17 @@ function CpAIBunkerSiloWorker.registerOverwrittenFunctions(vehicleType)
     SpecializationUtil.registerOverwrittenFunction(vehicleType, 'startCpAtFirstWp', CpAIBunkerSiloWorker.startCpAtFirstWp)
     SpecializationUtil.registerOverwrittenFunction(vehicleType, 'startCpAtLastWp', CpAIBunkerSiloWorker.startCpAtLastWp)
 end
+
+-- shortcut to access the spec
+function CpAIBunkerSiloWorker.getSpec(self)
+    return self["spec_" .. CpAIBunkerSiloWorker.SPEC_NAME]
+end
+
 ------------------------------------------------------------------------------------------------------------------------
 --- Event listeners
 ---------------------------------------------------------------------------------------------------------------------------
 function CpAIBunkerSiloWorker:onLoad(savegame)
-	--- Register the spec: spec_CpAIBunkerSiloWorker
-    self.spec_cpAIBunkerSiloWorker = self["spec_" .. CpAIBunkerSiloWorker.SPEC_NAME]
-    local spec = self.spec_cpAIBunkerSiloWorker
+    local spec = CpAIBunkerSiloWorker.getSpec(self)
     --- This job is for starting the driving with a key bind or the mini gui.
     spec.cpJob = g_currentMission.aiJobTypeManager:createJob(AIJobType.BUNKER_SILO_CP)
     spec.cpJob:setVehicle(self, true)
@@ -63,30 +66,25 @@ end
 
 
 function CpAIBunkerSiloWorker:onLoadFinished(savegame)
-    local spec = self.spec_cpAIBunkerSiloWorker
+    local spec = CpAIBunkerSiloWorker.getSpec(self)
     if savegame ~= nil then 
         spec.cpJob:loadFromXMLFile(savegame.xmlFile, savegame.key.. CpAIBunkerSiloWorker.KEY..".cpJob")
     end
 end
 
 function CpAIBunkerSiloWorker:saveToXMLFile(xmlFile, baseKey, usedModNames)
-    local spec = self.spec_cpAIBunkerSiloWorker
+    local spec = CpAIBunkerSiloWorker.getSpec(self)
     spec.cpJob:saveToXMLFile(xmlFile, baseKey.. ".cpJob")
 end
 
 function CpAIBunkerSiloWorker:onReadStream(streamId, connection)
-    local spec = self.spec_cpAIBunkerSiloWorker
+    local spec = CpAIBunkerSiloWorker.getSpec(self)
     spec.cpJob:readStream(streamId, connection)
 end
 
 function CpAIBunkerSiloWorker:onWriteStream(streamId, connection)
-    local spec = self.spec_cpAIBunkerSiloWorker
+    local spec = CpAIBunkerSiloWorker.getSpec(self)
     spec.cpJob:writeStream(streamId, connection)
-end
-
-function CpAIBunkerSiloWorker:onUpdate(dt)
-    local spec = self.spec_cpAIBunkerSiloWorker
-
 end
 
 --- Is the bunker silo allowed?
@@ -102,7 +100,7 @@ function CpAIBunkerSiloWorker:getCanStartCp(superFunc)
 end
 
 function CpAIBunkerSiloWorker:getCpStartableJob(superFunc, isStartedByHud)
-    local spec = self.spec_cpAIBunkerSiloWorker
+    local spec = CpAIBunkerSiloWorker.getSpec(self)
     if isStartedByHud and self:cpIsHudBunkerSiloJobSelected() then 
         return self:getCanStartCpBunkerSiloWorker() and spec.cpJob
     end
@@ -110,18 +108,18 @@ function CpAIBunkerSiloWorker:getCpStartableJob(superFunc, isStartedByHud)
 end
 
 function CpAIBunkerSiloWorker:getCpBunkerSiloWorkerJobParameters()
-    local spec = self.spec_cpAIBunkerSiloWorker
+    local spec = CpAIBunkerSiloWorker.getSpec(self)
     return spec.cpJob:getCpJobParameters()
 end
 
 function CpAIBunkerSiloWorker:applyCpBunkerSiloWorkerJobParameters(job)
-    local spec = self.spec_cpAIBunkerSiloWorker
+    local spec = CpAIBunkerSiloWorker.getSpec(self)
     spec.cpJob:getCpJobParameters():validateSettings()
     spec.cpJob:copyFrom(job)
 end
 
 function CpAIBunkerSiloWorker:getCpBunkerSiloWorkerJob()
-    local spec = self.spec_cpAIBunkerSiloWorker
+    local spec = CpAIBunkerSiloWorker.getSpec(self)
     return spec.cpJob
 end
 
@@ -130,7 +128,7 @@ end
 function CpAIBunkerSiloWorker:startCpAtFirstWp(superFunc, ...)
     if not superFunc(self, ...) then 
         if self:getCanStartCpBunkerSiloWorker() then 
-            local spec = self.spec_cpAIBunkerSiloWorker
+            local spec = CpAIBunkerSiloWorker.getSpec(self)
             spec.cpJob:applyCurrentState(self, g_currentMission, g_currentMission.playerSystem:getLocalPlayer().farmId, true)
             spec.cpJob:setValues()
             local success = spec.cpJob:validate(false)
@@ -148,7 +146,7 @@ end
 function CpAIBunkerSiloWorker:startCpAtLastWp(superFunc, ...)
     if not superFunc(self, ...) then 
         if self:getCanStartCpBunkerSiloWorker() then 
-            local spec = self.spec_cpAIBunkerSiloWorker
+            local spec = CpAIBunkerSiloWorker.getSpec(self)
             spec.cpJob:applyCurrentState(self, g_currentMission, g_currentMission.playerSystem:getLocalPlayer().farmId, true)
             spec.cpJob:setValues()
             local success = spec.cpJob:validate(false)
