@@ -494,9 +494,6 @@ You can define the following custom settings:
     <!--Harvester-->
 
     <!--Implements-->
-    <Vehicle name="proceedV.xml"
-             implementWheelAlwaysOnGround = "true"
-    />
 
     <!--Premium-->
     <Vehicle name="p3CLProfi.xml"
