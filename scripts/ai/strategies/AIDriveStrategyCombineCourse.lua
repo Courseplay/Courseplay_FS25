@@ -966,14 +966,17 @@ function AIDriveStrategyCombineCourse:callUnloader(bestUnloader, tentativeRendez
 end
 
 ---@param vehicle table
----@return boolean true if vehicle is an active Courseplay controlled combine/harvester
+---@return boolean true if vehicle is an active Courseplay controlled combine/harvester,
+--- or a manually-driven combine with an active "Call Grain Cart" request
 function AIDriveStrategyCombineCourse.isActiveCpCombine(vehicle)
-    if not (vehicle.getIsCpActive and vehicle:getIsCpActive()) then
-        -- not driven by CP
-        return false
+    if vehicle.getIsCpActive and vehicle:getIsCpActive() then
+        local driveStrategy = vehicle.getCpDriveStrategy and vehicle:getCpDriveStrategy()
+        return driveStrategy and driveStrategy.callUnloader ~= nil
     end
-    local driveStrategy = vehicle.getCpDriveStrategy and vehicle:getCpDriveStrategy()
-    return driveStrategy and driveStrategy.callUnloader ~= nil
+    if vehicle.cpIsCallGrainCartActive and vehicle:cpIsCallGrainCartActive() then
+        return true
+    end
+    return false
 end
 
 --- Find an unloader to drive to the target, which may either be the combine itself (when stopped and waiting for unload)

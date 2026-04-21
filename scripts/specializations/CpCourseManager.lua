@@ -367,7 +367,7 @@ function CpCourseManager:onPreDelete()
     if spec then
         g_assignedCoursesManager:unregisterVehicle(self, self.id)
         CpCourseManager.resetCourses(self)
-        if spec.courseDisplay then spec.courseDisplay:delete() end
+        spec.courseDisplay:delete()
         spec.courseDisplay = nil
     end
 end
