@@ -61,25 +61,28 @@ function CollisionAvoidanceController:findPotentialCollisions()
         if AIDriveStrategyCombineCourse.isActiveCpCombine(vehicle) then
             local d = calcDistanceFrom(self.vehicle.rootNode, vehicle.rootNode)
             if d < self.range then
-                local myCourse = self.strategy:getCurrentCourse()
-                local otherCourse = vehicle:getCpDriveStrategy():getCurrentCourse()
-                local myDistanceToCollision, otherDistanceToCollision = myCourse:intersects(otherCourse, self.lookahead, true)
-                if myDistanceToCollision then
-                    -- our course intersects with this vehicle's course (lastSpeedReal is in m/ms)
-                    -- for our own ETE, we always use the field speed and not the actual speed. This is to make sure
-                    -- we come to a full stop on a warning and remain stopped while the warning is active
-                    local myEte = myDistanceToCollision / (self.strategy:getFieldSpeed())
-                    local otherEte = CpMathUtil.divide(otherDistanceToCollision, (vehicle.lastSpeedReal * 1000))
-                    -- self:debug('Checking %s at %.1f m, %.1f, ETE %.1f %.1f', CpUtil.getName(vehicle), d, myDistanceToCollision, myEte, otherEte)
-                    if math.abs(myEte - otherEte) < self.eteDiffThreshold then
-                        if not self.warning:get() or (self.warning:get() and vehicle ~= self.warningVehicle) then
-                            -- no warning is active yet, or there is, but this is a different vehicle
-                            self:debug('collision warning: my course intersects with %s in %.1f m, my ETE %.1f, other ETE %.1f',
-                                    CpUtil.getName(vehicle), myDistanceToCollision, myEte, otherEte)
+                local otherStrategy = vehicle:getCpDriveStrategy()
+                if otherStrategy then
+                    local myCourse = self.strategy:getCurrentCourse()
+                    local otherCourse = otherStrategy:getCurrentCourse()
+                    local myDistanceToCollision, otherDistanceToCollision = myCourse:intersects(otherCourse, self.lookahead, true)
+                    if myDistanceToCollision then
+                        -- our course intersects with this vehicle's course (lastSpeedReal is in m/ms)
+                        -- for our own ETE, we always use the field speed and not the actual speed. This is to make sure
+                        -- we come to a full stop on a warning and remain stopped while the warning is active
+                        local myEte = myDistanceToCollision / (self.strategy:getFieldSpeed())
+                        local otherEte = CpMathUtil.divide(otherDistanceToCollision, (vehicle.lastSpeedReal * 1000))
+                        -- self:debug('Checking %s at %.1f m, %.1f, ETE %.1f %.1f', CpUtil.getName(vehicle), d, myDistanceToCollision, myEte, otherEte)
+                        if math.abs(myEte - otherEte) < self.eteDiffThreshold then
+                            if not self.warning:get() or (self.warning:get() and vehicle ~= self.warningVehicle) then
+                                -- no warning is active yet, or there is, but this is a different vehicle
+                                self:debug('collision warning: my course intersects with %s in %.1f m, my ETE %.1f, other ETE %.1f',
+                                        CpUtil.getName(vehicle), myDistanceToCollision, myEte, otherEte)
+                            end
+                            self.warningVehicle = vehicle
+                            self.warning:set(true, self.clearWarningDelayMs)
+                            return
                         end
-                        self.warningVehicle = vehicle
-                        self.warning:set(true, self.clearWarningDelayMs)
-                        return
                     end
                 end
             end

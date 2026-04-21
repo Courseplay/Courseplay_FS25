@@ -180,6 +180,12 @@ function CpAIWorker:onRegisterActionEvents(isActiveForInput, isActiveForInputIgn
                     CpGuiUtil.openCourseManagerGui(self)
                 end, g_i18n:getText("input_CP_OPEN_COURSEMANAGER"))
 
+            addActionEvent(self, InputAction.CP_CALL_GRAIN_CART, function ()
+                    if self.cpToggleCallGrainCart then
+                        self:cpToggleCallGrainCart()
+                    end
+                end)
+
             CpAIWorker.updateActionEvents(self)
         end
     end
@@ -245,6 +251,28 @@ function CpAIWorker:updateActionEvents()
 
         actionEvent = spec.actionEvents[InputAction.CP_GENERATE_COURSE]
         g_inputBinding:setActionEventActive(actionEvent.actionEventId, self:getCanStartCpFieldWork())
+
+        actionEvent = spec.actionEvents[InputAction.CP_CALL_GRAIN_CART]
+        if actionEvent then
+            local hasPipe = self.spec_pipe ~= nil or AIUtil.hasChildVehicleWithSpecialization(self, Pipe)
+            local isCpActive = self:getIsCpActive()
+            -- Forage harvesters (auto-aim rotatable spout) are not supported — hide the keybind.
+            local pipeSpec = self.spec_pipe
+            if not pipeSpec then
+                for _, child in ipairs(self:getChildVehicles()) do
+                    if child.spec_pipe then pipeSpec = child.spec_pipe; break end
+                end
+            end
+            local isChopper = pipeSpec and (pipeSpec.numAutoAimingStates or 0) > 0
+            local showCallGrainCart = hasPipe and not isCpActive and not isChopper
+            g_inputBinding:setActionEventActive(actionEvent.actionEventId, showCallGrainCart)
+            if showCallGrainCart then
+                local isActive = self.cpIsCallGrainCartActive and self:cpIsCallGrainCartActive()
+                local status = isActive and g_i18n:getText("CP_callGrainCartActive") or g_i18n:getText("CP_callGrainCartInactive")
+                g_inputBinding:setActionEventText(actionEvent.actionEventId,
+                    string.format("%s (%s)", g_i18n:getText("CP_callGrainCart"), status))
+            end
+        end
     end
 end
 

@@ -58,6 +58,8 @@ PurePursuitController = CpObject()
 --- if the vehicle is more than cutOutDistanceLimit meters from the current segment's endpoints, cut-out the
 --- controller to stop. Some error must have caused us to wander way off-track, unlikely to recover.
 PurePursuitController.cutOutDistanceLimit = 50
+--- Only shut off after being off track for this long (ms). Reduces false shutdowns on brief excursions (turns, terrain).
+PurePursuitController.offTrackGracePeriodMs = 10000
 
 -- constructor
 function PurePursuitController:init(vehicle)
@@ -92,6 +94,8 @@ function PurePursuitController:init(vehicle)
     self.waypointChangeListeners = {}
     -- enable/disable stopping the vehicle when it is off-track (too far away from any waypoint)
     self.stopWhenOffTrack = CpTemporaryObject(true)
+    -- when we first entered the off-track shutdown zone (nil = not in zone or just left it)
+    self.offTrackShutdownSince = nil
 end
 
 -- destructor
@@ -464,6 +468,7 @@ function PurePursuitController:findGoalPoint()
         -- case i (first node outside virtual circle but not yet reached) or (not the first node but we are way off the track)
         if (ix == self.firstIx and ix ~= self.lastPassedWaypointIx) and
                 q1 >= self.lookAheadDistance and q2 >= self.lookAheadDistance then
+            self.offTrackShutdownSince = nil
             -- If we weren't on track yet (after initialization, on our way to the first/initialized waypoint)
             -- set the goal to the relevant WP
             self.goalWpNode:setToWaypoint(self.course, self.relevantWpNode.ix)
@@ -476,6 +481,7 @@ function PurePursuitController:findGoalPoint()
 
         -- case ii (common case)
         if q1 <= self.lookAheadDistance and q2 >= self.lookAheadDistance then
+            self.offTrackShutdownSince = nil
             -- in some weird cases q1 may be 0 (when we calculate a course based on the vehicle position) so fix that
             -- to avoid a nan
             if q1 < 0.0001 then
@@ -499,6 +505,7 @@ function PurePursuitController:findGoalPoint()
         if ix == self.relevantWpNode.ix and q1 >= self.lookAheadDistance and q2 >= self.lookAheadDistance then
             if math.abs(self.crossTrackError) <= self.lookAheadDistance then
                 -- case iii (two intersection points)
+                self.offTrackShutdownSince = nil
                 local p = math.sqrt(self.lookAheadDistance * self.lookAheadDistance - self.crossTrackError * self.crossTrackError)
                 local gx, _, gz = localToWorld(self.projectedPosNode, 0, 0, p)
                 self:setGoalTranslation(gx, gz)
@@ -519,10 +526,33 @@ function PurePursuitController:findGoalPoint()
                 -- current waypoint is the waypoint at the end of the path segment
                 self:setCurrentWaypoint(ix + 1)
             end
+            -- Only shut off after being off track beyond cutOutDistanceLimit for a grace period (reduces false shutdowns)
             if (q1 > self.cutOutDistanceLimit) and (q2 > self.cutOutDistanceLimit) and self.stopWhenOffTrack:get() then
-                CpUtil.infoVehicle(self.vehicle, 'vehicle off track, shutting off Courseplay now.')
-                self.vehicle:stopCurrentAIJob(AIMessageCpError.new())
-                return
+                local now = g_currentMission and g_currentMission.time or 0
+                if self.offTrackShutdownSince == nil then
+                    self.offTrackShutdownSince = now
+                end
+                if (now - self.offTrackShutdownSince) >= (self.offTrackGracePeriodMs or PurePursuitController.offTrackGracePeriodMs or 10000) then
+                    -- Give the current drive strategy a chance to recover softly instead of
+                    -- stopping the CP helper entirely (user has to jump to that vehicle to
+                    -- restart). If the strategy implements onOffTrackShutdown() and returns
+                    -- true it has handled recovery and we must NOT call stopCurrentAIJob.
+                    local strategy = self.vehicle.getCpDriveStrategy and self.vehicle:getCpDriveStrategy()
+                    if strategy and strategy.onOffTrackShutdown then
+                        local handled = strategy:onOffTrackShutdown()
+                        if handled then
+                            CpUtil.infoVehicle(self.vehicle,
+                                    'vehicle off track, strategy performed soft recovery instead of shutdown.')
+                            self.offTrackShutdownSince = nil
+                            break
+                        end
+                    end
+                    CpUtil.infoVehicle(self.vehicle, 'vehicle off track, shutting off Courseplay now.')
+                    self.vehicle:stopCurrentAIJob(AIMessageCpError.new())
+                    return
+                end
+            else
+                self.offTrackShutdownSince = nil
             end
             break
         end
@@ -532,6 +562,7 @@ function PurePursuitController:findGoalPoint()
         -- the reference node is already beyond the direction switch waypoint. We should not skip that being
         -- the current waypoint otherwise the relevant waypoint won't be moved over the direction switch
         if self.course:switchingDirectionAt(ix) then
+            self.offTrackShutdownSince = nil
             -- force waypoint change
             self:showGoalpointDiag(100, 'switching direction while looking for goal point, ix=%d', ix)
             self.wpBeforeGoalPointIx = ix - 1

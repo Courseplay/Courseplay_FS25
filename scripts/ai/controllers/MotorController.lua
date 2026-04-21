@@ -25,8 +25,16 @@ function MotorController:update()
     if not self.isValid then
         return
     end
+    if not self.settings.fuelSave:getValue() then
+        if not self:getIsStarted() then
+            self:startMotor()
+            self.vehicle:raiseAIEvent('onAIFieldWorkerContinue', 'onAIImplementContinue')
+        end
+        self.timerSet = false
+        return
+    end
     if self:isFuelSaveDisabled() or self.driveStrategy:getMaxSpeed() >
-        self.speedThreshold or not self.settings.fuelSave:getValue() then
+        self.speedThreshold then
         if not self:getIsStarted() then
             self:startMotor()
             self.vehicle:raiseAIEvent("onAIFieldWorkerContinue", "onAIImplementContinue")
@@ -77,7 +85,7 @@ function MotorController:getDriveData()
     end
     if g_Courseplay.globalSettings.waitForRefueling:getValue() and
         self:isFuelLow(self.fuelThresholdSetting:getValue()) then
-
+			
         maxSpeed = 0
     end
 

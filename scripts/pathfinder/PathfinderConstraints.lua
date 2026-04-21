@@ -93,6 +93,22 @@ function PathfinderConstraints:resetCounts()
     self.preferredPathPenaltyCount = 0
 end
 
+--- Full width and length of the vehicle (and towed implement) for fruit checks, with 1 m buffer.
+--- Ensures the pathfinder avoids nodes where any part of the rig would be on standing fruit.
+function PathfinderConstraints:getFruitCheckDimensions()
+    local vParams = self.vehicleData:getVehicleOverlapBoxParams()
+    local fruitLength = (vParams.length or 2) * 2
+    local fruitWidth = (vParams.width or 2) * 2
+    if self.vehicleData:getTowedImplement() then
+        local tParams = self.vehicleData:getTowedImplementOverlapBoxParams()
+        if tParams then
+            fruitLength = math.max(fruitLength, tParams.length * 2)
+            fruitWidth = math.max(fruitWidth, tParams.width * 2)
+        end
+    end
+    return fruitLength + 1, fruitWidth + 1
+end
+
 --- Calculate penalty for this node. The penalty will be added to the cost of the node. This allows for
 --- obstacle avoidance or forcing the search to remain in certain areas.
 ---@param node State3D
@@ -120,7 +136,8 @@ function PathfinderConstraints:getNodePenalty(node)
         node.offField = true
     end
     if not offField then
-        local hasFruit, fruitValue = PathfinderUtil.hasFruit(node.x, -node.y, 4, 4, self.areaToIgnoreFruit)
+        local fruitLength, fruitWidth = self:getFruitCheckDimensions()
+        local hasFruit, fruitValue = PathfinderUtil.hasFruit(node.x, -node.y, fruitLength, fruitWidth, self.areaToIgnoreFruit)
         if hasFruit and fruitValue > self.maxFruitPercent then
             penalty = penalty + fruitValue / 2
             self.fruitPenaltyNodeCount = self.fruitPenaltyNodeCount + 1
@@ -169,7 +186,8 @@ end
 --- that analytic paths are almost always invalid when they go near the fruit. Since analytic paths are only at the
 --- beginning at the end of the course and mostly curves, it is no problem getting closer to the fruit than otherwise
 function PathfinderConstraints:isValidAnalyticSolutionNode(node, log)
-    local hasFruit, fruitValue = PathfinderUtil.hasFruit(node.x, -node.y, 3, 3, self.areaToIgnoreFruit)
+    local fruitLength, fruitWidth = self:getFruitCheckDimensions()
+    local hasFruit, fruitValue = PathfinderUtil.hasFruit(node.x, -node.y, fruitLength, fruitWidth, self.areaToIgnoreFruit)
     local analyticLimit = self.maxFruitPercent * 2
     if hasFruit and fruitValue > analyticLimit then
         if log then
