@@ -297,28 +297,8 @@ function AIDriveStrategyUnloadCombine:setAIVehicle(vehicle, jobParameters)
     if self.ppc then
         self.ppc.offTrackGracePeriodMs = 20000
     end
-    if CollisionAvoidanceController then
-        self.collisionAvoidanceController = CollisionAvoidanceController(self.vehicle, self)
-    else
-        CpUtil.errorVehicle(self.vehicle, 'Courseplay: CollisionAvoidanceController not loaded (mod conflict?). Collision avoidance disabled.')
-        self.collisionAvoidanceController = { isCollisionWarningActive = function() return false end }
-    end
-    if ProximityController then
-        self.proximityController = ProximityController(self.vehicle, self:getProximitySensorWidth())
-    else
-        CpUtil.errorVehicle(self.vehicle, 'Courseplay: ProximityController not loaded (mod conflict?). Proximity control disabled.')
-        self.proximityController = {
-            registerIsSlowdownEnabledCallback = function() end,
-            registerBlockingVehicleListener = function() end,
-            registerIgnoreObjectCallback = function() end,
-            checkBlockingVehicleFront = function() return math.huge, nil end,
-            disableLeftSide = function() end,
-            disableRightSide = function() end,
-            enableBothSides = function() end,
-            getDriveData = function(_, maxSpeed) return nil, nil, nil, maxSpeed end,
-            isVehicleInRange = function() return false end,
-        }
-    end
+    self.collisionAvoidanceController = CollisionAvoidanceController(self.vehicle, self)
+    self.proximityController = ProximityController(self.vehicle, self:getProximitySensorWidth())
     self.proximityController:registerIsSlowdownEnabledCallback(self, AIDriveStrategyUnloadCombine.isProximitySpeedControlEnabled)
     self.proximityController:registerBlockingVehicleListener(self, AIDriveStrategyUnloadCombine.onBlockingVehicle)
     self.proximityController:registerIgnoreObjectCallback(self, AIDriveStrategyUnloadCombine.ignoreProximityObject)
@@ -373,7 +353,7 @@ function AIDriveStrategyUnloadCombine:isCombineActive()
         if self.combineToUnload.getIsCpActive and self.combineToUnload:getIsCpActive() then
             return true
         end
-        if self.combineToUnload.cpIsCallGrainCartActive and self.combineToUnload:cpIsCallGrainCartActive() then
+        if self.combineToUnload.cpIsManualCombineCallingUnloader and self.combineToUnload:cpIsManualCombineCallingUnloader() then
             return true
         end
     end
@@ -1842,8 +1822,8 @@ function AIDriveStrategyUnloadCombine:call(combine, waypoint)
         elseif self:isPathfindingNeeded(self.vehicle, self:getPipeOffsetReferenceNode(), xOffset, zOffset) then
             self:setNewState(self.states.WAITING_FOR_PATHFINDER)
             -- For manually-driven combines, tune pathfinding for faster, safer approach.
-            local isManualCombine = self.combineToUnload.cpIsCallGrainCartActive and
-                    self.combineToUnload:cpIsCallGrainCartActive()
+            local isManualCombine = self.combineToUnload.cpIsManualCombineCallingUnloader and
+                    self.combineToUnload:cpIsManualCombineCallingUnloader()
             self:startPathfindingToWaitingCombine(xOffset, zOffset,
                     isManualCombine and self.onPathfindingFailedToMovingTarget or nil,
                     isManualCombine)

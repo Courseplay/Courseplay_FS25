@@ -13,9 +13,9 @@
     <text name="CP_automatic" text="auto"/>
     <text name="CP_unit_meter" text="m"/>
     <text name="CP_unit_foot" text="ft"/>
-    <text name="CP_callGrainCart" text="Call Grain Cart"/>
-    <text name="CP_callGrainCartActive" text="ACTIVE"/>
-    <text name="CP_callGrainCartInactive" text="OFF"/>
+    <text name="CP_callManualUnloader" text="Call Unloader"/>
+    <text name="CP_callManualUnloaderActive" text="ACTIVE"/>
+    <text name="CP_callManualUnloaderInactive" text="OFF"/>
     <text name="CP_copy" text="Copy course:"/>
     <text name="CP_infoText" text="Courseplay(%s): For help, bug reports or patch notes, please visit: https://github.com/Courseplay/Courseplay_FS25."/>
     <text name="CP_error_no_course" text="Generate a course before starting the job."/>

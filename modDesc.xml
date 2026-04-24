@@ -347,7 +347,7 @@ Changelog 8.1.0.3
 		<sourceFile filename="scripts/events/CpJobStartAtLastWpSyncEvent.lua"/>
 		<sourceFile filename="scripts/events/CpJobSyncOnLeaveEvent.lua"/>
 		<sourceFile filename="scripts/events/DriveNowRequestEvent.lua"/>
-		<sourceFile filename="scripts/events/CallGrainCartEvent.lua"/>
+		<sourceFile filename="scripts/events/CpManualUnloaderEvent.lua"/>
 		<sourceFile filename="scripts/events/PlowCenterTurnEvent.lua"/>
 		<sourceFile filename="scripts/events/FieldPolygonChangedEvent.lua"/>
 

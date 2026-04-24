@@ -505,7 +505,6 @@ function PurePursuitController:findGoalPoint()
         if ix == self.relevantWpNode.ix and q1 >= self.lookAheadDistance and q2 >= self.lookAheadDistance then
             if math.abs(self.crossTrackError) <= self.lookAheadDistance then
                 -- case iii (two intersection points)
-                self.offTrackShutdownSince = nil
                 local p = math.sqrt(self.lookAheadDistance * self.lookAheadDistance - self.crossTrackError * self.crossTrackError)
                 local gx, _, gz = localToWorld(self.projectedPosNode, 0, 0, p)
                 self:setGoalTranslation(gx, gz)

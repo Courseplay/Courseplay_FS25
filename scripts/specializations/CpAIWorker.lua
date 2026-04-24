@@ -181,8 +181,8 @@ function CpAIWorker:onRegisterActionEvents(isActiveForInput, isActiveForInputIgn
                 end, g_i18n:getText("input_CP_OPEN_COURSEMANAGER"))
 
             addActionEvent(self, InputAction.CP_CALL_GRAIN_CART, function ()
-                    if self.cpToggleCallGrainCart then
-                        self:cpToggleCallGrainCart()
+                    if self.cpToggleManualUnloader then
+                        self:cpToggleManualUnloader()
                     end
                 end)
 
@@ -264,13 +264,13 @@ function CpAIWorker:updateActionEvents()
                 end
             end
             local isChopper = pipeSpec and (pipeSpec.numAutoAimingStates or 0) > 0
-            local showCallGrainCart = hasPipe and not isCpActive and not isChopper
-            g_inputBinding:setActionEventActive(actionEvent.actionEventId, showCallGrainCart)
-            if showCallGrainCart then
-                local isActive = self.cpIsCallGrainCartActive and self:cpIsCallGrainCartActive()
-                local status = isActive and g_i18n:getText("CP_callGrainCartActive") or g_i18n:getText("CP_callGrainCartInactive")
+            local showCallManualUnloader = hasPipe and not isCpActive and not isChopper
+            g_inputBinding:setActionEventActive(actionEvent.actionEventId, showCallManualUnloader)
+            if showCallManualUnloader then
+                local isActive = self.cpIsManualCombineCallingUnloader and self:cpIsManualCombineCallingUnloader()
+                local status = isActive and g_i18n:getText("CP_callManualUnloaderActive") or g_i18n:getText("CP_callManualUnloaderInactive")
                 g_inputBinding:setActionEventText(actionEvent.actionEventId,
-                    string.format("%s (%s)", g_i18n:getText("CP_callGrainCart"), status))
+                    string.format("%s (%s)", g_i18n:getText("CP_callManualUnloader"), status))
             end
         end
     end

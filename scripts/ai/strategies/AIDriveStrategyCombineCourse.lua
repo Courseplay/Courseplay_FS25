@@ -967,13 +967,13 @@ end
 
 ---@param vehicle table
 ---@return boolean true if vehicle is an active Courseplay controlled combine/harvester,
---- or a manually-driven combine with an active "Call Grain Cart" request
+--- or a manually-driven combine with an active "Call Unloader" request
 function AIDriveStrategyCombineCourse.isActiveCpCombine(vehicle)
     if vehicle.getIsCpActive and vehicle:getIsCpActive() then
         local driveStrategy = vehicle.getCpDriveStrategy and vehicle:getCpDriveStrategy()
         return driveStrategy and driveStrategy.callUnloader ~= nil
     end
-    if vehicle.cpIsCallGrainCartActive and vehicle:cpIsCallGrainCartActive() then
+    if vehicle.cpIsManualCombineCallingUnloader and vehicle:cpIsManualCombineCallingUnloader() then
         return true
     end
     return false

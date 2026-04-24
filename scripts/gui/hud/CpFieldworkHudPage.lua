@@ -80,19 +80,19 @@ function CpFieldWorkHudPageElement:setupElements(baseHud, vehicle, lines, wMargi
                                                         
     CpGuiUtil.addCopyCourseBtn(self, baseHud, vehicle, lines, wMargin, hMargin, 1)
 
-    --- Call Grain Cart toggle button (left side)
-    self.callGrainCartBtn = baseHud:addLeftLineTextButton(self, 6, CpBaseHud.defaultFontSize,
+    --- Call Unloader toggle button (left side)
+    self.callManualUnloaderBtn = baseHud:addLeftLineTextButton(self, 6, CpBaseHud.defaultFontSize,
         function(vehicle)
-            if vehicle.cpToggleCallGrainCart then
-                vehicle:cpToggleCallGrainCart()
+            if vehicle.cpToggleManualUnloader then
+                vehicle:cpToggleManualUnloader()
             end
         end, vehicle)
 
-    --- Call Grain Cart status text (right side)
-    self.callGrainCartStatus = baseHud:addRightLineTextButton(self, 6, CpBaseHud.defaultFontSize,
+    --- Call Unloader status text (right side)
+    self.callManualUnloaderStatus = baseHud:addRightLineTextButton(self, 6, CpBaseHud.defaultFontSize,
         function(vehicle)
-            if vehicle.cpToggleCallGrainCart then
-                vehicle:cpToggleCallGrainCart()
+            if vehicle.cpToggleManualUnloader then
+                vehicle:cpToggleManualUnloader()
             end
         end, vehicle)
 end
@@ -147,10 +147,10 @@ function CpFieldWorkHudPageElement:updateContent(vehicle, status)
 
     CpGuiUtil.updateCopyBtn(self, vehicle, status)
 
-    if self.callGrainCartBtn then
+    if self.callManualUnloaderBtn then
         local hasPipe = vehicle.spec_pipe ~= nil or AIUtil.hasChildVehicleWithSpecialization(vehicle, Pipe)
         local isCpActive = vehicle:getIsCpActive()
-        local isCallActive = vehicle.cpIsCallGrainCartActive and vehicle:cpIsCallGrainCartActive()
+        local isCallActive = vehicle.cpIsManualCombineCallingUnloader and vehicle:cpIsManualCombineCallingUnloader()
         -- Forage harvesters have a rotatable auto-aim spout (numAutoAimingStates > 0).
         -- The manual call system is not supported for them, so hide the button entirely.
         local isChopper = false
@@ -162,18 +162,18 @@ function CpFieldWorkHudPageElement:updateContent(vehicle, status)
         end
         if pipeSpec then isChopper = (pipeSpec.numAutoAimingStates or 0) > 0 end
         local showBtn = hasPipe and not isCpActive and not isChopper
-        self.callGrainCartBtn:setVisible(showBtn)
-        self.callGrainCartStatus:setVisible(showBtn)
+        self.callManualUnloaderBtn:setVisible(showBtn)
+        self.callManualUnloaderStatus:setVisible(showBtn)
         if showBtn then
-            self.callGrainCartBtn:setTextDetails(g_i18n:getText("CP_callGrainCart"))
+            self.callManualUnloaderBtn:setTextDetails(g_i18n:getText("CP_callManualUnloader"))
             if isCallActive then
-                self.callGrainCartBtn:setColor(unpack(CpBaseHud.ON_COLOR))
-                self.callGrainCartStatus:setTextDetails(g_i18n:getText("CP_callGrainCartActive"))
-                self.callGrainCartStatus:setColor(unpack(CpBaseHud.ON_COLOR))
+                self.callManualUnloaderBtn:setColor(unpack(CpBaseHud.ON_COLOR))
+                self.callManualUnloaderStatus:setTextDetails(g_i18n:getText("CP_callManualUnloaderActive"))
+                self.callManualUnloaderStatus:setColor(unpack(CpBaseHud.ON_COLOR))
             else
-                self.callGrainCartBtn:setColor(unpack(CpBaseHud.OFF_COLOR))
-                self.callGrainCartStatus:setTextDetails(g_i18n:getText("CP_callGrainCartInactive"))
-                self.callGrainCartStatus:setColor(unpack(CpBaseHud.OFF_COLOR))
+                self.callManualUnloaderBtn:setColor(unpack(CpBaseHud.OFF_COLOR))
+                self.callManualUnloaderStatus:setTextDetails(g_i18n:getText("CP_callManualUnloaderInactive"))
+                self.callManualUnloaderStatus:setColor(unpack(CpBaseHud.OFF_COLOR))
             end
         end
     end
