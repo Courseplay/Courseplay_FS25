@@ -81,7 +81,7 @@ end
 function AIParameterSettingList.getDistanceText(value, precision)
 	precision = precision or 1
 	if g_Courseplay.globalSettings and g_Courseplay.globalSettings.distanceUnit:getValue() == g_Courseplay.globalSettings.IMPERIAL_UNIT  then 
-		return string.format("%.2f %s", value * AIParameterSettingList.FOOT_FACTOR, g_i18n:getText("CP_unit_foot"))
+		return string.format("%.1f %s", value*AIParameterSettingList.FOOT_FACTOR, g_i18n:getText("CP_unit_foot"))
 	end
 	return string.format("%.".. tostring(precision) .. "f %s", value, g_i18n:getText("CP_unit_meter"))
 end
@@ -105,9 +105,8 @@ AIParameterSettingList.UNITS_CONVERSION = {
 }
 
 AIParameterSettingList.MILES_FACTOR = 0.62137
-AIParameterSettingList.FOOT_FACTOR = 3.28084
+AIParameterSettingList.FOOT_FACTOR = 3.28
 AIParameterSettingList.ACRE_FACTOR = 2.4711
-AIParameterSettingList.IMPERIAL_FOOT_INCREMENT = 0.25
 AIParameterSettingList.INPUT_VALUE_THRESHOLD = 2
 --- Generates numeric values and texts from min to max with incremental of inc or 1.
 ---@param values table
@@ -210,11 +209,6 @@ function AIParameterSettingList:refresh(includeDisabledValues)
 		self:validateTexts()
 		return
 	end
-	-- Save the current value before overwriting the list. The metric and imperial
-	-- lists have different sizes, so self.current may point to the wrong value
-	-- after copying from the metric data table. regenerateValuesForUnit() will
-	-- use this to restore the correct position in the rebuilt list.
-	self._savedRefreshValue = self.values[self.current]
 	self.values = {}
 	self.texts = {}
 	for ix, v in ipairs(self.data.values) do 
@@ -225,7 +219,6 @@ function AIParameterSettingList:refresh(includeDisabledValues)
 	end
 	self:validateCurrentValue()
 	self:validateTexts()
-	self._savedRefreshValue = nil
 end
 
 --- Gets the texts for the given values.
@@ -253,10 +246,6 @@ end
 function AIParameterSettingList:validateTexts()
 	local unit = self.data.unit
 	local precision = self.data.precision or 2
-	if unit == 2 and self.data.min ~= nil and self.data.max ~= nil then
-		self:regenerateValuesForUnit()
-		return
-	end
 	if unit then 
 		local unitStrFunc = AIParameterSettingList.UNITS_TEXTS[unit]
 		local fixedTexts = {}
@@ -267,59 +256,6 @@ function AIParameterSettingList:validateTexts()
 		end
 		self.texts = fixedTexts
 	end
-end
-
---- Rebuilds self.values and self.texts for distance settings when the unit system
---- changes between metric and imperial. In imperial mode, values are generated at
---- exact foot increments (0.25 ft) converted to meters, so arrow buttons step in
---- clean foot amounts and display values are never rounded oddly.
-function AIParameterSettingList:regenerateValuesForUnit()
-	local unit = self.data.unit
-	if unit ~= 2 or self.data.min == nil or self.data.max == nil then
-		return
-	end
-
-	local currentValue = self._savedRefreshValue or self.values[self.current]
-
-	self.values = {}
-	self.texts = {}
-
-	local isImperial = g_Courseplay.globalSettings and
-		g_Courseplay.globalSettings.distanceUnit:getValue() == g_Courseplay.globalSettings.IMPERIAL_UNIT
-
-	local precision = self.data.precision or 2
-
-	if isImperial then
-		local ftInc = AIParameterSettingList.IMPERIAL_FOOT_INCREMENT
-		local minFt = math.ceil(self.data.min * AIParameterSettingList.FOOT_FACTOR / ftInc) * ftInc
-		local maxFt = math.floor(self.data.max * AIParameterSettingList.FOOT_FACTOR / ftInc) * ftInc
-		for ft = minFt, maxFt, ftInc do
-			local meters = ft / AIParameterSettingList.FOOT_FACTOR
-			table.insert(self.values, meters)
-			local text = AIParameterSettingList.UNITS_TEXTS[unit](meters, precision - 1)
-			table.insert(self.texts, text)
-		end
-	else
-		local inc = self.data.incremental or 0.1
-		AIParameterSettingList.generateValues(self, self.values, self.texts,
-			self.data.min, self.data.max, inc, unit, precision)
-	end
-
-	if currentValue and #self.values > 0 then
-		local closestIx = 1
-		local closestDiff = math.huge
-		for i = 1, #self.values do
-			local d = math.abs(self.values[i] - currentValue)
-			if d < closestDiff then
-				closestIx = i
-				closestDiff = d
-			end
-		end
-		self.current = closestIx
-	else
-		self.current = 1
-	end
-	self:validateCurrentValue()
 end
 
 function AIParameterSettingList:saveToXMLFile(xmlFile, key, usedModNames)
