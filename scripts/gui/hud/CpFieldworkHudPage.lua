@@ -151,17 +151,8 @@ function CpFieldWorkHudPageElement:updateContent(vehicle, status)
         local hasPipe = vehicle.spec_pipe ~= nil or AIUtil.hasChildVehicleWithSpecialization(vehicle, Pipe)
         local isCpActive = vehicle:getIsCpActive()
         local isCallActive = vehicle.cpIsManualCombineCallingUnloader and vehicle:cpIsManualCombineCallingUnloader()
-        -- Forage harvesters have a rotatable auto-aim spout (numAutoAimingStates > 0).
-        -- The manual call system is not supported for them, so hide the button entirely.
-        local isChopper = false
-        local pipeSpec = vehicle.spec_pipe
-        if not pipeSpec then
-            for _, child in ipairs(vehicle:getChildVehicles()) do
-                if child.spec_pipe then pipeSpec = child.spec_pipe; break end
-            end
-        end
-        if pipeSpec then isChopper = (pipeSpec.numAutoAimingStates or 0) > 0 end
-        local showBtn = hasPipe and not isCpActive and not isChopper
+        -- Forage harvesters have a rotatable auto-aim spout and are not supported — hide the button entirely.
+        local showBtn = hasPipe and not isCpActive and not ImplementUtil.isChopper(vehicle)
         self.callManualUnloaderBtn:setVisible(showBtn)
         self.callManualUnloaderStatus:setVisible(showBtn)
         if showBtn then

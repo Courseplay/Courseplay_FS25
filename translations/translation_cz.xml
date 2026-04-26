@@ -201,8 +201,8 @@
     <text name="CP_vehicle_setting_lowerImplementEarly_late" text="Pozdě"/>
     <text name="CP_vehicle_setting_turnOnField_title" text="Otáčení pouze na poli"/>
     <text name="CP_vehicle_setting_turnOnField_tooltip" text="Nastaví otáčení pouze na poli. Není možné pro všechny nástroje."/>
-    <text name="CP_vehicle_setting_restartCourseAtEnd_title" text="Restart course at the end"/>
-    <text name="CP_vehicle_setting_restartCourseAtEnd_tooltip" text="Restart the fieldwork course at the 1st waypoint."/>
+    <text name="CP_vehicle_setting_restartCourseAtEnd_title" text="Znovu spustit kurz na konci"/>
+    <text name="CP_vehicle_setting_restartCourseAtEnd_tooltip" text="Znovu zahajte kurz terénních prací na 1. bodě trasy."/>
     <text name="CP_vehicle_setting_avoidFruit_title" text="Vyhnout se vjíždění do plodin"/>
     <text name="CP_vehicle_setting_avoidFruit_tooltip" text="Umělá inteligence se pokusí vyhnout vjíždění do plodin."/>
     <text name="CP_vehicle_setting_toolOffsetX_title" text="Horizontální odsazení nástroje"/>

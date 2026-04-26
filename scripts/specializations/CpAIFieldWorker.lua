@@ -273,6 +273,8 @@ end
 function CpAIFieldWorker:onUpdate(dt)
     local spec = CpAIFieldWorker.getSpec(self)
     if spec and spec.cpManualCombineProxy then
+        -- If the player handed the combine over to CP (e.g. activated autopilot mid-session),
+        -- deactivate the manual unloader proxy so it doesn't conflict with the CP-driven combine.
         if self:getIsCpActive() then
             self:cpToggleManualUnloader()
         else

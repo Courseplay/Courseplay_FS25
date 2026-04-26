@@ -525,27 +525,11 @@ function PurePursuitController:findGoalPoint()
                 -- current waypoint is the waypoint at the end of the path segment
                 self:setCurrentWaypoint(ix + 1)
             end
-            -- Only shut off after being off track beyond cutOutDistanceLimit for a grace period (reduces false shutdowns)
+            -- Only shut off after being continuously off track for a grace period (reduces false shutdowns).
+            -- Strategies that legitimately expect to be off track should call disableStopWhenOffTrack().
             if (q1 > self.cutOutDistanceLimit) and (q2 > self.cutOutDistanceLimit) and self.stopWhenOffTrack:get() then
-                local now = g_currentMission and g_currentMission.time or 0
-                if self.offTrackShutdownSince == nil then
-                    self.offTrackShutdownSince = now
-                end
-                if (now - self.offTrackShutdownSince) >= (self.offTrackGracePeriodMs or PurePursuitController.offTrackGracePeriodMs or 10000) then
-                    -- Give the current drive strategy a chance to recover softly instead of
-                    -- stopping the CP helper entirely (user has to jump to that vehicle to
-                    -- restart). If the strategy implements onOffTrackShutdown() and returns
-                    -- true it has handled recovery and we must NOT call stopCurrentAIJob.
-                    local strategy = self.vehicle.getCpDriveStrategy and self.vehicle:getCpDriveStrategy()
-                    if strategy and strategy.onOffTrackShutdown then
-                        local handled = strategy:onOffTrackShutdown()
-                        if handled then
-                            CpUtil.infoVehicle(self.vehicle,
-                                    'vehicle off track, strategy performed soft recovery instead of shutdown.')
-                            self.offTrackShutdownSince = nil
-                            break
-                        end
-                    end
+                self.offTrackShutdownSince = self.offTrackShutdownSince or g_time
+                if (g_time - self.offTrackShutdownSince) >= self.offTrackGracePeriodMs then
                     CpUtil.infoVehicle(self.vehicle, 'vehicle off track, shutting off Courseplay now.')
                     self.vehicle:stopCurrentAIJob(AIMessageCpError.new())
                     return

@@ -289,14 +289,6 @@ function AIDriveStrategyUnloadCombine:setAIVehicle(vehicle, jobParameters)
     AIDriveStrategyCourse.setAIVehicle(self, vehicle)
     self:setJobParameterValues(jobParameters)
     self.reverser = AIReverseDriver(self.vehicle, self.ppc)
-    -- Unloaders spend a lot of time tracking moving targets (combines, chopper turns, rendezvous
-    -- points that shift underneath us). A 10 s grace period before off-track shutdown is too
-    -- short for this use case — give CP up to 20 s to get back on track before even considering
-    -- the soft-recovery path. The user would rather wait a few extra seconds than have to walk
-    -- over to the grain cart and restart it manually.
-    if self.ppc then
-        self.ppc.offTrackGracePeriodMs = 20000
-    end
     self.collisionAvoidanceController = CollisionAvoidanceController(self.vehicle, self)
     self.proximityController = ProximityController(self.vehicle, self:getProximitySensorWidth())
     self.proximityController:registerIsSlowdownEnabledCallback(self, AIDriveStrategyUnloadCombine.isProximitySpeedControlEnabled)
@@ -621,26 +613,6 @@ function AIDriveStrategyUnloadCombine:startWaitingForSomethingToDo()
     end
 end
 
---- Called by the PurePursuitController when the vehicle has been off-track long enough to
---- trigger the shutdown path. Returning true tells the PPC we've handled recovery and it
---- must NOT call stopCurrentAIJob. We release the current combine, drop to IDLE, and let
---- the combine proxy's normal re-call cycle pick us up again in a couple of seconds.
----
---- Why this is safe for manual combines: the CpManualCombineProxy.callUnloaderWhenNeeded()
---- runs every 1.5 s. After releaseCombine() the unloader slot expires (1 s TTL) and the
---- proxy re-summons us with a fresh call() / pathfind. The user never has to walk to the
---- grain cart and restart it manually.
----
---- Why this is safe for CP combines: the active CP combine's drive strategy calls
---- unloader:call() again when it needs an unloader (fill level, end of row), which takes
---- the idle cart and restarts the approach with fresh pathfinding.
----@return boolean handled true if recovery was performed and CP should NOT shut down
-function AIDriveStrategyUnloadCombine:onOffTrackShutdown()
-    self:info('onOffTrackShutdown: off-track grace period expired; soft-recovering to IDLE (state was %s) instead of stopping CP.',
-            self.state and self.state.name or 'nil')
-    self:startWaitingForSomethingToDo()
-    return true
-end
 
 ---@return table|nil the best node (of all the fill nodes on all trailers) to use to unload a harvester
 function AIDriveStrategyUnloadCombine:getBestTargetNode()
