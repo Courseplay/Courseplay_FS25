@@ -257,14 +257,7 @@ function CpAIWorker:updateActionEvents()
             local hasPipe = self.spec_pipe ~= nil or AIUtil.hasChildVehicleWithSpecialization(self, Pipe)
             local isCpActive = self:getIsCpActive()
             -- Forage harvesters (auto-aim rotatable spout) are not supported — hide the keybind.
-            local pipeSpec = self.spec_pipe
-            if not pipeSpec then
-                for _, child in ipairs(self:getChildVehicles()) do
-                    if child.spec_pipe then pipeSpec = child.spec_pipe; break end
-                end
-            end
-            local isChopper = pipeSpec and (pipeSpec.numAutoAimingStates or 0) > 0
-            local showCallManualUnloader = hasPipe and not isCpActive and not isChopper
+            local showCallManualUnloader = hasPipe and not isCpActive and not ImplementUtil.isChopper(self)
             g_inputBinding:setActionEventActive(actionEvent.actionEventId, showCallManualUnloader)
             if showCallManualUnloader then
                 local isActive = self.cpIsManualCombineCallingUnloader and self:cpIsManualCombineCallingUnloader()
