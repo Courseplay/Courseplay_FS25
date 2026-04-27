@@ -269,21 +269,6 @@ function PathfinderUtil.hasFruit(x, z, length, width, areaToIgnoreFruit)
                 break
             end
         end
-        -- Ignore windrow/swath types (cut material lying on the ground). Use the game API first:
-        -- isFillTypeWindrow covers all registered windrow fill types including DLC additions.
-        -- Name-based fallback catches any types not in the windrow registry (e.g. mod types).
-        if not ignoreThis then
-            local fillTypeIndex = g_fillTypeManager:getFillTypeIndexByName(fruitType.name)
-            if fillTypeIndex and g_fruitTypeManager:isFillTypeWindrow(fillTypeIndex) then
-                ignoreThis = true
-            end
-        end
-        if not ignoreThis then
-            local name = string.lower(fruitType.name or '')
-            if string.find(name, 'windrow') or string.find(name, 'swath') or name == 'straw' or name == 'chaff' then
-                ignoreThis = true
-            end
-        end
         if not ignoreThis then
             -- if the last boolean parameter is true then it returns fruitValue > 0 for fruits/states ready for forage also
             local fruitValue, numPixels, totalNumPixels, c = FSDensityMapUtil.getFruitArea(fruitType.index, x - width / 2, z - length / 2, x + width / 2, z, x, z + length / 2, true, true)

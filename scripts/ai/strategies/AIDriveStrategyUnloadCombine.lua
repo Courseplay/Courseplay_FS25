@@ -928,7 +928,7 @@ function AIDriveStrategyUnloadCombine:handleChopperTurn(harvester)
 
     -- since we are taking care of staying away, ask the chopper to ignore us
     local harvesterStrategy = self:getCombineStrategy()
-    if harvesterStrategy then harvesterStrategy:requestToIgnoreProximity(self.vehicle) end
+    harvesterStrategy:requestToIgnoreProximity(self.vehicle)
 
     local d, dx, dz = self:getDistanceFromCombine(harvester)
     local combineSpeed = harvester.lastSpeedReal * 3600
@@ -946,12 +946,12 @@ function AIDriveStrategyUnloadCombine:handleChopperTurn(harvester)
         -- stay closer when still discharging
         if sameDirection then
             -- reverse speed is controlled around combine's speed
-            dReference = (harvesterStrategy and harvesterStrategy:isDischarging()) and dz or dz - 3
+            dReference = harvesterStrategy:isDischarging() and dz or dz - 3
             speed = combineSpeed + CpMathUtil.clamp(self.targetDistanceBehindChopper - dReference, -combineSpeed,
                     self.settings.reverseSpeed:getValue() * 1.5)
         else
             -- reverse speed only depends on distance from the combine, stop when at working width
-            speed = CpMathUtil.clamp((harvesterStrategy and harvesterStrategy:getWorkWidth() or 6) - d, 0,
+            speed = CpMathUtil.clamp(harvesterStrategy:getWorkWidth() - d, 0,
                     self.settings.reverseSpeed:getValue() * 1.5)
         end
     else
@@ -2166,27 +2166,6 @@ function AIDriveStrategyUnloadCombine:unloadMovingCombine()
     self.followingCourseOffset = self:getFollowingCourseOffset(self.combineToUnload)
     self.followCourse:setOffset(self.followingCourseOffset, 0)
 
-    -- NOTE: For manually-driven combines we do NOT refresh the follow course.
-    -- driveBesideCombine() computes the steering goal point directly from the pipe reference
-    -- node every frame (see the isManual branch there), so the course is never consulted for
-    -- steering. This prevents any possibility of angle lock, stale courses, or backward
-    -- courses produced by synthesising a follow course from the combine's live position.
-    --
-    -- Because the placeholder follow course is deliberately static while steering happens
-    -- off a live pipe reference, the cart WILL drift far away from the placeholder course as
-    -- the combine curves or S-turns. The PPC's off-track shutdown would see that drift and
-    -- kill the CP helper. Keep the check continuously disabled while a manual combine is the
-    -- unload target. We use 5000 ms (much longer than any realistic frame interval) so there
-    -- is no risk of a brief re-enable window between ticks.
-    do
-        local combineStrategy = self:getCombineStrategy()
-        if combineStrategy and combineStrategy.isManualProxy and combineStrategy:isManualProxy() then
-            if self.ppc and self.ppc.disableStopWhenOffTrack then
-                self.ppc:disableStopWhenOffTrack(5000)
-            end
-        end
-    end
-
     if self:changeToUnloadWhenTrailerFull() then
         return
     end
@@ -2198,22 +2177,18 @@ function AIDriveStrategyUnloadCombine:unloadMovingCombine()
     -- The farmer is in full control: ignore fill level, alignment, turning state, etc.
     -- Stay under the pipe until the proxy's isUnloadFinished() fires (pipe closed for 2s)
     -- or the grain cart's own trailer fills up (handled by changeToUnloadWhenTrailerFull above).
-    if combineStrategy.isManualProxy and combineStrategy:isManualProxy() then
+    -- The cart will drift from the static placeholder course as the combine curves — disable the
+    -- PPC off-track check for the duration (5000 ms >> any realistic frame interval).
+    if combineStrategy.isManualProxy then
+        self.ppc:disableStopWhenOffTrack(5000)
         self:debugSparse('unloadMovingCombine (manual): isDischarging=%s',
-                tostring(combineStrategy.isDischarging and combineStrategy:isDischarging()))
+                tostring(combineStrategy:isDischarging()))
         return gx, gz
     end
 
     --when the combine is empty, stop and wait for next combine (unless this can't work without an unloader nearby)
-    local fillPct = combineStrategy:getFillLevelPercentage()
-    local isDischarging = combineStrategy.isDischarging and combineStrategy:isDischarging()
-    local isUnloadFinished = combineStrategy.isUnloadFinished and combineStrategy:isUnloadFinished()
-    self:debugSparse('unloadMovingCombine: fillPct=%.2f isDischarging=%s isUnloadFinished=%s',
-            fillPct, tostring(isDischarging), tostring(isUnloadFinished))
-    -- Don't exit on fill level while the combine is still actively discharging — the pipe hasn't
-    -- closed yet and we'd leave with grain still flowing. Wait for discharge to stop first.
-    if fillPct <= 0.1 and not isDischarging and not combineStrategy:alwaysNeedsUnloader() then
-        self:debug('unloadMovingCombine: EXIT - combine empty (fillPct=%.2f) and not discharging, finishing unloading.', fillPct)
+    if combineStrategy:getFillLevelPercentage() <= 0.1 and not combineStrategy:alwaysNeedsUnloader() then
+        self:debug('Combine empty, finish unloading.')
         self:onUnloadingMovingCombineFinished(combineStrategy)
         return
     end
@@ -2376,13 +2351,14 @@ function AIDriveStrategyUnloadCombine:onBlockingVehicle(blockingVehicle, isBack)
         -- TODO: maybe a generic getTrailer() ?
         local referenceObject = AIUtil.getImplementOrVehicleWithSpecialization(self.vehicle, Trailer) or
                 AIUtil.getImplementOrVehicleWithSpecialization(self.vehicle, HookLiftTrailer) or self.vehicle
-        if AIDriveStrategyCombineCourse.isActiveCpCombine(blockingVehicle) then
+        local isManualBlocker = blockingVehicle.cpIsManualCombineCallingUnloader and blockingVehicle:cpIsManualCombineCallingUnloader()
+        if AIDriveStrategyCombineCourse.isActiveCpCombine(blockingVehicle) or isManualBlocker then
             -- except we are blocking our buddy, so set up a course parallel to the combine's direction,
             -- with an offset from the combine that makes sure we are clear. Use the trailer's root node (and not
             -- the tractor's) as when we reversing, it is easier when the trailer remains on the same side of the combine
             local dx, _, _ = localToLocal(referenceObject.rootNode, blockingVehicle:getAIDirectionNode(), 0, 0, 0)
             local blockingStrategy = blockingVehicle:getCpDriveStrategy() or (blockingVehicle.cpGetManualCombineProxy and blockingVehicle:cpGetManualCombineProxy())
-            local blockingWorkWidth = blockingStrategy and blockingStrategy:getWorkWidth() or 6
+            local blockingWorkWidth = blockingStrategy:getWorkWidth()
             local xOffset = self.vehicle.size.width / 2 + blockingWorkWidth / 2 + 2
             xOffset = dx > 0 and xOffset or -xOffset
             self:setNewState(self.states.MOVING_AWAY_FROM_OTHER_VEHICLE)
