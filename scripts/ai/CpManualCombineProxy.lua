@@ -380,8 +380,8 @@ function CpManualCombineProxy:isWaitingInPocket()
     return false
 end
 
---- Needed so isActiveCpCombine() recognizes this as a valid combine strategy.
-function CpManualCombineProxy:callUnloader()
+function CpManualCombineProxy:isActiveCpCombine()
+    return true
 end
 
 function CpManualCombineProxy:getUnloadTargetType()

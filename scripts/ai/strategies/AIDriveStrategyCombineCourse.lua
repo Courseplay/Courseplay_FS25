@@ -966,17 +966,14 @@ function AIDriveStrategyCombineCourse:callUnloader(bestUnloader, tentativeRendez
 end
 
 ---@param vehicle table
----@return boolean true if vehicle is an active Courseplay controlled combine/harvester,
---- or a manually-driven combine with an active "Call Unloader" request
+---@return boolean true if vehicle is an active Courseplay controlled combine/harvester
 function AIDriveStrategyCombineCourse.isActiveCpCombine(vehicle)
-    if vehicle.getIsCpActive and vehicle:getIsCpActive() then
-        local driveStrategy = vehicle.getCpDriveStrategy and vehicle:getCpDriveStrategy()
-        return driveStrategy and driveStrategy.callUnloader ~= nil
+    if not (vehicle.getIsCpActive and vehicle:getIsCpActive()) then
+        -- not driven by CP
+        return false
     end
-    if vehicle.cpIsManualCombineCallingUnloader and vehicle:cpIsManualCombineCallingUnloader() then
-        return true
-    end
-    return false
+    local driveStrategy = vehicle.getCpDriveStrategy and vehicle:getCpDriveStrategy()
+    return driveStrategy and driveStrategy.callUnloader ~= nil
 end
 
 --- Find an unloader to drive to the target, which may either be the combine itself (when stopped and waiting for unload)
