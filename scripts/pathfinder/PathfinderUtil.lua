@@ -68,7 +68,7 @@ function PathfinderUtil.VehicleData:init(vehicle, withImplements, buffer)
                 -- for implements which are not centered on the hitch point, such as bale wrappers in the working position
                 towedImplementSideOffset, _, _ = localToLocal(inputAttacherJoint.node, self.towedImplement.rootNode, 0, 0, 0)
                 dLeft = dLeft - towedImplementSideOffset
-                dRight = dRight - towedImplementSideOffset
+                dRight = dRight + towedImplementSideOffset
             end
         else
             self.hitchOffset = self.dRear
