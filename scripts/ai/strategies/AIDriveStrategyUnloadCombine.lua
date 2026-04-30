@@ -2195,7 +2195,7 @@ function AIDriveStrategyUnloadCombine:unloadMovingCombine()
 
     -- combine stopped in the meanwhile, like for example end of course
     if combineStrategy:willWaitForUnloadToFinish() then
-        self:debug('unloadMovingCombine: EXIT - willWaitForUnloadToFinish=true, switching to UNLOADING_STOPPED_COMBINE')
+        self:debug('change to unload stopped combine')
         self:setNewState(self.states.UNLOADING_STOPPED_COMBINE)
         return
     end
@@ -2241,8 +2241,7 @@ function AIDriveStrategyUnloadCombine:unloadMovingCombine()
         -- call these again just to log the reason
         self:isBehindAndAlignedToCombine(true)
         self:isInFrontAndAlignedToMovingCombine(true)
-        self:info('unloadMovingCombine: EXIT - not in a good position (behind=%s, inFront=%s), startWaitingForSomethingToDo',
-                tostring(self:isBehindAndAlignedToCombine()), tostring(self:isInFrontAndAlignedToMovingCombine()))
+        self:info('not in a good position to unload, cancelling rendezvous, trying to recover')
         self:startWaitingForSomethingToDo()
     end
     return gx, gz
