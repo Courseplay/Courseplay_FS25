@@ -13,6 +13,9 @@
     <text name="CP_automatic" text="auto"/>
     <text name="CP_unit_meter" text="m"/>
     <text name="CP_unit_foot" text="ft"/>
+    <text name="CP_callManualUnloader" text="Call Unloader"/>
+    <text name="CP_callManualUnloaderActive" text="ACTIVE"/>
+    <text name="CP_callManualUnloaderInactive" text="OFF"/>
     <text name="CP_copy" text="Copy course:"/>
     <text name="CP_infoText" text="Courseplay(%s): For help, bug reports or patch notes, please visit: https://github.com/Courseplay/Courseplay_FS25."/>
     <text name="CP_error_no_course" text="Generate a course before starting the job."/>
@@ -1103,5 +1106,6 @@ Now your selection should look similar to the image.
     <text name="input_CP_OPEN_COURSEGENERATOR_SETTINGS" text="CP: Open course generator/job menu"/>
     <text name="input_CP_OPEN_COURSEMANAGER" text="CP: Open course manager"/>
     <text name="input_CP_OPEN_INGAME_MENU" text="CP: Open menu"/>
+    <text name="input_CP_CALL_GRAIN_CART" text="CP: Call grain cart"/>
   </texts>
 </l10n>

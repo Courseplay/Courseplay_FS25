@@ -41,6 +41,8 @@ end
 function CpAIFieldWorker.registerEventListeners(vehicleType)
 	SpecializationUtil.registerEventListener(vehicleType, "onLoad", CpAIFieldWorker)
     SpecializationUtil.registerEventListener(vehicleType, "onLoadFinished", CpAIFieldWorker)
+    SpecializationUtil.registerEventListener(vehicleType, "onUpdate", CpAIFieldWorker)
+    SpecializationUtil.registerEventListener(vehicleType, "onDelete", CpAIFieldWorker)
 
     SpecializationUtil.registerEventListener(vehicleType, "onCpEmpty", CpAIFieldWorker)
     SpecializationUtil.registerEventListener(vehicleType, "onCpFull", CpAIFieldWorker)
@@ -70,6 +72,10 @@ function CpAIFieldWorker.registerFunctions(vehicleType)
     SpecializationUtil.registerFunction(vehicleType, "startCpAtLastWp", CpAIFieldWorker.startCpAtLastWp)
     SpecializationUtil.registerFunction(vehicleType, "getCpStartingPointSetting", CpAIFieldWorker.getCpStartingPointSetting)
     SpecializationUtil.registerFunction(vehicleType, "getCpLaneOffsetSetting", CpAIFieldWorker.getCpLaneOffsetSetting)
+
+    SpecializationUtil.registerFunction(vehicleType, "cpToggleManualUnloader", CpAIFieldWorker.cpToggleManualUnloader)
+    SpecializationUtil.registerFunction(vehicleType, "cpIsManualCombineCallingUnloader", CpAIFieldWorker.cpIsManualCombineCallingUnloader)
+    SpecializationUtil.registerFunction(vehicleType, "cpGetManualCombineProxy", CpAIFieldWorker.cpGetManualCombineProxy)
 end
 
 function CpAIFieldWorker.registerOverwrittenFunctions(vehicleType)
@@ -259,6 +265,63 @@ end
 function CpAIFieldWorker:onCpFinished()
  
 end
+
+------------------------------------------------------------------------------------------------------------------------
+--- Manual combine "Call Unloader" proxy management
+------------------------------------------------------------------------------------------------------------------------
+
+function CpAIFieldWorker:onUpdate(dt)
+    local spec = CpAIFieldWorker.getSpec(self)
+    if spec and spec.cpManualCombineProxy then
+        -- If the player handed the combine over to CP (e.g. activated autopilot mid-session),
+        -- deactivate the manual unloader proxy so it doesn't conflict with the CP-driven combine.
+        if self:getIsCpActive() then
+            self:cpToggleManualUnloader()
+        else
+            spec.cpManualCombineProxy:update(dt)
+        end
+    end
+end
+
+function CpAIFieldWorker:onDelete()
+    local spec = CpAIFieldWorker.getSpec(self)
+    if spec and spec.cpManualCombineProxy then
+        spec.cpManualCombineProxy:delete()
+        spec.cpManualCombineProxy = nil
+    end
+end
+
+function CpAIFieldWorker:cpToggleManualUnloader()
+    local spec = CpAIFieldWorker.getSpec(self)
+    if not spec then return end
+    if spec.cpManualCombineProxy then
+        CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, self, 'Call grain cart deactivated')
+        spec.cpManualCombineProxy:delete()
+        spec.cpManualCombineProxy = nil
+    else
+        if self:getIsCpActive() then
+            CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, self, 'Cannot call grain cart while CP is active')
+            return
+        end
+        CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, self, 'Call grain cart activated')
+        spec.cpManualCombineProxy = CpManualCombineProxy(self)
+    end
+    if not self.isServer then
+        CpManualUnloaderEvent.sendEvent(self)
+    end
+end
+
+function CpAIFieldWorker:cpIsManualCombineCallingUnloader()
+    local spec = CpAIFieldWorker.getSpec(self)
+    return spec and spec.cpManualCombineProxy ~= nil
+end
+
+function CpAIFieldWorker:cpGetManualCombineProxy()
+    local spec = CpAIFieldWorker.getSpec(self)
+    return spec and spec.cpManualCombineProxy
+end
+
+------------------------------------------------------------------------------------------------------------------------
 
 function CpAIFieldWorker:getCanStartCpFieldWork()
     self:updateAIFieldWorkerImplementData()

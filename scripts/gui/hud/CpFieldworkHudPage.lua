@@ -78,7 +78,23 @@ function CpFieldWorkHudPageElement:setupElements(baseHud, vehicle, lines, wMargi
 															baseHud:openCourseManagerGui(vehicle)
 														end, vehicle)
                                                         
-    CpGuiUtil.addCopyCourseBtn(self, baseHud, vehicle, lines, wMargin, hMargin, 1)    												
+    CpGuiUtil.addCopyCourseBtn(self, baseHud, vehicle, lines, wMargin, hMargin, 1)
+
+    --- Call Unloader toggle button (left side)
+    self.callManualUnloaderBtn = baseHud:addLeftLineTextButton(self, 6, CpBaseHud.defaultFontSize,
+        function(vehicle)
+            if vehicle.cpToggleManualUnloader then
+                vehicle:cpToggleManualUnloader()
+            end
+        end, vehicle)
+
+    --- Call Unloader status text (right side)
+    self.callManualUnloaderStatus = baseHud:addRightLineTextButton(self, 6, CpBaseHud.defaultFontSize,
+        function(vehicle)
+            if vehicle.cpToggleManualUnloader then
+                vehicle:cpToggleManualUnloader()
+            end
+        end, vehicle)
 end
 
 function CpFieldWorkHudPageElement:update(dt)
@@ -130,4 +146,26 @@ function CpFieldWorkHudPageElement:updateContent(vehicle, status)
     end
 
     CpGuiUtil.updateCopyBtn(self, vehicle, status)
+
+    if self.callManualUnloaderBtn then
+        local hasPipe = vehicle.spec_pipe ~= nil or AIUtil.hasChildVehicleWithSpecialization(vehicle, Pipe)
+        local isCpActive = vehicle:getIsCpActive()
+        local isCallActive = vehicle.cpIsManualCombineCallingUnloader and vehicle:cpIsManualCombineCallingUnloader()
+        -- Forage harvesters have a rotatable auto-aim spout and are not supported — hide the button entirely.
+        local showBtn = hasPipe and not isCpActive and not ImplementUtil.isChopper(vehicle)
+        self.callManualUnloaderBtn:setVisible(showBtn)
+        self.callManualUnloaderStatus:setVisible(showBtn)
+        if showBtn then
+            self.callManualUnloaderBtn:setTextDetails(g_i18n:getText("CP_callManualUnloader"))
+            if isCallActive then
+                self.callManualUnloaderBtn:setColor(unpack(CpBaseHud.ON_COLOR))
+                self.callManualUnloaderStatus:setTextDetails(g_i18n:getText("CP_callManualUnloaderActive"))
+                self.callManualUnloaderStatus:setColor(unpack(CpBaseHud.ON_COLOR))
+            else
+                self.callManualUnloaderBtn:setColor(unpack(CpBaseHud.OFF_COLOR))
+                self.callManualUnloaderStatus:setTextDetails(g_i18n:getText("CP_callManualUnloaderInactive"))
+                self.callManualUnloaderStatus:setColor(unpack(CpBaseHud.OFF_COLOR))
+            end
+        end
+    end
 end
