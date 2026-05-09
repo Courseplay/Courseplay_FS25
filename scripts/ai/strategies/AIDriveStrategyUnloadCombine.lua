@@ -1573,6 +1573,12 @@ function AIDriveStrategyUnloadCombine:onPathfindingDoneToWaitingCombine(controll
         self:debug('Pathfinding to waiting combine successful')
         course:adjustForReversing(math.max(1, -AIUtil.getDirectionNodeToReverserNodeOffset(self.vehicle)))
         self:startCourse(course, 1)
+        -- Record the combine's position now so driveToCombine() can detect if it has moved
+        -- significantly and needs a re-path. Also reset the check timer so the first periodic
+        -- check fires 5 s after we start driving, not immediately.
+        local cX, _, cZ = getWorldTranslation(self:getPipeOffsetReferenceNode())
+        self.combinePositionAtApproachStart = { x = cX, z = cZ }
+        self.lastCombinePositionCheckTime = g_time
         self:setNewState(self.states.DRIVING_TO_COMBINE)
         return true
     else
@@ -1965,6 +1971,49 @@ function AIDriveStrategyUnloadCombine:driveToCombine()
     self:setFieldSpeed()
 
     self:getCombineStrategy():reconfirmRendezvous()
+
+    -- If the combine has moved significantly since the current approach course was generated,
+    -- re-pathfind to its new position so we don't drive to an empty spot.
+    -- Guards keep this infrequent and fast:
+    --   • only check every 5 s (cheap distance math)
+    --   • skip if remaining course < 20 m (almost there — let proximity handling finish)
+    --   • skip if already within 25 m of the combine (driveBesideCombine takes over soon)
+    --   • only trigger when the combine has actually moved ≥ 30 m (genuine relocation)
+    -- Uses a capped iteration count (defaultMaxIterations) so the A* search completes in
+    -- well under a second on any field size, minimising the WAITING_FOR_PATHFINDER stop.
+    if g_time - (self.lastCombinePositionCheckTime or 0) > 5000 then
+        self.lastCombinePositionCheckTime = g_time
+        local remainingDist = self.course:getDistanceToLastWaypoint(self.course:getCurrentWaypointIx())
+        local distToCombine = self:getDistanceFromCombine()
+        if remainingDist > 20 and distToCombine > 25 then
+            local cX, _, cZ = getWorldTranslation(self:getPipeOffsetReferenceNode())
+            local lastX = self.combinePositionAtApproachStart and self.combinePositionAtApproachStart.x or cX
+            local lastZ = self.combinePositionAtApproachStart and self.combinePositionAtApproachStart.z or cZ
+            local moved = MathUtil.vector2Length(cX - lastX, cZ - lastZ)
+            if moved >= 30 then
+                local xOffset, zOffset = self:getPipeOffset(self.combineToUnload)
+                zOffset = -self:getCombinesMeasuredBackDistance() - 3
+                self:debug('driveToCombine: combine moved %.1f m, re-pathfinding to new position', moved)
+                self.combinePositionAtApproachStart = { x = cX, z = cZ }
+                -- Fast re-path: cap iterations at the default (avoids multi-second searches on
+                -- large fields) and ignore the combine as an obstacle so the path finds the gap
+                -- behind it rather than routing around the vehicle body.
+                local context = PathfinderContext(self.vehicle)
+                context:maxFruitPercent(self:getMaxFruitPercent(self:getPipeOffsetReferenceNode(), xOffset, zOffset))
+                context:offFieldPenalty(self:getOffFieldPenalty(self.combineToUnload))
+                context:useFieldNum(CpFieldUtil.getFieldNumUnderVehicle(self.combineToUnload))
+                context:areaToAvoid(self:getCombineStrategy():getAreaToAvoid())
+                context:vehiclesToIgnore({ self.combineToUnload })
+                context:maxIterations(HybridAStar.defaultMaxIterations)
+                self.pathfinderController:registerListeners(self, self.onPathfindingDoneToWaitingCombine,
+                        self.onPathfindingFailedToMovingTarget, self.onPathfindingObstacleAtStart)
+                self.pathfinderController:findPathToNode(context, self:getPipeOffsetReferenceNode(),
+                        xOffset or 0, zOffset or 0, 3)
+                self:setNewState(self.states.WAITING_FOR_PATHFINDER)
+                return
+            end
+        end
+    end
 
     -- towards the end of the course we start checking if we can already switch to unload
     if self.course:getDistanceToLastWaypoint(self.course:getCurrentWaypointIx()) < 15 and
