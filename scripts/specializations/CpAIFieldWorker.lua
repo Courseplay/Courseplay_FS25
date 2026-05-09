@@ -295,15 +295,15 @@ function CpAIFieldWorker:cpToggleManualUnloader()
     local spec = CpAIFieldWorker.getSpec(self)
     if not spec then return end
     if spec.cpManualCombineProxy then
-        CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, self, 'Call grain cart deactivated')
+        CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, self, 'manual unloader deactivated')
         spec.cpManualCombineProxy:delete()
         spec.cpManualCombineProxy = nil
     else
         if self:getIsCpActive() then
-            CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, self, 'Cannot call grain cart while CP is active')
+            CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, self, 'Cannot call manual unloader while CP is active')
             return
         end
-        CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, self, 'Call grain cart activated')
+        CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, self, 'manual unloader activated')
         spec.cpManualCombineProxy = CpManualCombineProxy(self)
     end
     if not self.isServer then
