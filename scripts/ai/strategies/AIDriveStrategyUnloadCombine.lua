@@ -1972,8 +1972,10 @@ function AIDriveStrategyUnloadCombine:driveToCombine()
 
     self:getCombineStrategy():reconfirmRendezvous()
 
-    -- If the combine has moved significantly since the current approach course was generated,
-    -- re-pathfind to its new position so we don't drive to an empty spot.
+    -- For manually-driven combines only: if the combine has moved significantly since the
+    -- approach course was generated, re-pathfind to its new position so we don't drive to
+    -- an empty spot. CP combines use their own rendezvous/waypoint system and must not be
+    -- affected by this extra re-dispatch.
     -- Guards keep this infrequent and fast:
     --   • only check every 5 s (cheap distance math)
     --   • skip if remaining course < 20 m (almost there — let proximity handling finish)
@@ -1981,7 +1983,9 @@ function AIDriveStrategyUnloadCombine:driveToCombine()
     --   • only trigger when the combine has actually moved ≥ 30 m (genuine relocation)
     -- Uses a capped iteration count (defaultMaxIterations) so the A* search completes in
     -- well under a second on any field size, minimising the WAITING_FOR_PATHFINDER stop.
-    if g_time - (self.lastCombinePositionCheckTime or 0) > 5000 then
+    local combineStrategyForRepath = self:getCombineStrategy()
+    if combineStrategyForRepath and combineStrategyForRepath.isManualProxy and
+            g_time - (self.lastCombinePositionCheckTime or 0) > 5000 then
         self.lastCombinePositionCheckTime = g_time
         local remainingDist = self.course:getDistanceToLastWaypoint(self.course:getCurrentWaypointIx())
         local distToCombine = self:getDistanceFromCombine()
