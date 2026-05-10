@@ -336,6 +336,14 @@ function AIDriveStrategyUnloadCombine:getCombineStrategy()
     return nil
 end
 
+--- Returns true when the assigned combine is a manually-driven combine (CpManualCombineProxy),
+--- false for CP-driven combines or when no combine is assigned.
+---@return boolean
+function AIDriveStrategyUnloadCombine:isManualCombine()
+    local strategy = self:getCombineStrategy()
+    return strategy ~= nil and strategy.isManualProxy ~= nil
+end
+
 --- Checks if the assigned combine is active (either CP-driven or manually calling a grain cart).
 ---@return boolean
 function AIDriveStrategyUnloadCombine:isCombineActive()
@@ -386,8 +394,7 @@ function AIDriveStrategyUnloadCombine:getDriveData(dt, vX, vY, vZ)
     -- The placeholder follow course is static and the cart will drift from it as the combine moves,
     -- so the off-track check would otherwise stop the job. The timeout (5000 ms) is much larger
     -- than any realistic frame interval, so as long as this runs every frame the check stays off.
-    local combineStrategyForOffTrack = self:getCombineStrategy()
-    if combineStrategyForOffTrack and combineStrategyForOffTrack.isManualProxy then
+    if self:isManualCombine() then
         self.ppc:disableStopWhenOffTrack(5000)
     end
 
@@ -709,7 +716,7 @@ function AIDriveStrategyUnloadCombine:driveBesideCombine()
     -- the live pipe reference node and stays locked to the combine's current heading, including
     -- through curves. For CP-driven combines keep the original behaviour: only override the PPC
     -- course-based goal point when the cart is still far behind the pipe (dz > 5).
-    local isManual = strategy.isManualProxy and strategy:isManualProxy()
+    local isManual = self:isManualCombine()
     -- Calculate an artificial goal point relative to the harvester to align better when starting to unload
     if dz > 5 or isManual then
         _, _, dz = localToLocal(self.vehicle:getAIDirectionNode(), self:getPipeOffsetReferenceNode(), 0, 0, 0)
@@ -1467,7 +1474,7 @@ function AIDriveStrategyUnloadCombine:setupFollowCourse()
     -- starting at the combine's current position and heading. The PPC needs a course to
     -- initialise against, but driveBesideCombine() overrides all steering with a live goal
     -- point derived from the pipe reference node, so this course is never actually followed.
-    if combineStrategy and combineStrategy:isManualProxy() then
+    if self:isManualCombine() then
         local placeholder = Course.createStraightForwardCourse(self.combineToUnload, 100, 0,
                 self.combineToUnload:getAIDirectionNode())
         if placeholder then
@@ -1961,6 +1968,43 @@ function AIDriveStrategyUnloadCombine:checkForCombineTurnArea()
     end
 end
 
+--- For manually-driven combines: if the combine has moved significantly since the approach
+--- course was generated, trigger a fast A* re-path to its new position.
+--- Only fires for manual combines — CP combines use their own rendezvous/waypoint system.
+--- Guards: checks every 5 s; skips when <20 m of course remains or within 25 m of combine;
+--- only re-paths when combine has moved ≥ 30 m (genuine relocation, not minor drift).
+--- Uses HybridAStar.defaultMaxIterations to keep the search sub-second on any field size.
+---@return boolean true when a re-path was triggered (caller should return immediately)
+function AIDriveStrategyUnloadCombine:checkCombineRelocatedAndRepath()
+    if not self:isManualCombine() then return false end
+    if g_time - (self.lastCombinePositionCheckTime or 0) <= 5000 then return false end
+    self.lastCombinePositionCheckTime = g_time
+    local remainingDist = self.course:getDistanceToLastWaypoint(self.course:getCurrentWaypointIx())
+    local distToCombine = self:getDistanceFromCombine()
+    if remainingDist <= 20 or distToCombine <= 25 then return false end
+    local cX, _, cZ = getWorldTranslation(self:getPipeOffsetReferenceNode())
+    local lastX = self.combinePositionAtApproachStart and self.combinePositionAtApproachStart.x or cX
+    local lastZ = self.combinePositionAtApproachStart and self.combinePositionAtApproachStart.z or cZ
+    if MathUtil.vector2Length(cX - lastX, cZ - lastZ) < 30 then return false end
+    local xOffset, zOffset = self:getPipeOffset(self.combineToUnload)
+    zOffset = -self:getCombinesMeasuredBackDistance() - 3
+    self:debug('combine moved, re-pathfinding to new position')
+    self.combinePositionAtApproachStart = { x = cX, z = cZ }
+    local context = PathfinderContext(self.vehicle)
+    context:maxFruitPercent(self:getMaxFruitPercent(self:getPipeOffsetReferenceNode(), xOffset, zOffset))
+    context:offFieldPenalty(self:getOffFieldPenalty(self.combineToUnload))
+    context:useFieldNum(CpFieldUtil.getFieldNumUnderVehicle(self.combineToUnload))
+    context:areaToAvoid(self:getCombineStrategy():getAreaToAvoid())
+    context:vehiclesToIgnore({ self.combineToUnload })
+    context:maxIterations(HybridAStar.defaultMaxIterations)
+    self.pathfinderController:registerListeners(self, self.onPathfindingDoneToWaitingCombine,
+            self.onPathfindingFailedToMovingTarget, self.onPathfindingObstacleAtStart)
+    self.pathfinderController:findPathToNode(context, self:getPipeOffsetReferenceNode(),
+            xOffset or 0, zOffset or 0, 3)
+    self:setNewState(self.states.WAITING_FOR_PATHFINDER)
+    return true
+end
+
 ------------------------------------------------------------------------------------------------------------------------
 -- Drive to stopped combine
 ------------------------------------------------------------------------------------------------------------------------
@@ -1972,52 +2016,7 @@ function AIDriveStrategyUnloadCombine:driveToCombine()
 
     self:getCombineStrategy():reconfirmRendezvous()
 
-    -- For manually-driven combines only: if the combine has moved significantly since the
-    -- approach course was generated, re-pathfind to its new position so we don't drive to
-    -- an empty spot. CP combines use their own rendezvous/waypoint system and must not be
-    -- affected by this extra re-dispatch.
-    -- Guards keep this infrequent and fast:
-    --   • only check every 5 s (cheap distance math)
-    --   • skip if remaining course < 20 m (almost there — let proximity handling finish)
-    --   • skip if already within 25 m of the combine (driveBesideCombine takes over soon)
-    --   • only trigger when the combine has actually moved ≥ 30 m (genuine relocation)
-    -- Uses a capped iteration count (defaultMaxIterations) so the A* search completes in
-    -- well under a second on any field size, minimising the WAITING_FOR_PATHFINDER stop.
-    local combineStrategyForRepath = self:getCombineStrategy()
-    if combineStrategyForRepath and combineStrategyForRepath.isManualProxy and
-            g_time - (self.lastCombinePositionCheckTime or 0) > 5000 then
-        self.lastCombinePositionCheckTime = g_time
-        local remainingDist = self.course:getDistanceToLastWaypoint(self.course:getCurrentWaypointIx())
-        local distToCombine = self:getDistanceFromCombine()
-        if remainingDist > 20 and distToCombine > 25 then
-            local cX, _, cZ = getWorldTranslation(self:getPipeOffsetReferenceNode())
-            local lastX = self.combinePositionAtApproachStart and self.combinePositionAtApproachStart.x or cX
-            local lastZ = self.combinePositionAtApproachStart and self.combinePositionAtApproachStart.z or cZ
-            local moved = MathUtil.vector2Length(cX - lastX, cZ - lastZ)
-            if moved >= 30 then
-                local xOffset, zOffset = self:getPipeOffset(self.combineToUnload)
-                zOffset = -self:getCombinesMeasuredBackDistance() - 3
-                self:debug('driveToCombine: combine moved %.1f m, re-pathfinding to new position', moved)
-                self.combinePositionAtApproachStart = { x = cX, z = cZ }
-                -- Fast re-path: cap iterations at the default (avoids multi-second searches on
-                -- large fields) and ignore the combine as an obstacle so the path finds the gap
-                -- behind it rather than routing around the vehicle body.
-                local context = PathfinderContext(self.vehicle)
-                context:maxFruitPercent(self:getMaxFruitPercent(self:getPipeOffsetReferenceNode(), xOffset, zOffset))
-                context:offFieldPenalty(self:getOffFieldPenalty(self.combineToUnload))
-                context:useFieldNum(CpFieldUtil.getFieldNumUnderVehicle(self.combineToUnload))
-                context:areaToAvoid(self:getCombineStrategy():getAreaToAvoid())
-                context:vehiclesToIgnore({ self.combineToUnload })
-                context:maxIterations(HybridAStar.defaultMaxIterations)
-                self.pathfinderController:registerListeners(self, self.onPathfindingDoneToWaitingCombine,
-                        self.onPathfindingFailedToMovingTarget, self.onPathfindingObstacleAtStart)
-                self.pathfinderController:findPathToNode(context, self:getPipeOffsetReferenceNode(),
-                        xOffset or 0, zOffset or 0, 3)
-                self:setNewState(self.states.WAITING_FOR_PATHFINDER)
-                return
-            end
-        end
-    end
+    if self:checkCombineRelocatedAndRepath() then return end
 
     -- towards the end of the course we start checking if we can already switch to unload
     if self.course:getDistanceToLastWaypoint(self.course:getCurrentWaypointIx()) < 15 and
@@ -2151,7 +2150,7 @@ function AIDriveStrategyUnloadCombine:unloadMovingCombine()
     -- The farmer is in full control: ignore fill level, alignment, turning state, etc.
     -- Stay under the pipe until the proxy's isUnloadFinished() fires (pipe closed for 2s)
     -- or the grain cart's own trailer fills up (handled by changeToUnloadWhenTrailerFull above).
-    if combineStrategy.isManualProxy then
+    if self:isManualCombine() then
         self:debugSparse('unloadMovingCombine (manual): isDischarging=%s',
                 tostring(combineStrategy:isDischarging()))
         return gx, gz
