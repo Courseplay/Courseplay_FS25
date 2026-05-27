@@ -390,14 +390,6 @@ end
 function AIDriveStrategyUnloadCombine:getDriveData(dt, vX, vY, vZ)
     self:updateLowFrequencyImplementControllers()
 
-    -- While a manual-combine proxy is our target, disable the PPC off-track shutdown continuously.
-    -- The placeholder follow course is static and the cart will drift from it as the combine moves,
-    -- so the off-track check would otherwise stop the job. The timeout (5000 ms) is much larger
-    -- than any realistic frame interval, so as long as this runs every frame the check stays off.
-    if self:isManualCombine() then
-        self.ppc:disableStopWhenOffTrack(5000)
-    end
-
     -- if applicable, calculate on which side of an auto aim pipe we should be driving, once every loop
     self:calculateAutoAimPipeOffsetX(self.combineToUnload)
 
