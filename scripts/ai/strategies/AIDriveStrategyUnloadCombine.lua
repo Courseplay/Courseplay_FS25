@@ -3163,6 +3163,12 @@ function AIDriveStrategyUnloadCombine:debug(...)
 end
 
 function AIDriveStrategyUnloadCombine:update(dt)
+    -- Must run before AIDriveStrategyCourse.update() because that calls ppc:update() which
+    -- contains the off-track cutout check. Disabling here ensures the flag is cleared before
+    -- the check runs, not after, so the unloader is never killed while serving a manual combine.
+    if self:isManualCombine() then
+        self.ppc:disableStopWhenOffTrack(2000)
+    end
     AIDriveStrategyCourse.update(self)
     if CpUtil.isVehicleDebugActive(self.vehicle) and CpDebug:isChannelActive(self.debugChannel) then
         if self.course then
@@ -3196,13 +3202,6 @@ function AIDriveStrategyUnloadCombine:update(dt)
         end
     end
     self:updateImplementControllers(dt)
-    -- The dynamic placeholder course for a manually-driven combine is a short straight line
-    -- that does not track the combine's actual path, so the unloader will routinely drift
-    -- away from it. Suppress the off-track shutdown for the entire lifetime of a manual-combine
-    -- unload job so the unloader is never killed by PPC's cutout check.
-    if self:isManualCombine() then
-        self.ppc:disableStopWhenOffTrack(2000)
-    end
 end
 
 function AIDriveStrategyUnloadCombine:renderText(x, y, ...)
