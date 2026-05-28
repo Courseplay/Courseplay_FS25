@@ -3196,6 +3196,13 @@ function AIDriveStrategyUnloadCombine:update(dt)
         end
     end
     self:updateImplementControllers(dt)
+    -- The dynamic placeholder course for a manually-driven combine is a short straight line
+    -- that does not track the combine's actual path, so the unloader will routinely drift
+    -- away from it. Suppress the off-track shutdown for the entire lifetime of a manual-combine
+    -- unload job so the unloader is never killed by PPC's cutout check.
+    if self:isManualCombine() then
+        self.ppc:disableStopWhenOffTrack(2000)
+    end
 end
 
 function AIDriveStrategyUnloadCombine:renderText(x, y, ...)
