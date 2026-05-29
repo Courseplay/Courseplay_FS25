@@ -213,6 +213,9 @@ function AIDriveStrategyUnloadCombine:init(task, job)
     self.vehicleInFrontOfUS = CpTemporaryObject()
     self.vehicleRequestingBackUp = CpTemporaryObject()
     self.driveUnloadNowRequested = CpTemporaryObject(false)
+    -- Sticky flag: true for the entire lifetime of a manual-combine unload job so the
+    -- off-track guard in update() stays active even after the proxy is deleted on release.
+    self.servingManualCombine = false
     self.movingAwayDelay = CpTemporaryObject(false)
     self.checkForTrailerToUnloadTo = CpTemporaryObject(true)
     self.unloadTargetType = self.UNLOAD_TYPES.COMBINE
@@ -1218,6 +1221,7 @@ function AIDriveStrategyUnloadCombine:releaseCombine()
         self.combineJustUnloaded = self.combineToUnload
     end
     self.combineToUnload = nil
+    self.servingManualCombine = false
 end
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -1718,6 +1722,7 @@ end
 ---@return boolean true if the unloader has accepted the request
 function AIDriveStrategyUnloadCombine:call(combine, waypoint)
     self.combineToUnload = combine
+    self.servingManualCombine = combine.cpGetManualCombineProxy ~= nil
     local xOffset, zOffset = self:getPipeOffset(combine)
     if waypoint then
         -- combine set up a rendezvous waypoint for us, go there
@@ -3164,9 +3169,10 @@ end
 
 function AIDriveStrategyUnloadCombine:update(dt)
     -- Must run before AIDriveStrategyCourse.update() because that calls ppc:update() which
-    -- contains the off-track cutout check. Disabling here ensures the flag is cleared before
-    -- the check runs, not after, so the unloader is never killed while serving a manual combine.
-    if self:isManualCombine() then
+    -- contains the off-track cutout check. Use the sticky servingManualCombine flag rather
+    -- than isManualCombine() so the disable stays active even after the proxy is deleted
+    -- when the player releases the unloader — preventing a late cutout during job wind-down.
+    if self.servingManualCombine then
         self.ppc:disableStopWhenOffTrack(2000)
     end
     AIDriveStrategyCourse.update(self)
