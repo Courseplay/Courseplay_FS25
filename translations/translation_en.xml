@@ -13,7 +13,7 @@
     <text name="CP_automatic" text="auto"/>
     <text name="CP_unit_meter" text="m"/>
     <text name="CP_unit_foot" text="ft"/>
-    <text name="CP_callManualUnloader" text="Call Unloader"/>
+    <text name="CP_callManualUnloader" text="Unloader"/>
     <text name="CP_callManualUnloaderActive" text="ACTIVE"/>
     <text name="CP_callManualUnloaderInactive" text="OFF"/>
     <text name="CP_copy" text="Copy course:"/>
