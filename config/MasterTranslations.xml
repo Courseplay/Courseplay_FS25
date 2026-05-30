@@ -253,6 +253,18 @@
 			<Text language="de"><![CDATA[Abladeseite Anhänger:]]></Text>
 			<Text language="en"><![CDATA[Trailer tip side:]]></Text>
 		</Translation>
+		<Translation name="CP_callManualUnloader">
+			<Text language="de"><![CDATA[Manuell abtanken]]></Text>
+			<Text language="en"><![CDATA[Manual unloading]]></Text>
+		</Translation>
+    	<Translation name="CP_callManualUnloaderActive">
+			<Text language="de"><![CDATA[Aktiv]]></Text>
+			<Text language="en"><![CDATA[Active]]></Text>
+		</Translation>
+    	<Translation name="CP_callManualUnloaderInactive">
+			<Text language="de"><![CDATA[Inaktiv]]></Text>
+			<Text language="en"><![CDATA[Inactive]]></Text>
+		</Translation>
 	</Category>
 	<Category name="AI bunker silo worker job parameters">
 		<Translation name="CP_bunkerSiloJobParameters_subTitle_drivingForwardsIntoSilo">
