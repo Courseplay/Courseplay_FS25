@@ -76,6 +76,9 @@
     <text name="CP_combineUnloaderJobParameters_useFieldUnload_title" text="Tarlada boşaltmayı kullan:"/>
     <text name="CP_combineUnloaderJobParameters_fieldUnloadPosition_title" text="Tarlaya boşaltma noktası:"/>
     <text name="CP_combineUnloaderJobParameters_unloadingTipSide_title" text="Römork boşaltma tarafı:"/>
+    <text name="CP_callManualUnloader" text="Manual unloading"/>
+    <text name="CP_callManualUnloaderActive" text="Active"/>
+    <text name="CP_callManualUnloaderInactive" text="Inactive"/>
     <!---->
     <!--AI bunker silo worker job parameters-->
     <!---->

@@ -76,6 +76,9 @@
     <text name="CP_combineUnloaderJobParameters_useFieldUnload_title" text="Использовать разгрузку на поле:"/>
     <text name="CP_combineUnloaderJobParameters_fieldUnloadPosition_title" text="Позиция разгрузки на поле:"/>
     <text name="CP_combineUnloaderJobParameters_unloadingTipSide_title" text="Сторона разгрузки прицепа:"/>
+    <text name="CP_callManualUnloader" text="Manual unloading"/>
+    <text name="CP_callManualUnloaderActive" text="Active"/>
+    <text name="CP_callManualUnloaderInactive" text="Inactive"/>
     <!---->
     <!--AI bunker silo worker job parameters-->
     <!---->

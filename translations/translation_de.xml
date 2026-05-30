@@ -76,6 +76,9 @@
     <text name="CP_combineUnloaderJobParameters_useFieldUnload_title" text="Abladen auf dem Feld benutzen:"/>
     <text name="CP_combineUnloaderJobParameters_fieldUnloadPosition_title" text="Abladeposition:"/>
     <text name="CP_combineUnloaderJobParameters_unloadingTipSide_title" text="Abladeseite Anhänger:"/>
+    <text name="CP_callManualUnloader" text="Manuell abtanken"/>
+    <text name="CP_callManualUnloaderActive" text="Aktiv"/>
+    <text name="CP_callManualUnloaderInactive" text="Inaktiv"/>
     <!---->
     <!--AI bunker silo worker job parameters-->
     <!---->

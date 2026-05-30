@@ -76,6 +76,9 @@
     <text name="CP_combineUnloaderJobParameters_useFieldUnload_title" text="필드 하역 사용:"/>
     <text name="CP_combineUnloaderJobParameters_fieldUnloadPosition_title" text="필드 하역 위치:"/>
     <text name="CP_combineUnloaderJobParameters_unloadingTipSide_title" text="트레일러 하역 방향:"/>
+    <text name="CP_callManualUnloader" text="Manual unloading"/>
+    <text name="CP_callManualUnloaderActive" text="Active"/>
+    <text name="CP_callManualUnloaderInactive" text="Inactive"/>
     <!---->
     <!--AI bunker silo worker job parameters-->
     <!---->
