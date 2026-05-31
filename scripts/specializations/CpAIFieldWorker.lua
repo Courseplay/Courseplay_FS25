@@ -291,7 +291,7 @@ function CpAIFieldWorker:onDelete()
     end
 end
 
-function CpAIFieldWorker:cpToggleManualUnloader()
+function CpAIFieldWorker:cpToggleManualUnloader(noEventSend)
     local spec = CpAIFieldWorker.getSpec(self)
     if not spec then return end
     if spec.cpManualCombineProxy then
@@ -306,7 +306,9 @@ function CpAIFieldWorker:cpToggleManualUnloader()
         CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, self, 'manual unloader activated')
         spec.cpManualCombineProxy = CpManualCombineProxy(self)
     end
-    if not self.isServer then
+    if not noEventSend then
+        -- sendEvent handles routing: server broadcasts to all clients, client sends to server.
+        -- The noEventSend=true path is used by the event handler to apply state without echoing.
         CpManualUnloaderEvent.sendEvent(self)
     end
 end

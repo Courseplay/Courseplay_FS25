@@ -26,7 +26,9 @@ end
 
 function CpManualUnloaderEvent:run(connection)
 	if self.vehicle and self.vehicle.cpToggleManualUnloader then
-		self.vehicle:cpToggleManualUnloader()
+		-- noEventSend=true: apply state only, never re-send. Without this flag cpToggleManualUnloader
+		-- calls sendEvent() again, causing an infinite echo loop between clients and the server.
+		self.vehicle:cpToggleManualUnloader(true)
 	end
 	if not connection:getIsServer() then
 		g_server:broadcastEvent(CpManualUnloaderEvent.new(self.vehicle), nil, connection, self.vehicle)
