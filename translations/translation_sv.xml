@@ -14,6 +14,9 @@
     <text name="CP_unit_meter" text="m"/>
     <text name="CP_unit_foot" text="ft"/>
     <text name="CP_copy" text="Kopiera kurs:"/>
+    <text name="CP_callManualUnloader" text="Manual unloading"/>
+    <text name="CP_callManualUnloaderActive" text="Active"/>
+    <text name="CP_callManualUnloaderInactive" text="Inactive"/>
     <text name="CP_infoText" text="Courseplay(%s): För hjälp, buggrapporter eller patch notes, besök: https://github.com/Courseplay/Courseplay_FS25."/>
     <text name="CP_error_no_course" text="Skapa en kurs innan du påbörjar jobbet."/>
     <text name="CP_error_could_not_generate_course" text="Kunde inte generera kurs. Vänligen prova andra inställningar."/>
