@@ -479,7 +479,9 @@ function AIDriveStrategyUnloadCombine:getDriveData(dt, vX, vY, vZ)
 
     elseif self.state == self.states.DRIVING_TO_COMBINE then
 
-        self:driveToCombine()
+        if not self:checkCombineRelocatedAndRepath() then
+            self:driveToCombine()
+        end
 
     elseif self.state == self.states.DRIVING_TO_MOVING_COMBINE then
 
@@ -1576,12 +1578,9 @@ function AIDriveStrategyUnloadCombine:onPathfindingDoneToWaitingCombine(controll
         self:debug('Pathfinding to waiting combine successful')
         course:adjustForReversing(math.max(1, -AIUtil.getDirectionNodeToReverserNodeOffset(self.vehicle)))
         self:startCourse(course, 1)
-        -- Record the combine's position now so driveToCombine() can detect if it has moved
-        -- significantly and needs a re-path. Also reset the check timer so the first periodic
-        -- check fires 5 s after we start driving, not immediately.
-        local cX, _, cZ = getWorldTranslation(self:getPipeOffsetReferenceNode())
-        self.combinePositionAtApproachStart = { x = cX, z = cZ }
-        self.lastCombinePositionCheckTime = g_time
+        -- Clear the approach-start snapshot so checkCombineRelocatedAndRepath() takes a
+        -- fresh baseline on the very first tick of the new DRIVING_TO_COMBINE phase.
+        self.combinePositionAtApproachStart = nil
         self:setNewState(self.states.DRIVING_TO_COMBINE)
         return true
     else
@@ -1974,14 +1973,23 @@ end
 ---@return boolean true when a re-path was triggered (caller should return immediately)
 function AIDriveStrategyUnloadCombine:checkCombineRelocatedAndRepath()
     if not self:isManualCombine() then return false end
-    if g_time - (self.lastCombinePositionCheckTime or 0) <= 5000 then return false end
+    -- Lazy init: capture the combine's position on the first tick after a new approach
+    -- course starts (onPathfindingDoneToWaitingCombine clears this to trigger re-init).
+    -- Also starts the 5 s check timer so the first real check fires 5 s into driving.
+    if not self.combinePositionAtApproachStart then
+        local cX, _, cZ = getWorldTranslation(self:getPipeOffsetReferenceNode())
+        self.combinePositionAtApproachStart = { x = cX, z = cZ }
+        self.lastCombinePositionCheckTime = g_time
+        return false
+    end
+    if g_time - self.lastCombinePositionCheckTime <= 5000 then return false end
     self.lastCombinePositionCheckTime = g_time
     local remainingDist = self.course:getDistanceToLastWaypoint(self.course:getCurrentWaypointIx())
     local distToCombine = self:getDistanceFromCombine()
     if remainingDist <= 20 or distToCombine <= 25 then return false end
     local cX, _, cZ = getWorldTranslation(self:getPipeOffsetReferenceNode())
-    local lastX = self.combinePositionAtApproachStart and self.combinePositionAtApproachStart.x or cX
-    local lastZ = self.combinePositionAtApproachStart and self.combinePositionAtApproachStart.z or cZ
+    local lastX = self.combinePositionAtApproachStart.x
+    local lastZ = self.combinePositionAtApproachStart.z
     if MathUtil.vector2Length(cX - lastX, cZ - lastZ) < 30 then return false end
     local xOffset, zOffset = self:getPipeOffset(self.combineToUnload)
     zOffset = -self:getCombinesMeasuredBackDistance() - 3
@@ -2012,8 +2020,6 @@ function AIDriveStrategyUnloadCombine:driveToCombine()
     self:setFieldSpeed()
 
     self:getCombineStrategy():reconfirmRendezvous()
-
-    if self:checkCombineRelocatedAndRepath() then return end
 
     -- towards the end of the course we start checking if we can already switch to unload
     if self.course:getDistanceToLastWaypoint(self.course:getCurrentWaypointIx()) < 15 and
