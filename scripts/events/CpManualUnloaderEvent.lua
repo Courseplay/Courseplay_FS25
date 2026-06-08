@@ -9,36 +9,39 @@ function CpManualUnloaderEvent.emptyNew()
 	return self
 end
 
-function CpManualUnloaderEvent.new(vehicle)
+function CpManualUnloaderEvent.new(vehicle, active)
 	local self = CpManualUnloaderEvent.emptyNew()
 	self.vehicle = vehicle
+	self.active = active
 	return self
 end
 
 function CpManualUnloaderEvent:readStream(streamId, connection)
 	self.vehicle = NetworkUtil.readNodeObject(streamId)
+	self.active = streamReadBool(streamId)
 	self:run(connection)
 end
 
 function CpManualUnloaderEvent:writeStream(streamId, connection)
 	NetworkUtil.writeNodeObject(streamId, self.vehicle)
+	streamWriteBool(streamId, self.active)
 end
 
 function CpManualUnloaderEvent:run(connection)
-	if self.vehicle and self.vehicle.cpToggleManualUnloader then
-		-- noEventSend=true: apply state only, never re-send. Without this flag cpToggleManualUnloader
-		-- calls sendEvent() again, causing an infinite echo loop between clients and the server.
-		self.vehicle:cpToggleManualUnloader(true)
+	if self.vehicle and self.vehicle.cpSetManualUnloaderActive then
+		-- Apply the explicit desired state. noEventSend=true prevents the setter from
+		-- re-broadcasting, which would echo indefinitely between server and clients.
+		self.vehicle:cpSetManualUnloaderActive(self.active, true)
 	end
 	if not connection:getIsServer() then
-		g_server:broadcastEvent(CpManualUnloaderEvent.new(self.vehicle), nil, connection, self.vehicle)
+		g_server:broadcastEvent(CpManualUnloaderEvent.new(self.vehicle, self.active), nil, connection, self.vehicle)
 	end
 end
 
-function CpManualUnloaderEvent.sendEvent(vehicle)
+function CpManualUnloaderEvent.sendEvent(vehicle, active)
 	if g_server ~= nil then
-		g_server:broadcastEvent(CpManualUnloaderEvent.new(vehicle), nil, nil, vehicle)
+		g_server:broadcastEvent(CpManualUnloaderEvent.new(vehicle, active), nil, nil, vehicle)
 	else
-		g_client:getServerConnection():sendEvent(CpManualUnloaderEvent.new(vehicle))
+		g_client:getServerConnection():sendEvent(CpManualUnloaderEvent.new(vehicle, active))
 	end
 end

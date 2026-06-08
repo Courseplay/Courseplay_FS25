@@ -74,6 +74,7 @@ function CpAIFieldWorker.registerFunctions(vehicleType)
     SpecializationUtil.registerFunction(vehicleType, "getCpLaneOffsetSetting", CpAIFieldWorker.getCpLaneOffsetSetting)
 
     SpecializationUtil.registerFunction(vehicleType, "cpToggleManualUnloader", CpAIFieldWorker.cpToggleManualUnloader)
+    SpecializationUtil.registerFunction(vehicleType, "cpSetManualUnloaderActive", CpAIFieldWorker.cpSetManualUnloaderActive)
     SpecializationUtil.registerFunction(vehicleType, "cpIsManualCombineCallingUnloader", CpAIFieldWorker.cpIsManualCombineCallingUnloader)
     SpecializationUtil.registerFunction(vehicleType, "cpGetManualCombineProxy", CpAIFieldWorker.cpGetManualCombineProxy)
 end
@@ -276,7 +277,7 @@ function CpAIFieldWorker:onUpdate(dt)
         -- If the player handed the combine over to CP (e.g. activated autopilot mid-session),
         -- deactivate the manual unloader proxy so it doesn't conflict with the CP-driven combine.
         if self:getIsCpActive() then
-            self:cpToggleManualUnloader()
+            self:cpSetManualUnloaderActive(false)
         else
             spec.cpManualCombineProxy:update(dt)
         end
@@ -291,25 +292,33 @@ function CpAIFieldWorker:onDelete()
     end
 end
 
-function CpAIFieldWorker:cpToggleManualUnloader(noEventSend)
+function CpAIFieldWorker:cpToggleManualUnloader()
+    -- Determine the new desired state and delegate to the explicit setter so the
+    -- MP event always carries a concrete active/inactive value rather than a raw
+    -- toggle command.  This prevents double-toggle races when multiple machines
+    -- fire deactivation events simultaneously (e.g. CP becoming active mid-session).
+    self:cpSetManualUnloaderActive(not self:cpIsManualCombineCallingUnloader())
+end
+
+function CpAIFieldWorker:cpSetManualUnloaderActive(active, noEventSend)
     local spec = CpAIFieldWorker.getSpec(self)
     if not spec then return end
-    if spec.cpManualCombineProxy then
-        CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, self, 'manual unloader deactivated')
-        spec.cpManualCombineProxy:delete()
-        spec.cpManualCombineProxy = nil
-    else
+    if active then
+        if spec.cpManualCombineProxy then return end
         if self:getIsCpActive() then
             CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, self, 'Cannot call manual unloader while CP is active')
             return
         end
         CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, self, 'manual unloader activated')
         spec.cpManualCombineProxy = CpManualCombineProxy(self)
+    else
+        if not spec.cpManualCombineProxy then return end
+        CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, self, 'manual unloader deactivated')
+        spec.cpManualCombineProxy:delete()
+        spec.cpManualCombineProxy = nil
     end
     if not noEventSend then
-        -- sendEvent handles routing: server broadcasts to all clients, client sends to server.
-        -- The noEventSend=true path is used by the event handler to apply state without echoing.
-        CpManualUnloaderEvent.sendEvent(self)
+        CpManualUnloaderEvent.sendEvent(self, active)
     end
 end
 
