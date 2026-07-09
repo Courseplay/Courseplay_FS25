@@ -19,6 +19,8 @@ FieldBoundaryDetector = CpObject()
 function FieldBoundaryDetector:init(x, z, vehicle)
     self.logger = Logger('FieldBoundaryDetector', Logger.level.debug, CpDebug.DBG_COURSES)
     self.vehicle = vehicle
+    self.x = x
+    self.z = z
     self.updates = 0
     local customField = g_customFieldManager:getCustomField(x, z)
     if customField and g_Courseplay.globalSettings.preferCustomFields:getValue() then
@@ -35,6 +37,7 @@ function FieldBoundaryDetector:init(x, z, vehicle)
             self.logger:info('Field boundary detection successful after %d updates, %d boundary points and %d islands',
                     self.updates, #courseField.fieldRootBoundary.boundaryLine, #courseField.islands)
             self.fieldPolygon = self:_getAsVertices(courseField.fieldRootBoundary.boundaryLine)
+            self:_tryLowResolutionBoundaryFallback()
             self.islandPolygons = {}
             for i, island in ipairs(courseField.islands) do
                 local islandBoundary = self:_getAsVertices(island.rootBoundary.boundaryLine)
@@ -49,6 +52,7 @@ function FieldBoundaryDetector:init(x, z, vehicle)
             else
                 self.logger:info('Field boundary detection failed after %d updates and no custom field found at %.1f %.1f',
                         self.updates, x, z)
+                self:_tryGiantsFailedBoundaryFallback()
                 return
             end
         end
@@ -95,4 +99,37 @@ end
 function FieldBoundaryDetector:_useCustomField(customField)
     self.fieldPolygon = customField:getVertices()
     self.useCustomField = true
+end
+
+function FieldBoundaryDetector:_tryLowResolutionBoundaryFallback()
+    local minimumGiantsBoundaryPoints = 60
+    if not self.fieldPolygon or #self.fieldPolygon >= minimumGiantsBoundaryPoints then
+        return
+    end
+    if not g_fieldScanner or not g_fieldScanner.findContour then
+        return
+    end
+    local valid, scannerPolygon = g_fieldScanner:findContour(self.x, self.z)
+    if valid and scannerPolygon and #scannerPolygon > #self.fieldPolygon * 2 then
+        self.logger:info('Giants boundary only has %d points, using Courseplay field scanner result with %d points instead',
+                #self.fieldPolygon, #scannerPolygon)
+        self.fieldPolygon = scannerPolygon
+    else
+        self.logger:info('Giants boundary only has %d points, but Courseplay field scanner fallback did not improve it',
+                #self.fieldPolygon)
+    end
+end
+
+function FieldBoundaryDetector:_tryGiantsFailedBoundaryFallback()
+    if not g_fieldScanner or not g_fieldScanner.findContour then
+        return
+    end
+    local valid, scannerPolygon = g_fieldScanner:findContour(self.x, self.z)
+    if valid and scannerPolygon and #scannerPolygon > 0 then
+        self.logger:info('Giants boundary detection failed, using Courseplay field scanner result with %d points instead',
+                #scannerPolygon)
+        self.fieldPolygon = scannerPolygon
+    else
+        self.logger:info('Giants boundary detection failed, and Courseplay field scanner fallback did not find a boundary')
+    end
 end
