@@ -2176,15 +2176,12 @@ function AIDriveStrategyUnloadCombine:onBlockingVehicle(blockingVehicle, isBack)
             -- the tractor's) as when we reversing, it is easier when the trailer remains on the same side of the combine
             local dx, _, _ = localToLocal(referenceObject.rootNode, blockingVehicle:getAIDirectionNode(), 0, 0, 0)
             -- articulated harvesters can stand bent, with the rear part sticking out sideways from
-            -- the direction node - make sure the offset also clears the widest component, not just
-            -- the work width around the front part
-            local maxComponentOffset = 0
-            for _, component in pairs(blockingVehicle.components) do
-                local cdx, _, _ = localToLocal(component.node, blockingVehicle:getAIDirectionNode(), 0, 0, 0)
-                maxComponentOffset = math.max(maxComponentOffset, math.abs(cdx) + blockingVehicle.size.width / 2)
-            end
+            -- the direction node - make sure the offset also clears the widest part of the vehicle
+            -- in its current, possibly bent state, not just the work width around the front part
+            local _, _, dLeft, dRight = VehicleSizeScanner():scan(blockingVehicle, blockingVehicle:getAIDirectionNode())
+            local halfWidth = math.max(dLeft, -dRight)
             local xOffset = self.vehicle.size.width / 2 +
-                    math.max(blockingVehicle:getCpDriveStrategy():getWorkWidth() / 2, maxComponentOffset) + 2
+                    math.max(blockingVehicle:getCpDriveStrategy():getWorkWidth() / 2, halfWidth) + 2
             xOffset = dx > 0 and xOffset or -xOffset
             self:setNewState(self.states.MOVING_AWAY_FROM_OTHER_VEHICLE)
             self.state.properties.vehicle = blockingVehicle
