@@ -171,6 +171,7 @@ Changelog 8.1.0.3
 		<sourceFile filename="scripts/field/CustomFieldManager.lua"/>
 		<sourceFile filename="scripts/field/FieldScanner.lua"/>
 		<sourceFile filename="scripts/field/FieldBoundaryDetector.lua"/>
+		<sourceFile filename="scripts/field/WindrowDetector.lua"/>
 		<sourceFile filename="scripts/field/VineScanner.lua"/>
 
 		<sourceFile filename="scripts/silo/BunkerSiloVehicleController.lua"/>
@@ -283,6 +284,7 @@ Changelog 8.1.0.3
 		<sourceFile filename="scripts/ai/jobs/CpAIJob.lua"/>
 		<sourceFile filename="scripts/ai/jobs/CpAIJobFieldWork.lua"/>
 		<sourceFile filename="scripts/ai/jobs/CpAIJobBaleFinder.lua"/>
+		<sourceFile filename="scripts/ai/jobs/CpAIJobBaleWindrows.lua"/>
 		<sourceFile filename="scripts/ai/jobs/CpAIJobCombineUnloader.lua"/>
 		<sourceFile filename="scripts/ai/jobs/CpAIJobBunkerSilo.lua"/>
 		<sourceFile filename="scripts/ai/jobs/CpAIJobSiloLoader.lua"/>
@@ -362,6 +364,7 @@ Changelog 8.1.0.3
 		<specialization name="cpAIWorker" className="CpAIWorker" filename="scripts/specializations/CpAIWorker.lua"/>
 		<specialization name="cpAIFieldWorker" className="CpAIFieldWorker" filename="scripts/specializations/CpAIFieldWorker.lua"/>
 		<specialization name="cpAIBaleFinder" className="CpAIBaleFinder" filename="scripts/specializations/CpAIBaleFinder.lua"/>
+		<specialization name="cpAIBaleWindrows" className="CpAIBaleWindrows" filename="scripts/specializations/CpAIBaleWindrows.lua"/>
 		<specialization name="cpAICombineUnloader" className="CpAICombineUnloader" filename="scripts/specializations/CpAICombineUnloader.lua"/>
 		<specialization name="cpAIBunkerSiloWorker" className="CpAIBunkerSiloWorker" filename="scripts/specializations/CpAIBunkerSiloWorker.lua"/>
 		<specialization name="cpAISiloLoaderWorker" className="CpAISiloLoaderWorker" filename="scripts/specializations/CpAISiloLoaderWorker.lua"/>

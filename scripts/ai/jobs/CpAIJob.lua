@@ -521,6 +521,7 @@ function CpAIJob.registerJob(aiJobTypeManager)
 		aiJobTypeManager:registerJobType(class.name, g_i18n:getText(class.jobName), class)
 	end
 	register(CpAIJobBaleFinder)
+	register(CpAIJobBaleWindrows)
 	register(CpAIJobFieldWork)
 	register(CpAIJobCombineUnloader)
 	register(CpAIJobSiloLoader)

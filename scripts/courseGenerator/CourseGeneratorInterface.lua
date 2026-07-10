@@ -245,6 +245,58 @@ function CourseGeneratorInterface:generateVineCourse(
     return true, course
 end
 
+--- Generates a course whose rows follow detected windrows (straw/hay swaths on the ground), so a baler
+--- drives exactly over the product. The windrow lines are used directly as the course generator rows
+--- (like the vine course), so the existing turn/headland-transition logic connects them with 180° turns.
+---@param fieldPolygon table [{x, z}]
+---@param startPosition table {x, z}
+---@param vehicle table
+---@param workWidth number baler pickup width
+---@param turningRadius number
+---@param lines table [{x1, z1, x2, z2}] one straight line per detected windrow (game coordinates)
+---@param multiTools number number of vehicles (1 for a single baler)
+function CourseGeneratorInterface:generateWindrowCourse(
+        fieldPolygon,
+        startPosition,
+        vehicle,
+        workWidth,
+        turningRadius,
+        lines,
+        multiTools
+)
+    CourseGenerator.clearDebugObjects()
+    local field = CourseGenerator.Field('', 0, CpMathUtil.pointsFromGame(fieldPolygon))
+
+    local context = CourseGenerator.FieldworkContext(field, workWidth, turningRadius, 0)
+    context:setRowPattern(CourseGenerator.RowPatternAlternating())
+    context:setStartLocation(startPosition.x, -startPosition.z)
+    context:setAutoRowAngle(false)
+    context:setBypassIslands(false)
+    local status
+    status, self.generatedCourse = xpcall(
+            function()
+                -- rows ON the windrow lines (rowsBetweenLines = false)
+                return CourseGenerator.FieldworkCourseVine(context,
+                        CourseGenerator.FieldworkCourseVine.generateRows(workWidth, lines, false))
+            end,
+            function(err)
+                printCallstack();
+                return err
+            end
+    )
+    if not status or self.generatedCourse == nil then
+        return false
+    end
+
+    self.logger:debug('Generated windrow course: %d center waypoints',
+            #self.generatedCourse:getCenterPath())
+
+    local course = Course.createFromGeneratedCourse(vehicle, self.generatedCourse,
+            workWidth, 0, multiTools, true, true, true)
+    self:setCourse(vehicle, course)
+    return true, course
+end
+
 --- Load the course into the vehicle
 function CourseGeneratorInterface:setCourse(vehicle, course)
     if course and course:getMultiTools() > 1 then
