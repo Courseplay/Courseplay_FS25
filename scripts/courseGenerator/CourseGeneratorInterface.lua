@@ -245,55 +245,244 @@ function CourseGeneratorInterface:generateVineCourse(
     return true, course
 end
 
---- Generates a course whose rows follow detected windrows (straw/hay swaths on the ground), so a baler
---- drives exactly over the product. The windrow lines are used directly as the course generator rows
---- (like the vine course), so the existing turn/headland-transition logic connects them with 180° turns.
----@param fieldPolygon table [{x, z}]
----@param startPosition table {x, z}
----@param vehicle table
----@param workWidth number baler pickup width
----@param turningRadius number
----@param lines table [{x1, z1, x2, z2}] one straight line per detected windrow (game coordinates)
----@param multiTools number number of vehicles (1 for a single baler)
-function CourseGeneratorInterface:generateWindrowCourse(
-        fieldPolygon,
-        startPosition,
-        vehicle,
-        workWidth,
-        turningRadius,
-        lines,
-        multiTools
-)
-    CourseGenerator.clearDebugObjects()
-    local field = CourseGenerator.Field('', 0, CpMathUtil.pointsFromGame(fieldPolygon))
-
-    local context = CourseGenerator.FieldworkContext(field, workWidth, turningRadius, 0)
-    context:setRowPattern(CourseGenerator.RowPatternAlternating())
-    context:setStartLocation(startPosition.x, -startPosition.z)
-    context:setAutoRowAngle(false)
-    context:setBypassIslands(false)
-    local status
-    status, self.generatedCourse = xpcall(
-            function()
-                -- rows ON the windrow lines (rowsBetweenLines = false)
-                return CourseGenerator.FieldworkCourseVine(context,
-                        CourseGenerator.FieldworkCourseVine.generateRows(workWidth, lines, false))
-            end,
-            function(err)
-                printCallstack();
-                return err
+--- Waypoints of one headland straw ring: walk the field boundary and offset each point inward by `distance`,
+--- emitting a waypoint every `spacing` metres. Returns the ring points in boundary order (not yet closed).
+function CourseGeneratorInterface:_headlandRing(fieldPolygon, distance, spacing)
+    local n = #fieldPolygon
+    -- which side of an edge is inward? test the first edge's midpoint offset by one candidate normal
+    local inwardSign = 1
+    local a1, b1 = fieldPolygon[1], fieldPolygon[2]
+    local ex, ez = b1.x - a1.x, b1.z - a1.z
+    local el = math.sqrt(ex * ex + ez * ez)
+    if el > 1e-6 then
+        local tx, tz = ex / el, ez / el
+        local mx, mz = (a1.x + b1.x) / 2, (a1.z + b1.z) / 2
+        if not CpMathUtil.isPointInPolygon(fieldPolygon, mx - tz * 2, mz + tx * 2) then inwardSign = -1 end
+    end
+    -- MITRE each boundary vertex inward: the offset vertex sits `distance` from BOTH adjacent edges, so a
+    -- corner becomes a single clean waypoint in the corner instead of two crossing offset edges.
+    local corners = {}
+    for i = 1, n do
+        local prev = fieldPolygon[(i - 2) % n + 1]
+        local cur = fieldPolygon[i]
+        local nxt = fieldPolygon[i % n + 1]
+        local e1x, e1z = cur.x - prev.x, cur.z - prev.z
+        local e2x, e2z = nxt.x - cur.x, nxt.z - cur.z
+        local l1 = math.sqrt(e1x * e1x + e1z * e1z)
+        local l2 = math.sqrt(e2x * e2x + e2z * e2z)
+        if l1 > 1e-6 and l2 > 1e-6 then
+            local n1x, n1z = -e1z / l1 * inwardSign, e1x / l1 * inwardSign
+            local n2x, n2z = -e2z / l2 * inwardSign, e2x / l2 * inwardSign
+            local denom = 1 + (n1x * n2x + n1z * n2z)
+            if denom < 0.1 then denom = 0.1 end -- clamp very sharp corners so the mitre can't blow up
+            corners[#corners + 1] = { x = cur.x + distance * (n1x + n2x) / denom,
+                                      z = cur.z + distance * (n1z + n2z) / denom }
+        else
+            corners[#corners + 1] = { x = cur.x, z = cur.z }
+        end
+    end
+    -- ring = each corner waypoint, plus a waypoint every `spacing` along the straight run to the next corner
+    local m = #corners
+    local ring = {}
+    for i = 1, m do
+        local a = corners[i]
+        local b = corners[i % m + 1]
+        ring[#ring + 1] = { x = a.x, z = a.z }
+        local dx, dz = b.x - a.x, b.z - a.z
+        local len = math.sqrt(dx * dx + dz * dz)
+        if len > spacing then
+            local tx, tz = dx / len, dz / len
+            local d = spacing
+            while d < len - 0.5 do
+                ring[#ring + 1] = { x = a.x + tx * d, z = a.z + tz * d }
+                d = d + spacing
             end
-    )
-    if not status or self.generatedCourse == nil then
+        end
+    end
+    return ring
+end
+
+--- Map a course that traces the detected windrows directly: a waypoint every `spacing` metres along each
+--- windrow line, with the windrows visited in nearest-endpoint order (serpentine for parallel rows). Every
+--- waypoint is kept INSIDE the field boundary (no extension past the edge, nothing outside the field).
+--- This does NOT use the fieldwork row/section generator -- the windrow lines ARE the course. Each windrow
+--- is marked as a WORK row (rowStart/rowEnd), so CP's fieldwork driver lowers the baler along it and creates
+--- the turns between rows itself; the course just ends at the last work waypoint (no return/loop).
+--- (Ordering: headrows -- windrows along the inner perimeter -- should be driven first; that is a TODO for
+--- when the detector separates them. For now all windrows are treated as parallel rows.)
+---@param fieldPolygon table [{x, z}] field boundary (game coordinates)
+---@param vehicle table
+---@param windrows table detector output: [{x1, z1, x2, z2, ...}] interior windrow lines (game coordinates)
+---@param headlandRings table|nil distances from the boundary of each headland straw ring (outer ring = smallest)
+---@param startX number|nil start next to this position (default: the vehicle position)
+---@param startZ number|nil
+---@return boolean ok
+---@return table|nil course
+function CourseGeneratorInterface:generateWindrowCourse(fieldPolygon, vehicle, windrows, headlandRings, startX, startZ)
+    local SPACING = 10
+    if #windrows == 0 and (not headlandRings or #headlandRings == 0) then
         return false
     end
+    if startX == nil or startZ == nil then
+        local x, _, z = getWorldTranslation(vehicle.rootNode)
+        startX, startZ = x, z
+    end
+    local function dist(ax, az, bx, bz)
+        return math.sqrt((ax - bx) ^ 2 + (az - bz) ^ 2)
+    end
 
-    self.logger:debug('Generated windrow course: %d center waypoints',
-            #self.generatedCourse:getCenterPath())
+    local waypoints = {}
+    local px, pz = startX, startZ
+    local rowNumber = 0
 
-    local course = Course.createFromGeneratedCourse(vehicle, self.generatedCourse,
-            workWidth, 0, multiTools, true, true, true)
-    self:setCourse(vehicle, course)
+    -- Headlands FIRST: drive each straw ring outer -> inner, as a WORK row, starting at the ring point
+    -- nearest the previous exit and going all the way around. CP makes the turn to the next ring itself.
+    -- Each ring is the field boundary offset inward to the ring's distance from the edge.
+    if headlandRings and #headlandRings > 0 then
+        local dists = {}
+        for _, d in ipairs(headlandRings) do dists[#dists + 1] = d end
+        table.sort(dists)
+        for _, ringDist in ipairs(dists) do
+            local ring = self:_headlandRing(fieldPolygon, ringDist, SPACING)
+            if #ring >= 3 then
+                -- rotate the ring so it starts nearest the previous exit, then walk once around (close loop)
+                local startIdx, bestD = 1, math.huge
+                for i, p in ipairs(ring) do
+                    local d2 = (p.x - px) ^ 2 + (p.z - pz) ^ 2
+                    if d2 < bestD then bestD, startIdx = d2, i end
+                end
+                local kept = {}
+                for i = 0, #ring do
+                    local p = ring[(startIdx - 1 + i) % #ring + 1]
+                    if CpMathUtil.isPointInPolygon(fieldPolygon, p.x, p.z) then kept[#kept + 1] = { x = p.x, z = p.z } end
+                end
+                if #kept >= 2 then
+                    rowNumber = rowNumber + 1
+                    for i, p in ipairs(kept) do
+                        local attributes = CourseGenerator.WaypointAttributes()
+                        attributes:setRowNumber(rowNumber)
+                        if i == 1 then attributes:setRowStart(true) end
+                        if i == #kept then attributes:setRowEnd(true) end
+                        p.attributes = attributes
+                        waypoints[#waypoints + 1] = p
+                    end
+                    px, pz = kept[#kept].x, kept[#kept].z
+                end
+            end
+        end
+    end
+
+    -- Then the interior windrows: SWEEP across the field, one side to the other (not greedy-from-the-middle,
+    -- which splits the field in two). Order the windrows by cross-position (each midpoint projected onto the
+    -- axis perpendicular to the rows), start from whichever side is nearer the tractor, and enter each row
+    -- from the end closest to the previous exit (serpentine).
+    local adx, adz = 0, 0
+    for _, w in ipairs(windrows) do
+        local dx, dz = w.x2 - w.x1, w.z2 - w.z1
+        local l = math.sqrt(dx * dx + dz * dz)
+        if l > 1e-6 then
+            dx, dz = dx / l, dz / l
+            if dz < 0 or (dz == 0 and dx < 0) then dx, dz = -dx, -dz end
+            adx, adz = adx + dx, adz + dz
+        end
+    end
+    local al = math.sqrt(adx * adx + adz * adz)
+    if al > 1e-6 then adx, adz = adx / al, adz / al else adx, adz = 0, 1 end
+    local crossX, crossZ = -adz, adx -- axis perpendicular to the rows
+    local ordered = {}
+    for _, w in ipairs(windrows) do
+        w._cross = ((w.x1 + w.x2) / 2) * crossX + ((w.z1 + w.z2) / 2) * crossZ
+        ordered[#ordered + 1] = w
+    end
+    table.sort(ordered, function(a, b) return a._cross < b._cross end)
+    if #ordered >= 2 then
+        -- start from whichever end of the sweep is nearer the tractor
+        local f, lst = ordered[1], ordered[#ordered]
+        local df = math.min(dist(px, pz, f.x1, f.z1), dist(px, pz, f.x2, f.z2))
+        local dl = math.min(dist(px, pz, lst.x1, lst.z1), dist(px, pz, lst.x2, lst.z2))
+        if dl < df then
+            local rev = {}
+            for i = #ordered, 1, -1 do rev[#rev + 1] = ordered[i] end
+            ordered = rev
+        end
+    end
+
+    for _, w in ipairs(ordered) do
+        local fx, fz, tx, tz
+        if dist(px, pz, w.x1, w.z1) <= dist(px, pz, w.x2, w.z2) then
+            fx, fz, tx, tz = w.x1, w.z1, w.x2, w.z2
+        else
+            fx, fz, tx, tz = w.x2, w.z2, w.x1, w.z1
+        end
+        local dx, dz = tx - fx, tz - fz
+        local length = math.sqrt(dx * dx + dz * dz)
+        local steps = math.max(1, math.floor(length / SPACING + 0.5))
+        -- Sample the line, splitting into contiguous IN-FIELD segments: a point outside the field ends the
+        -- current segment. This keeps waypoints inside the field AND, on a concave field where a windrow
+        -- leaves and re-enters, produces two separate rows instead of one lowered pass across the gap.
+        local segments, segment = {}, {}
+        for k = 0, steps do
+            local t = k / steps
+            local x, z = fx + dx * t, fz + dz * t
+            if CpMathUtil.isPointInPolygon(fieldPolygon, x, z) then
+                segment[#segment + 1] = { x = x, z = z }
+            elseif #segment > 0 then
+                segments[#segments + 1] = segment
+                segment = {}
+            end
+        end
+        if #segment > 0 then segments[#segments + 1] = segment end
+        -- each in-field segment (>= 2 waypoints) is its own WORK row. CP raises the baler at the rowEnd
+        -- waypoint and lowers at rowStart, so if those sit on the windrow ends the last/first stretch of straw
+        -- is left (the detected crest is also a bit shorter than the real straw). So extend the row a short
+        -- OVERRUN past each end -- but only while still inside the field -- and put the rowStart/rowEnd markers
+        -- on that overrun. The true windrow endpoints stay WORK waypoints and the baler stays lowered across
+        -- the whole windrow; the lift/drop happens on bare ground just past the product.
+        local OVERRUN = 4
+        for _, segmentPoints in ipairs(segments) do
+            if #segmentPoints >= 2 then
+                local a, b = segmentPoints[1], segmentPoints[#segmentPoints]
+                local sdx, sdz = b.x - a.x, b.z - a.z
+                local sl = math.sqrt(sdx * sdx + sdz * sdz)
+                if sl > 1e-6 then
+                    sdx, sdz = sdx / sl, sdz / sl
+                    local pre = { x = a.x - sdx * OVERRUN, z = a.z - sdz * OVERRUN }
+                    local post = { x = b.x + sdx * OVERRUN, z = b.z + sdz * OVERRUN }
+                    if CpMathUtil.isPointInPolygon(fieldPolygon, pre.x, pre.z) then
+                        table.insert(segmentPoints, 1, pre)
+                    end
+                    if CpMathUtil.isPointInPolygon(fieldPolygon, post.x, post.z) then
+                        segmentPoints[#segmentPoints + 1] = post
+                    end
+                end
+                rowNumber = rowNumber + 1
+                for i, p in ipairs(segmentPoints) do
+                    local attributes = CourseGenerator.WaypointAttributes()
+                    attributes:setRowNumber(rowNumber)
+                    if i == 1 then attributes:setRowStart(true) end
+                    if i == #segmentPoints then attributes:setRowEnd(true) end
+                    p.attributes = attributes
+                    waypoints[#waypoints + 1] = p
+                end
+            end
+        end
+        px, pz = tx, tz
+    end
+
+    if #waypoints < 2 then
+        self.logger:debug(vehicle, 'Windrow course: only %d waypoints inside the field, not enough', #waypoints)
+        return false
+    end
+    self.logger:debug(vehicle, '%d waypoints over %d windrows', #waypoints, #windrows)
+    -- protect course construction: if it errors, return false so the caller can show the error dialog
+    -- and clear its pending flag, instead of the exception wedging the Generate button for the session.
+    local ok, course = xpcall(function() return Course(vehicle, waypoints) end,
+            function(err) printCallstack(); return err end)
+    if not ok then
+        self.logger:error(vehicle, 'Windrow course construction failed: %s', tostring(course))
+        return false
+    end
+    vehicle:setFieldWorkCourse(course)
     return true, course
 end
 

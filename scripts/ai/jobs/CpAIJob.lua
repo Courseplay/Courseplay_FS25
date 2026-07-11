@@ -521,10 +521,11 @@ function CpAIJob.registerJob(aiJobTypeManager)
 		aiJobTypeManager:registerJobType(class.name, g_i18n:getText(class.jobName), class)
 	end
 	register(CpAIJobBaleFinder)
-	register(CpAIJobBaleWindrows)
 	register(CpAIJobFieldWork)
 	register(CpAIJobCombineUnloader)
 	register(CpAIJobSiloLoader)
 	register(CpAIJobBunkerSilo)
+	-- register new jobs LAST so existing job-type indices are not shifted (breaks savegame job restore)
+	register(CpAIJobBaleWindrows)
 end
 

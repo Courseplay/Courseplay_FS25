@@ -1,10 +1,12 @@
 --- Bale windrows job.
 ---
---- Detects the field and the windrows (straw/hay/grass swaths lying on the ground) on it, then generates a
---- fieldwork course whose rows follow those windrows, so an attached baler is driven exactly over the
---- product. Extends the fieldwork job to reuse all of its driving, turning and implement control; the only
---- new behaviour is that the course is generated automatically from the detected windrows (instead of the
---- generic up/down rows) as soon as the field boundary is known.
+--- A fieldwork job whose course follows the windrows (straw/hay/grass swaths lying on the ground) instead
+--- of generic up/down rows, so an attached baler is driven exactly over the product. Extends the fieldwork
+--- job to reuse all of its driving, turning and implement control.
+---
+--- IMPORTANT: the windrow (ground product) detection is EXPENSIVE (it sweeps the whole field). It must run
+--- ONLY on the explicit "generate course" action, never in the menu's validate/boundary-detection loop
+--- (which fires every frame) -- otherwise the game scans the field every frame and freezes.
 ---@class CpAIJobBaleWindrows : CpAIJobFieldWork
 CpAIJobBaleWindrows = CpObject(CpAIJobFieldWork)
 CpAIJobBaleWindrows.name = "BALE_WINDROWS_CP"
@@ -17,50 +19,41 @@ function CpAIJobBaleWindrows:getIsAvailableForVehicle(vehicle, cpJobsAllowed)
         and vehicle.getCanStartCpBaleWindrows and vehicle:getCanStartCpBaleWindrows()
 end
 
---- Once the field boundary is detected, detect the windrows and build a course following them.
---- Replaces the fieldwork/vine handling with windrow handling.
+--- Field boundary detection runs on every menu validate, so keep this CHEAP: just show the field plot.
+--- No vine scan, no windrow scan here (that is done once in onClickGenerateFieldWorkCourse).
 function CpAIJobBaleWindrows:onFieldBoundaryDetectionFinished(vehicle, fieldPolygon, islandPolygons)
-    if not fieldPolygon then
-        self.selectedFieldPlot:setVisible(false)
-        self:callFieldBoundaryDetectionFinishedCallback(false, 'CP_error_field_detection_failed')
-        return
-    end
-    self.selectedFieldPlot:setWaypoints(fieldPolygon)
-    self.selectedFieldPlot:setVisible(true)
-    local ok, errorMessage = self:generateWindrowCourse(vehicle, fieldPolygon)
-    if ok then
+    if fieldPolygon then
+        self.selectedFieldPlot:setWaypoints(fieldPolygon)
+        self.selectedFieldPlot:setVisible(true)
         self:callFieldBoundaryDetectionFinishedCallback(true)
     else
-        self:callFieldBoundaryDetectionFinishedCallback(false, errorMessage)
+        self.selectedFieldPlot:setVisible(false)
+        self:callFieldBoundaryDetectionFinishedCallback(false, 'CP_error_field_detection_failed')
     end
 end
 
---- Detect the windrows in the field and generate a course following them.
----@return boolean ok
----@return string errorMessage i18n key, set when ok is false
-function CpAIJobBaleWindrows:generateWindrowCourse(vehicle, fieldPolygon)
-    local settings = vehicle:getCourseGeneratorSettings()
-    local workWidth = settings.workWidth:getValue()
+--- The "generate course" button: detect the windrows ONCE and map a course tracing them.
+function CpAIJobBaleWindrows:onClickGenerateFieldWorkCourse(callback)
+    local vehicle = self.vehicleParameter:getVehicle()
+    local fieldPolygon = vehicle:cpGetFieldPolygon()
+    if not fieldPolygon then
+        callback(nil)
+        return true
+    end
 
     local detector = WindrowDetector(fieldPolygon)
-    local windrows = detector:findWindrows()
-    if #windrows == 0 then
+    local windrows, debugInfo = detector:findWindrows()
+    local headlandRings = debugInfo.headlandRingDistances
+    if #windrows == 0 and (not headlandRings or #headlandRings == 0) then
         self:debug('No windrows found on the field')
-        return false, 'CP_error_no_windrows'
+        callback(nil)
+        return true
     end
 
-    local lines = {}
-    for _, w in ipairs(windrows) do
-        lines[#lines + 1] = { x1 = w.x1, z1 = w.z1, x2 = w.x2, z2 = w.z2 }
-    end
-
-    local tx, tz = self.cpJobParameters.fieldPosition:getPosition()
-    local ok = self.courseGeneratorInterface:generateWindrowCourse(
-            fieldPolygon, { x = tx, z = tz }, vehicle, workWidth, AIUtil.getTurningRadius(vehicle), lines, 1)
-    if not ok then
-        self:debug('Windrow course generation failed for %d windrows', #windrows)
-        return false, 'CP_error_no_windrows'
-    end
-    self:debug('Generated a bale-windrow course over %d windrows', #windrows)
-    return true, ''
+    local _, course = self.courseGeneratorInterface:generateWindrowCourse(
+            fieldPolygon, vehicle, windrows, headlandRings)
+    self:debug('Mapped a course over %d windrows + %d headland rings',
+            #windrows, headlandRings and #headlandRings or 0)
+    callback(course)
+    return true
 end
