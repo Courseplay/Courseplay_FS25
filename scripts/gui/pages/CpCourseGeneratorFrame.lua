@@ -1691,7 +1691,15 @@ function CpCourseGeneratorFrame:setAIVehicle(vehicle)
 	local hotspot = vehicle:getMapHotspot()
 	self:setMapSelectionItem(hotspot)
 	self.ingameMap:panToHotspot(hotspot)
-	if not vehicle:getIsAIActive() then 
+	-- AutoDrive reports getIsAIActive() == true while it drives the vehicle to its
+	-- target (Specialization.lua:getIsAIActive), even though no real AI/CP job is
+	-- running yet. Without this exception the course generator silently refuses to
+	-- open while AutoDrive is en route, so a course could never be prepared in advance.
+	local isOnlyAutoDriveDriving = vehicle.ad and vehicle.ad.stateModule and vehicle.ad.stateModule:isActive()
+	if isOnlyAutoDriveDriving then
+		CpUtil.info("[CP ad-gate-fix] %s: AutoDrive active, getIsAIActive=%s, opening course creator anyway", vehicle:getName(), tostring(vehicle:getIsAIActive()))
+	end
+	if not vehicle:getIsAIActive() or isOnlyAutoDriveDriving then
 		self:onCreateJob()
 	end
 end
