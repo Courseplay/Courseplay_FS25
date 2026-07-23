@@ -209,10 +209,10 @@
     <text name="CP_vehicle_setting_toolOffsetX_tooltip" text="Ajuste da alfaia horizontal"/>
     <text name="CP_vehicle_setting_baleCollectorOffset_title" text="Ajuste do juntador de fardos"/>
     <text name="CP_vehicle_setting_baleCollectorOffset_tooltip" text="Ajuste do juntador de fardos"/>
-    <text name="CP_vehicle_setting_combineOffsetX_title" text="Ajuste dianteiro/traseiro"/>
-    <text name="CP_vehicle_setting_combineOffsetX_tooltip" text="Ajuste para o tubo de descarga das ceifeiras mais(dianteiro), ou menos(traseiro)"/>
-    <text name="CP_vehicle_setting_combineOffsetZ_title" text="Ajuste dianteiro/traseiro"/>
-    <text name="CP_vehicle_setting_combineOffsetZ_tooltip" text="Ajuste para o tubo de descarga das ceifeiras mais(dianteiro), ou menos(traseiro)"/>
+    <text name="CP_vehicle_setting_combineOffsetX_title" text="Deslocamento esquerda/direita"/>
+    <text name="CP_vehicle_setting_combineOffsetX_tooltip" text="Deslocamento lateral do tubo de descarga da ceifeira: valores positivos deslocam para a direita (+), valores negativos deslocam para a esquerda (-)."/>
+    <text name="CP_vehicle_setting_combineOffsetZ_title" text="Deslocamento frente/trás"/>
+    <text name="CP_vehicle_setting_combineOffsetZ_tooltip" text="Deslocamento longitudinal do tubo de descarga da ceifeira: valores positivos deslocam para a frente (+), valores negativos deslocam para trás (-)."/>
     <text name="CP_vehicle_setting_fullThreshold_title" text="Despeja quando termina:"/>
     <text name="CP_vehicle_setting_fullThreshold_tooltip" text="TODO"/>
     <text name="CP_vehicle_setting_useAdditiveFillUnit_title" text="Verifica o aditivo de silagem."/>
