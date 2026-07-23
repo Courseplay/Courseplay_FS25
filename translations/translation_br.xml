@@ -209,10 +209,10 @@
     <text name="CP_vehicle_setting_toolOffsetX_tooltip" text="Distancia horizontal do implemento"/>
     <text name="CP_vehicle_setting_baleCollectorOffset_title" text="Distância lateral para coleta de fardos"/>
     <text name="CP_vehicle_setting_baleCollectorOffset_tooltip" text="Distância lateral para coleta de fardos"/>
-    <text name="CP_vehicle_setting_combineOffsetX_title" text="Distância para frente/para trás"/>
-    <text name="CP_vehicle_setting_combineOffsetX_tooltip" text="Distância do tubo da colheitadeira para frente(+) e para trás(-)"/>
-    <text name="CP_vehicle_setting_combineOffsetZ_title" text="Distância para frente/para trás"/>
-    <text name="CP_vehicle_setting_combineOffsetZ_tooltip" text="Distância do tubo da colheitadeira para frente(+) e para trás(-)"/>
+    <text name="CP_vehicle_setting_combineOffsetX_title" text="Deslocamento esquerda/direita"/>
+    <text name="CP_vehicle_setting_combineOffsetX_tooltip" text="Deslocamento lateral do tubo de descarga da ceifeira: valores positivos deslocam para a direita (+), valores negativos deslocam para a esquerda (-)."/>
+    <text name="CP_vehicle_setting_combineOffsetZ_title" text="Deslocamento frente/trás"/>
+    <text name="CP_vehicle_setting_combineOffsetZ_tooltip" text="Deslocamento longitudinal do tubo de descarga da ceifeira: valores positivos deslocam para a frente (+), valores negativos deslocam para trás (-)."/>
     <text name="CP_vehicle_setting_fullThreshold_title" text="Esvaziar quando acabar:"/>
     <text name="CP_vehicle_setting_fullThreshold_tooltip" text="TODO"/>
     <text name="CP_vehicle_setting_useAdditiveFillUnit_title" text="Verifique se há aditivo de silagem."/>
