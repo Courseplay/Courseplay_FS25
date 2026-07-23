@@ -72,7 +72,7 @@
     <text name="CP_combineUnloaderJobParameters_subTitle_giantsUnloader" text="Giants descarrega:"/>
     <text name="CP_combineUnloaderJobParameters_useGiantsUnload_title" text="Use giants para descarregar:"/>
     <text name="CP_combineUnloaderJobParameters_unloadingStation_title" text="Estação para descarregar:"/>
-    <text name="CP_combineUnloaderJobParameters_subTitle_fieldUnload" text="Giants descarrega:"/>
+    <text name="CP_combineUnloaderJobParameters_subTitle_fieldUnload" text="Descarregar no campo:"/>
     <text name="CP_combineUnloaderJobParameters_useFieldUnload_title" text="Descarregar no campo:"/>
     <text name="CP_combineUnloaderJobParameters_fieldUnloadPosition_title" text="Posição no campo para descarregar:"/>
     <text name="CP_combineUnloaderJobParameters_unloadingTipSide_title" text="Lado da carreta para descarregar:"/>
@@ -173,13 +173,13 @@
     <text name="CP_vehicle_setting_showCourse_all" text="Todos os waypoints"/>
     <text name="CP_vehicle_setting_openHudWithMouse_title" text="Abrir o Hud com mouse"/>
     <text name="CP_vehicle_setting_openHudWithMouse_tooltip" text="Quando desativado, o Hud só poderá ser aberto com o teclado."/>
-    <text name="CP_vehicle_setting_fuelSave_title" text="Economia de combustivel"/>
+    <text name="CP_vehicle_setting_fuelSave_title" text="Economia de combustível"/>
     <text name="CP_vehicle_setting_fuelSave_tooltip" text="Desligar o veículo, enquanto espera."/>
     <text name="CP_vehicle_setting_stopAtEnd_title" text="Parar no final"/>
-    <text name="CP_vehicle_setting_stopAtEnd_tooltip" text="Parar no final"/>
-    <text name="CP_vehicle_setting_useJps_title" text="Use JPS pathfinder"/>
+    <text name="CP_vehicle_setting_stopAtEnd_tooltip" text="O veículo para no ponto final após o trabalho."/>
+    <text name="CP_vehicle_setting_useJps_title" text="Usar pathfinder JPS"/>
     <text name="CP_vehicle_setting_useJps_tooltip" text="Use a busca por pontos de salto para distâncias maiores, o que resulta em uma busca de caminho mais rápida."/>
-    <text name="CP_vehicle_setting_penaltyFactor_title" text="Fator de penalidade do Pathfinderr"/>
+    <text name="CP_vehicle_setting_penaltyFactor_title" text="Fator de penalidade do pathfinder"/>
     <text name="CP_vehicle_setting_penaltyFactor_tooltip" text="Um valor mais alto levará mais tempo, mas o caminho permanece mais no campo e fora da fruta."/>
     <text name="CP_vehicle_setting_allowReversePathfinding_title" text="Permitir marcha a ré no caminho da rota"/>
     <text name="CP_vehicle_setting_allowReversePathfinding_tooltip" text="Quando aplicável, permitir gerar rotas contendo marcha a ré"/>
@@ -205,16 +205,16 @@
     <text name="CP_vehicle_setting_restartCourseAtEnd_tooltip" text="Reinicie a rota no primeiro waypoint."/>
     <text name="CP_vehicle_setting_avoidFruit_title" text="Evite dirigir na plantação"/>
     <text name="CP_vehicle_setting_avoidFruit_tooltip" text="AI evitará dirigir na plantação"/>
-    <text name="CP_vehicle_setting_toolOffsetX_title" text="Distancia horizontal do implemento"/>
-    <text name="CP_vehicle_setting_toolOffsetX_tooltip" text="Distancia horizontal do implemento"/>
+    <text name="CP_vehicle_setting_toolOffsetX_title" text="Distância horizontal do implemento"/>
+    <text name="CP_vehicle_setting_toolOffsetX_tooltip" text="Distância horizontal do implemento"/>
     <text name="CP_vehicle_setting_baleCollectorOffset_title" text="Distância lateral para coleta de fardos"/>
-    <text name="CP_vehicle_setting_baleCollectorOffset_tooltip" text="Distância lateral para coleta de fardos"/>
+    <text name="CP_vehicle_setting_baleCollectorOffset_tooltip" text="Distância lateral para o coletor de fardos."/>
     <text name="CP_vehicle_setting_combineOffsetX_title" text="Deslocamento esquerda/direita"/>
     <text name="CP_vehicle_setting_combineOffsetX_tooltip" text="Deslocamento lateral do tubo de descarga da ceifeira: valores positivos deslocam para a direita (+), valores negativos deslocam para a esquerda (-)."/>
     <text name="CP_vehicle_setting_combineOffsetZ_title" text="Deslocamento frente/trás"/>
     <text name="CP_vehicle_setting_combineOffsetZ_tooltip" text="Deslocamento longitudinal do tubo de descarga da ceifeira: valores positivos deslocam para a frente (+), valores negativos deslocam para trás (-)."/>
     <text name="CP_vehicle_setting_fullThreshold_title" text="Esvaziar quando acabar:"/>
-    <text name="CP_vehicle_setting_fullThreshold_tooltip" text="TODO"/>
+    <text name="CP_vehicle_setting_fullThreshold_tooltip" text="Se o nível de carga do descarregador estiver acima deste valor, ele não esperará pela colheitadeira."/>
     <text name="CP_vehicle_setting_useAdditiveFillUnit_title" text="Verifique se há aditivo de silagem."/>
     <text name="CP_vehicle_setting_useAdditiveFillUnit_tooltip" text="Se o aditivo ativo e de silagem estiver vazio, o motorista irá parar."/>
     <text name="CP_vehicle_setting_symmetricLaneChange_title" text="Mudança de fileira simétrica"/>
@@ -235,8 +235,8 @@
     <text name="CP_vehicle_setting_bunkerSiloWorkWidth_tooltip" text="Largura de trabalho. Valor: 0 - 50"/>
     <text name="CP_vehicle_setting_levelerHeightOffset_title" text="Altura."/>
     <text name="CP_vehicle_setting_levelerHeightOffset_tooltip" text="Altura do solo. Valor: 0 - 1"/>
-    <text name="CP_vehicle_setting_loadingShovelHeightOffset_title" text="Distãncia da pá carregadeira. Valor: -1 - 1"/>
-    <text name="CP_vehicle_setting_loadingShovelHeightOffset_tooltip" text="Distãncia da pá carregadeira. Valor: -1 - 1"/>
+    <text name="CP_vehicle_setting_loadingShovelHeightOffset_title" text="Altura da pá carregadeira"/>
+    <text name="CP_vehicle_setting_loadingShovelHeightOffset_tooltip" text="Ajuste de altura da pá na posição de carregamento. Valor: -1 - 1"/>
     <!---->
     <!--Vehicle settings speed-->
     <!---->
@@ -268,16 +268,16 @@
     <text name="CP_vehicle_setting_pipeAlwaysUnfold_tooltip" text="Desdobrar o tubo quando a colheitadeira estiver cheia ou aguardando descarregar."/>
     <text name="CP_vehicle_setting_stopForUnload_title" text="Parar enquanto descarrega"/>
     <text name="CP_vehicle_setting_stopForUnload_tooltip" text="Sempre parar, enquanto descarrega."/>
-    <text name="CP_vehicle_setting_selfUnload_title" text="Colheitadeira descarrega"/>
+    <text name="CP_vehicle_setting_selfUnload_title" text="Autodescarga da colheitadeira"/>
     <text name="CP_vehicle_setting_selfUnload_tooltip" text="Colheitadeira descarrega na carreta. Não suportado em multiferramentas ou no nodo comboio."/>
     <text name="CP_vehicle_setting_unloadOnFirstHeadland_title" text="Descarregar na cabeceira"/>
     <text name="CP_vehicle_setting_unloadOnFirstHeadland_tooltip" text="Colheitadeira chamará a carreta na cabeceira."/>
     <text name="CP_vehicle_setting_strawSwath_title" text="fileira de palha"/>
     <text name="CP_vehicle_setting_strawSwath_tooltip" text="Ativar / desativar fileira de palha."/>
-    <text name="CP_vehicle_setting_pipeOffsetX_title" text="Distancia do tubo X"/>
-    <text name="CP_vehicle_setting_pipeOffsetX_tooltip" text="Distancia do tubo X"/>
-    <text name="CP_vehicle_setting_pipeOffsetZ_title" text="Distancia do tubo Z"/>
-    <text name="CP_vehicle_setting_pipeOffsetZ_tooltip" text="Distancia do tubo Z"/>
+    <text name="CP_vehicle_setting_pipeOffsetX_title" text="Ajuste do tubo X"/>
+    <text name="CP_vehicle_setting_pipeOffsetX_tooltip" text="Ajuste lateral do tubo"/>
+    <text name="CP_vehicle_setting_pipeOffsetZ_title" text="Ajuste do tubo Z"/>
+    <text name="CP_vehicle_setting_pipeOffsetZ_tooltip" text="Ajuste longitudinal do tubo"/>
     <text name="CP_vehicle_setting_callUnloaderPercent_title" text="Chamar carreta em"/>
     <text name="CP_vehicle_setting_callUnloaderPercent_tooltip" text="Chamar a carreta quando o nível de enchimento da colheitadeira estiver acima deste valor."/>
     <text name="CP_vehicle_setting_strawSwath_onlyCenter" text="Cabeceira desativada"/>
@@ -285,16 +285,16 @@
     <!--Course generator settings-->
     <!---->
     <text name="CP_vehicle_courseGeneratorSetting_title" text="Configuração do gerador de rota de (%s)"/>
-    <text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="Configuração do gerador de rota de (%s)"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_basic" text="Configurações básicas"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Configuração do campo de videiras"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Configurações de trabalho no campo"/>
-    <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="cabeceira"/>
-    <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="centro"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="Configurações da cabeceira"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="Configurações do centro"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Configurações de ilhas"/>
     <text name="CP_vehicle_courseGeneratorSetting_workWidth_title" text="Largura do implemento"/>
-    <text name="CP_vehicle_courseGeneratorSetting_workWidth_tooltip" text="Largura do implemento"/>
+    <text name="CP_vehicle_courseGeneratorSetting_workWidth_tooltip" text="Largura de trabalho. Valor: 0 - 55"/>
     <text name="CP_vehicle_courseGeneratorSetting_numberOfHeadlands_title" text="Total de cabeceiras"/>
-    <text name="CP_vehicle_courseGeneratorSetting_numberOfHeadlands_tooltip" text="Total de cabeceiras"/>
+    <text name="CP_vehicle_courseGeneratorSetting_numberOfHeadlands_tooltip" text="Número de cabeceiras. Valor: 0 - 40"/>
     <text name="CP_vehicle_courseGeneratorSetting_headlandOverlapPercent_title" text="Sobreposição de cabeceira"/>
     <text name="CP_vehicle_courseGeneratorSetting_headlandOverlapPercent_tooltip" text="Sobrepor largura fileira de cabeceira por porcentagem"/>
     <text name="CP_vehicle_courseGeneratorSetting_fieldMargin_title" text="Margem do campo"/>
@@ -308,9 +308,9 @@
     <text name="CP_vehicle_courseGeneratorSetting_headlandClockwise_title" text="Direção na cabeceira"/>
     <text name="CP_vehicle_courseGeneratorSetting_headlandClockwise_tooltip" text="O veículo deve circular no sentido horário ou anti-horário na cabeceira."/>
     <text name="CP_vehicle_courseGeneratorSetting_centerClockwise_title" text="Direção no centro"/>
-    <text name="CP_vehicle_courseGeneratorSetting_centerClockwise_tooltip" text="O veículo deve circular no sentido horário ou anti-horário na cabeceira."/>
+    <text name="CP_vehicle_courseGeneratorSetting_centerClockwise_tooltip" text="O veículo deve percorrer o centro do campo no sentido horário ou anti-horário."/>
     <text name="CP_vehicle_courseGeneratorSetting_islandHeadlandClockwise_title" text="direção na ilha na cabeceira"/>
-    <text name="CP_vehicle_courseGeneratorSetting_islandHeadlandClockwise_tooltip" text="O veículo deve circular no sentido horário ou anti-horário na cabeceira."/>
+    <text name="CP_vehicle_courseGeneratorSetting_islandHeadlandClockwise_tooltip" text="Contornar as ilhas no sentido horário ou anti-horário."/>
     <text name="CP_vehicle_courseGeneratorSetting_headlandClockwise_clockwise" text="horário"/>
     <text name="CP_vehicle_courseGeneratorSetting_headlandClockwise_counterclockwise" text="anti-horário"/>
     <text name="CP_vehicle_courseGeneratorSetting_centerClockwise_clockwise" text="horário"/>
@@ -318,7 +318,7 @@
     <text name="CP_vehicle_courseGeneratorSetting_islandHeadlandClockwise_clockwise" text="horário"/>
     <text name="CP_vehicle_courseGeneratorSetting_islandHeadlandClockwise_counterclockwise" text="anti-horário"/>
     <text name="CP_vehicle_courseGeneratorSetting_centerMode_title" text="Centro do campo"/>
-    <text name="CP_vehicle_courseGeneratorSetting_centerMode_tooltip" text="Centro do campo"/>
+    <text name="CP_vehicle_courseGeneratorSetting_centerMode_tooltip" text="Selecione como o centro do campo deve ser percorrido: cima/baixo, espiral, terras ou circular."/>
     <text name="CP_vehicle_courseGeneratorSetting_centerMode_up_down" text="Cima / Baixo"/>
     <text name="CP_vehicle_courseGeneratorSetting_centerMode_spiral" text="Espiral"/>
     <text name="CP_vehicle_courseGeneratorSetting_centerMode_circular" text="Circular"/>
@@ -344,7 +344,7 @@
     <text name="CP_vehicle_courseGeneratorSetting_nIslandHeadlands_title" text="Ilhas na cabeceira"/>
     <text name="CP_vehicle_courseGeneratorSetting_nIslandHeadlands_tooltip" text="Número de cabeceiras ao redor das ilhas. Value: 1 - 10"/>
     <text name="CP_vehicle_courseGeneratorSetting_startOnHeadland_title" text="Iniciar em"/>
-    <text name="CP_vehicle_courseGeneratorSetting_startOnHeadland_tooltip" text="Iniciar em"/>
+    <text name="CP_vehicle_courseGeneratorSetting_startOnHeadland_tooltip" text="Iniciar o trabalho na cabeceira ou no centro do campo"/>
     <text name="CP_vehicle_courseGeneratorSetting_startOnHeadland_on_headland" text="Cabeceira"/>
     <text name="CP_vehicle_courseGeneratorSetting_startOnHeadland_up_down_rows" text="Centro"/>
     <text name="CP_vehicle_courseGeneratorSetting_multiTools_title" text="Multiplos implementos"/>
@@ -462,37 +462,37 @@ A rota é salva automaticamente ao fechar o editor e substituir a rota seleciona
     <text name="CP_courseManager_invalidNameError" text="Nome da rota (%s) está inválido!"/>
     <text name="CP_courseManager_basicSettings" text="Interação com rota."/>
     <text name="CP_courseManager_advancedSettings" text="Editar arquivos."/>
-    <text name="CP_courseManager_activate" text="Ativado"/>
+    <text name="CP_courseManager_activate" text="Ativar"/>
     <!---->
     <!--Course editor-->
     <!---->
-    <text name="CP_editor_course_title" text="Editor de rota"/>
-    <text name="CP_editor_custom_field_title" text="Custom field editor : %s"/>
+    <text name="CP_editor_course_title" text="Editor de rota: %s"/>
+    <text name="CP_editor_custom_field_title" text="Editor de campo customizado: %s"/>
     <text name="CP_editor_change_lane_offset" text="Mudar para distânciamento da faixa (%s)"/>
-    <text name="CP_editor_save_changes" text="Should the changes to %s be saved?"/>
+    <text name="CP_editor_save_changes" text="As alterações em %s devem ser salvas?"/>
     <text name="CP_editor_course_basic_delete_title" text="Excluir waypoints"/>
-    <text name="CP_editor_course_basic_delete_primary_text" text="primário"/>
-    <text name="CP_editor_course_basic_delete_secondary_text" text="secundário"/>
+    <text name="CP_editor_course_basic_delete_primary_text" text="Exclui o waypoint selecionado."/>
+    <text name="CP_editor_course_basic_delete_secondary_text" text="Continua a exclusão dos waypoints sob o cursor."/>
     <text name="CP_editor_course_basic_delete_tertiary_text" text="Excluir todos os waypoints até o último waypoint."/>
     <text name="CP_editor_course_basic_delete_yesNo_deleteToLastWp_title" text="Tem certeza de que todos os waypoints até o último devem ser excluídos?"/>
     <text name="CP_editor_course_basic_delete_err" text="Para poucos waypoints restantes."/>
     <text name="CP_editor_course_basic_title" text="Básico"/>
     <text name="CP_editor_course_basic_move_title" text="Mover um waypoint"/>
-    <text name="CP_editor_course_basic_move_primary_text" text="primário"/>
+    <text name="CP_editor_course_basic_move_primary_text" text="Arrasta e solta um waypoint com o mouse."/>
     <text name="CP_editor_course_basic_insert_title" text="Inserir waypoints"/>
-    <text name="CP_editor_course_basic_insert_primary_text" text="primário"/>
-    <text name="CP_editor_course_basic_insert_secondary_text" text="secundário"/>
+    <text name="CP_editor_course_basic_insert_primary_text" text="Insere um waypoint após o waypoint selecionado."/>
+    <text name="CP_editor_course_basic_insert_secondary_text" text="Insere um waypoint antes do waypoint selecionado."/>
     <text name="CP_editor_course_basic_insert_err" text="A inserção entre um waypoint de virada não é permitida."/>
     <text name="CP_editor_course_advanced_title" text="Avançado"/>
     <text name="CP_editor_course_advanced_changeTurn_title" text="Marca um waypoint como curva."/>
     <text name="CP_editor_course_advanced_changeTurn_primary_text" text="Adiciona ou exclui um waypoint de virada. (O waypoint selecionado será o início da curva.)"/>
     <text name="CP_editor_course_advanced_changeTurn_err" text="Para fechar a outro waypoint da curva."/>
     <text name="CP_editor_course_advanced_moveExtended_title" text="Mover multiplos waypoints"/>
-    <text name="CP_editor_course_advanced_moveExtended_primary_text" text="primário"/>
-    <text name="CP_editor_course_advanced_moveExtended_secondary_text" text="secundário"/>
+    <text name="CP_editor_course_advanced_moveExtended_primary_text" text="Seleciona dois waypoints e os move junto com todos os waypoints entre eles."/>
+    <text name="CP_editor_course_advanced_moveExtended_secondary_text" text="Redefine os waypoints selecionados."/>
     <text name="CP_editor_course_advanced_curveInsert_title" text="Inserir waypoints como curva(s)"/>
-    <text name="CP_editor_course_advanced_curveInsert_primary_text" text="primário"/>
-    <text name="CP_editor_course_advanced_curveInsert_secondary_text" text="secundário"/>
+    <text name="CP_editor_course_advanced_curveInsert_primary_text" text="Seleciona dois waypoints e adiciona alguns waypoints entre eles como uma curva."/>
+    <text name="CP_editor_course_advanced_curveInsert_secondary_text" text="Redefine os waypoints selecionados."/>
     <text name="CP_editor_course_advanced_curveInsert_err" text="Não é permitido selecionar um waypoint de virada."/>
     <!---->
     <!--Info texts-->
@@ -507,7 +507,7 @@ A rota é salva automaticamente ao fechar o editor e substituir a rota seleciona
     <text name="CP_infoTexts_workFinished" text="Trabalho feito"/>
     <text name="CP_infoTexts_drivingToCombine" text="Dirigir para a colheitadeira"/>
     <text name="CP_infoTexts_drivingToSelfUnload" text="Dirigir para a carreta"/>
-    <text name="CP_infoTexts_waitingForFieldBoundaryDetection" text="Detecção de campon"/>
+    <text name="CP_infoTexts_waitingForFieldBoundaryDetection" text="Detecção de campo"/>
     <text name="CP_infoTexts_outOfMoney" text="Sem dinheiro"/>
     <text name="CP_infoTexts_waitForRainToFinish" text="Esperando a chuva passar"/>
     <text name="CP_infoTexts_waitForSnowToClear" text="Espera a neve desaparecer"/>
@@ -527,7 +527,7 @@ A rota é salva automaticamente ao fechar o editor e substituir a rota seleciona
     <!--Custom field manager-->
     <!---->
     <text name="CP_customFieldManager_hotspotName" text="Campo customizado"/>
-    <text name="CP_customFieldManager_fieldList" text="Custom fields"/>
+    <text name="CP_customFieldManager_fieldList" text="Campos customizados"/>
     <text name="CP_customFieldManager_confirm_save" text="Deseja salvar a rota gravado como campo customizado %s?"/>
     <text name="CP_customFieldManager_confirm_delete" text="Deseja excluir o campo customizado %s?"/>
     <text name="CP_customFieldManager_delete" text="Excluir campo customizado"/>
@@ -754,7 +754,7 @@ C: Clicar no texto recalculará a largura de trabalho, ou você pode configurá-
 D: Algumas ferramentas precisam de um deslocamento lateral. O Courseplay irá calculá-lo automaticamente ao clicar no texto, ou você pode alterá-lo manualmente, assim como a largura de trabalho.
 E: Use o símbolo do lado direito para copiar a rota atual para a área de transferência. O nome da rota copiado é mostrado à esquerda. Você pode carregar o percurso copiado em outro veículo que ainda não tenha percurso. Para remover a rota da área de transferência, clique no símbolo de remoção.
 "/>
-    <text name="CP_help_page_minihud_combineunload_title" text="Colheitadeira descarrega"/>
+    <text name="CP_help_page_minihud_combineunload_title" text="Descarregador da colheitadeira"/>
     <text name="CP_help_page_minihud_combineunload_text" text="
 A: Selecione que tipo de veículo o trabalhador deve descarregar. Isto é útil se você tiver tipos diferentes, como uma colheitadeira e uma carregadeira como a ROPA Maus trabalhando no mesmo campo.
 B: Defina o nível de enchimento (40% - 100%) que o trabalhador deve dirigir até o local de descarga. Clique em +/- ou use a roda de rolagem sobre o número para alterar.
@@ -967,7 +967,7 @@ Para desmarcar os waypoints, clique com o botão direito do mouse.
 Assim como mover mais waypoints, marque 2 waypoints, então segure o botão esquerdo do mouse e mova o mouse.
 Atenção: Assim que você soltar o botão do mouse, os waypoints serão definidos, isso não pode ser desfeito! (é claro que você pode excluir esses waypoints.)
  "/>
-    <text name="CP_help_page_unloader_title" text="Colheitadeira descarrega"/>
+    <text name="CP_help_page_unloader_title" text="Descarregador da colheitadeira"/>
     <text name="CP_help_page_unloaderGeneral_text" text="
 O modo descarregador do Courseplay funciona com colheitadeiras, colheitadeiras, picadores e colheitadeiras rebocadas conduzidas pelo Courseplay.
 Você pode usar um reboque comum ou um vagão helicoidal para descarregar uma colheitadeira.
@@ -1091,7 +1091,7 @@ Agora sua seleção deve ser semelhante à imagem.
     <text name="input_CP_START_STOP_AT_FIRST_WAYPOINT" text="CP: Iniciar/parar motorista (no primeiro waypoint)"/>
     <text name="input_CP_START_STOP_AT_NEAREST_WAYPOINT" text="CP: Iniciar/parar motorista (no próximo waypoint)"/>
     <text name="input_CP_START_STOP_AT_LAST_WAYPOINT" text="CP: Iniciar/parar motorista (no último waypoint)"/>
-    <text name="input_CP_GENERATE_COURSE" text="CP: Alterar trabalho selecionado atual"/>
+    <text name="input_CP_GENERATE_COURSE" text="CP: Gerar rota"/>
     <text name="input_CP_CHANGE_SELECTED_JOB" text="CP: Alterar trabalho selecionado atual"/>
     <text name="input_CP_CHANGE_STARTING_POINT" text="CP: Mudar ponto inicial"/>
     <text name="input_CP_CLEAR_COURSE" text="CP: Limpa a rota atual"/>
