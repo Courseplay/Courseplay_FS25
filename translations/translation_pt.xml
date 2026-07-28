@@ -14,7 +14,7 @@
     <text name="CP_unit_meter" text="m"/>
     <text name="CP_unit_foot" text="ft"/>
     <text name="CP_copy" text="Copiar rota: "/>
-    <text name="CP_infoText" text="Courseplay(%s): Para ajuda, reportar um erro ou para notas de actualizações, é favor visitar: https://github.com/Courseplay/Courseplay_FS22."/>
+    <text name="CP_infoText" text="Courseplay(%s): Para ajuda, reportar um erro ou para notas de actualizações, é favor visitar: https://github.com/Courseplay/Courseplay_FS25."/>
     <text name="CP_error_no_course" text="Cria uma rota antes de começares o serviço."/>
     <text name="CP_error_could_not_generate_course" text="Não é possível gerar a rota. Mais informação no ficheiro de registro."/>
     <text name="CP_error_field_detection_still_running" text="A detecção do campo ainda está a decorrer."/>
@@ -25,7 +25,7 @@
     <text name="CP_error_giants_unloader_not_available" text="Descarregador da Giants não é acessível."/>
     <text name="CP_error_fieldUnloadPosition_too_far_away_from_field" text="A posição para descarregar no campo está muito longe do campo."/>
     <text name="CP_error_no_bunkerSilo_found" text="Não há silo à vista."/>
-    <text name="CP_error_no_heap_found" text="Não encontrou nenhum silo."/>
+    <text name="CP_error_no_heap_found" text="Não encontrou nenhum monte."/>
     <text name="CP_error_no_unload_trigger_found" text="Não encontra nenhum ponto de descarga."/>
     <text name="CP_error_unload_target_to_far_away_from_silo" text="O ponto de descarga escolhido é muito longe do silo."/>
     <!---->
@@ -88,14 +88,14 @@
     <text name="CP_bunkerSiloJobParameters_waitAtParkPosition_silo" text="no silo"/>
     <text name="CP_bunkerSiloJobParameters_waitAtParkPosition_parkPosition" text="na posição de parque"/>
     <text name="CP_bunkerSiloJobParameters_stopWithCompactedSilo_title" text="Pára com 99% compactado"/>
-    <text name="CP_bunkerSiloJobParameters_subTitle_stopWithCompactedSilo" text="Pára com 99% compactadon"/>
+    <text name="CP_bunkerSiloJobParameters_subTitle_stopWithCompactedSilo" text="Pára com 99% compactado"/>
     <text name="CP_bunkerSilo_compactionPercentage" text="Compactação do Silo:"/>
     <!---->
     <!--AI silo lader worker job parameters-->
     <!---->
     <text name="CP_siloLoaderJobParameters_subTitle_loadPosition" text="Posição para carregar"/>
     <text name="CP_siloLoaderJobParameters_loadPosition_title" text="Posição para carregar"/>
-    <text name="CP_siloLoader_fillLevelProgress" text="Progresso: "/>
+    <text name="CP_siloLoader_fillLevelProgress" text="Litros restantes: "/>
     <text name="CP_siloLoaderJobParameters_subTitle_unloading" text="Descarregar em:"/>
     <text name="CP_siloLoaderJobParameters_unloadAt_trailer" text="Atrelado"/>
     <text name="CP_siloLoaderJobParameters_unloadAt_unloadTrigger" text="Ponto de Descarregar"/>
@@ -103,7 +103,7 @@
     <!--AI jobs-->
     <!---->
     <text name="CP_job_fieldWork" text="CP: serviço de campo"/>
-    <text name="CP_job_baleCollect" text="CP:  Recolher/enrolar fardos"/>
+    <text name="CP_job_baleCollect" text="CP: Recolher/enrolar fardos"/>
     <text name="CP_job_combineUnload" text="CP: Descarrega Ceifeira"/>
     <text name="CP_job_bunkerSilo" text="CP: Trabalho no Silo"/>
     <text name="CP_job_siloLoader" text="CP: Carregar Silo"/>
@@ -205,8 +205,8 @@
     <text name="CP_vehicle_setting_restartCourseAtEnd_tooltip" text="Reinicia a rota de trabalho no campo no primeiro ponto."/>
     <text name="CP_vehicle_setting_avoidFruit_title" text="Evita passar por cima de culturas"/>
     <text name="CP_vehicle_setting_avoidFruit_tooltip" text="O trabalhar vai tentar evitar passar por cima de culturas"/>
-    <text name="CP_vehicle_setting_toolOffsetX_title" text="Ajuste da alfaia horizontal"/>
-    <text name="CP_vehicle_setting_toolOffsetX_tooltip" text="Ajuste da alfaia horizontal"/>
+    <text name="CP_vehicle_setting_toolOffsetX_title" text="Ajuste horizontal"/>
+    <text name="CP_vehicle_setting_toolOffsetX_tooltip" text="Ajuste horizontal da alfaia"/>
     <text name="CP_vehicle_setting_baleCollectorOffset_title" text="Ajuste do juntador de fardos"/>
     <text name="CP_vehicle_setting_baleCollectorOffset_tooltip" text="Ajuste lateral para o juntador de fardos."/>
     <text name="CP_vehicle_setting_combineOffsetX_title" text="Deslocamento esquerda/direita"/>
@@ -289,10 +289,10 @@
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_vineField" text="Configurações da vinha"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_fieldwork" text="Configurações do trabalho no campo"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_headland" text="Configuração de cabeceiras"/>
-    <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="Configuração de faixas"/>
+    <text name="CP_vehicle_courseGeneratorSetting_subTitle_center" text="Configurações do centro"/>
     <text name="CP_vehicle_courseGeneratorSetting_subTitle_island" text="Configurações de ilhas"/>
     <text name="CP_vehicle_courseGeneratorSetting_workWidth_title" text="Largura de trabalho"/>
-    <text name="CP_vehicle_courseGeneratorSetting_workWidth_tooltip" text="Largura de trabalho. Valor: 0 - 50"/>
+    <text name="CP_vehicle_courseGeneratorSetting_workWidth_tooltip" text="Largura de trabalho. Valor: 0 - 55"/>
     <text name="CP_vehicle_courseGeneratorSetting_numberOfHeadlands_title" text="Número de cabeceiras"/>
     <text name="CP_vehicle_courseGeneratorSetting_numberOfHeadlands_tooltip" text="Número de passagens nas cabeceiras. Valor: 0 - 40"/>
     <text name="CP_vehicle_courseGeneratorSetting_headlandOverlapPercent_title" text="Sobreposição nas cabeceira"/>
@@ -317,7 +317,7 @@
     <text name="CP_vehicle_courseGeneratorSetting_centerClockwise_counterclockwise" text="sentido anti-horário"/>
     <text name="CP_vehicle_courseGeneratorSetting_islandHeadlandClockwise_clockwise" text="sentido horário"/>
     <text name="CP_vehicle_courseGeneratorSetting_islandHeadlandClockwise_counterclockwise" text="sentido anti-horário"/>
-    <text name="CP_vehicle_courseGeneratorSetting_centerMode_title" text="Gestão de faixas"/>
+    <text name="CP_vehicle_courseGeneratorSetting_centerMode_title" text="Centro do campo"/>
     <text name="CP_vehicle_courseGeneratorSetting_centerMode_tooltip" text="Escolhe como o centro do campo deve ser percorrido: ida e volta, espiral, blocos ou circular."/>
     <text name="CP_vehicle_courseGeneratorSetting_centerMode_up_down" text="Ida e volta"/>
     <text name="CP_vehicle_courseGeneratorSetting_centerMode_spiral" text="Espiral"/>
@@ -341,7 +341,7 @@
     <text name="CP_vehicle_courseGeneratorSetting_manualRowAngleDeg_tooltip" text="Ângulo de ida e volta das faixas, em modo manuel (0 é Norte). Valor: 0 - 175 Passos: 5"/>
     <text name="CP_vehicle_courseGeneratorSetting_bypassIslands_title" text="Modo de contornar ilhas"/>
     <text name="CP_vehicle_courseGeneratorSetting_bypassIslands_tooltip" text="Como a rota deve contornar as ilhas no campo."/>
-    <text name="CP_vehicle_courseGeneratorSetting_nIslandHeadlands_title" text="Cabeceiras das ilhas"/>
+    <text name="CP_vehicle_courseGeneratorSetting_nIslandHeadlands_title" text="Cabeceiras à volta das ilhas"/>
     <text name="CP_vehicle_courseGeneratorSetting_nIslandHeadlands_tooltip" text="Número de cabeceiras à volta das ilhas. Valor: 1 - 10"/>
     <text name="CP_vehicle_courseGeneratorSetting_startOnHeadland_title" text="Início do serviço"/>
     <text name="CP_vehicle_courseGeneratorSetting_startOnHeadland_tooltip" text="Começa o serviço na cabeceira ou no centro do campo"/>
@@ -440,7 +440,7 @@
     <text name="CP_courseManager_change_mode" text="Alterar modo"/>
     <text name="CP_courseManager_load_courses" text="Carregar rota"/>
     <text name="CP_courseManager_save_courses" text="Salvar rota"/>
-    <text name="CP_courseManager_edit_course" text="Abrir gestor de rotas"/>
+    <text name="CP_courseManager_edit_course" text="Abrir editor de rotas"/>
     <text name="CP_courseManager_clear_current_courses" text="Limpar rota corrente"/>
     <text name="CP_courseManager_create_directory" text="Criar nova pasta"/>
     <text name="CP_courseManager_move_entry" text="Mover registo"/>
@@ -483,7 +483,7 @@ A rota é guardada automaticamente ao fechar o editor e sobrepõe-se a qualquer 
     <text name="CP_editor_course_basic_insert_primary_text" text="Insere um ponto depois do ponto selecionado."/>
     <text name="CP_editor_course_basic_insert_secondary_text" text="Insere um ponto antes do ponto selecionado."/>
     <text name="CP_editor_course_basic_insert_err" text="Inserir pontos entre outros numa curva não é permitido."/>
-    <text name="CP_editor_course_advanced_title" text="Advançado"/>
+    <text name="CP_editor_course_advanced_title" text="Avançado"/>
     <text name="CP_editor_course_advanced_changeTurn_title" text="Marca um ponto para virar."/>
     <text name="CP_editor_course_advanced_changeTurn_primary_text" text="Adiciona ou apaga um ponto para virar. (O ponto selecionado é onde inicia a curva.)"/>
     <text name="CP_editor_course_advanced_changeTurn_err" text="Perto demais de outro ponto para virar."/>
@@ -545,12 +545,12 @@ A rota é guardada automaticamente ao fechar o editor e sobrepõe-se a qualquer 
     <!---->
     <!--CP ingame menu-->
     <!---->
-    <text name="CP_ingameMenu_map_title" text="Map"/>
+    <text name="CP_ingameMenu_map_title" text="Mapa"/>
     <!---->
     <!--Help menu-->
     <!---->
-    <text name="CP_help_title" text="Gestor de Rotas"/>
-    <text name="CP_help_subTitle" text="Uma Modificação para o Farming Simulator 22 "/>
+    <text name="CP_help_title" text="Courseplay"/>
+    <text name="CP_help_subTitle" text="Uma Modificação para o Farming Simulator 25"/>
     <text name="CP_help_page_blank" text=""/>
     <text name="CP_help_page_General_title" text="Informação Geral"/>
     <text name="CP_help_page_GeneralBase_text" text="
@@ -563,7 +563,7 @@ Também é possível de ter a ceifeira e descarregar sozinha num reboque no camp
 Pode-se definir os limites em campos personalizados como por exemplo: em caso de prados que não são reconhecidos como campos normais.
 Por último existe uma ligação com o Autodrive, que permite que se encha a semeadora num silo perto ou descarregue as auto carregadoras sozinhas.
 
-Para mais informação é favor visitar o github: https://github.com/Courseplay/Courseplay_FS22 .
+Para mais informação é favor visitar o github: https://github.com/Courseplay/Courseplay_FS25 .
 Aí pode-se ter ajuda ou reportar algum problema que lhe tenha ocorrido.
 Finalmente agradecemos todos os tradutores e a nossa comunidade para reportar erro ou ocorrências, dando-nos sempre opiniões e novas ideias.
 
@@ -688,13 +688,13 @@ NOTA IMPORTANTE: Se a rota gerada não for perfeita ou até for má, o lado sele
     <text name="CP_help_page_courseGeneratorCenter_title" text="Gerador de rotas: centro"/>
     <text name="CP_help_page_courseGeneratorIsland_title" text="Gerador de rotas: ilhas"/>
     <text name="CP_help_page_courseGeneratorExpert_title" text="Gerador de rotas: modo avançado"/>
-    <text name="CP_help_page_courseManager_title" text="Gerente de curso"/>
+    <text name="CP_help_page_courseManager_title" text="Gestor de rotas"/>
     <text name="CP_help_page_courseManagerBase_text" text="
 O gerenciador de cursos permite que você salve cursos e carregue o curso salvo novamente mais tarde.
 Isso é realmente importante, quando você deseja ter vários trabalhadores dirigindo o mesmo curso para comboio (multiferramentas).
 Esse recurso também permite que você colete a faixa deixada para trás por uma colheitadeira ou um enleirador com um vagão de forragem ou uma enfardadeira.
 
-O local para salvar os arquivos do curso é: ..\My Games\FarmingSimulator2022\modSettings\FS22_Courseplay\Courses\Mapname.SampleModMap (ou para vanilla, por exemplo, MapUS).
+O local para salvar os arquivos do curso é: ..\My Games\FarmingSimulator2025\modSettings\FS25_Courseplay\Courses\Mapname.SampleModMap (ou para vanilla, por exemplo, MapUS).
 O gestor do curso funciona de forma diferente do que você está acostumado no FS19.
 Os cursos são salvos em pastas, que serão exibidas à esquerda. Isso significa que você precisaria de pelo menos uma pasta para começar a salvar cursos.
 As pastas podem ser criadas simplesmente pelo botão na parte inferior da tela e digitando um nome.
@@ -833,7 +833,7 @@ A coleta de fardos funciona da mesma forma, com ou sem curso.
 Quando o coletor estiver cheio, ele interromperá o trabalho e informará ao usuário que precisa ser descarregado. Se você tiver o AutoDrive
 instalado, você pode usá-lo para executar e descarregar o coletor de fardos automaticamente.
 "/>
-    <text name="CP_help_page_symetricLaneChange_title" text="Mudança simétrica de idioma"/>
+    <text name="CP_help_page_symetricLaneChange_title" text="Mudança simétrica de faixa"/>
     <text name="CP_help_page_symetricLaneChangeBasic_text" text="
 A mudança de faixa simétrica é usada em cursos multiferramentas e informa ao motorista em qual faixa ele deve dirigir após a curva.
 Isso é um pouco difícil de entender, então vamos dar uma olhada em dois exemplos.
@@ -1049,13 +1049,13 @@ Agora a tua seleção deve parecer-se com a imagem.
     <text name="input_CP_CHANGE_SELECTED_JOB" text="CP: Alterar o trabalho selecionado"/>
     <text name="input_CP_CHANGE_STARTING_POINT" text="CP: Altera Ponto de Ínicio"/>
     <text name="input_CP_CLEAR_COURSE" text="CP: Limpa actual rotas"/>
-    <text name="input_CP_CHANGE_COURSE_VISIBILITY" text="Mostra as rotas actuais do veículo"/>
+    <text name="input_CP_CHANGE_COURSE_VISIBILITY" text="CP: Alternar visibilidade da rota"/>
     <text name="input_CP_TOGGLE_MOUSE" text="CP: Ativar/desativar o cursor do rato"/>
     <text name="input_CP_OPEN_CLOSE_HUD" text="CP: Abrir/fechar hud"/>
     <text name="input_CP_OPEN_VEHICLE_SETTINGS" text="CP: Abre Configurações do Veículo"/>
     <text name="input_CP_OPEN_GLOBAL_SETTINGS" text="CP: Abre Configurações Globais"/>
     <text name="input_CP_OPEN_COURSEGENERATOR_SETTINGS" text="CP: Abre Menu do Gerador Rotas"/>
-    <text name="input_CP_OPEN_COURSEMANAGER" text="CP: Abre Gerador de Rotas"/>
+    <text name="input_CP_OPEN_COURSEMANAGER" text="CP: Abrir gestor de rotas"/>
     <text name="input_CP_OPEN_INGAME_MENU" text="CP: Abrir menu"/>
   </texts>
 </l10n>
