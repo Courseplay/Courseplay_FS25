@@ -14,6 +14,9 @@
     <text name="CP_unit_meter" text="M"/>
     <text name="CP_unit_foot" text="Fod"/>
     <text name="CP_copy" text="Kopier rute: "/>
+    <text name="CP_callManualUnloader" text="Unloader"/>
+    <text name="CP_callManualUnloaderActive" text="ACTIVE"/>
+    <text name="CP_callManualUnloaderInactive" text="OFF"/>
     <text name="CP_infoText" text="Courseplay(%s): Få hjælp, ved fejl eller spørgsmål om patch noter, besøg da: https://github.com/Courseplay/Courseplay_FS22."/>
     <text name="CP_error_no_course" text="Opret først en rute inden start."/>
     <text name="CP_error_could_not_generate_course" text="Kunne ikke oprette en rute. Logfilen kan indeholde yderligere informationer."/>

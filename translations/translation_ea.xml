@@ -14,6 +14,9 @@
     <text name="CP_unit_meter" text="m"/>
     <text name="CP_unit_foot" text="ft"/>
     <text name="CP_copy" text="Copiar Curso:"/>
+    <text name="CP_callManualUnloader" text="Unloader"/>
+    <text name="CP_callManualUnloaderActive" text="ACTIVE"/>
+    <text name="CP_callManualUnloaderInactive" text="OFF"/>
     <text name="CP_infoText" text="Courseplay(%s): Para obtener ayuda, informar de errores o notas de parches, visite: https://github.com/Courseplay/Courseplay_FS25"/>
     <text name="CP_error_no_course" text="Genera una ruta antes de comenzar el trabajo."/>
     <text name="CP_error_could_not_generate_course" text="No se ha podido generar una ruta. El Log puede contener más información."/>

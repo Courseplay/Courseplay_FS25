@@ -14,6 +14,9 @@
     <text name="CP_unit_meter" text="m"/>
     <text name="CP_unit_foot" text="pieds"/>
     <text name="CP_copy" text="Course copiée : "/>
+    <text name="CP_callManualUnloader" text="Unloader"/>
+    <text name="CP_callManualUnloaderActive" text="ACTIVE"/>
+    <text name="CP_callManualUnloaderInactive" text="OFF"/>
     <text name="CP_infoText" text="Courseplay(%s): Pour toute demande d'assistance, signalement de bug ou suivi des mises à jour, rendez vous sur le site officiel : https://github.com/Courseplay/Courseplay_FS22."/>
     <text name="CP_error_no_course" text="Générez ou chargez une course avant de démarrer la tâche"/>
     <text name="CP_error_could_not_generate_course" text="Impossible de générer la course. Plus d'informations dans le journal."/>
