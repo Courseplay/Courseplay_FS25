@@ -284,6 +284,10 @@ function CpHud:getCpStatus()
 end
 
 function CpHud:onPostLoad(savegame)
+    --- The hud is only ever drawn or interacted with on a client.
+    if not self.isClient then
+        return
+    end
     local spec = self.spec_cpHud
     spec.hud = CpBaseHud(self)
 end
