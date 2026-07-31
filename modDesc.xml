@@ -211,6 +211,7 @@ Changelog 8.1.0.3
 		<sourceFile filename="scripts/ai/InfoTextsManager.lua"/>
 		<sourceFile filename="scripts/ai/PurePursuitController.lua"/>
 		<sourceFile filename="scripts/ai/SelfUnloadHelper.lua"/>
+		<sourceFile filename="scripts/ai/CpManualCombineProxy.lua"/>
 		<sourceFile filename="scripts/ai/VehicleScanner.lua"/>
 		<sourceFile filename="scripts/ai/AIReverseDriver.lua"/>
 
@@ -346,6 +347,7 @@ Changelog 8.1.0.3
 		<sourceFile filename="scripts/events/CpJobStartAtLastWpSyncEvent.lua"/>
 		<sourceFile filename="scripts/events/CpJobSyncOnLeaveEvent.lua"/>
 		<sourceFile filename="scripts/events/DriveNowRequestEvent.lua"/>
+		<sourceFile filename="scripts/events/CpManualUnloaderEvent.lua"/>
 		<sourceFile filename="scripts/events/PlowCenterTurnEvent.lua"/>
 		<sourceFile filename="scripts/events/FieldPolygonChangedEvent.lua"/>
 
@@ -434,6 +436,10 @@ Changelog 8.1.0.3
 			<binding device="KB_MOUSE_DEFAULT" input="KEY_lalt KEY_g" />
 		</actionBinding>
 
+		<actionBinding action="CP_CALL_GRAIN_CART">
+			<binding device="KB_MOUSE_DEFAULT" input="KEY_lctrl KEY_u" />
+		</actionBinding>
+
 		<actionBinding action="CP_TOGGLE_MOUSE">
 			<binding device="KB_MOUSE_DEFAULT" input="MOUSE_BUTTON_RIGHT" />
 		</actionBinding>
@@ -463,6 +469,7 @@ Changelog 8.1.0.3
 		<action name="CP_OPEN_COURSEMANAGER"/>
 		<action name="CP_OPEN_INGAME_MENU"/>
 
+		<action name="CP_CALL_GRAIN_CART" />
 		<action name="CP_TOGGLE_MOUSE" />
 	</actions>
 </modDesc>

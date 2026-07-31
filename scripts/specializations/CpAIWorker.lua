@@ -180,6 +180,12 @@ function CpAIWorker:onRegisterActionEvents(isActiveForInput, isActiveForInputIgn
                     CpGuiUtil.openCourseManagerGui(self)
                 end, g_i18n:getText("input_CP_OPEN_COURSEMANAGER"))
 
+            addActionEvent(self, InputAction.CP_CALL_GRAIN_CART, function ()
+                    if self.cpToggleManualUnloader then
+                        self:cpToggleManualUnloader()
+                    end
+                end)
+
             CpAIWorker.updateActionEvents(self)
         end
     end
@@ -245,6 +251,21 @@ function CpAIWorker:updateActionEvents()
 
         actionEvent = spec.actionEvents[InputAction.CP_GENERATE_COURSE]
         g_inputBinding:setActionEventActive(actionEvent.actionEventId, self:getCanStartCpFieldWork())
+
+        actionEvent = spec.actionEvents[InputAction.CP_CALL_GRAIN_CART]
+        if actionEvent then
+            local hasPipe = self.spec_pipe ~= nil or AIUtil.hasChildVehicleWithSpecialization(self, Pipe)
+            local isCpActive = self:getIsCpActive()
+            -- Forage harvesters (auto-aim rotatable spout) are not supported — hide the keybind.
+            local showCallManualUnloader = hasPipe and not isCpActive and not ImplementUtil.isChopper(self)
+            g_inputBinding:setActionEventActive(actionEvent.actionEventId, showCallManualUnloader)
+            if showCallManualUnloader then
+                local isActive = self.cpIsManualCombineCallingUnloader and self:cpIsManualCombineCallingUnloader()
+                local status = isActive and g_i18n:getText("CP_callManualUnloaderActive") or g_i18n:getText("CP_callManualUnloaderInactive")
+                g_inputBinding:setActionEventText(actionEvent.actionEventId,
+                    string.format("%s (%s)", g_i18n:getText("CP_callManualUnloader"), status))
+            end
+        end
     end
 end
 
