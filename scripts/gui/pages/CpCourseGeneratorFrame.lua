@@ -1153,7 +1153,7 @@ function CpCourseGeneratorFrame:getNumberOfItemsInSection(list, section)
 	end
 	if list == self.contextButtonList then 
 		self.contextActionMapping = {}
-		for index, action in pairs(self.contextActions) do 
+		for index, action in ipairs(self.contextActions) do 
 			if action.isActive and not action.actionOnly then 
 				table.insert(self.contextActionMapping, index)
 			end
@@ -1165,7 +1165,7 @@ function CpCourseGeneratorFrame:getNumberOfItemsInSection(list, section)
 	end
 	if list == self.contextButtonCustomFieldList then 
 		self.contextActionMapping = {}
-		for index, action in pairs(self.contextActions) do 
+		for index, action in ipairs(self.contextActions) do 
 			if action.isActive and not action.actionOnly then 
 				table.insert(self.contextActionMapping, index)
 			end
