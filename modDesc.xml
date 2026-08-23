@@ -404,6 +404,10 @@ Changelog 8.1.0.3
 		<actionBinding action="CP_GENERATE_COURSE">
 			<binding device="KB_MOUSE_DEFAULT" input="KEY_lctrl KEY_g" />
 		</actionBinding>
+		<!--- Only used in the course generator menu while creating a job, where KEY_v is free. -->
+		<actionBinding action="CP_SET_POSITIONS_TO_VEHICLE">
+			<binding device="KB_MOUSE_DEFAULT" input="KEY_v" />
+		</actionBinding>
 
 		<actionBinding action="CP_CHANGE_SELECTED_JOB">
 			<binding device="" input="" />
@@ -451,6 +455,7 @@ Changelog 8.1.0.3
 		<action name="CP_START_STOP_AT_NEAREST_WAYPOINT"/>
 		<action name="CP_START_STOP_AT_LAST_WAYPOINT"/>
 		<action name="CP_GENERATE_COURSE" />
+		<action name="CP_SET_POSITIONS_TO_VEHICLE" />
 
 		<action name="CP_CHANGE_SELECTED_JOB"/>
 		<action name="CP_CHANGE_STARTING_POINT"/>

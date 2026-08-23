@@ -108,6 +108,8 @@
     <text name="CP_job_bunkerSilo" text="CP: Silo work"/>
     <text name="CP_job_siloLoader" text="CP: Silo loading"/>
     <text name="CP_ai_page_generate_course" text="CP: Generate fieldwork course"/>
+    <text name="CP_ai_page_positions_to_vehicle" text="Target &amp; field to vehicle"/>
+    <text name="CP_ai_page_positions_to_vehicle_title" text="Set positions"/>
     <text name="CP_ai_page_open_course_generator" text="CP: Open/close course generator"/>
     <!---->
     <!--AI error messages-->
@@ -1092,6 +1094,7 @@ Now your selection should look similar to the image.
     <text name="input_CP_START_STOP_AT_NEAREST_WAYPOINT" text="CP: Start/stop driver (at nearest waypoint)"/>
     <text name="input_CP_START_STOP_AT_LAST_WAYPOINT" text="CP: Start/stop driver (at last waypoint)"/>
     <text name="input_CP_GENERATE_COURSE" text="CP: Generate course"/>
+    <text name="input_CP_SET_POSITIONS_TO_VEHICLE" text="CP: Set target &amp; field to vehicle position"/>
     <text name="input_CP_CHANGE_SELECTED_JOB" text="CP: Change current selected job"/>
     <text name="input_CP_CHANGE_STARTING_POINT" text="CP: Change starting point"/>
     <text name="input_CP_CLEAR_COURSE" text="CP: Clear currently loaded course"/>

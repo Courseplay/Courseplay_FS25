@@ -35,14 +35,17 @@ CpCourseGeneratorFrame = {
 	CONTEXT_ACTIONS = {
 		ENTER_VEHICLE 	= 1,
 		CREATE_JOB		= 2,
-		START_JOB		= 3,
-		STOP_JOB		= 4,
-		GENERATE_COURSE = 5,
-		DELETE_CUSTOM_FIELD = 6,
-		RENAME_CUSTOM_FIELD = 7,
-		EDIT_CUSTOM_FIELD 	= 8,
-		DRAW_CUSTOM_FIELD 	= 9,
-		HOTSPOT_SELECT_ALL	= 10
+		--- These three show up in the create job button list in this order, which is also
+		--- the usual work flow: set the positions, generate the course, start the job.
+		SET_POSITIONS_TO_VEHICLE = 3,
+		GENERATE_COURSE = 4,
+		START_JOB		= 5,
+		STOP_JOB		= 6,
+		DELETE_CUSTOM_FIELD = 7,
+		RENAME_CUSTOM_FIELD = 8,
+		EDIT_CUSTOM_FIELD 	= 9,
+		DRAW_CUSTOM_FIELD 	= 10,
+		HOTSPOT_SELECT_ALL	= 11
 	},
 	AI_MODE_OVERVIEW = 1,
 	AI_MODE_CREATE = 2,
@@ -945,6 +948,63 @@ function CpCourseGeneratorFrame:getIsPicking()
 	return self.isPickingRotation or self.isPickingLocation
 end
 
+--- Sets the target position (the position the helper drives to first, with the vehicle's direction)
+--- and the field/silo position of the job currently being created to the vehicle's position, so
+--- these don't have to be picked on the map when standing on the field already.
+function CpCourseGeneratorFrame:setJobPositionsToVehiclePosition()
+	local vehicle = self.currentJobVehicle
+	if self.currentJob == nil or vehicle == nil or vehicle.rootNode == nil or self:getIsPicking() then
+		return
+	end
+	local x, _, z = getWorldTranslation(vehicle.rootNode)
+	local dirX, _, dirZ = localDirectionToWorld(vehicle.rootNode, 0, 0, 1)
+	local angle = MathUtil.getYRotationFromDirection(dirX, dirZ)
+	local changed = false
+	for _, element in ipairs(self.currentJobElements) do
+		local parameter = element.aiParameter
+		if parameter and parameter.is_a and parameter:is_a(CpAIParameterPosition) and parameter:getCanBeChanged() then
+			local positionType = parameter:getPositionType()
+			if positionType == CpAIParameterPositionAngle.POSITION_TYPES.DRIVE_TO then
+				parameter:setPosition(x, z)
+				if parameter.setAngle then
+					--- the target of the drive to task also has a direction, use the one the vehicle is facing
+					parameter:setAngle(angle)
+				end
+				changed = true
+			elseif positionType == CpAIParameterPositionAngle.POSITION_TYPES.FIELD_OR_SILO then
+				parameter:setPosition(x, z)
+				changed = true
+			end
+		end
+	end
+	if changed then
+		--- this also restarts the field boundary detection for the new field position
+		self:validateParameters()
+		self:updateParameterValueTexts()
+	end
+end
+
+--- Adds a button to the job parameter list, which sets the target and the field position
+--- to the vehicle's current position. It gets a group of its own so it is separated from
+--- the position rows above and isn't clicked by accident.
+function CpCourseGeneratorFrame:addSetPositionsToVehicleButton()
+	local titleElement = self.createTitleTemplate:clone(self.jobMenuLayout)
+	titleElement:setText(g_i18n:getText("CP_ai_page_positions_to_vehicle_title"))
+	--- Using the position parameter template, so the button looks and behaves exactly
+	--- like the position rows above it.
+	local element = self.createPositionTemplate:clone(self.jobMenuLayout)
+	FocusManager:loadElementFromCustomValues(element)
+	element:setText(g_i18n:getText("CP_ai_page_positions_to_vehicle"))
+	local invalidElement = element:getDescendantByName("invalid")
+	if invalidElement then
+		invalidElement:setVisible(false)
+	end
+	element.onClickCallback = function()
+		self:setJobPositionsToVehiclePosition()
+	end
+	return element
+end
+
 function CpCourseGeneratorFrame:validateParameters()
 	local isValid = true
 	local errorText = ""
@@ -1455,6 +1515,12 @@ function CpCourseGeneratorFrame:initializeContextActions()
 			callback = self.onCreateJob,
 			isActive = false
 		},
+		[self.CONTEXT_ACTIONS.SET_POSITIONS_TO_VEHICLE] = {
+			text = g_i18n:getText("CP_ai_page_positions_to_vehicle"),
+			action = InputAction.CP_SET_POSITIONS_TO_VEHICLE,
+			callback = self.setJobPositionsToVehiclePosition,
+			isActive = false
+		},
 		[self.CONTEXT_ACTIONS.START_JOB] = {
 			text = g_i18n:getText("button_startJob"),
 			action = InputAction.MENU_EXTRA_1,
@@ -1547,6 +1613,9 @@ function CpCourseGeneratorFrame:updateContextActions()
 		end
 	end
 	self.contextActions[self.CONTEXT_ACTIONS.CREATE_JOB].isActive = self.canCreateJob and self.mode ~= self.AI_MODE_CREATE
+	self.contextActions[self.CONTEXT_ACTIONS.SET_POSITIONS_TO_VEHICLE].isActive =
+		self.mode == self.AI_MODE_CREATE and self.currentJob ~= nil and
+		self.currentJobVehicle ~= nil and not self:getIsPicking()
 	self.contextActions[self.CONTEXT_ACTIONS.START_JOB].isActive = self:getCanStartJob()
 	self.contextActions[self.CONTEXT_ACTIONS.STOP_JOB].isActive = self:getCanCancelJob() and self.mode ~= self.AI_MODE_CREATE
 	self.contextActions[self.CONTEXT_ACTIONS.GENERATE_COURSE].isActive = self:getCanGenerateFieldWorkCourse()
@@ -1765,11 +1834,27 @@ function CpCourseGeneratorFrame:setActiveJobTypeSelection(jobTypeIndex)
 		end
 		self.currentJob:applyCurrentState(self.currentJobVehicle, g_currentMission, farmId, false)
 		self.currentJobElements = {}
+		--- The button setting the positions to the vehicle position goes right below the field/silo
+		--- position, or below the target position for jobs without a field position (silo loader).
+		local buttonAnchorPositionType = nil
+		for _, group in ipairs(self.currentJob:getGroupedParameters()) do
+			for _, item in ipairs(group:getParameters()) do
+				local positionType = item.getPositionType and item:getPositionType()
+				if positionType == CpAIParameterPositionAngle.POSITION_TYPES.FIELD_OR_SILO then
+					buttonAnchorPositionType = positionType
+				elseif positionType == CpAIParameterPositionAngle.POSITION_TYPES.DRIVE_TO and
+					buttonAnchorPositionType == nil then
+					buttonAnchorPositionType = positionType
+				end
+			end
+		end
+		local isButtonAdded = false
 		for _, group in ipairs(self.currentJob:getGroupedParameters()) do
 			local titleElement = self.createTitleTemplate:clone(self.jobMenuLayout)
 
 			titleElement:setText(group:getTitle())
 
+			local isButtonAnchorGroup = false
 			for _, item in ipairs(group:getParameters()) do
 				local element = nil
 				local parameterType = item:getType()
@@ -1797,7 +1882,15 @@ function CpCourseGeneratorFrame:setActiveJobTypeSelection(jobTypeIndex)
 					end
 					element:setDisabled(not item:getCanBeChanged())
 					table.insert(self.currentJobElements, element)
+					if buttonAnchorPositionType ~= nil and item.getPositionType and
+						item:getPositionType() == buttonAnchorPositionType then
+						isButtonAnchorGroup = true
+					end
 				end
+			end
+			if isButtonAnchorGroup and not isButtonAdded then
+				self:addSetPositionsToVehicleButton()
+				isButtonAdded = true
 			end
 		end
 		self:validateParameters()
