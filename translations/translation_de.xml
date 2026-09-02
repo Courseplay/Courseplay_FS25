@@ -108,6 +108,8 @@
     <text name="CP_job_bunkerSilo" text="CP: Siloarbeit"/>
     <text name="CP_job_siloLoader" text="CP: Silo laden"/>
     <text name="CP_ai_page_generate_course" text="CP: Feldkurs generieren"/>
+    <text name="CP_ai_page_positions_to_vehicle" text="Ziel &amp; Feld auf Fahrzeug"/>
+    <text name="CP_ai_page_positions_to_vehicle_title" text="Positionen setzen"/>
     <text name="CP_ai_page_open_course_generator" text="CP: Kursgenerator öffnen/schließen"/>
     <!---->
     <!--AI error messages-->
@@ -1076,6 +1078,7 @@ Das Kreuz sollte jetzt, wie im Bild dargestellt, gelb sein.
     <text name="input_CP_START_STOP_AT_NEAREST_WAYPOINT" text="CP: CP-Helfer starten/stoppen (am nächsten Wegpunkt)"/>
     <text name="input_CP_START_STOP_AT_LAST_WAYPOINT" text="CP: CP-Helfer starten/stoppen (am letzten Wegpunkt)"/>
     <text name="input_CP_GENERATE_COURSE" text="CP: Kurs generieren"/>
+    <text name="input_CP_SET_POSITIONS_TO_VEHICLE" text="CP: Ziel &amp; Feld auf Fahrzeugposition setzen"/>
     <text name="input_CP_CHANGE_SELECTED_JOB" text="CP: Aktuell ausgewählten Job ändern"/>
     <text name="input_CP_CHANGE_STARTING_POINT" text="CP: Startpunkt ändern"/>
     <text name="input_CP_CLEAR_COURSE" text="CP: Aktuell geladenen Kurs löschen"/>
