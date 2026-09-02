@@ -268,7 +268,11 @@ function AIDriveStrategyCombineCourse:getDriveData(dt, vX, vY, vZ)
                 self:changeToUnloadOnField()
             end
         elseif self:shouldWaitAtEndOfRow() then
-            self:startWaitingForUnloadBeforeNextRow()
+            if self:isSideBySideUnloading() then
+                self:startUnloadingAtRowEnd()
+            else
+                self:startWaitingForUnloadBeforeNextRow()
+            end
         end
 
         if not self.pipeController:isInAllowedState() then
@@ -682,6 +686,31 @@ function AIDriveStrategyCombineCourse:startWaitingForUnloadBeforeNextRow()
     self:stopForUnload(self.states.WAITING_FOR_UNLOAD_BEFORE_STARTING_NEXT_ROW, true)
 end
 
+--- Discharging into a CP unloader or trailer under the pipe.
+---@return boolean
+function AIDriveStrategyCombineCourse:isUnloadingIntoUnloader()
+    if not self:isDischarging() or self:hasAutoAimPipe() then
+        return false
+    end
+    return self.pipeController:isFillableTrailerUnderPipe() or self.unloader:get() ~= nil
+end
+
+--- Side-by-side unload close to the end of the row: already discharging, so skip stopForUnload and keep the header down.
+function AIDriveStrategyCombineCourse:startUnloadingAtRowEnd()
+    self:debug('Unloading into unloader at end of row, waiting for unload to finish')
+    self:cancelRendezvous()
+    self.state = self.states.UNLOADING_ON_FIELD
+    self.unloadState = self.states.UNLOADING_BEFORE_STARTING_NEXT_ROW
+end
+
+--- Side-by-side unload with stopForUnload off: discharging into a trailer/unloader while still driving.
+---@return boolean
+function AIDriveStrategyCombineCourse:isSideBySideUnloading()
+    return not self.settings.stopForUnload:getValue()
+            and not self:alwaysNeedsUnloader()
+            and self:isUnloadingIntoUnloader()
+end
+
 --- The unloader may call this repeatedly to confirm that the rendezvous still stands, making sure the
 --- combine won't give up and keeps waiting
 function AIDriveStrategyCombineCourse:reconfirmRendezvous()
@@ -851,6 +880,10 @@ function AIDriveStrategyCombineCourse:shouldWaitAtEndOfRow()
             nextRowStartIx > self.unloaderRendezvousWaypointIx then
         self:debug('shouldWaitAtEndOfRow: Closer than %.1f m to a turn and rendezvous waypoint %d is before the turn, waiting for the unloader here',
                 AIDriveStrategyCombineCourse.safeUnloadDistanceBeforeEndOfRow, self.unloaderRendezvousWaypointIx)
+        return true
+    end
+    if closeToTurn and self:isSideBySideUnloading() then
+        self:debug('shouldWaitAtEndOfRow: close to turn while discharging side-by-side, waiting for unload to finish')
         return true
     end
 end
@@ -1368,6 +1401,19 @@ end
 function AIDriveStrategyCombineCourse:isWaitingForUnloadAfterPulledBack()
     return self.state == self.states.UNLOADING_ON_FIELD and
             self.unloadState == self.states.WAITING_FOR_UNLOAD_AFTER_PULLED_BACK
+end
+
+---@return boolean true when waiting to unload at the end of a row before starting the next one
+function AIDriveStrategyCombineCourse:isWaitingForUnloadBeforeNextRow()
+    return self.state == self.states.UNLOADING_ON_FIELD and
+            (self.unloadState == self.states.WAITING_FOR_UNLOAD_BEFORE_STARTING_NEXT_ROW or
+                    self.unloadState == self.states.UNLOADING_BEFORE_STARTING_NEXT_ROW)
+end
+
+---@return boolean true when unload is done and the combine waits for the unloader to clear before resuming
+function AIDriveStrategyCombineCourse:isWaitingForUnloaderToLeave()
+    return self.state == self.states.UNLOADING_ON_FIELD and
+            self.unloadState == self.states.WAITING_FOR_UNLOADER_TO_LEAVE
 end
 
 ---@return boolean the combine is about to turn
@@ -2045,7 +2091,9 @@ function AIDriveStrategyCombineCourse:willWaitForUnloadToFinish()
             ((self.settings.stopForUnload:getValue() and self.unloadState == self.states.WAITING_FOR_UNLOAD_ON_FIELD) or
                     self.unloadState == self.states.WAITING_FOR_UNLOAD_IN_POCKET or
                     self.unloadState == self.states.WAITING_FOR_UNLOAD_AFTER_PULLED_BACK or
-                    self.unloadState == self.states.WAITING_FOR_UNLOAD_AFTER_FIELDWORK_ENDED)
+                    self.unloadState == self.states.WAITING_FOR_UNLOAD_AFTER_FIELDWORK_ENDED or
+                    self.unloadState == self.states.WAITING_FOR_UNLOAD_BEFORE_STARTING_NEXT_ROW or
+                    self.unloadState == self.states.UNLOADING_BEFORE_STARTING_NEXT_ROW)
 end
 
 --- Try to not hit our Unloader after Pocket.
