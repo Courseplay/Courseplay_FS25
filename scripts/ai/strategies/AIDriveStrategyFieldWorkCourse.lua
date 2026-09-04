@@ -33,9 +33,16 @@ AIDriveStrategyFieldWorkCourse.myStates = {
     TEMPORARY = {},
     RETURNING_TO_START = {},
     DRIVING_TO_WORK_START_WAYPOINT = { showTurnContextDebug = true },
+    REVERSING_AFTER_BLOCKED = {},
 }
 
 AIDriveStrategyFieldWorkCourse.normalFillLevelFullPercentage = 99.5
+-- blocked-by-obstacle recovery: how far to back up before asking the pathfinder for a way around
+AIDriveStrategyFieldWorkCourse.blockedRecoveryReverseDistance = 10
+-- blocked-by-obstacle recovery: resume the course at the first waypoint at least this far from the obstacle
+AIDriveStrategyFieldWorkCourse.blockedRecoverySkipDistance = 20
+-- blocked-by-obstacle recovery: give up after this many attempts in the same area
+AIDriveStrategyFieldWorkCourse.blockedRecoveryMaxAttempts = 3
 
 function AIDriveStrategyFieldWorkCourse:init(task, job)
     AIDriveStrategyCourse.init(self, task, job)
@@ -189,6 +196,11 @@ function AIDriveStrategyFieldWorkCourse:getDriveData(dt, vX, vY, vZ)
         self:setMaxSpeed(0)
     elseif self.state == self.states.WORKING then
         self:setMaxSpeed(self.settings.fieldWorkSpeed:getValue())
+        -- AITurn unregisters the blocking object listener at the end of each turn,
+        -- so make sure ours is active again while working
+        self.proximityController:registerBlockingObjectListener(self, AIDriveStrategyFieldWorkCourse.onBlockedByObject)
+    elseif self.state == self.states.REVERSING_AFTER_BLOCKED then
+        self:setMaxSpeed(self.settings.reverseSpeed:getValue())
     elseif self.state == self.states.TURNING then
         local turnGx, turnGz, turnMoveForwards, turnMaxSpeed = self.aiTurn:getDriveData(dt)
         self:setMaxSpeed(turnMaxSpeed)
@@ -251,7 +263,8 @@ function AIDriveStrategyFieldWorkCourse:initializeImplementControllers(vehicle)
     local defaultDisabledStates = {
         self.states.TEMPORARY,
         self.states.TURNING,
-        self.states.DRIVING_TO_WORK_START_WAYPOINT
+        self.states.DRIVING_TO_WORK_START_WAYPOINT,
+        self.states.REVERSING_AFTER_BLOCKED
     }
     self:addImplementController(vehicle, BalerController, Baler, {})
     self:addImplementController(vehicle, BaleWrapperController, BaleWrapper, defaultDisabledStates)
@@ -381,6 +394,9 @@ function AIDriveStrategyFieldWorkCourse:onLastWaypointPassed()
         self.vehicle:stopCurrentAIJob(AIMessageSuccessFinishedJob.new())
     elseif self.state == self.states.DRIVING_TO_WORK_START_WAYPOINT then
         self.workStarter:onLastWaypoint()
+    elseif self.state == self.states.REVERSING_AFTER_BLOCKED then
+        self:debug('Backed up after being blocked, now looking for a path around the obstacle')
+        self:startPathfindingAroundObstacle()
     else
         -- by default, stop the job
         self:finishFieldWork()
@@ -547,6 +563,88 @@ function AIDriveStrategyFieldWorkCourse:onPathfindingDoneToReturnToStart(path)
     end
 end
 -----------------------------------------------------------------------------------------------------------------------
+--- Blocked by static obstacle recovery
+-----------------------------------------------------------------------------------------------------------------------
+
+--- The proximity controller stops us in front of any obstacle, but a static one (tree, lamp post,
+--- parked implement) never moves out of the way, so without recovery we would stand there forever.
+--- Called by the proximity controller after an object has been blocking us for a few seconds:
+--- back up a bit, then use the pathfinder to get around the obstacle and continue the course
+--- at a waypoint beyond it.
+function AIDriveStrategyFieldWorkCourse:onBlockedByObject(isBack)
+    if self.state == self.states.REVERSING_AFTER_BLOCKED then
+        if isBack then
+            -- blocked backwards too while backing up, no point in continuing to reverse,
+            -- try finding a path around the obstacle from right here
+            self:debug('Blocked backwards during recovery, trying the pathfinder from here')
+            self:startPathfindingAroundObstacle()
+        end
+        return
+    end
+    if self.state ~= self.states.WORKING or isBack then
+        -- turns and the other states have their own blocked handling
+        return
+    end
+    -- limit the number of attempts in the same area so we do not bounce between obstacles forever
+    local x, _, z = getWorldTranslation(self.vehicle.rootNode)
+    if self.lastBlockedRecoveryPosition ~= nil and
+            MathUtil.vector2Length(x - self.lastBlockedRecoveryPosition.x, z - self.lastBlockedRecoveryPosition.z) > 50 then
+        self.blockedRecoveryCounter = 0
+    end
+    self.lastBlockedRecoveryPosition = { x = x, z = z }
+    self.blockedRecoveryCounter = (self.blockedRecoveryCounter or 0) + 1
+    if self.blockedRecoveryCounter > self.blockedRecoveryMaxAttempts then
+        self:debug('Still blocked after %d recovery attempts, giving up', self.blockedRecoveryCounter - 1)
+        self.vehicle:stopCurrentAIJob(AIMessageErrorBlockedByObject.new())
+        return
+    end
+    self:debug('Blocked by an object while working (attempt %d), backing up %.1f m and trying to go around',
+            self.blockedRecoveryCounter, self.blockedRecoveryReverseDistance)
+    self.blockedRecoveryContinueIx = self:getWaypointToContinueBeyondObstacle()
+    self:raiseImplements()
+    self.state = self.states.REVERSING_AFTER_BLOCKED
+    self:startCourse(Course.createStraightReverseCourse(self.vehicle, self.blockedRecoveryReverseDistance), 1)
+end
+
+--- Called by the proximity controller after a vehicle has been blocking us for a few seconds.
+--- A moving vehicle will clear the way on its own. A stationary one probably won't - even with
+--- an AI driver (a harvester standing bent, a waiting helper), it has already been blocking us
+--- for several seconds without moving, so go around it like a static obstacle.
+function AIDriveStrategyFieldWorkCourse:onBlockedByVehicle(blockingVehicle, isBack)
+    if blockingVehicle == nil then
+        return
+    end
+    local isMoving = blockingVehicle.lastSpeedReal ~= nil and math.abs(blockingVehicle.lastSpeedReal) * 3600 > 1
+    if isMoving then
+        self:debug('Blocked by %s, but it is moving, waiting for it to pass',
+                CpUtil.getName(blockingVehicle))
+        return
+    end
+    self:onBlockedByObject(isBack)
+end
+
+--- First waypoint of the fieldwork course that is far enough from the vehicle so that resuming there
+--- clears the obstacle (the strip the obstacle occupies can't be worked anyway)
+function AIDriveStrategyFieldWorkCourse:getWaypointToContinueBeyondObstacle()
+    local course = self.fieldWorkCourse
+    local startIx = course:getLastPassedWaypointIx() or course:getCurrentWaypointIx()
+    local vx, _, vz = getWorldTranslation(self.vehicle.rootNode)
+    for ix = startIx, course:getNumberOfWaypoints() do
+        local x, _, z = course:getWaypointPosition(ix)
+        if MathUtil.vector2Length(x - vx, z - vz) > self.blockedRecoverySkipDistance then
+            return ix
+        end
+    end
+    return course:getNumberOfWaypoints()
+end
+
+function AIDriveStrategyFieldWorkCourse:startPathfindingAroundObstacle()
+    local continueIx = self.blockedRecoveryContinueIx or self:getBestWaypointToContinueFieldWork()
+    -- startPathfindingToNextWaypoint targets ix + 1
+    self:startPathfindingToNextWaypoint(continueIx - 1)
+end
+
+-----------------------------------------------------------------------------------------------------------------------
 --- Use pathfinder to next waypoint
 -----------------------------------------------------------------------------------------------------------------------
 function AIDriveStrategyFieldWorkCourse:startPathfindingToNextWaypoint(ix)
@@ -681,6 +779,10 @@ function AIDriveStrategyFieldWorkCourse:setAllStaticParameters()
     self:setFrontAndBackMarkers()
     self.loweringDurationMs = AIUtil.findLoweringDurationMs(self.vehicle)
     self.fieldWorkerProximityController = FieldWorkerProximityController(self.vehicle, self.workWidth)
+    -- instead of standing in front of a static obstacle forever, try to recover
+    -- (subclasses like the combine strategy may overwrite the vehicle listener with their own)
+    self.proximityController:registerBlockingObjectListener(self, AIDriveStrategyFieldWorkCourse.onBlockedByObject)
+    self.proximityController:registerBlockingVehicleListener(self, AIDriveStrategyFieldWorkCourse.onBlockedByVehicle)
 end
 
 -----------------------------------------------------------------------------------------------------------------------
