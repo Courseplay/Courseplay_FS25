@@ -448,8 +448,16 @@ function CpShovelPositions:setShovelPosition(dt, shovelLimits, armLimits, height
 		--- Controls the arm height
 		setTranslation(armProjectionNode, 0, i1y, i1z)
 		setTranslation(armToolRefNode, ax, ay, az)
+
 		local _, shy, shz = localToLocal(shovelTool.node, armVehicle.rootNode, 0, 0, 0)
+		local _, _, rz = localRotationToLocal(getParent(shovelTool.node), getParent(getParent(shovelTool.node)), 0, 0, 0)
 		local dirZ, dirY = MathUtil.vector2Normalize(shz - az, shy - ay)
+		if math.abs(rz) > math.rad(160) then 
+			--- We assume the shovel node is rotated by 180 degrees,
+			--- so we have to flip the calculation
+			dirZ, dirY = MathUtil.vector2Normalize(az - shz, ay - shy)
+		end
+
 		oldRotRelativeArmRot = MathUtil.getYRotationFromDirection(-dirZ, dirY) + math.pi/2
 
 		alpha = math.atan2(i1y - ay, i1z - az)
