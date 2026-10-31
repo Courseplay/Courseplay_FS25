@@ -218,7 +218,6 @@ Changelog 8.1.0.3
 		<sourceFile filename="scripts/ai/turns/Corner.lua"/>
 		<sourceFile filename="scripts/ai/turns/TurnContext.lua"/>
 		<sourceFile filename="scripts/ai/turns/TurnManeuver.lua"/>
-		<sourceFile filename="scripts/ai/turns/TurnContext.lua"/>
 		<sourceFile filename="scripts/ai/turns/WorkStartHandler.lua"/>
 		<sourceFile filename="scripts/ai/turns/WorkEndHandler.lua"/>
 
