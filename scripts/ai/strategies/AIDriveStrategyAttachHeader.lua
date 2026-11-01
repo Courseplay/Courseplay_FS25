@@ -59,6 +59,10 @@ function AIDriveStrategyAttachHeader:isGeneratedCourseNeeded()
 end
 
 function AIDriveStrategyAttachHeader:delete()
+    if self.attachStartTimer then
+        self.attachStartTimer:delete()
+        self.attachStartTimer = nil
+    end
     if self.cutterNode then
         CpUtil.destroyNode(self.cutterNode)
     end
@@ -168,10 +172,23 @@ function AIDriveStrategyAttachHeader:getDriveData(dt, vX, vY, vZ)
         local speed = CpMathUtil.clamp(-2 * z, 1, self.settings.reverseSpeed:getValue())
         self:setMaxSpeed(speed)
         if self.attacherJointController:canAttachCutter() then
-            Timer.createOneshot(120, function()
-                --- Wait a small time, until the harvester stands still.
-                self.state = self.states.WAITING_FOR_ATTACH_TO_START
-            end)
+            self:setMaxSpeed(0)
+            if not self.attachStartTimer then
+                local timer
+                timer = Timer.createOneshot(120, function()
+                    if self.attachStartTimer ~= timer then
+                        return
+                    end
+                    self.attachStartTimer = nil
+                    if self.state == self.states.DRIVING_TO_ATTACH_CUTTER then
+                        self.state = self.states.WAITING_FOR_ATTACH_TO_START
+                    end
+                end)
+                self.attachStartTimer = timer
+            end
+        elseif self.attachStartTimer then
+            self.attachStartTimer:delete()
+            self.attachStartTimer = nil
         end
     elseif self.state == self.states.WAITING_FOR_ATTACH_TO_START then
         self:setMaxSpeed(0)

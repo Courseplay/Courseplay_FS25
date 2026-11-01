@@ -281,7 +281,7 @@ end
 function AIDriveStrategyCourse:updateLowFrequencyImplementControllers()
     for _, controller in pairs(self.controllers) do
         ---@type ImplementController
-        if controller:isEnabled() then
+        if controller:isEnabled(self.state) then
             -- we don't know yet if we even need anything from the controller other than the speed.
             local _, _, _, maxSpeed = controller:getDriveData()
             if maxSpeed then
@@ -306,7 +306,9 @@ end
 function AIDriveStrategyCourse:raiseControllerEventWithLambda(eventName, lambda, ...)
     for _, controller in pairs(self.controllers) do
         ---@type ImplementController
-        if controller:isEnabled() then
+        -- State restrictions apply to periodic work, not lifecycle events.
+        -- Raising, finishing and deleting must reach every controller.
+        if eventName ~= self.updateEvent or controller:isEnabled(self.state) then
             if controller[eventName] then
                 lambda(controller[eventName](controller, ...))
             end
