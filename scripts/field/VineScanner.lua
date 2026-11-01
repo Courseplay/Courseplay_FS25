@@ -11,6 +11,7 @@ end
 
 function VineScanner:setup()
 	self.vineSystem = g_currentMission.vineSystem
+	self.orchardRows = {}
 end
 
 function VineScanner:foundVines()
@@ -43,6 +44,7 @@ end
 ---@return table|nil closest vine node
 ---@return Placeable|nil closest placeable
 function VineScanner:getVineNodesOnField(vertices, tx, tz, isCustomField)
+	self.orchardRows = {}
 	if vertices == nil or next(vertices) == nil or tx == nil or tz == nil then 
 		self.lines = nil
 		self.width = nil
@@ -61,14 +63,17 @@ function VineScanner:getVineNodesOnField(vertices, tx, tz, isCustomField)
 	for node, placeable in pairs(self.vineSystem.nodes) do 
 		x, _, z = getWorldTranslation(node)
 		if CpMathUtil.isPointInPolygon(vertices, x, z) then 
-			segment = self:getVineSegmentIxForNode(node, placeable.spec_vine.vineSegments)
-			table.insert(vineSegments, segment)
-			dist = MathUtil.vector2Length(x-tx, z-tz)
-			if dist < closestDist then 
-				closestSegment = self:getVineSegmentIxForNode(node, placeable.spec_vine.vineSegments)
-				closestPlaceable = placeable
-				closestNode = node
-				closestDist = dist
+			local placeableSegments = self:getVineSegmentsAndWidth(placeable)
+			segment = placeableSegments and self:getVineSegmentIxForNode(node, placeableSegments)
+			if segment then
+				table.insert(vineSegments, segment)
+				dist = MathUtil.vector2Length(x-tx, z-tz)
+				if dist < closestDist then
+					closestSegment = segment
+					closestPlaceable = placeable
+					closestNode = node
+					closestDist = dist
+				end
 			end
 		end
 	end
@@ -147,7 +152,8 @@ function VineScanner:findVineNodesInField(vertices, tx, tz, isCustomField)
 
 
 	self.lines = newLines
-	self.width = closestPlaceable.spec_vine.width
+	local _, width = self:getVineSegmentsAndWidth(closestPlaceable)
+	self.width = width
 
 	self:debug("Found %d number of lines for a width of %.2f", #self.lines, self.width)
 
@@ -189,7 +195,7 @@ end
 ---@return table right lines
 function VineScanner:separateIntoColumns(lines, closestNode)
 	local placeable = self.vineSystem.nodes[closestNode]
-	local width = placeable.spec_vine.width
+	local _, width = self:getVineSegmentsAndWidth(placeable)
 	local columnsLeft = {}
 	local columnsRight = {}
 	--- Left columns 
@@ -405,6 +411,48 @@ end
 
 function VineScanner:getLines()
 	return self.lines
+end
+
+--- Gets the vine segments and the row spacing of a placeable in the vine system.
+--- The coffee plantation of the Beans & Alpacas DLC has no spec_vine, its fence segments
+--- hold the vine nodes and the spacing comes from getOrchardRowSpacing().
+--- These are converted into the spec_vine layout once per scan.
+---@param placeable table
+---@return table|nil vine segments
+---@return number|nil row spacing
+function VineScanner:getVineSegmentsAndWidth(placeable)
+	if placeable.spec_vine then
+		return placeable.spec_vine.vineSegments, placeable.spec_vine.width
+	end
+	self.orchardRows = self.orchardRows or {}
+	local rows = self.orchardRows[placeable]
+	if rows == nil then
+		rows = {}
+		self.orchardRows[placeable] = rows
+		local fence = placeable.getFence and placeable:getFence()
+		local width = placeable.getOrchardRowSpacing and placeable:getOrchardRowSpacing()
+		if fence == nil or type(fence.segments) ~= "table" or type(width) ~= "number" or width <= 0 then
+			self:debug("Placeable of type %s in the vine system has no vine rows, ignoring it.", tostring(placeable.typeName))
+			return
+		end
+		local vineSegments = {}
+		for _, fenceSegment in ipairs(fence.segments) do
+			if fenceSegment.vineNodes and fenceSegment.getStartPos and fenceSegment.getEndPos then
+				local x1, _, z1 = fenceSegment:getStartPos()
+				local x2, _, z2 = fenceSegment:getEndPos()
+				if x1 and z1 and x2 and z2 then
+					local nodes = {}
+					for node, _ in pairs(fenceSegment.vineNodes) do
+						table.insert(nodes, {node = node})
+					end
+					vineSegments[{x1 = x1, z1 = z1, x2 = x2, z2 = z2}] = nodes
+				end
+			end
+		end
+		rows.vineSegments = vineSegments
+		rows.width = width
+	end
+	return rows.vineSegments, rows.width
 end
 
 --- Gets a segment for a vine node.
