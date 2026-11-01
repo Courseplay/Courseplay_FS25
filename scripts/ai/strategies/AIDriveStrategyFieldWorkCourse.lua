@@ -743,6 +743,24 @@ function AIDriveStrategyFieldWorkCourse:calculateTightTurnOffset()
     end
 end
 
+--- Check resources separately from controller update restrictions. A missing
+--- required seed/fertilizer supply must also be noticed while preparing/lowering.
+function AIDriveStrategyFieldWorkCourse:getIsRequiredMaterialMissing()
+    for _, controller in pairs(self.controllers) do
+        if controller:getIsRequiredMaterialMissing() then
+            return true
+        end
+    end
+    return false
+end
+
+function AIDriveStrategyFieldWorkCourse:getIsMaterialCheckActive()
+    return self.state == self.states.INITIAL or self.state == self.states.PREPARING or
+        self.state == self.states.WAITING_FOR_LOWER or self.state == self.states.WAITING_FOR_LOWER_DELAYED or
+        self.state == self.states.WORKING or self.state == self.states.TURNING or
+        self.state == self.states.DRIVING_TO_WORK_START_WAYPOINT
+end
+
 function AIDriveStrategyFieldWorkCourse:isWorking()
     return self.state == self.states.WORKING or self.state == self.states.TURNING
 end

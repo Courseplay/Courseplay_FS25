@@ -357,13 +357,17 @@ function CpVehicleSettings:isRidgeMarkerSettingVisible()
 end
 
 function CpVehicleSettings:isOptionalSowingMachineSettingVisible()
-    local vehicles, found = AIUtil.getAllChildVehiclesWithSpecialization(self, SowingMachine)
-    return found and not vehicles[1]:getAIRequiresTurnOn()
+    local vehicles = AIUtil.getAllChildVehiclesWithSpecialization(self, SowingMachine)
+    for _, implement in ipairs(vehicles) do
+        if ImplementUtil.isOptionalSowingMachine(implement) then
+            return true
+        end
+    end
+    return false
 end
 
 function CpVehicleSettings:isOptionalSowingMachineSettingDisabled()
-    local vehicles, found = AIUtil.getAllChildVehiclesWithSpecialization(self, SowingMachine)
-    return not found or vehicles[1]:getAIRequiresTurnOn()
+    return not CpVehicleSettings.isOptionalSowingMachineSettingVisible(self)
 end
 
 

@@ -22,6 +22,16 @@ function CpAITaskFieldWork:setWaitingForRefillingActive()
 end
 
 function CpAITaskFieldWork:update(dt)
+    local strategy = self.vehicle.spec_cpAIFieldWorker.driveStrategy
+    if self.isServer and strategy and not self.waitingForRefillingActive and
+        not strategy.aiWorkStartCancelled and strategy:getIsMaterialCheckActive() and
+        strategy:getIsRequiredMaterialMissing() then
+        -- Hold immediately, including when the job intercepts OutOfFill to wait
+        -- on the field instead of dismissing the helper.
+        self.vehicle:cpHold(1500, true)
+        self.vehicle:stopCurrentAIJob(AIMessageErrorOutOfFill.new())
+        return
+    end
 	-- Hack to reevaluate the refill condition for the new setting state after it changed.
 	local settingWasChanged = false
 	if self.lastSettingValues then 
@@ -38,14 +48,13 @@ function CpAITaskFieldWork:update(dt)
 		local cpSpec = self.vehicle.spec_cpAIFieldWorker
 		self.vehicle:setCpInfoTextActive(InfoTextManager.NEEDS_FILLING)
 
-		local readyToContinue, fillLevelHasChanged = true, false
+		local readyToContinue = true
 		cpSpec.driveStrategy:raiseControllerEventWithLambda(
 			AIDriveStrategyCourse.onUpdateRefillingEvent,
-			function(timerHasFinished, hasChanged)
+			function(timerHasFinished)
 				readyToContinue = readyToContinue and timerHasFinished
-				fillLevelHasChanged = fillLevelHasChanged or hasChanged
 			end)
-		if readyToContinue and fillLevelHasChanged or settingWasChanged then
+		if not cpSpec.driveStrategy:getIsRequiredMaterialMissing() and (readyToContinue or settingWasChanged) then
 			cpSpec.driveStrategy:raiseControllerEvent(
 				AIDriveStrategyCourse.onStopRefillingEvent)
 			self.waitingForRefillingActive = false

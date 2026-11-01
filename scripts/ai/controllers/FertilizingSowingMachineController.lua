@@ -5,7 +5,7 @@ FertilizingSowingMachineController = CpObject(ImplementController)
 
 function FertilizingSowingMachineController:init(vehicle, implement)
     ImplementController.init(self, vehicle, implement)
-	self.fertilizingSowingMachineSpec = self.spec_fertilizingSowingMachine
+	self.fertilizingSowingMachineSpec = implement.spec_fertilizingSowingMachine
 end
 
 local function onStartWorkAreaProcessing(sowingMachine, superFunc, ...)
@@ -22,7 +22,7 @@ local function onStartWorkAreaProcessing(sowingMachine, superFunc, ...)
 	local fertilizingEnabled = rootVehicle:getCpSettings().sowingMachineFertilizerEnabled:getValue()
 	if not fertilizingEnabled then
 		sprayerParams.sprayFillLevel = 0
-		sowingMachine.lastAIHasSprayed = nil
+		sprayerParams.lastAIHasSprayed = nil
 	end
 end
 Sprayer.onStartWorkAreaProcessing = Utils.overwrittenFunction(Sprayer.onStartWorkAreaProcessing, onStartWorkAreaProcessing)
@@ -37,7 +37,8 @@ local function processSowingMachineArea(sowingMachine, superFunc, ...)
 	local fertilizingEnabled = rootVehicle:getCpSettings().sowingMachineFertilizerEnabled:getValue()
 	if not fertilizingEnabled then 
 		sprayerParams.sprayFillLevel = 0
-	elseif sprayerParams.sprayFillLevel <=0 and not sowingMachine:getIsSprayerExternallyFilled() then
+        sprayerParams.lastAIHasSprayed = nil
+	elseif ImplementUtil.isSprayerEmpty(sowingMachine, rootVehicle:getCpSettings()) then
 		CpUtil.debugImplement(CpDebug.DBG_IMPLEMENTS,sowingMachine,"Stopped Cp, as the fertilizer for sowing machine is empty.")
 		rootVehicle:stopCurrentAIJob(AIMessageErrorOutOfFill.new())
 	end

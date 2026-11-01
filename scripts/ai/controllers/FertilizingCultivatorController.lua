@@ -18,7 +18,8 @@ local function processCultivatorArea(cultivator,superFunc,...)
 	local fertilizingEnabled = rootVehicle:getCpSettings().sowingMachineFertilizerEnabled:getValue()
 	if not fertilizingEnabled then 
 		sprayerParams.sprayFillLevel = 0
-	elseif sprayerParams.sprayFillLevel <=0 and not cultivator:getIsSprayerExternallyFilled() then
+        sprayerParams.lastAIHasSprayed = nil
+	elseif ImplementUtil.isSprayerEmpty(cultivator, rootVehicle:getCpSettings()) then
 		CpUtil.debugImplement(CpDebug.DBG_IMPLEMENTS, cultivator, "Stopped Cp, as fertilizer for cultivator is empty.")
 		rootVehicle:stopCurrentAIJob(AIMessageErrorOutOfFill.new())
 	end

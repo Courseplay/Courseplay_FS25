@@ -179,6 +179,11 @@ function AIDriveStrategyCourse:updateAIWorkStart()
     if not startup then
         return true
     end
+    if self.currentTask and self.currentTask.waitingForRefillingActive then
+        -- An initially empty tool may enter the refill phase before its first
+        -- AI start event. Do not activate preparation actions while loading.
+        return false
+    end
     if startup.loop == g_updateLoopIndex then
         return false
     end
