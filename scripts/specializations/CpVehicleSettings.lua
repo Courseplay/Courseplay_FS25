@@ -358,12 +358,21 @@ end
 
 function CpVehicleSettings:isOptionalSowingMachineSettingVisible()
     local vehicles, found = AIUtil.getAllChildVehiclesWithSpecialization(self, SowingMachine)
-    return found and not vehicles[1]:getAIRequiresTurnOn()
+    if not found then
+        return false
+    end
+    if not vehicles[1]:getAIRequiresTurnOn() then
+        --- Passive sowing machines, for example a roller with a seeder configuration.
+        return true
+    end
+    --- Cultivators with a seeder unit configuration, like the Horsch Finer 6 SL,
+    --- are primarily cultivators, so sowing is optional for them as well, even
+    --- though their seeder unit needs to be turned on (#989).
+    return SpecializationUtil.hasSpecialization(Cultivator, vehicles[1].specializations)
 end
 
 function CpVehicleSettings:isOptionalSowingMachineSettingDisabled()
-    local vehicles, found = AIUtil.getAllChildVehiclesWithSpecialization(self, SowingMachine)
-    return not found or vehicles[1]:getAIRequiresTurnOn()
+    return not CpVehicleSettings.isOptionalSowingMachineSettingVisible(self)
 end
 
 
