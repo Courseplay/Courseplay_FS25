@@ -284,6 +284,9 @@ function AIDriveStrategyFieldWorkCourse:initializeImplementControllers(vehicle)
     self:addImplementController(vehicle, SoilSamplerController, nil, defaultDisabledStates, CpUtil.getSoilSamplerSpecName())
     self:addImplementController(vehicle, StumpCutterController, StumpCutter, defaultDisabledStates)
     self:addImplementController(vehicle, TreePlanterController, TreePlanter, {})
+    for _, tool in ipairs(AIUtil.getVineyardToolsWithoutAIMarkers(vehicle)) do
+        self:appendImplementController(VineyardToolController(vehicle, tool), {})
+    end
 
 end
 

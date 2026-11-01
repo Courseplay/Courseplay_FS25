@@ -759,6 +759,37 @@ function AIUtil.hasValidUniversalTrailerAttached(vehicle)
 	return spec.isAutoloadAvailable and not spec.autoloadDisabled
 end
 
+--- Is this a vineyard tool with work areas?
+--- Giants leaves out the AI markers on some of them, for example on the row spreading
+--- configuration of the Kuhn Accura 1200, as the built in helper can't work in vineyards.
+function AIUtil.isVineyardTool(object)
+	if object.getAIIsVineyardTool and object:getAIIsVineyardTool() and WorkWidthUtil.hasWorkAreas(object) then
+		return true
+	end
+	return false
+end
+
+--- Checks if a vineyard tool with work areas is attached.
+function AIUtil.hasVineyardToolAttached(vehicle)
+	for _, childVehicle in pairs(vehicle:getChildVehicles()) do
+		if AIUtil.isVineyardTool(childVehicle) then
+			return true
+		end
+	end
+	return false
+end
+
+--- Gets all vineyard tools, that are not in the AI implement list of giants, as they have no AI markers.
+function AIUtil.getVineyardToolsWithoutAIMarkers(vehicle)
+	local tools = {}
+	for _, childVehicle in pairs(vehicle:getChildVehicles()) do
+		if AIUtil.isVineyardTool(childVehicle) and not childVehicle:getCanImplementBeUsedForAI() then
+			table.insert(tools, childVehicle)
+		end
+	end
+	return tools
+end
+
 --- Checks if cutter on an trailer is attached.
 function AIUtil.hasCutterOnTrailerAttached(vehicle)
 	local trailer = AIUtil.getImplementWithSpecialization(vehicle, DynamicMountAttacher)

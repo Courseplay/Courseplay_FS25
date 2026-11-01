@@ -240,6 +240,7 @@ Changelog 8.1.0.3
 		<sourceFile filename="scripts/ai/controllers/CombineController.lua"/>
 		<sourceFile filename="scripts/ai/controllers/MotorController.lua"/>
 		<sourceFile filename="scripts/ai/controllers/VineCutterController.lua"/>
+		<sourceFile filename="scripts/ai/controllers/VineyardToolController.lua"/>
 		<sourceFile filename="scripts/ai/controllers/WearableController.lua"/>
 		<sourceFile filename="scripts/ai/controllers/SoilSamplerController.lua"/>
 		<sourceFile filename="scripts/ai/controllers/TrailerController.lua"/>
