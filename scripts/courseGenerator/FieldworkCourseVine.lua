@@ -13,28 +13,13 @@ local FieldworkCourseVine = CpObject(CourseGenerator.FieldworkCourse)
 ---@return CourseGenerator.Row[] Rows generated from the lines
 function FieldworkCourseVine.generateRows(workingWidth, lines, rowsBetweenLines)
     local rows = {}
-    for _, l in ipairs(lines) do
+    local drivingLines = VineScanner.createDrivingLines(lines, workingWidth, rowsBetweenLines)
+    for _, l in ipairs(drivingLines) do
         local row = CourseGenerator.Row(workingWidth, { { x = l.x1, y = -l.z1 }, { x = l.x2, y = -l.z2 } })
-        -- extend a bit to make sure it intersects the boundary
-        row:extendStart(20)
-        row:extendEnd(20)
+        -- The scanner already clipped physical rows to the selected field. Ordinary field
+        -- clipping and coverage extensions would change their measured ends again.
+        row.preserveOrchardEndpoints = lines.preserveEndpoints
         table.insert(rows, row)
-    end
-    if rowsBetweenLines then
-        local offset
-        if (rows[2] and rows[1][1]:getExitEdge():isPointOnLeft(rows[2][1])) then
-            -- the second row is on the left side of the first, so move all rows to the left
-            offset = workingWidth / 2
-        else
-            -- the second row is on the right side of the first, so move all rows to the right
-            offset = - workingWidth / 2
-        end
-        -- remove the last one, to keep only the ones between the lines
-        table.remove(rows)
-        for i = 1, #rows do
-            -- move each row to in between the lines
-            rows[i] = rows[i]:createNext(offset)
-        end
     end
     return rows
 end
