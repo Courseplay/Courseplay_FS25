@@ -233,6 +233,9 @@ function AIDriveStrategyCombineCourse:hold(periodMs)
 end
 
 function AIDriveStrategyCombineCourse:getDriveData(dt, vX, vY, vZ)
+    if not self:updateAIWorkStart() then
+        return self:getAIWorkStartDriveData()
+    end
     self:handlePipe(dt)
     self:measureBackDistance()
     Markers.refreshMarkerNodes(self.vehicle, self.measuredBackDistance)

@@ -97,6 +97,10 @@ end
 
 --- Make sure all implements are in the working state
 function AIDriveStrategyFieldWorkCourse:prepareForFieldWork()
+    if self.aiWorkStart then
+        -- Alignment setup can reach here before the start event was processed.
+        return
+    end
     self.vehicle:raiseAIEvent('onAIFieldWorkerPrepareForWork', 'onAIImplementPrepareForWork')
 end
 
@@ -140,6 +144,9 @@ end
 
 --- This is the interface to the Giant's AIFieldWorker specialization, telling it the direction and speed
 function AIDriveStrategyFieldWorkCourse:getDriveData(dt, vX, vY, vZ)
+    if not self:updateAIWorkStart() then
+        return self:getAIWorkStartDriveData()
+    end
     self:updateFieldworkOffset(self.course)
     self:updateLowFrequencyImplementControllers()
     Markers.refreshMarkerNodes(self.vehicle, self.measuredBackDistance)
@@ -165,7 +172,9 @@ function AIDriveStrategyFieldWorkCourse:getDriveData(dt, vX, vY, vZ)
         -- AIFieldWorker:updateAIFieldWorker() triggers a onAIFieldWorkerActive event.
         -- This makes sure that all implements are lowered and started correctly in multiplayer as well.
         self:setMaxSpeed(0)
-        self:prepareForFieldWork()
+        if not self.aiWorkStartPrepared then
+            self:prepareForFieldWork()
+        end
         self.state = self.states.PREPARING
     elseif self.state == self.states.PREPARING then
         self:setMaxSpeed(0)

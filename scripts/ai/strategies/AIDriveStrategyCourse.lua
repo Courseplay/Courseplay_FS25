@@ -150,7 +150,115 @@ function AIDriveStrategyCourse:setAIVehicle(vehicle, jobParameters)
         self:debug('Vehicle has no course, start work without it.')
         self:startWithoutCourse(jobParameters)
     end
-    self:raiseControllerEvent(self.onStartEvent)
+    if not self.aiWorkStart then
+        self:raiseControllerEvent(self.onStartEvent)
+    end
+end
+
+--- Common server-side startup for field workers and combine unloaders. Keep AI events
+--- in distinct update loops so the engine can process controlled actions in between.
+--- This deliberately does not call startFieldWorker(), which installs GIANTS strategies.
+function AIDriveStrategyCourse:beginAIWorkStart()
+    self.aiWorkStart = { phase = "START", notBefore = g_time + 50, loop = g_updateLoopIndex }
+    self.aiWorkStartPrepared = false
+    self.aiWorkStartCancelled = false
+    self.aiWorkStartLoweringRequested = false
+end
+
+function AIDriveStrategyCourse:cancelAIWorkStart()
+    self.aiWorkStart = nil
+    self.aiWorkStartCancelled = true
+    self.aiWorkStartLoweringRequested = false
+end
+
+function AIDriveStrategyCourse:updateAIWorkStart()
+    if self.aiWorkStartCancelled then
+        return false
+    end
+    local startup = self.aiWorkStart
+    if not startup then
+        return true
+    end
+    if startup.loop == g_updateLoopIndex then
+        return false
+    end
+    -- The measuring controller is temporary, so its outstanding restoration belongs
+    -- to the implement, not to that controller's lifetime.
+    for _, implement in pairs(self.vehicle:getChildVehicles()) do
+        if implement.cpPipeMeasurementRestore then
+            startup.notBefore = g_time + 50
+            return false
+        end
+        if implement.cpPipeMeasurementFinishedAt then
+            startup.notBefore = math.max(startup.notBefore, implement.cpPipeMeasurementFinishedAt + 50)
+        end
+    end
+    if g_time < startup.notBefore then
+        return false
+    end
+    if startup.phase == "START" then
+        self:debug('AI startup: start')
+        self.vehicle:raiseAIEvent("onAIFieldWorkerStart", "onAIImplementStart")
+        self:raiseControllerEvent(self.onStartEvent)
+        startup.phase = "PREPARE"
+    elseif startup.phase == "PREPARE" then
+        self:debug('AI startup: prepare for work')
+        self.vehicle:raiseAIEvent("onAIFieldWorkerPrepareForWork", "onAIImplementPrepareForWork")
+        self.aiWorkStartPrepared = true
+        startup.phase = "WAIT"
+        startup.retryAt = g_time + 500
+    else
+        for _, implement in pairs(self.vehicle:getChildVehicles()) do
+            if implement.getIsAIPreparingToDrive and implement:getIsAIPreparingToDrive() then
+                return false
+            end
+        end
+        -- Fold actions do not all use forceUntilFinished in FS25. A preparation
+        -- request can be rejected while another action is still changing state.
+        -- Check the actual registered actions and retry their explicit direction,
+        -- through the GIANTS callback, rather than forcing fold/turn-on states.
+        local waitingForAction = false
+        local actionController = self.vehicle.actionController
+        if actionController then
+            for _, action in ipairs(actionController.actions) do
+                for _, listener in ipairs(action.aiEventListener) do
+                    if listener.eventName == "onAIFieldWorkerPrepareForWork" or
+                        listener.eventName == "onAIImplementPrepareForWork" then
+                        if not action:getIsFinished(listener.direction) then
+                            waitingForAction = true
+                            if g_time >= startup.retryAt then
+                                self:debug('AI startup: retry preparation action %s', tostring(action.name))
+                                action:doAction(listener.direction, true)
+                                startup.loop = g_updateLoopIndex
+                            end
+                        end
+                        break
+                    end
+                end
+            end
+        end
+        if waitingForAction then
+            if g_time >= startup.retryAt then
+                startup.retryAt = g_time + 500
+            end
+            return false
+        end
+        self:debug('AI startup: ready for work')
+        self.aiWorkStart = nil
+        if self.aiWorkStartLoweringRequested then
+            self.aiWorkStartLoweringRequested = false
+            self:lowerImplements()
+        end
+        return true
+    end
+    startup.loop = g_updateLoopIndex
+    return false
+end
+
+function AIDriveStrategyCourse:getAIWorkStartDriveData()
+    self:setMaxSpeed(0)
+    local gx, _, gz = self.ppc:getGoalPointPosition()
+    return gx, gz, not self.ppc:isReversing(), 0, 100
 end
 
 function AIDriveStrategyCourse:fixTurnOnEvent()
@@ -169,6 +277,7 @@ function AIDriveStrategyCourse:isGeneratedCourseNeeded()
 end
 
 function AIDriveStrategyCourse:delete()
+    self:cancelAIWorkStart()
     self:raiseControllerEvent(self.deleteEvent)
 end
 
@@ -274,11 +383,17 @@ end
 --- Normal update function called every frame.
 --- For releasing the helper in the controller, use this one.
 function AIDriveStrategyCourse:updateImplementControllers(dt)
+    if self.aiWorkStart or self.aiWorkStartCancelled then
+        return
+    end
     self:raiseControllerEvent(self.updateEvent, dt)
 end
 
 --- Called in the low frequency function for the helper.
 function AIDriveStrategyCourse:updateLowFrequencyImplementControllers()
+    if self.aiWorkStart or self.aiWorkStartCancelled then
+        return
+    end
     for _, controller in pairs(self.controllers) do
         ---@type ImplementController
         if controller:isEnabled(self.state) then
@@ -327,6 +442,14 @@ function AIDriveStrategyCourse:raiseImplements()
 end
 
 function AIDriveStrategyCourse:lowerImplements()
+    if self.aiWorkStartCancelled then
+        return
+    end
+    if self.aiWorkStart then
+        -- Course/waypoint callbacks may request lowering while startup is held.
+        self.aiWorkStartLoweringRequested = true
+        return
+    end
     self:debug('Lowering all implements')
     --- Lowers all implements, that are available for the giants field worker.
     for _, implement in pairs(self.vehicle:getAttachedAIImplements()) do
@@ -669,6 +792,7 @@ end
 --- Event raised when the driver was stopped.
 ---@param hasFinished boolean|nil flag passed by the info text
 function AIDriveStrategyCourse:onFinished(hasFinished)
+    self:cancelAIWorkStart()
     self:raiseControllerEvent(self.onFinishedEvent, hasFinished)
     if hasFinished and self.settings.foldImplementAtEnd:getValue() then
         --- Folds implements at the end if the setting is active.

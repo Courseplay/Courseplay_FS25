@@ -31,9 +31,7 @@ function PipeController:init(vehicle, implement, doMeasure)
         self:measurePipeProperties()
     else
         -- the vehicle settings should have measured this automatically on load and changes
-        self.pipeOffsetX = vehicle:getCpSettings().pipeOffsetX:getValue()
-        self.pipeOffsetZ = vehicle:getCpSettings().pipeOffsetZ:getValue()
-        self.pipeOnLeftSide = self.pipeOffsetX >= 0
+        self:readPipeOffsets()
     end
 
     self.isDischargingToGroundTimer = CpTemporaryObject(false)
@@ -48,6 +46,17 @@ function PipeController:init(vehicle, implement, doMeasure)
     end
     self.oldAutomaticDischarge = self.pipeSpec.automaticDischarge
     self.pipeSpec.automaticDischarge = true
+end
+
+function PipeController:readPipeOffsets()
+    self.pipeOffsetX = self.vehicle:getCpSettings().pipeOffsetX:getValue()
+    self.pipeOffsetZ = self.vehicle:getCpSettings().pipeOffsetZ:getValue()
+    self.pipeOnLeftSide = self.pipeOffsetX >= 0
+end
+
+function PipeController:onStart()
+    -- A load/attach measurement may have finished after this controller was created.
+    self:readPipeOffsets()
 end
 
 function PipeController:getDriveData()
@@ -330,15 +339,20 @@ end
 
 --- Measures pipe properties: xOffset, zOffset, pipeOnLeftSide
 function PipeController:measurePipeProperties()
-    --- Old fold and pipe states.
-    local isFolded = true
-    if (self.foldableSpec.turnOnFoldDirection == -1 and self.foldableSpec.foldAnimTime == 0) or 
-        (self.foldableSpec.turnOnFoldDirection == 1 and self.foldableSpec.foldAnimTime == 1) then 
-        isFolded = false
+    -- Finish a previous measurement before taking another snapshot (for example
+    -- when several implements are attached in the same frame).
+    if self.implement.cpPipeMeasurementRestore then
+        self.implement.cpPipeMeasurementRestore()
     end
-    local foldAnimTime = self.foldableSpec.foldAnimTime
-    local currentFoldDirection = self.foldableSpec.foldMoveDirection
-    local pipeAnimTime = self.implement:getAnimationTime(self.pipeSpec.animation.name)
+    --- Old fold and pipe states.
+    local foldable = self.foldableSpec
+    local isFolded = foldable ~= nil and not (
+        (foldable.turnOnFoldDirection == -1 and foldable.foldAnimTime == 0) or
+        (foldable.turnOnFoldDirection == 1 and foldable.foldAnimTime == 1))
+    local foldAnimTime = foldable and foldable.foldAnimTime
+    local currentFoldDirection = foldable and foldable.foldMoveDirection
+    local wasTurnedOn = self.implement.getIsTurnedOn and self.implement:getIsTurnedOn()
+    local pipeAnimTime = self.pipeSpec.animation.name and self.implement:getAnimationTime(self.pipeSpec.animation.name)
     local targetPipeState = self.pipeSpec.targetState
     local currentPipeState = self.pipeSpec.currentState
     
@@ -369,7 +383,7 @@ function PipeController:measurePipeProperties()
 
     --- Restoring old states.
     self:resetFold(isFolded, currentFoldDirection, foldAnimTime, 
-        currentPipeState, targetPipeState, pipeAnimTime)
+        currentPipeState, targetPipeState, pipeAnimTime, wasTurnedOn)
     self:printFoldableDebug()
     self:printPipeDebug()
     local configOffsetX = g_vehicleConfigurations:get(self.implement, "unloadOffsetX" )
@@ -377,6 +391,8 @@ function PipeController:measurePipeProperties()
         self:debug("Setting pipe x offset to configured %.2f x offset", configOffsetX)
         self.pipeOffsetX = configOffsetX
     end
+    self.pipeOnLeftSide = self.pipeOffsetX >= 0
+    self.implement.cpPipeMeasurementFinishedAt = g_time
 end
 
 --- Unfolds the pipe completely to measure the pipe properties.
@@ -409,7 +425,7 @@ end
 
 --- Instantly folds the pipe and the implement.
 function PipeController:instantFold()
-    if self.pipeSpec.currentState ~= self.pipeSpec.targetPipeState or self.pipeSpec.currentState ~= PipeController.PIPE_STATE_CLOSED then 
+    if self.pipeSpec.currentState ~= self.pipeSpec.targetState or self.pipeSpec.currentState ~= PipeController.PIPE_STATE_CLOSED then
         if self.pipeSpec.animation.name ~= nil then
             self.implement:setAnimationTime( self.pipeSpec.animation.name, 0, true, false )
         end
@@ -433,8 +449,14 @@ end
 ---@param foldAnimTime number
 ---@param currentPipeState number
 ---@param targetPipeState number
----@param pipeAnimTime number
-function PipeController:resetFold(isFolded, currentFoldDirection, foldAnimTime, currentPipeState, targetPipeState, pipeAnimTime)
+---@param pipeAnimTime number|nil
+---@param wasTurnedOn boolean|nil
+function PipeController:resetFold(isFolded, currentFoldDirection, foldAnimTime, currentPipeState, targetPipeState, pipeAnimTime, wasTurnedOn)
+    local function restoreTurnOn()
+        if wasTurnedOn ~= nil and self.implement:getIsTurnedOn() ~= wasTurnedOn then
+            self.implement:setIsTurnedOn(wasTurnedOn, true)
+        end
+    end
     if currentPipeState == targetPipeState and currentPipeState == PipeController.PIPE_STATE_OPEN then 
         --- Pipe was already extended before measurement, 
         --- so the everything can be left as it is.
@@ -457,9 +479,31 @@ function PipeController:resetFold(isFolded, currentFoldDirection, foldAnimTime, 
         AnimatedVehicle.updateAnimations(self.implement, 99999999, true)
         self.implement:setFoldDirection(0, true)
         self.implement:setFoldDirection(-self.foldableSpec.turnOnFoldDirection, true)
-        Timer.createOneshot(1, function()
-            self.implement:setFoldDirection(currentFoldDirection, true)
-        end)
+        local implement = self.implement
+        local restore
+        local timer
+        restore = function()
+            if implement.cpPipeMeasurementRestore ~= restore then
+                return
+            end
+            if timer then
+                timer:delete()
+                timer = nil
+            end
+            implement:setFoldDirection(currentFoldDirection, true)
+            -- Folding can affect the pipe again. Restore its original target and
+            -- animation only after the fold animation has been processed.
+            implement:setPipeState(targetPipeState, true)
+            if self.pipeSpec.animation.name ~= nil then
+                implement:setAnimationTime(self.pipeSpec.animation.name, pipeAnimTime, true, false)
+            end
+            implement:updatePipeNodes(99999999, nil)
+            restoreTurnOn()
+            implement.cpPipeMeasurementFinishedAt = g_time
+            implement.cpPipeMeasurementRestore = nil
+        end
+        implement.cpPipeMeasurementRestore = restore
+        timer = Timer.createOneshot(1, restore)
     else 
         self:debug("Implement was unfolded before, but pipe was not unfolded.")
         if self.pipeSpec.animation.name ~= nil then
@@ -477,6 +521,7 @@ function PipeController:resetFold(isFolded, currentFoldDirection, foldAnimTime, 
             self:debug("Pipe was closing before measurement.")
         end
         self.implement:updatePipeNodes(99999999, nil)
+        restoreTurnOn()
     end
 end
 
@@ -772,6 +817,9 @@ function PipeController:printPipeDebug()
 end
 
 function PipeController:printFoldableDebug()
+    if not self.foldableSpec then
+        return
+    end
     self:debug("--Foldable Debug--")
     self:debug("Foldable => startAnimTime: %.2f, foldAnimTime: %.2f", 
         self.foldableSpec.startAnimTime, self.foldableSpec.foldAnimTime)

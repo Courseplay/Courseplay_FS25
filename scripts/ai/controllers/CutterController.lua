@@ -51,7 +51,8 @@ function CutterController:getDriveData()
     else
         self:cancelDelayedTurnOff()
         --- Turns it back on, when the unloading finished and the cutter is lowered.
-        if not self.implement:getIsTurnedOn() and self.implement:getIsLowered() then
+        if not self.implement:getIsTurnedOn() and self.implement:getIsLowered() and
+            self.implement:getCanBeTurnedOn() then
             self.implement:setIsTurnedOn(true)
         end
     end
