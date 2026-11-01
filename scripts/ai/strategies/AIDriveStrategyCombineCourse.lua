@@ -274,6 +274,10 @@ function AIDriveStrategyCombineCourse:getDriveData(dt, vX, vY, vZ)
         if not self.pipeController:isInAllowedState() then
             self:debugSparse('Pipe is not in allowed state, stop')
             self:setMaxSpeed(0)
+            if fillLevel < 0.1 then
+	  	        self.pipeController:closePipe()
+		        self.forcePipeClose:set(true, 2000)
+            end
         end
 
         if self:shouldStopForUnloading() then
