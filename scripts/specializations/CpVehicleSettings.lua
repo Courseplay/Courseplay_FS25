@@ -120,6 +120,7 @@ function CpVehicleSettings:onUpdate()
         CpVehicleSettings.setPipeOffset(self)
     end
     spec.finishedFirstUpdate = true
+    CpVehicleSettings.updatePendingWorkWidth(self)
     if spec.needsRefresh then 
         CpVehicleSettings.validateSettings(self)
         spec.needsRefresh = false
@@ -130,15 +131,9 @@ end
 --- For example Lime and Fertilizer might have a different work width.
 function CpVehicleSettings:onStateChange(state, data)
     local spec = self.spec_cpVehicleSettings
-    if state == VehicleStateChange.FILLTYPE_CHANGE and self:getIsSynchronized() then
-        local _, hasSprayer = AIUtil.getAllChildVehiclesWithSpecialization(self, Sprayer, nil)
-        if self.isServer and hasSprayer then 
-            local width, offset = WorkWidthUtil.getAutomaticWorkWidthAndOffset(self, nil, nil)
-            local oldWidth = self:getCourseGeneratorSettings().workWidth:getValue()
-            if not MathUtil.equalEpsilon(width, oldWidth, 1)  then 
-                CpUtil.debugVehicle(CpDebug.DBG_IMPLEMENTS, self, "Changed work width, as the fill type changed.")
-                self:getCourseGeneratorSettings().workWidth:setFloatValue(width)
-            end
+    if state == VehicleStateChange.FILLTYPE_CHANGE then
+        if AIUtil.hasChildVehicleWithSpecialization(self, Sprayer) then
+            CpVehicleSettings.requestWorkWidthUpdate(self, false)
         end
     elseif state == VehicleStateChange.ATTACH then
         CpVehicleSettings.setAutomaticWorkWidthAndOffset(self)
@@ -163,6 +158,47 @@ function CpVehicleSettings:onStateChange(state, data)
         CpVehicleSettings.resetToDefault(self, data.attachedVehicle, spec.lowerImplementEarly, 
             'lowerEarly', false)
         spec.needsRefresh = true
+    end
+end
+
+--- Fill types, active spray types and variable sections are updated in different
+--- engine callbacks. Coalesce them and measure in a later update, on the server.
+function CpVehicleSettings.requestWorkWidthUpdate(object, updateOffset)
+    local vehicle = object.rootVehicle or object
+    local spec = vehicle.spec_cpVehicleSettings
+    if not vehicle.isServer or not spec then
+        return
+    end
+    spec.workWidthUpdate = {
+        loop = g_updateLoopIndex,
+        updateOffset = updateOffset or (spec.workWidthUpdate and spec.workWidthUpdate.updateOffset) or false
+    }
+end
+
+function CpVehicleSettings:updatePendingWorkWidth()
+    local spec = self.spec_cpVehicleSettings
+    local pending = spec.workWidthUpdate
+    if not pending or not self.isServer or not self:getIsSynchronized() or
+        pending.loop == g_updateLoopIndex then
+        return
+    end
+    spec.workWidthUpdate = nil
+    local width, offset = WorkWidthUtil.getAutomaticWorkWidthAndOffset(self)
+    -- An unresolved/disabled work area must not replace the setting with zero.
+    if width <= 0 then
+        return
+    end
+    local setting = self:getCourseGeneratorSettings().workWidth
+    local oldWidth = setting:getValue()
+    -- A material may provide a larger range than the previously loaded value.
+    setting:refresh()
+    if not MathUtil.equalEpsilon(width, oldWidth, 0.001) then
+        setting:setFloatValue(width)
+        CpUtil.debugVehicle(CpDebug.DBG_IMPLEMENTS, self,
+            "Updated automatic work width after material/section change: %.2f -> %.2f", oldWidth, width)
+    end
+    if pending.updateOffset then
+        self:getCpSettings().toolOffsetX:setFloatValue(offset)
     end
 end
 
