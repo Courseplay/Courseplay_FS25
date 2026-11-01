@@ -1087,8 +1087,5 @@ Das Kreuz sollte jetzt, wie im Bild dargestellt, gelb sein.
     <text name="input_CP_OPEN_COURSEGENERATOR_SETTINGS" text="CP: Kursgenerator/Jobmenü öffnen"/>
     <text name="input_CP_OPEN_COURSEMANAGER" text="CP: Kursmanager öffnen"/>
     <text name="input_CP_OPEN_INGAME_MENU" text="CP: Menu öffnen"/>
-    <text name="CP_error_plantation_unsupported" text="Diese Plantage stellt keine unterstützten Reihendaten bereit." />
-    <text name="CP_error_plantation_layout" text="Diese Plantage hat Lücken oder unregelmäßige Reihenabstände. Bitte einen zusammenhängenden Block paralleler Reihen auswählen." />
-    <text name="CP_error_plantation_no_rows" text="Zwischen diesen Reihen ist keine nutzbare Fahrspur vorhanden." />
   </texts>
 </l10n>

@@ -1103,8 +1103,5 @@ Now your selection should look similar to the image.
     <text name="input_CP_OPEN_COURSEGENERATOR_SETTINGS" text="CP: Open course generator/job menu"/>
     <text name="input_CP_OPEN_COURSEMANAGER" text="CP: Open course manager"/>
     <text name="input_CP_OPEN_INGAME_MENU" text="CP: Open menu"/>
-    <text name="CP_error_plantation_unsupported" text="This plantation does not provide supported row data." />
-    <text name="CP_error_plantation_layout" text="This plantation has gaps or irregular row spacing. Select a continuous block of parallel rows." />
-    <text name="CP_error_plantation_no_rows" text="There is no usable driving lane between these rows." />
   </texts>
 </l10n>
