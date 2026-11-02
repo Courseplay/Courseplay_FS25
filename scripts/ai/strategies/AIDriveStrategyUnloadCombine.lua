@@ -473,10 +473,9 @@ function AIDriveStrategyUnloadCombine:getDriveData(dt, vX, vY, vZ)
 
     elseif self.state == self.states.MOVING_BACK_WITH_TRAILER_FULL then
         self:setMaxSpeed(self.settings.reverseSpeed:getValue())
-        -- drive back to have some room for the pathfinder
-        local _, dx, dz = self:getDistanceFromCombine(self.state.properties.vehicle)
-        -- drive back more if we are close to the harvester
-        if dz > ((math.abs(dx) < self.turningRadius) and 0 or -3) then
+        -- drive back until the combine is behind us before going to unload the trailer
+        local _, _, dz = self:getDistanceFromCombine(self.state.properties.vehicle)
+        if dz > 0 then
             self:startUnloadingTrailers()
         end
 
@@ -1960,6 +1959,10 @@ function AIDriveStrategyUnloadCombine:unloadStoppedCombine()
     end
     local gx, gz
     local combineDriver = self.combineToUnload:getCpDriveStrategy()
+    if combineDriver:isWaitingForUnloaderToLeave() then
+        self:backAwayWhenCombineWaitingToLeave(combineDriver)
+        return
+    end
     if combineDriver:isUnloadFinished() then
         if combineDriver:isWaitingForUnloadAfterCourseEnded() then
             if combineDriver:getFillLevelPercentage() < 0.1 then
@@ -2004,6 +2007,11 @@ function AIDriveStrategyUnloadCombine:unloadMovingCombine()
 
     local combineStrategy = self.combineToUnload:getCpDriveStrategy()
     local gx, gz = self:driveBesideCombine()
+
+    if combineStrategy:isWaitingForUnloaderToLeave() then
+        self:backAwayWhenCombineWaitingToLeave(combineStrategy)
+        return
+    end
 
     --when the combine is empty, stop and wait for next combine (unless this can't work without an unloader nearby)
     if combineStrategy:getFillLevelPercentage() <= 0.1 and not combineStrategy:alwaysNeedsUnloader() then
@@ -2076,8 +2084,9 @@ function AIDriveStrategyUnloadCombine:onUnloadingMovingCombineFinished(combineSt
     elseif combineStrategy:isTurningOnHeadland() then
         self:debug('combine empty and turning on headland, moving back')
         self:startMakingRoomForCombineTurningOnHeadland(self.combineToUnload)
-    elseif combineStrategy:isTurning() or combineStrategy:isAboutToTurn() then
-        self:debug('combine empty and moving forward but we are too close to the end of the row or combine is turning, moving back')
+    elseif combineStrategy:isWaitingForUnloaderToLeave() or combineStrategy:isWaitingForUnloadBeforeNextRow() or
+            combineStrategy:isTurning() or combineStrategy:isAboutToTurn() then
+        self:debug('combine empty at end of row or turning, moving back to make room')
         self:startMovingBackFromCombine(self.states.MOVING_BACK, self.combineToUnload, true)
         return
     elseif self:getAllTrailersFull(self.settings.fullThreshold:getValue()) then
@@ -2097,6 +2106,25 @@ end
 ------------------------------------------------------------------------------------------------------------------------
 -- Start moving back from empty combine
 ------------------------------------------------------------------------------------------------------------------------
+function AIDriveStrategyUnloadCombine:isBackingAwayFromCombine()
+    return self.state == self.states.MOVING_BACK
+            or self.state == self.states.MOVING_BACK_WITH_TRAILER_FULL
+            or self.state == self.states.MOVING_BACK_FOR_HEADLAND_TURN
+            or self.state == self.states.MOVING_BACK_BEFORE_PATHFINDING
+end
+
+--- The combine entered WAITING_FOR_UNLOADER_TO_LEAVE; back away if we have not already.
+---@param combineStrategy AIDriveStrategyCombineCourse
+function AIDriveStrategyUnloadCombine:backAwayWhenCombineWaitingToLeave(combineStrategy)
+    if self:isBackingAwayFromCombine() then
+        return
+    end
+    if combineStrategy:isWaitingForUnloaderToLeave() then
+        self:debug('Combine waiting for unloader to leave, moving back')
+        self:startMovingBackFromCombine(self.states.MOVING_BACK, self.combineToUnload, true)
+    end
+end
+
 function AIDriveStrategyUnloadCombine:startMovingBackFromCombine(newState, combine, holdCombineWhileMovingBack)
     if self.unloadTargetType == self.UNLOAD_TYPES.SILO_LOADER then
         --- Finished unloading of silo unloader. Moving back is not needed.
