@@ -43,6 +43,10 @@
 			<Text language="de"><![CDATA[Erstelle einen Kurs vor dem Starten des Jobs.]]></Text>
 			<Text language="en"><![CDATA[Generate a course before starting the job.]]></Text>
 		</Translation>
+		<Translation name="CP_error_no_windrows">
+			<Text language="de"><![CDATA[Keine Schwaden auf dem Feld gefunden.]]></Text>
+			<Text language="en"><![CDATA[No windrows found on the field.]]></Text>
+		</Translation>
 		<Translation name="CP_error_could_not_generate_course">
 			<Text language="de"><![CDATA[Konnte keinen Kurs generieren. Bitte versuchen es mit anderen Einstellungen.]]></Text>
 			<Text language="en"><![CDATA[Could not generate course. Please try other settings.]]></Text>
@@ -334,6 +338,10 @@
 		<Translation name="CP_job_baleCollect">
 			<Text language="de"><![CDATA[CP: Ballen sammeln/wickeln]]></Text>
 			<Text language="en"><![CDATA[CP: Bale collect/wrap]]></Text>
+		</Translation>
+		<Translation name="CP_job_baleWindrows">
+			<Text language="de"><![CDATA[CP: Schwad pressen]]></Text>
+			<Text language="en"><![CDATA[CP: Bale windrows]]></Text>
 		</Translation>
 		<Translation name="CP_job_combineUnload">
 			<Text language="de"><![CDATA[CP: Drescher entladen]]></Text>

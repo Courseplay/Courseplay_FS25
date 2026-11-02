@@ -525,5 +525,7 @@ function CpAIJob.registerJob(aiJobTypeManager)
 	register(CpAIJobCombineUnloader)
 	register(CpAIJobSiloLoader)
 	register(CpAIJobBunkerSilo)
+	-- register new jobs LAST so existing job-type indices are not shifted (breaks savegame job restore)
+	register(CpAIJobBaleWindrows)
 end
 

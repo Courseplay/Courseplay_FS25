@@ -57,7 +57,11 @@ function CpObject(base, baseClassInit)
 		end
 		return obj
 	end
-	c.baseClassInit = baseClassInit
+	-- Inherit the Giants base constructor (e.g. AIJob.new) from the base class when this subclass does not
+	-- pass its own, so it propagates through the WHOLE inheritance chain. Without this, only a direct child
+	-- of the Giants-backed class runs the base constructor; a grandchild silently skips it and ends up with
+	-- an uninitialized Giants object.
+	c.baseClassInit = baseClassInit or (type(base) == 'table' and base.baseClassInit) or nil
 	c.is_a = function(self, klass)
 		local m = getmetatable(self)
 		while m do
