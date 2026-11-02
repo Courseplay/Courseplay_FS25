@@ -94,7 +94,7 @@
 	</SettingSubTitle>
 
 	<SettingSubTitle title="bunkerSilo" isVisible="areBunkerSiloSettingsVisible">
-		<Setting classType="AIParameterSettingList" name="bunkerSiloWorkWidth" min="3" max="50" incremental="0.1" unit="2" setDefault="setAutomaticBunkerSiloWorkWidth" onChangeCallback="cpShowWorkWidth"/>
+		<Setting classType="AIParameterSettingList" name="bunkerSiloWorkWidth" min="2" max="20" incremental="0.1" unit="2" setDefault="setAutomaticBunkerSiloWorkWidth" onChangeCallback="cpShowWorkWidth"/>
 		<Setting classType="AIParameterSettingList" name="loadingShovelHeightOffset" min="-1" max="1" incremental="0.05" default="0" unit="2" precision="3"
 				isVisible="isLoadingShovelOffsetSettingVisible" isDisabled="isLoadingShovelOffsetSettingDisabled" 
 				onChangeCallback="onCpLoadingShovelOffsetSettingChanged" vehicleConfiguration="loadingShovelOffset"/>
@@ -112,7 +112,7 @@
 		<!--Unload on first Headland-->
 		<Setting classType="AIParameterBooleanSetting" name="unloadOnFirstHeadland" defaultBool="false" isExpertModeOnly="true"/>
 		<!--UnloadLevel-->
-		<Setting classType="AIParameterSettingList" name="callUnloaderPercent" min="60" max="90" incremental="5" default ="80" unit="4" isExpertModeOnly="false"/>
+		<Setting classType="AIParameterSettingList" name="callUnloaderPercent" min="20" max="90" incremental="5" default ="80" unit="4" isExpertModeOnly="false"/>
 		<!--Strawswath-->
 		<Setting classType="AIParameterSettingList" name="strawSwath" default="2">
 			<Values>
