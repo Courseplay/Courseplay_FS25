@@ -329,7 +329,8 @@ end
 
 function PipeController:isEmpty()
     local dischargeNode = self:getDischargeNode()
-    return self.implement:getFillUnitFillLevelPercentage(dischargeNode.fillUnitIndex) <= 0
+    return dischargeNode ~= nil and dischargeNode.fillUnitIndex ~= nil
+            and self.implement:getFillUnitFillLevelPercentage(dischargeNode.fillUnitIndex) <= 0
 end
 
 --- Gets the pipe z offset relative to the root vehicles direction node.

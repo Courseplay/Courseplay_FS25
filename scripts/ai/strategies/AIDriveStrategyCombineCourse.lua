@@ -1510,6 +1510,9 @@ function AIDriveStrategyCombineCourse:handlePipe(dt)
 end
 
 function AIDriveStrategyCombineCourse:handleCombinePipe(dt)
+    if self:updatePipeWorkRecovery() then
+        return
+    end
     -- don't open the pipe while turning or driving to self unload
     -- open it when there's a trailer in range or when AutoDrive wants us to open it
     if self:isPipeOpenEnabled() and (self:isAGoodTrailerInRange() or self:isAutoDriveWaitingForPipe()) then
@@ -1528,7 +1531,9 @@ function AIDriveStrategyCombineCourse:handleCombinePipe(dt)
     end
     -- Close the pipe if configured to do so after unloading
     if self.pipeController:isPipeOpen() and self.pipeController:justStoppedDischarging() then
-        if g_vehicleConfigurations:get(self.vehicle, 'closePipeAfterUnload') then
+        if g_vehicleConfigurations:get(self.vehicle, 'closePipeAfterUnload') and
+                (self.pipeController:canWorkWhenOpen() or
+                 (not self.pipeController:isDischarging() and not self.pipeController:isSomethingInRange())) then
             self:debug('Closing pipe after unloading done.')
             self.pipeController:closePipe()
             -- TODO: now with the canWorkWhenOpen() check we may not need this anymore
@@ -1542,6 +1547,52 @@ function AIDriveStrategyCombineCourse:handleCombinePipe(dt)
         self.forcePipeClose:setAndProlong(true, 2000)
         self:debugSparse('Pipe open disabled, trailer still in range after unloading...')
     end
+end
+
+--- Recover from a pipe or lifting bunker that prevents harvesting after unloading.
+---@return boolean handled True while recovery owns the pipe and fieldwork is held.
+function AIDriveStrategyCombineCourse:updatePipeWorkRecovery()
+    local state = self.state
+    if not self.vehicle.isServer or self.aiWorkStartCancelled or
+            (state ~= self.states.WORKING and state ~= self.states.WAITING_FOR_LOWER and
+             state ~= self.states.WAITING_FOR_LOWER_DELAYED) then
+        self.pipeWorkRecovery = nil
+        return false
+    end
+
+    local pipe = self.pipeController
+    if not self.pipeWorkRecovery then
+        if self:alwaysNeedsUnloader() or pipe:isInAllowedState() or pipe:canWorkWhenOpen() or
+                not pipe:isInAllowedState(PipeController.PIPE_STATE_CLOSED) or
+                not pipe:isEmpty() or pipe:isDischarging() then
+            return false
+        end
+        self.pipeWorkRecovery = true
+        self:debug('Empty discharge unit blocks harvesting, wait for the pipe to close')
+    end
+
+    -- Let the unloader leave the trigger before moving the pipe or bunker.
+    -- Suppress automatic opening while waiting, including AutoDrive requests.
+    self.forcePipeClose:set(true, 2000)
+    if not pipe:isInAllowedState() or pipe:isPipeMoving() then
+        self:setMaxSpeed(0)
+        if pipe:isEmpty() and not pipe:isDischarging() then
+            pipe:closePipe(true)
+        end
+        return true
+    end
+
+    local combine = self.combine
+    if combine.getIsTurnedOn and not combine:getIsTurnedOn() then
+        self:setMaxSpeed(0)
+        if not combine:getCanBeTurnedOn() then
+            return true
+        end
+        self:debug('Pipe allows harvesting again, restart fieldwork')
+        self:changeToFieldWork()
+    end
+    self.pipeWorkRecovery = nil
+    return true
 end
 
 --- we don't want random triggers to open the pipe while turning or driving to another trailer
