@@ -1047,9 +1047,32 @@ end
 
 function VineTurn:startTurn()
     local turnManeuver = VineTurnManeuver(self.vehicle, self.turnContext, self.vehicle:getAIDirectionNode(),
-            self.turningRadius, self.workWidth)
+            self.turningRadius, self.workWidth, self.ppc:getLookaheadDistance())
     self.turnCourse = turnManeuver:getCourse()
     self.ppc:setCourse(self.turnCourse)
     self.ppc:initialize(1)
     self.state = self.states.TURNING
+end
+
+function VineTurn:isAlignedWithNextRow()
+    local directionNode = self.vehicle:getAIDirectionNode()
+    local lateralError = localToLocal(directionNode, self.turnContext.turnEndWpNode.node, 0, 0, 0)
+    return math.abs(lateralError) <= 0.25 and self.turnContext:isDirectionCloseToEndDirection(directionNode, 5)
+end
+
+function VineTurn:endTurn(dt)
+    -- With no AI markers, the generic turn can finish as soon as lowering is requested.
+    if not self:isAlignedWithNextRow() then
+        return true
+    end
+    return CourseTurn.endTurn(self, dt)
+end
+
+function VineTurn:onWaypointPassed(ix, course)
+    if course == self.turnCourse and ix == course:getNumberOfWaypoints() and not self:isAlignedWithNextRow() then
+        self:debug('End of turn reached without alignment to the next row, stopping fieldwork')
+        self.vehicle:stopCurrentAIJob(AIMessageCpError.new())
+        return
+    end
+    AITurn.onWaypointPassed(self, ix, course)
 end
