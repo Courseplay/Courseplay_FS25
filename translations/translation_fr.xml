@@ -16,7 +16,7 @@
     <text name="CP_copy" text="Course copiée : "/>
     <text name="CP_infoText" text="Courseplay(%s): Pour toute demande d'assistance, signalement de bug ou suivi des mises à jour, rendez vous sur le site officiel : https://github.com/Courseplay/Courseplay_FS22."/>
     <text name="CP_error_no_course" text="Générez ou chargez une course avant de démarrer la tâche"/>
-    <text name="CP_error_could_not_generate_course" text="Impossible de générer la course. Plus d'informations dans le journal."/>
+    <text name="CP_error_could_not_generate_course" text="Impossible de générer la course. Essayez d'autres paramètres."/>
     <text name="CP_error_field_detection_still_running" text="La détection du champ est toujours en cours."/>
     <text name="CP_error_field_detection_failed" text="La détection du champ a échoué."/>
     <text name="CP_error_not_on_field" text="Le point de départ n'est pas dans un champ"/>
@@ -466,7 +466,7 @@ La course est automatiquement sauvegardée à la fermeture de l'éditeur et remp
     <!---->
     <!--Course editor-->
     <!---->
-    <text name="CP_editor_course_title" text="Editeur de course"/>
+    <text name="CP_editor_course_title" text="Éditeur de course : %s"/>
     <text name="CP_editor_custom_field_title" text="Editeur de champ personnalisé : %s"/>
     <text name="CP_editor_change_lane_offset" text="Modifie le décalage de la ligne sélectionnée(%s)"/>
     <text name="CP_editor_save_changes" text="Sauvegarder les changements de %s ?"/>
@@ -526,8 +526,8 @@ La course est automatiquement sauvegardée à la fermeture de l'éditeur et remp
     <!---->
     <!--Custom field manager-->
     <!---->
-    <text name="CP_customFieldManager_hotspotName" text="Custom field"/>
-    <text name="CP_customFieldManager_fieldList" text="Custom fields"/>
+    <text name="CP_customFieldManager_hotspotName" text="Champ personnalisé"/>
+    <text name="CP_customFieldManager_fieldList" text="Champs personnalisés"/>
     <text name="CP_customFieldManager_confirm_save" text="Souhaitez-vous sauvegarder la course enregistrée comme contour de champ personnalisé %s?"/>
     <text name="CP_customFieldManager_confirm_delete" text="Souhaitez-vous supprimer le champ personnalisé %s?"/>
     <text name="CP_customFieldManager_delete" text="Supprimer le champ personnalisé"/>
@@ -545,7 +545,7 @@ La course est automatiquement sauvegardée à la fermeture de l'éditeur et remp
     <!---->
     <!--CP ingame menu-->
     <!---->
-    <text name="CP_ingameMenu_map_title" text="Map"/>
+    <text name="CP_ingameMenu_map_title" text="Carte"/>
     <!---->
     <!--Help menu-->
     <!---->
@@ -574,10 +574,10 @@ De cette façon, nous essayons d'aider les nouveaux utilisateurs à se familiari
 "/>
     <text name="CP_help_page_extendedJobMenu_title" text="Nouveau menu des ouvriers"/>
     <text name="CP_help_page_startJobMenuBase_text" text="
-Vous devez d'abord sélectionner un véhicule depuis le menu des ouvriers afin de pouvoir générer une course CP ou configurer les paramètres de la course actuelle. 
-La course active s'affichera sur la carte.
-Les paramètres globaux sont toujours accessibles.
-Pour générer une course et la démarrer, choisissez dans le type de tâche CP:Travail,CP:Ramassage/enrub. bottes, CP:Tassage silo, CP:Remplissage silo.
+Les paramètres des ouvriers se trouvent désormais dans notre nouveau menu « Paramètres des ouvriers ». Son fonctionnement est similaire à celui de l'ancien menu IA. Sélectionnez un véhicule dans le menu IA pour créer une tâche adaptée aux outils attelés ou au véhicule sélectionné. Outre la carte et les paramètres de la tâche, vous trouverez en haut les
+paramètres du générateur de courses et du générateur de courses pour les vignes. Ils ne sont
+accessibles qu'avec un outil compatible lors de la création d'une tâche. Pour générer une
+course et démarrer les tâches Courseplay, créez la tâche CP:Travail avec un outil ou un véhicule compatible. Astuce : pour y accéder plus rapidement, cliquez sur « Aucune course » dans l'ATH. Le menu s'ouvrira avec une tâche déjà créée pour le véhicule.
 "/>
     <text name="CP_help_page_startJobMenuFunctions_text" text="
 Pour créer une course CP, assurez vous de sélectionner un véhicule équipé avec des outils compatibles avec un travail du Courseplay (CP).
@@ -605,19 +605,19 @@ Si vous souhaitez aller plus loin dans les réglages, vous pouvez toujours les m
 Le plus simple est d'expérimenter un paramètre à la fois et d'observer son impact sur la course elle-même ou sur son tracé.
 "/>
     <text name="CP_help_page_courseGeneratorBaseFunctions_text" text="
-Paramètres de base :
-Les premières valeurs de la liste sont les réglages les plus courants.
-- Largeur de travail : La détection est automatique selon les outils attelés mais ajustable si nécessaire.
-- Outils multiples : Permet de faire travailler plusieurs ouvriers dans le même champ avec la même course. Il y a une rubrique d'aide spécifique à ce sujet.
-- Nombre de fourrières : Le meilleur moyen pour maintenir votre véhicule dans le champ lorsqu'il devra manoeuvrer en bout de rang est de créer des fourrières autour du champ.
-Le nombre de fourrières multiplié par la largeur de travail doit au minimum être équivalent à la longueur totale de votre véhicule avec tous ses outils déployés.
-Gestion des rangs :
-- Il existe plusieurs approches pour créer les rangs de travail, la plus classique et courante est celle des allers-retours. 
-Les approches en spirales, blocs ou circulaires ont leur utilité selon le contexte. En mode blocs, les moissonneuses conserveront leur goulotte de sortie vers l'extérieur des cultures pour faciliter leur vidange par les autres ouvriers.
-- Orientation des rangs : la course proposera automatiquement la meilleure orientation des rangs (en général alignée sur le bord le plus long) mais vous pouvez la modifier manuellement.
-- Rangs à ignorer : Permet d'accélérer grandement le temps de travail car cela évite à l'ouvrier de devoir manoeuvrer en bout de rang pour se positionner pour le prochain rang.
-- Rangs par blocs : Utilisé uniquement lorsque la gestion des rangs est en mode blocs pour déterminer combien de rangs vont composer chaque bloc. Plus il y aura de rangs et moins il y aura de blocs.
-- Angle de l'orientation : Lorsque l'orientation des rangs (allers-retours) est en mode manuelle, permet de spécifier l'angle de celle-ci lors de la génération de la course.
+Paramètres de base
+: Les premières valeurs sont les réglages essentiels.
+- Largeur de travail : Courseplay détecte automatiquement la largeur de
+travail de la plupart des outils. Si la détection échoue, vous pouvez la régler manuellement. Ce paramètre influe sur
+l'ensemble de la course. - Marge du champ : Les valeurs positives réduisent la surface du champ pour ajouter une
+marge autour de la zone travaillée lorsque des obstacles se trouvent près de la bordure. Les valeurs négatives
+étendent la zone
+travaillée au-delà des limites du champ pour couvrir les bordures mal détectées. -
+Nombre de fourrières : Ajouter des fourrières est le meilleur moyen de maintenir les véhicules dans le champ lorsqu'ils tournent en bout de rang.
+Le nombre de fourrières multiplié par la largeur de travail doit être au moins égal à la longueur totale
+du véhicule et de l'outil attelé. - Démarrer par : Comme indiqué dans le menu IA étendu, la position dans le
+champ sert à définir le début ou la fin de la course de travail. Pour la récolte, commencez par les fourrières et progressez vers le centre
+du champ. Pour le labour, le semis et le déchaumage, commencez au centre et progressez vers les fourrières.
 "/>
     <text name="CP_help_page_courseGeneratorHeadland_text" text="
 Le paramétrage des fourrières n'apparait que lorsque vous en souhaitez au moins une.
@@ -625,11 +625,11 @@ Vous pouvez spécifier si la course doit démarrer par elles, comment sont appr�
 Les fourrières sont fortement recommandées pour aider les véhicules à rester dans le champ lorsqu'ils manoeuvrent en bout de rang.
 "/>
     <text name="CP_help_page_courseGeneratorHeadlandFunctions_text" text="
-- Démarrer par : Permet de choisir si la course doit d'abord démarrer ou terminer par les fourrières.
-- Angle des fourrières : Virages lissés évite les marches arrière et fonctionnera avec tous les outils mais peut laisser un petit coin de champ non travaillé.
-Cela peut être attenué avec le chevauchement mais sans pour autant complètement disparaitre. Manoeuvre demandera à l'ouvrier de potentiellement (en fonction de l'angle) faire une marche arrière pour mieux se placer et éviter de laisser des coins non travaillés. Circulaire prendra en compte le rayon de braquage du véhicule pour traiter les angles avec l'outil actif (similaire à virages lissés).
-- Sens des fourrières : Horaire ou anti-horaire. Important pour les véhicules qui doivent être vidés (moissonneuses) en fonction du côté de leur goulotte de déchargement.
-- Chevauchement : Le pourcentage de recouvrement entre les fourrières. La première fourrière (contour du champ) n'aura pas de recouvrement mais les suivantes utiliseront ce paramètre.
+- Accentuer les coins des fourrières : Accentue les coins des fourrières qui ne sont pas arrondis. Le véhicule sera
+obligé d'effectuer une manœuvre de virage lorsque le rayon de courbure de la fourrière est inférieur à son rayon de braquage. - Nombre de fourrières à coins arrondis : Nombre
+de fourrières, comptées depuis la plus extérieure, dont les coins seront arrondis. Les coins arrondis sont calculés selon le rayon de braquage du véhicule ; celui-ci n'effectuera donc pas de manœuvre de virage dans leurs coins. - Rayon des coins : Définit le rayon des coins arrondis. Si vous savez qu'un outil tracté nécessite un rayon minimal de 10, vous pouvez régler cette valeur sur 10
+pour la course. - Sens des fourrières : Horaire ou anti-horaire. Ce choix peut être important pour les moissonneuses et les récolteuses selon le côté de leur goulotte
+ou de leur tapis de déchargement. - Chevauchement des fourrières : Recouvrement entre une fourrière et la suivante afin d'éviter de laisser des cultures non récoltées dans certains cas.
 "/>
     <text name="CP_help_page_courseGeneratorCenter_text" text="
 Différentes stratégies sont disponibles pour effectuer le travail au centre du champ. La plupart du temps, l'outil sélectionné déterminera la meilleure stratégie à adopter. Les stratégies disponibles ont été créées sur la base des commentaires et des informations de notre communauté. 
@@ -690,7 +690,7 @@ Le gestionnaire de courses vous permet de sauvegarder et de charger vos courses 
 La sauvegarde de la course est également obligatoire lorsque vous utilisez les outils multiples afin de pouvoir affecter la même course à plusieurs ouvriers.
 Cela vous permet également de pouvoir affecter la course d'une moissonneuse ou d'une faucheuse à une presse ou un véhicule avec une autochargeuse pour venir récupérer les andains.
 
-L'emplacement des sauvegarde se trouve ici : ..\My Games\FarmingSimulator2022\modSettings\FS22_Courseplay\Courses\Mapname.SampleModMap (ou pour les cartes de base de type MapUS).
+L'emplacement des sauvegarde se trouve ici : ..\My Games\FarmingSimulator2025\modSettings\FS25_Courseplay\Courses\Mapname.SampleModMap (ou pour les cartes de base de type MapUS).
 Le gestionnaire fonctionne différement de celui présent dans FS19.
 Les courses sont sauvegardées dans des dossiers affichés sur le côté gauche. Il faudra donc au moins créer un dossier pour commencer à sauvegarder vos courses. 
 Les dossiers peuvent être créés en utilisant le bouton correspondant en bas de l'écran et en spécifiant un nom.
@@ -771,7 +771,7 @@ Il y a deux méthodes pour créer des champs personnalisés.
 La première méthode est d'utiliser l'enregistrement de course depuis le mini-ATH.
 Activez l'enregistrement puis créez votre contour de champ.
 Une fois terminé, appuyez à nouveau sur le bouton d'enregistrement pour avoir la possibilité de sauvegarder le champ personnalisé.
-"/>
+ Le début et la fin ne doivent pas se chevaucher ! "/>
     <text name="CP_help_page_customFieldDone_text" text="
 Les contours du champ personnalisé apparaissent dans l'onglet des ouvriers.
 Cliquez sur son nom pour le supprimer ou le renommer.
@@ -794,7 +794,7 @@ Avec une course à outils multiples, vous pouvez avoir jusqu'à 5 véhicules en 
 Lorsque vous chargez une course à outils multiples, vous devez spécifier la position du véhicule dans la rangée.
 Ces positions sont nommées :
 gauche(2), gauche(1), centre, droite(1), droite(2).
-2 véhicules pourront occuper les positions gauche(1) and droite(1), 4 pourront en plus occuper gauche(2) et droite(2).
+2 véhicules pourront occuper les positions gauche(1) et droite(1), 4 pourront en plus occuper gauche(2) et droite(2).
 Avec 3 ou 5 véhicules, vous pourrez également affecter un véhicule au centre.
 "/>
     <text name="CP_help_page_convoyBasic_text" text="
@@ -836,13 +836,13 @@ Lorsque le changement symétrique est désactivé, le véhicule restera toujours
 Cela évite ainsi tout risque de collision par croisement avec les autres véhicules.
 "/>
     <text name="CP_help_page_symetricLaneChangeExampleOn_text" text="
-Lorsque le changement symétrique est désactivé, les côtés gauche et droit seront alternés à chaque nouvelle rangée (non indiqué par l'ATH).
-Il y a un risque de collision par croisement avec d'autres véhicules dans ce cas.
-Quel est donc l'avantage d'utiliser cette fonction ?
-En observant une course par rangées d'aller-retour de gauche vers la droite :
-Sans changement symétrique : gauche, droite, gauche, droite - presque comme si l'ouvrier ignorait une rangée.
-Avec changement symétrique: gauche, droite, droite, gauche - le travail est continu de gauche vers la droite.
-Avec l'exemple des moissonneuses, cela veut dire qu'aucune d'entre elles n'auront de risque d'avoir de la culture restante à côté de leurs rangées.
+Lorsque le changement de rangée est activé, par exemple avec deux véhicules, le véhicule A à gauche et le véhicule B à droite échangent leur position après le virage :
+A se retrouve à droite et B à gauche. Tous les véhicules ont ainsi la même largeur de virage et la
+même distance à parcourir. Pour les moissonneuses, ce réglage est important
+: il maintient la goulotte hors des cultures et l'empêche d'empiéter sur une autre rangée. L'inconvénient est le
+risque de collision lorsque les véhicules se croisent sur des rangées voisines. L'ordre des rangées, de gauche à droite, permet de comprendre :
+Sans changement symétrique : gauche, droite, gauche, droite - presque comme si une rangée était ignorée. Avec changement symétrique : gauche, droite, droite, gauche
+- les rangées sont travaillées l'une après l'autre, de gauche à droite. Dans l'exemple des moissonneuses, aucune n'aura donc de cultures à la fois à gauche et à droite de sa rangée.
 "/>
     <text name="CP_help_page_infoPanel_title" text="Fenêtre d'informations"/>
     <text name="CP_help_page_infoPanelBasic_text" text="
@@ -923,18 +923,18 @@ Dans la catégorie avancée :
 "/>
     <text name="CP_help_page_unloader_title" text="Déchargement d'une récolteuse"/>
     <text name="CP_help_page_unloaderGeneral_text" text="
-Le mode déchargement du Courseplay fonctionne avec les moissonneuses, les récolteuses ainsi que les récolteuses tractées qui sont conduites par un ouvrier Courseplay.
-Cela ne fonctionne pas avec les ensileuses.
-Vous pouvez soit utiliser une benne classique ou un transbordeur pour aller vider une moissonneuse.
-Pour ensuite aller vider les bennes, vous pouvez utiliser soit les ouvriers Giants ou l'AutoDrive.
-Pour démarrer le processus de déchargement, il a quelques conditions :
-- Vous devez avoir attelé une seule remorque ou transbordeur. L'ouvrier CP ne gère pas plusieurs remorques attachées à la suite.
-- Utilisez l'icone de la cible depuis l'ATH pour sélectionner le champ à surveiller et qui est en cours de récolte. L'ouvrier CP ira s'occuper de décharger toutes les récolteuses conduites par le CP travaillant dans ce champ.
-- Vous devez être sur le champ ou à moins de 20 mètres de distance pour démarrer la course de déchargement.
+Le mode déchargement de Courseplay fonctionne avec les moissonneuses, les récolteuses, les ensileuses et les récolteuses tractées conduites
+par Courseplay. Vous pouvez utiliser une
+remorque classique ou un transbordeur pour décharger une moissonneuse. Pour vider
+les remorques, vous pouvez utiliser l'ouvrier GIANTS ou AutoDrive. Pour démarrer le
+chauffeur chargé du déchargement : - Une seule remorque
+ou un seul transbordeur doit être attelé. Les remorques multiples ne sont pas prises en charge.
+- Utilisez l'icône de cible dans l'ATH pour sélectionner le champ en cours de récolte. Le chauffeur déchargera toutes les récolteuses conduites par Courseplay dans ce champ. - Vous devez
+être dans le champ ou à moins de 20 mètres de celui-ci pour démarrer le chauffeur. Quelques
 
-Vous pouvez adapter quelques paramètres concernant le processus de déchargement :
-- Fixer le seuil de remplissage au-delà duquel la benne ou le transbordeur sera considéré comme plein. Très pratique pour éviter qu'une moissonneuse appelle une benne qui serait déjà presque pleine.
-- Utiliser l'ATH pour faire varier le décalage du placement de la benne ou du transbordeur sous la goulotte de la moissonneuse.
+paramètres sont disponibles : - Vous pouvez définir
+le niveau de remplissage à partir duquel le chauffeur considère sa remorque comme pleine, afin d'éviter d'attendre l'appel d'une moissonneuse avec une remorque presque pleine.
+- Les décalages de l'ATH permettent d'ajuster la position du chauffeur sous la goulotte de la récolteuse.
 
 "/>
     <text name="CP_help_page_unloaderTrailer_title" text="Utilisation des bennes"/>
