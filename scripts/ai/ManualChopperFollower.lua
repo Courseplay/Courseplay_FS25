@@ -172,7 +172,17 @@ function ManualChopperFollower:getSideOffset(side)
     for _, implement in pairs(self.proxy.vehicle:getChildVehicles()) do
         width = math.max(width, AIUtil.getWidth(implement))
     end
-    return side * ((width + self:getVehicleWidth()) / 2 + 1)
+    local clearance = (width + self:getVehicleWidth()) / 2
+    -- Same sign convention as getPipeOffset(): positive setting moves to the right.
+    local offset = side * (clearance + 1) - self:getManualOffset('combineOffsetX')
+    if side > 0 then return math.max(clearance + 0.5, offset) end
+    if side < 0 then return math.min(-clearance - 0.5, offset) end
+    return offset
+end
+
+function ManualChopperFollower:getManualOffset(name)
+    local setting = self.strategy.settings[name]
+    return setting and setting:getValue() or 0
 end
 
 --- Keep the tractor front behind the cutter attachment, even with a long trailer.
@@ -325,7 +335,8 @@ function ManualChopperFollower:getDriveData()
     end
 
     local targetX = self:getSideOffset(self.side)
-    local targetZ = self.side == 0 and rearZ or 0
+    local followRearZ = rearZ + math.min(0, self:getManualOffset('combineOffsetZ'))
+    local targetZ = self.side == 0 and followRearZ or 0
     if self.phase == 'FALL_BACK' then
         -- Brake in the current lane until the complete tractor front clears the harvester's rear.
         self.retreatX = self.retreatX or x
@@ -346,7 +357,7 @@ function ManualChopperFollower:getDriveData()
             self.trailerTrim = 0
         end
     elseif self.phase == 'ALIGN' then
-        targetX, targetZ = self:getSideOffset(self.side), self.side == 0 and rearZ or 0
+        targetX, targetZ = self:getSideOffset(self.side), self.side == 0 and followRearZ or 0
         if math.abs(x - targetX) < 0.5 then self.phase = 'FOLLOW' end
     end
 
@@ -401,7 +412,7 @@ function ManualChopperFollower:getDriveData()
         if proxy:hasAutoAimPipe() then
             -- The spout tracks the trailer. Keep a stable tractor position instead
             -- of chasing the moving discharge node with the trailer fill point.
-            longitudinalError = frontError
+            longitudinalError = frontError + math.min(0, self:getManualOffset('combineOffsetZ'))
         else
             if fillProgress then
                 local _, pipeZ = strategy:getPipeOffset(proxy.vehicle)

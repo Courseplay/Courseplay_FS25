@@ -563,4 +563,59 @@ test('manual proxy identifies auto aim using the existing pipe state metadata',f
     assert(not proxy:hasAutoAimPipe())
 end)
 
+test('lateral manual offset works on both sides and behind with safety limits',function()
+    local follower,strategy=fixture()
+    strategy.settings.combineOffsetX=setting(2)
+    assert(follower:getSideOffset(1)==3.5)
+    assert(follower:getSideOffset(-1)==-6)
+    assert(follower:getSideOffset(0)==-2)
+    strategy.settings.combineOffsetX=setting(-2)
+    assert(follower:getSideOffset(1)==6)
+    assert(follower:getSideOffset(-1)==-3.5)
+    assert(follower:getSideOffset(0)==2)
+end)
+
+test('auto aim longitudinal offset shifts the target without reading the pipe',function()
+    local follower,strategy,proxy=fixture(1)
+    follower.side=1
+    proxy.hasAutoAimPipe=function() return true end
+    strategy.vehicle.node.x,strategy.vehicle.front.x=4,4
+    strategy.vehicle.node.z,strategy.vehicle.front.z=-2,0
+    strategy.getPipeOffset=function() error('auto aim must not read pipe position') end
+    strategy.settings.combineOffsetZ=setting(-3)
+    follower:getDriveData()
+    assert(math.abs(strategy.speed-5)<0.001)
+    strategy.settings.combineOffsetZ=setting(-5)
+    follower:getDriveData()
+    assert(strategy.speed==0)
+    strategy.settings.combineOffsetZ=setting(5)
+    strategy.vehicle.front.z=5
+    follower:getDriveData()
+    assert(strategy.speed==0)
+end)
+
+test('rear longitudinal offset increases distance and cannot defeat rear clearance',function()
+    local follower,strategy=fixture(2)
+    strategy.settings.combineOffsetZ=setting(-3)
+    strategy.vehicle.front.z=-9
+    follower:getDriveData()
+    assert(math.abs(strategy.speed-5)<0.001)
+    strategy.settings.combineOffsetZ=setting(10)
+    strategy.vehicle.front.z=-3
+    follower:getDriveData()
+    assert(strategy.speed==0)
+end)
+
+test('fixed pipe uses configured longitudinal offset once through existing strategy',function()
+    local follower,strategy=fixture(1)
+    follower.side=1
+    strategy.vehicle.node.x,strategy.vehicle.front.x=4,4
+    strategy.vehicle.node.z,strategy.vehicle.front.z=-2,0
+    strategy.settings.combineOffsetZ=setting(-2)
+    strategy.getBestTargetNode=function() return {node={x=4,z=-7}} end
+    strategy.getPipeOffset=function(self) return 4,-5+self.settings.combineOffsetZ:getValue() end
+    follower:getDriveData()
+    assert(math.abs(strategy.speed-5)<0.001)
+end)
+
 print('Manual chopper regression tests: '..tests..' passed')
