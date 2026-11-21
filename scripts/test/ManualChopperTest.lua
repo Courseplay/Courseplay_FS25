@@ -649,4 +649,43 @@ test('alignment holds report measured angle and actual readiness',function()
     assert(message:find('reason=alignment',1,true) and message:find('angle=60.0',1,true))
 end)
 
+test('direct rear following can cross a crop-free field edge without replanning',function()
+    local follower,strategy=fixture(2)
+    onField=function() return false end
+    strategy.startWaitingForSomethingToDo=function() error('near follower must not replan') end
+    follower:getDriveData()
+    assert(strategy.speed>0 and not strategy.waiting)
+    g_time=5000
+    follower:getDriveData()
+    assert(strategy.speed>0 and not strategy.waiting)
+end)
+
+test('relaxed field membership does not bypass crop or unknown samples',function()
+    local follower=fixture()
+    onField=function() return false end
+    crop=function() return true,50 end
+    assert(not follower:isCorridorClear(0,-10,0,-5,true))
+    assert(follower.lastCorridorBlock.reason=='fruit')
+    g_time=300
+    crop=function() return nil end
+    assert(not follower:isCorridorClear(0,-10,0,-5,true))
+    assert(follower.lastCorridorBlock.reason=='unknown-fruit')
+end)
+
+test('off-field policy has separate cache entries for side and direct corridors',function()
+    local follower=fixture()
+    onField=function() return false end
+    assert(follower:isCorridorClear(0,-10,0,-5,true))
+    assert(not follower:isCorridorClear(0,-10,0,-5))
+    assert(follower:isCorridorClear(0,-10,0,-5,true))
+end)
+
+test('field-edge following still stops for a blocking vehicle',function()
+    local follower,strategy=fixture(2)
+    onField=function() return false end
+    strategy.frontDistance=1
+    follower:getDriveData()
+    assert(strategy.speed==0)
+end)
+
 print('Manual chopper regression tests: '..tests..' passed')

@@ -135,7 +135,7 @@ function ManualChopperFollower:getVehicleWidth()
 end
 
 --- Check a corridor rather than a single plant sample. Unknown samples are not clear ground.
-function ManualChopperFollower:isCorridorClear(fromX, fromZ, toX, toZ)
+function ManualChopperFollower:isCorridorClear(fromX, fromZ, toX, toZ, allowOffField)
     local reference = self.proxy.vehicle:getAIDirectionNode()
     local halfWidth = self:getVehicleWidth() / 2 + 0.25
     -- Density queries are expensive. Reuse nearby world-space corridors for at most 200 ms.
@@ -146,8 +146,8 @@ function ManualChopperFollower:isCorridorClear(fromX, fromZ, toX, toZ)
     end
     local startX, _, startZ = localToWorld(reference, fromX, 0, fromZ)
     local endX, _, endZ = localToWorld(reference, toX, 0, toZ)
-    local key = string.format('%d:%d:%d:%d:%.2f', math.floor(startX * 2), math.floor(startZ * 2),
-        math.floor(endX * 2), math.floor(endZ * 2), halfWidth)
+    local key = string.format('%d:%d:%d:%d:%.2f:%s', math.floor(startX * 2), math.floor(startZ * 2),
+        math.floor(endX * 2), math.floor(endZ * 2), halfWidth, tostring(allowOffField == true))
     if self.corridors[key] ~= nil then
         self.lastCorridorBlock = self.corridorFailures[key]
         return self.corridors[key]
@@ -171,7 +171,7 @@ function ManualChopperFollower:isCorridorClear(fromX, fromZ, toX, toZ)
             local x, _, z = localToWorld(reference,
                 fromX + fraction * (toX - fromX) + lateral * acrossX, 0,
                 fromZ + fraction * (toZ - fromZ) + lateral * acrossZ)
-            if not CpFieldUtil.isOnField(x, z) then return remember(false, 'off-field', x, z) end
+            if not allowOffField and not CpFieldUtil.isOnField(x, z) then return remember(false, 'off-field', x, z) end
             local fruit, density = PathfinderUtil.hasFruit(x, z, 0.5, 0.5)
             if fruit ~= false then return remember(false, fruit == true and 'fruit' or 'unknown-fruit', x, z, density) end
         end
@@ -297,7 +297,7 @@ function ManualChopperFollower:hold(recheck, reason)
     if self.lastWaitReason ~= reason or g_time >= (self.nextWaitLog or 0) then
         self.lastWaitReason = reason
         self.nextWaitLog = g_time + 5000
-        local block = self.lastCorridorBlock
+        local block = (reason == 'drive-corridor' or reason == 'side-corridor-or-turn-radius') and self.lastCorridorBlock or nil
         self.strategy:debug('Manual chopper WAIT: reason=%s phase=%s side=%d angle=%.1f ready=%s reverse=%s block=%s at=%.2f/%.2f density=%s',
             reason, self.phase, self.side, self.alignmentAngle or -1,
             tostring(self.proxy:isReadyToUnload()), tostring(self.proxy:isReversing()),
@@ -426,7 +426,9 @@ function ManualChopperFollower:getDriveData()
     local goalOffset = lateral + CpMathUtil.clamp(targetX - lateral, -lookahead / 2, lookahead / 2)
     gx, gz = self:getGuidePosition(progress + lookahead, goalOffset)
     local goalLocalX, _, goalLocalZ = worldToLocal(reference, gx, 0, gz)
-    if not self:isCorridorClear(x, z, goalLocalX, goalLocalZ) then
+    -- A nearby follower may straddle a headland/grass verge. Field membership is
+    -- not an obstacle; retain crop checks and the normal collision sensors.
+    if not self:isCorridorClear(x, z, goalLocalX, goalLocalZ, true) then
         if self:hold(true, 'drive-corridor') then return end
         return gx, gz
     end
