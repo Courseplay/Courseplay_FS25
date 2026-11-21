@@ -276,6 +276,8 @@ function CpAIFieldWorker:getCanStartCpFieldWork()
             AIUtil.hasImplementWithSpecialization(self, Cutter) or
             AIUtil.hasChildVehicleWithSpecialization(self, VineCutter) or
             AIUtil.hasChildVehicleWithSpecialization(self, VinePrepruner) or
+            --- Vineyard tools may come without AI markers, the giants fieldworker can't use them anyway.
+            AIUtil.hasVineyardToolAttached(self) or
             --- This also allows the use of stump cutters, that work like a mulcher.
             AIUtil.hasChildVehicleWithSpecialization(self, Plow) or
             --- A few mowers can't be used by the giants fieldworker 
