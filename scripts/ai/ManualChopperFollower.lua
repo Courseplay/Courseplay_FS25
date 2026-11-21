@@ -2,6 +2,22 @@
 ---@class ManualChopperFollower
 ManualChopperFollower = CpObject()
 
+ManualChopperFollower.PARAMETERS = {
+    TRAIL_SAMPLE_DISTANCE = 0.5,
+    TRAIL_LENGTH = 150,
+    TELEPORT_DISTANCE = 30,
+    REVERSE_SEARCH_DISTANCE = 30,
+    REVERSE_MATCH_DISTANCE = 2,
+    CORRIDOR_CACHE_MS = 200,
+    CORRIDOR_SAMPLE_STEP = 2,
+    SIDE_CHECK_MS = 500,
+    SIDE_CONFIRM_MS = 2000,
+    WAIT_RECHECK_MS = 3000,
+    REAPPROACH_DELAY_MS = 15000,
+    REAPPROACH_DISTANCE = 25,
+    DEBUG_INTERVAL_MS = 5000
+}
+
 --- Rewind only the recent part actually retraced by the reversing harvester.
 function ManualChopperFollower.rewindTrail(proxy, x, z)
     local trail = proxy.chopperTrail
@@ -10,7 +26,7 @@ function ManualChopperFollower.rewindTrail(proxy, x, z)
         local first = trail[1]
         local along = (x-first.x)*first.dx+(z-first.z)*first.dz
         local across = (x-first.x)*first.dz-(z-first.z)*first.dx
-        if along < -0.01 and math.abs(across) <= 2 then
+        if along < -0.01 and math.abs(across) <= ManualChopperFollower.PARAMETERS.REVERSE_MATCH_DISTANCE then
             trail[1] = {x=x,z=z,dx=first.dx,dz=first.dz,progress=first.progress+along,curvature=0}
             proxy.chopperTrailRevision = (proxy.chopperTrailRevision or 0)+1
         end
@@ -21,7 +37,7 @@ function ManualChopperFollower.rewindTrail(proxy, x, z)
     reverse.distance = reverse.distance + MathUtil.vector2Length(x-reverse.x,z-reverse.z)
     reverse.x, reverse.z = x, z
     proxy.chopperTrailReverse = reverse
-    local minProgress = last.progress - math.min(30, reverse.distance*1.5+1)
+    local minProgress = last.progress - math.min(ManualChopperFollower.PARAMETERS.REVERSE_SEARCH_DISTANCE, reverse.distance*1.5+1)
     local bestDistance, bestIndex, bestFraction = math.huge
     for i=#trail,2,-1 do
         local a,b = trail[i-1],trail[i]
@@ -38,7 +54,7 @@ function ManualChopperFollower.rewindTrail(proxy, x, z)
         end
     end
     -- Off-track reverse turns retain the old route; their later connector is checked separately.
-    if not bestIndex or bestDistance > 4 then return end
+    if not bestIndex or bestDistance > ManualChopperFollower.PARAMETERS.REVERSE_MATCH_DISTANCE^2 then return end
     local a,b = trail[bestIndex-1],trail[bestIndex]
     local progress = a.progress+bestFraction*(b.progress-a.progress)
     if progress >= last.progress-0.01 then return end
@@ -74,9 +90,9 @@ function ManualChopperFollower.recordPosition(proxy)
         proxy.chopperTrailWasReversing,proxy.chopperTrailReverse = nil,nil
         return
     end
-    if previous and distance < 0.5 and not resuming then return end
+    if previous and distance < ManualChopperFollower.PARAMETERS.TRAIL_SAMPLE_DISTANCE and not resuming then return end
     -- A teleport invalidates the route; do not connect unrelated locations.
-    if distance > 30 then trail,previous,distance = {},nil,0 end
+    if distance > ManualChopperFollower.PARAMETERS.TELEPORT_DISTANCE then trail,previous,distance = {},nil,0 end
     local progress = previous and previous.progress+distance or 0
     local curvature = 0
     if previous and distance > 0 and not resuming then
@@ -85,7 +101,7 @@ function ManualChopperFollower.recordPosition(proxy)
     end
     local connectionFrom = resuming and previous and {x=previous.x,z=previous.z,progress=previous.progress} or nil
     table.insert(trail,{x=x,z=z,dx=dx,dz=dz,progress=progress,curvature=curvature,connectionFrom=connectionFrom})
-    while #trail > 2 and progress-trail[2].progress > 150 do table.remove(trail,1) end
+    while #trail > 2 and progress-trail[2].progress > ManualChopperFollower.PARAMETERS.TRAIL_LENGTH do table.remove(trail,1) end
     proxy.chopperTrail = trail
     if resuming then proxy.chopperTrailRevision = (proxy.chopperTrailRevision or 0)+1 end
     proxy.chopperTrailWasReversing,proxy.chopperTrailReverse = nil,nil
@@ -204,7 +220,7 @@ function ManualChopperFollower:isCorridorClear(fromX, fromZ, toX, toZ, allowOffF
     if not self.corridors or g_time >= self.corridorCacheUntil then
         self.corridors = {}
         self.corridorFailures = {}
-        self.corridorCacheUntil = g_time + 200
+        self.corridorCacheUntil = g_time + self.PARAMETERS.CORRIDOR_CACHE_MS
     end
     local startX, _, startZ = localToWorld(reference, fromX, 0, fromZ)
     local endX, _, endZ = localToWorld(reference, toX, 0, toZ)
@@ -226,7 +242,7 @@ function ManualChopperFollower:isCorridorClear(fromX, fromZ, toX, toZ, allowOffF
     if distance > 0.001 then
         acrossX, acrossZ = (toZ-fromZ)/distance, -(toX-fromX)/distance
     end
-    local steps = math.max(1, math.ceil(distance / 2))
+    local steps = math.max(1, math.ceil(distance / self.PARAMETERS.CORRIDOR_SAMPLE_STEP))
     for i = 0, steps do
         local fraction = i / steps
         for _, lateral in ipairs({-halfWidth, 0, halfWidth}) do
@@ -361,7 +377,7 @@ function ManualChopperFollower:getRequestedSide(rearZ)
     end
     local signature = string.format('%d:%d:%s:%s', requested, chosen, left.reason, right.reason)
     if signature ~= self.lastSideLog or g_time >= (self.nextSideLog or 0) then
-        self.lastSideLog, self.nextSideLog = signature, g_time + 5000
+        self.lastSideLog, self.nextSideLog = signature, g_time + self.PARAMETERS.DEBUG_INTERVAL_MS
         local function describe(lane)
             local block = lane.block
             return string.format('%s offset=%.2f z=%.2f..%.2f at=%.2f/%.2f density=%s',
@@ -376,13 +392,13 @@ end
 
 function ManualChopperFollower:updateSide(rearZ)
     if g_time < self.nextSideCheck then return end
-    self.nextSideCheck = g_time + 500
+    self.nextSideCheck = g_time + self.PARAMETERS.SIDE_CHECK_MS
     local requested = self:getRequestedSide(rearZ)
     if requested ~= self.pendingSide then
         self.pendingSide = requested
         self.pendingSince = g_time
     end
-    if g_time - self.pendingSince >= 2000 then
+    if g_time - self.pendingSince >= self.PARAMETERS.SIDE_CONFIRM_MS then
         if self.phase == 'FOLLOW' and requested ~= self.side then
             self.targetSide = requested
             self.phase = 'FALL_BACK'
@@ -399,7 +415,7 @@ function ManualChopperFollower:hold(recheck, reason)
     reason = reason or 'safety'
     if self.lastWaitReason ~= reason or g_time >= (self.nextWaitLog or 0) then
         self.lastWaitReason = reason
-        self.nextWaitLog = g_time + 5000
+        self.nextWaitLog = g_time + self.PARAMETERS.DEBUG_INTERVAL_MS
         local block = (reason == 'drive-corridor' or reason == 'trail-connection' or reason == 'side-corridor-or-turn-radius') and self.lastCorridorBlock or nil
         self.strategy:debug('Manual chopper WAIT: reason=%s phase=%s side=%d angle=%.1f ready=%s reverse=%s block=%s at=%.2f/%.2f density=%s',
             reason, self.phase, self.side, self.alignmentAngle or -1,
@@ -415,20 +431,148 @@ function ManualChopperFollower:hold(recheck, reason)
         return false
     end
     self.waitingSince = self.waitingSince or g_time
-    if g_time - self.waitingSince < 3000 or g_time < (strategy.manualChopperReapproachAfter or 0) then return false end
+    if g_time - self.waitingSince < self.PARAMETERS.WAIT_RECHECK_MS or g_time < (strategy.manualChopperReapproachAfter or 0) then return false end
     -- Reuse the normal assignment/pathfinding flow only once there is room for an approach.
     local x, _, z = localToLocal(Markers.getFrontMarkerNode(strategy.vehicle), proxy.vehicle:getAIDirectionNode(), 0, 0, 0)
-    if MathUtil.vector2Length(x, z) <= 25 then return false end
-    strategy.manualChopperReapproachAfter = g_time + 15000
+    if MathUtil.vector2Length(x, z) <= self.PARAMETERS.REAPPROACH_DISTANCE then return false end
+    strategy.manualChopperReapproachAfter = g_time + self.PARAMETERS.REAPPROACH_DELAY_MS
     self.waitingSince = nil
     strategy:debug('Manual chopper: waiting, releasing assignment for a fresh approach')
     strategy:startWaitingForSomethingToDo()
     return true
 end
 
---- The normal steering reference follows a live parallel line. Speed controls longitudinal spacing.
+--- Advance the existing side-change state machine and return its target.
+function ManualChopperFollower:getFollowTarget(x, z, rearZ)
+    local targetX = self:getSideOffset(self.side)
+    local followRearZ = rearZ + math.min(0, self:getManualOffset('combineOffsetZ'))
+    local targetZ = self.side == 0 and followRearZ or 0
+    if self.phase == 'FALL_BACK' then
+        -- Brake in the current lane until the complete tractor front clears the harvester's rear.
+        self.retreatX = self.retreatX or x
+        targetX, targetZ = self.retreatX, rearZ - 2
+        if z <= rearZ then self.phase = 'CROSS_BEHIND' end
+    end
+    if self.phase == 'CROSS_BEHIND' then
+        if z > rearZ then
+            self.phase = 'FALL_BACK'
+            self:hold(false, 'crossing-needs-rear-clearance')
+            return nil, nil
+        end
+        targetX, targetZ = self:getSideOffset(self.targetSide), rearZ - 2
+        if math.abs(x - targetX) < 0.5 then
+            self.side = self.targetSide
+            self.phase = 'ALIGN'
+            self.retreatX = nil
+            self.trailerTrim = 0
+        end
+    elseif self.phase == 'ALIGN' then
+        targetX, targetZ = self:getSideOffset(self.side), self.side == 0 and followRearZ or 0
+        if math.abs(x - targetX) < 0.5 then self.phase = 'FOLLOW' end
+    end
+
+    return targetX, targetZ
+end
+
+--- Account for the trailer fill point and curve radius without changing spacing control.
+function ManualChopperFollower:getTrailerTarget(targetX)
+    local strategy, proxy = self.strategy, self.proxy
+    local fillProgress
+    if self.phase == 'FOLLOW' and self.side ~= 0 then
+        local target = strategy:getBestTargetNode()
+        if target then
+            fillProgress = self:projectOnGuide(target.node)
+            -- Derive the tractor's curve radius from the actual fill-node offset.
+            -- A long trailer cannot follow the same radius as the steering reference.
+            local fillX, _, fillZ = localToLocal(target.node, strategy.vehicle:getAIDirectionNode(), 0, 0, 0)
+            local offset = self:getSideOffset(self.side)
+            local rootOffset = offset-fillX
+            local curvature = proxy.chopperTrail[#proxy.chopperTrail].curvature
+            if math.abs(curvature) > 0.001 then
+                local radius = 1/curvature
+                local radiusSquared = (radius-offset)^2-fillZ^2
+                if radiusSquared <= 0 then
+                    self.targetSide, self.phase = 0, 'FALL_BACK'
+                    self:hold(false, 'trailer-turn-radius')
+                    return nil, nil
+                end
+                rootOffset = radius-fillX-(curvature>0 and 1 or -1)*math.sqrt(radiusSquared)
+            end
+            local observedTrim = CpMathUtil.clamp(rootOffset-offset,-6,6)
+            local elapsed = self.lastTrimUpdate and math.min(0.5,(g_time-self.lastTrimUpdate)/1000) or 0
+            self.trailerTrim = (self.trailerTrim or 0) + (observedTrim-(self.trailerTrim or 0))*elapsed/(0.75+elapsed)
+            self.lastTrimUpdate = g_time
+            targetX = offset + self.trailerTrim
+        end
+    end
+
+    return targetX, fillProgress
+end
+
+--- Choose longitudinal spacing for rear following, auto-aim spouts or fixed pipes.
+function ManualChopperFollower:getLongitudinalError(headProgress, targetZ, frontProgress, z, fillProgress)
+    local strategy, proxy = self.strategy, self.proxy
+    local longitudinalError = headProgress + targetZ - frontProgress
+    if self.phase == 'FOLLOW' and self.side ~= 0 then
+        local frontError = self:getSideFrontLimit() - z
+        if proxy:hasAutoAimPipe() then
+            -- The spout tracks the trailer. Keep a stable tractor position instead
+            -- of chasing the moving discharge node with the trailer fill point.
+            longitudinalError = frontError + math.min(0, self:getManualOffset('combineOffsetZ'))
+        else
+            if fillProgress then
+                local _, pipeZ = strategy:getPipeOffset(proxy.vehicle)
+                longitudinalError = headProgress + pipeZ - fillProgress
+            else
+                longitudinalError = strategy:getBestTargetNodeDistanceFromPipe() or longitudinalError
+            end
+            -- Fixed pipes still require fill-point alignment, within the header limit.
+            longitudinalError = math.min(longitudinalError, frontError)
+        end
+    end
+    return longitudinalError
+end
+
+--- Apply the existing speed, proximity and stopped-harvester limits in their original order.
+function ManualChopperFollower:updateFollowSpeed(progress, targetX, longitudinalError, combineSpeed)
+    local strategy, proxy = self.strategy, self.proxy
+    local beforeX, beforeZ = self:getGuidePosition(progress - 0.5, targetX)
+    local afterX, afterZ = self:getGuidePosition(progress + 0.5, targetX)
+    local curveFactor = CpMathUtil.clamp(MathUtil.vector2Length(afterX-beforeX,afterZ-beforeZ), 0.4, 1.5)
+    local correction = CpMathUtil.clamp(longitudinalError * 2.5, -combineSpeed, 12)
+    local speed = math.max(0, combineSpeed * curveFactor + correction)
+    if self.phase == 'FOLLOW' and longitudinalError < -1 then speed = 0 end
+    if self.phase ~= 'FOLLOW' then speed = math.min(speed, strategy.settings.turnSpeed:getValue()) end
+    local distance, frontVehicle = strategy.proximityController:checkBlockingVehicleFront()
+    local followDistance, followVehicle = strategy.followModeProximitySensor:getClosestObjectDistanceAndRootVehicle()
+    if (frontVehicle == proxy.vehicle or followVehicle == proxy.vehicle) and self:hasHarvesterClearance() then
+        if frontVehicle == proxy.vehicle then distance = math.huge end
+        if followVehicle == proxy.vehicle then followDistance = math.huge end
+    end
+    distance = math.min(distance, followDistance)
+    speed = math.min(speed, math.max(0, (distance - 2) * 2))
+    -- Approach a stopped machine at walking speed, retaining the same clearance target.
+    if combineSpeed < 0.5 then
+        local approachLimit = math.abs(longitudinalError) > 4 and 8 or 4
+        speed = math.min(speed, approachLimit, math.max(0, longitudinalError * 2.5))
+    end
+    if speed <= 0 and combineSpeed >= 0.5 and longitudinalError > 1 then
+        if self:hold(true, 'proximity-sensor') then return false end
+    else
+        self.lastWaitReason = nil
+        self.waitingSince = nil
+    end
+    strategy:setMaxSpeed(math.min(speed, strategy.settings.fieldSpeed:getValue()))
+    strategy:debugSparse('Manual chopper: %s side=%d error=%.1f speed=%.1f front=%.1f follow=%.1f',
+        self.phase, self.side, longitudinalError, strategy.maxSpeed or speed, distance, followDistance)
+    return true
+end
+
+--- Follow the recorded track. The target stages preserve the existing side-change and spacing rules.
 function ManualChopperFollower:getDriveData()
     local strategy, proxy = self.strategy, self.proxy
+    -- Keep this fallback: the proxy and strategy may update in either order.
+    -- Distance sampling makes the second call a no-op when the pose has not changed.
     ManualChopperFollower.recordPosition(proxy)
     local reference = proxy.vehicle:getAIDirectionNode()
     local front = Markers.getFrontMarkerNode(strategy.vehicle)
@@ -477,61 +621,12 @@ function ManualChopperFollower:getDriveData()
     end
     local combineSpeed = math.abs(proxy.vehicle.lastSpeedReal or 0) * 3600
 
-    local targetX = self:getSideOffset(self.side)
-    local followRearZ = rearZ + math.min(0, self:getManualOffset('combineOffsetZ'))
-    local targetZ = self.side == 0 and followRearZ or 0
-    if self.phase == 'FALL_BACK' then
-        -- Brake in the current lane until the complete tractor front clears the harvester's rear.
-        self.retreatX = self.retreatX or x
-        targetX, targetZ = self.retreatX, rearZ - 2
-        if z <= rearZ then self.phase = 'CROSS_BEHIND' end
-    end
-    if self.phase == 'CROSS_BEHIND' then
-        if z > rearZ then
-            self.phase = 'FALL_BACK'
-            self:hold(false, 'crossing-needs-rear-clearance')
-            return gx, gz
-        end
-        targetX, targetZ = self:getSideOffset(self.targetSide), rearZ - 2
-        if math.abs(x - targetX) < 0.5 then
-            self.side = self.targetSide
-            self.phase = 'ALIGN'
-            self.retreatX = nil
-            self.trailerTrim = 0
-        end
-    elseif self.phase == 'ALIGN' then
-        targetX, targetZ = self:getSideOffset(self.side), self.side == 0 and followRearZ or 0
-        if math.abs(x - targetX) < 0.5 then self.phase = 'FOLLOW' end
-    end
+    local targetX, targetZ = self:getFollowTarget(x, z, rearZ)
+    if targetX == nil then return gx, gz end
 
     local fillProgress
-    if self.phase == 'FOLLOW' and self.side ~= 0 then
-        local target = strategy:getBestTargetNode()
-        if target then
-            fillProgress = self:projectOnGuide(target.node)
-            -- Derive the tractor's curve radius from the actual fill-node offset.
-            -- A long trailer cannot follow the same radius as the steering reference.
-            local fillX, _, fillZ = localToLocal(target.node, strategy.vehicle:getAIDirectionNode(), 0, 0, 0)
-            local offset = self:getSideOffset(self.side)
-            local rootOffset = offset-fillX
-            local curvature = proxy.chopperTrail[#proxy.chopperTrail].curvature
-            if math.abs(curvature) > 0.001 then
-                local radius = 1/curvature
-                local radiusSquared = (radius-offset)^2-fillZ^2
-                if radiusSquared <= 0 then
-                    self.targetSide, self.phase = 0, 'FALL_BACK'
-                    self:hold(false, 'trailer-turn-radius')
-                    return gx,gz
-                end
-                rootOffset = radius-fillX-(curvature>0 and 1 or -1)*math.sqrt(radiusSquared)
-            end
-            local observedTrim = CpMathUtil.clamp(rootOffset-offset,-6,6)
-            local elapsed = self.lastTrimUpdate and math.min(0.5,(g_time-self.lastTrimUpdate)/1000) or 0
-            self.trailerTrim = (self.trailerTrim or 0) + (observedTrim-(self.trailerTrim or 0))*elapsed/(0.75+elapsed)
-            self.lastTrimUpdate = g_time
-            targetX = offset + self.trailerTrim
-        end
-    end
+    targetX, fillProgress = self:getTrailerTarget(targetX)
+    if targetX == nil then return gx, gz end
 
     -- If the current side becomes blocked, retreat first. Never sweep sideways through the harvester.
     if self.phase == 'FOLLOW' and self.side ~= 0 and
@@ -563,53 +658,8 @@ function ManualChopperFollower:getDriveData()
         if self:hold(true, 'drive-corridor') then return end
         return gx, gz
     end
-    local longitudinalError = headProgress + targetZ - frontProgress
-    if self.phase == 'FOLLOW' and self.side ~= 0 then
-        local frontError = self:getSideFrontLimit() - z
-        if proxy:hasAutoAimPipe() then
-            -- The spout tracks the trailer. Keep a stable tractor position instead
-            -- of chasing the moving discharge node with the trailer fill point.
-            longitudinalError = frontError + math.min(0, self:getManualOffset('combineOffsetZ'))
-        else
-            if fillProgress then
-                local _, pipeZ = strategy:getPipeOffset(proxy.vehicle)
-                longitudinalError = headProgress + pipeZ - fillProgress
-            else
-                longitudinalError = strategy:getBestTargetNodeDistanceFromPipe() or longitudinalError
-            end
-            -- Fixed pipes still require fill-point alignment, within the header limit.
-            longitudinalError = math.min(longitudinalError, frontError)
-        end
-    end
-    local beforeX, beforeZ = self:getGuidePosition(progress - 0.5, targetX)
-    local afterX, afterZ = self:getGuidePosition(progress + 0.5, targetX)
-    local curveFactor = CpMathUtil.clamp(MathUtil.vector2Length(afterX-beforeX,afterZ-beforeZ), 0.4, 1.5)
-    local correction = CpMathUtil.clamp(longitudinalError * 2.5, -combineSpeed, 12)
-    local speed = math.max(0, combineSpeed * curveFactor + correction)
-    if self.phase == 'FOLLOW' and longitudinalError < -1 then speed = 0 end
-    if self.phase ~= 'FOLLOW' then speed = math.min(speed, strategy.settings.turnSpeed:getValue()) end
-    local distance, frontVehicle = strategy.proximityController:checkBlockingVehicleFront()
-    local followDistance, followVehicle = strategy.followModeProximitySensor:getClosestObjectDistanceAndRootVehicle()
-    if (frontVehicle == proxy.vehicle or followVehicle == proxy.vehicle) and self:hasHarvesterClearance() then
-        if frontVehicle == proxy.vehicle then distance = math.huge end
-        if followVehicle == proxy.vehicle then followDistance = math.huge end
-    end
-    distance = math.min(distance, followDistance)
-    speed = math.min(speed, math.max(0, (distance - 2) * 2))
-    -- Approach a stopped machine at walking speed, retaining the same clearance target.
-    if combineSpeed < 0.5 then
-        local approachLimit = math.abs(longitudinalError) > 4 and 8 or 4
-        speed = math.min(speed, approachLimit, math.max(0, longitudinalError * 2.5))
-    end
-    if speed <= 0 and combineSpeed >= 0.5 and longitudinalError > 1 then
-        if self:hold(true, 'proximity-sensor') then return end
-    else
-        self.lastWaitReason = nil
-        self.waitingSince = nil
-    end
-    strategy:setMaxSpeed(math.min(speed, strategy.settings.fieldSpeed:getValue()))
-    strategy:debugSparse('Manual chopper: %s side=%d error=%.1f speed=%.1f front=%.1f follow=%.1f',
-        self.phase, self.side, longitudinalError, strategy.maxSpeed or speed, distance, followDistance)
+    local longitudinalError = self:getLongitudinalError(headProgress, targetZ, frontProgress, z, fillProgress)
+    if not self:updateFollowSpeed(progress, targetX, longitudinalError, combineSpeed) then return end
     return gx, gz
 end
 

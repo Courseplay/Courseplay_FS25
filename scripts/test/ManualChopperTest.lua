@@ -197,7 +197,7 @@ test('unloader can approach a stopped chopper before harvesting starts',function
     follower:getDriveData()
     assert(strategy.speed>3 and strategy.speed<=8)
 end)
-test('unexpected heading change and a folded pipe hold the follower',function()
+test('a backward steering target or folded pipe holds the follower',function()
     local follower,strategy,proxy=fixture()
     strategy.vehicle.node.angle=120
     follower:getDriveData()
@@ -640,7 +640,7 @@ test('cached corridor failures preserve the exact rejection point and cause',fun
     assert(follower.lastCorridorBlock==failure)
 end)
 
-test('alignment holds report measured angle and actual readiness',function()
+test('a goal behind the tractor reports the heading and readiness',function()
     local follower,strategy=fixture()
     local message
     strategy.debug=function(self,format,...) message=string.format(format,...) end
@@ -721,7 +721,7 @@ test('normal catch-up after reversing retains crop and vehicle checks',function(
     assert(strategy.speed==0 and strategy.waiting)
 end)
 
-test('normal catch-up still waits when too close or facing the opposite way',function()
+test('spacing and forward-goal checks stop unsafe catch-up',function()
     local follower,strategy=alignmentFixture()
     strategy.vehicle.front.z=-2
     follower:getDriveData()
@@ -1092,6 +1092,30 @@ test('disabled fruit avoidance retains collision stopping during direct followin
     strategy.frontDistance=1
     follower:getDriveData()
     assert(strategy.speed==0)
+end)
+
+test('proxy update records the trail without unused remote fruit queries',function()
+    local proxy=setmetatable({vehicle={node={x=0,z=0}},pipeImplement={chopper=true},lastCourseRefreshTime=0},
+        {__index=CpManualCombineProxy})
+    proxy.vehicle.getAIDirectionNode=function(self) return self.node end
+    proxy.callUnloaderWhenNeeded=function() end
+    proxy.checkChopperFruit=function() error('update must not query unused fruit samples') end
+    proxy:update(16)
+    assert(proxy.chopperTrail and #proxy.chopperTrail==1)
+end)
+
+test('compatibility fruit queries are calculated on demand with the original interval',function()
+    local queries=0
+    local proxy=setmetatable({pipeImplement={chopper=true}},{__index=CpManualCombineProxy})
+    proxy.checkChopperFruit=function(self) queries=queries+1;self.fruitLeft,self.fruitRight=0,10 end
+    local left,right=proxy:getFruitAtSides()
+    assert(left==0 and right==10 and queries==1)
+    g_time=499
+    proxy:getFruitAtSides()
+    assert(queries==1)
+    g_time=500
+    proxy:getFruitAtSides()
+    assert(queries==2)
 end)
 
 print('Manual chopper regression tests: '..tests..' passed')

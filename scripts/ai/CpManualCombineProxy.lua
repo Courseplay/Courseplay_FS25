@@ -65,10 +65,6 @@ function CpManualCombineProxy:update(dt)
     if g_time - self.lastCourseRefreshTime > self.COURSE_REFRESH_INTERVAL then
         self:refreshDynamicCourse()
     end
-    if self:isManualChopper() and (not self.nextFruitCheck or g_time >= self.nextFruitCheck) then
-        self.nextFruitCheck = g_time + 500
-        self:checkChopperFruit()
-    end
     if self:isManualChopper() then ManualChopperFollower.recordPosition(self) end
     self:callUnloaderWhenNeeded()
 end
@@ -216,6 +212,12 @@ function CpManualCombineProxy:isManualChopper()
 end
 
 function CpManualCombineProxy:getFruitAtSides()
+    -- Compatibility interface: manual-chopper following uses its own actual lane
+    -- checks. Only calculate the old remote samples if another caller requests them.
+    if self:isManualChopper() and (not self.nextFruitCheck or g_time >= self.nextFruitCheck) then
+        self.nextFruitCheck = g_time + ManualChopperFollower.PARAMETERS.SIDE_CHECK_MS
+        self:checkChopperFruit()
+    end
     return self.fruitLeft, self.fruitRight
 end
 
@@ -263,7 +265,7 @@ function CpManualCombineProxy:willWaitForUnloadToFinish()
         -- A momentary GPS micro-correction or terrain hitch would otherwise cause isInFrontAndAligned-
         -- ToMovingCombine() to return false, which combined with the grain cart being in the normal
         -- forward-of-direction-node unloading position (dz>0) kills isBehindAndAlignedToCombine() too,
-        -- triggering the dreaded startWaitingForSomethingToDo() → tarp cycle.
+        -- triggering the dreaded startWaitingForSomethingToDo() â†’ tarp cycle.
         if not self._stoppedSinceTime then
             self._stoppedSinceTime = g_time
             CpUtil.debugVehicle(CpDebug.DBG_UNLOAD, self.vehicle,
@@ -386,7 +388,7 @@ function CpManualCombineProxy:isUnloadFinished()
 end
 
 function CpManualCombineProxy:getFillLevelPercentage()
-    -- The farmer is in full control. Fill level must never cause the grain cart to leave —
+    -- The farmer is in full control. Fill level must never cause the grain cart to leave â€”
     -- the only valid exit is the pipe closing (isUnloadFinished). Always report full.
     return 1
 end
