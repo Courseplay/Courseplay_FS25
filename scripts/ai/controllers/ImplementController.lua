@@ -152,6 +152,35 @@ function ImplementController:addRefillImplementAndFillUnit(implement,
     self.refillData.lastFillLevels[implement][fillUnitIndex] = -1
 end
 
+--- Rebuild sources after attach/configuration changes without losing refill history.
+function ImplementController:updateRefillFillTypeSources(fillTypeSources, fillTypes, ownFillUnitIndex)
+    local previous = self.refillData.lastFillLevels
+    local current = {}
+    local function add(implement, index)
+        if index ~= nil and implement:getFillUnitCapacity(index) > 0 then
+            current[implement] = current[implement] or {}
+            current[implement][index] = previous[implement] and previous[implement][index] or -1
+        end
+    end
+    add(self.implement, ownFillUnitIndex)
+    for _, fillType in ipairs(fillTypes) do
+        for _, source in ipairs(fillTypeSources[fillType] or {}) do
+            add(source.vehicle, source.fillUnitIndex)
+        end
+    end
+    self.refillData.lastFillLevels = current
+end
+
+function ImplementController:isRefillingEnabled()
+    return true
+end
+
+--- Explicit opt-in: needsRefilling() in the base class means "supports refill",
+--- not "is empty" (for example controllers registering silage additive tanks).
+function ImplementController:getIsRequiredMaterialMissing()
+    return false
+end
+
 function ImplementController:isRefillingAllowed()
     return next(self.refillData.lastFillLevels) ~= nil
 end
@@ -161,7 +190,7 @@ function ImplementController:needsRefilling()
 end
 
 function ImplementController:onStartRefilling()
-    if self:isRefillingAllowed() then
+    if self:isRefillingAllowed() and self:isRefillingEnabled() then
         if self:needsRefilling() then
             for implement, data in pairs(self.refillData.lastFillLevels) do
                 for fillUnitIndex, _ in pairs(data) do
@@ -184,7 +213,7 @@ end
 ---@return boolean dirty at least one fill unit is currently being filled.
 ---@return boolean changed at least one fill unit fill level has been changed since the start.
 function ImplementController:onUpdateRefilling()
-    if self:isRefillingAllowed() then
+    if self:isRefillingAllowed() and self:isRefillingEnabled() then
         if ImplementUtil.tryAndCheckRefillingFillUnits(self.refillData.lastFillLevels) or
             ImplementUtil.hasFillLevelChanged(self.refillData.lastFillLevels) then
 

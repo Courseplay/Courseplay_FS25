@@ -543,9 +543,80 @@ function ImplementUtil.getCanLoadTo(loadTargetImplement, implementToLoadFrom, di
     return validTarget, targetFillUnitIndex, fillType, exactFillRootNode, alternativeFillType
 end
 
---- Checks the passed in implements for a fill level change
---- and also caches the current fill levels.
---- Example input table format: {["implement"]["fillUnitIndex"] = 200}
+--- Use the individual implement's AI requirement, never the visibility/disabled
+--- state of the vehicle-wide setting (another attached seeder may be optional).
+function ImplementUtil.isOptionalSowingMachine(implement)
+    return implement.spec_sowingMachine ~= nil and not implement:getAIRequiresTurnOn()
+end
+
+function ImplementUtil.isSowingMachineEnabled(implement, settings)
+    return not ImplementUtil.isOptionalSowingMachine(implement) or
+        settings.optionalSowingMachineEnabled:getValue()
+end
+
+function ImplementUtil.isFertilizingEnabled(implement, settings)
+    if implement.spec_fertilizingSowingMachine or implement.spec_fertilizingCultivator then
+        return settings.sowingMachineFertilizerEnabled:getValue()
+    end
+    -- A hidden combination-tool setting must not disable a standalone spreader.
+    return true
+end
+
+--- Availability is independent of work-area parameters, which may deliberately
+--- contain a zero rate while stopped. An empty additional tank is harmless when
+--- another compatible source still supplies the implement.
+function ImplementUtil.hasMaterialInFillTypeSources(fillTypeSources, fillTypes)
+    for _, fillType in ipairs(fillTypes) do
+        for _, source in ipairs(fillTypeSources[fillType] or {}) do
+            if source.vehicle:getFillUnitFillLevel(source.fillUnitIndex) > 0 and
+                source.vehicle:getFillUnitFillType(source.fillUnitIndex) == fillType then
+                return true
+            end
+        end
+    end
+    return false
+end
+
+function ImplementUtil.isSowingMachineEmpty(implement, settings)
+    if not ImplementUtil.isSowingMachineEnabled(implement, settings) or
+        g_currentMission.missionInfo.helperBuySeeds then
+        return false
+    end
+    local spec = implement.spec_sowingMachine
+    if spec.consumableName ~= nil then
+        if implement:getConsumableIsAvailable(spec.consumableName) then
+            return false
+        end
+    elseif spec.fillUnitIndex ~= nil and implement:getFillUnitFillLevel(spec.fillUnitIndex) > 0 then
+        return false
+    end
+    return not ImplementUtil.hasMaterialInFillTypeSources(spec.fillTypeSources or {}, { spec.seedFillType })
+end
+
+function ImplementUtil.isSprayerRefillingEnabled(implement, settings)
+    local spec = implement.spec_sprayer
+    -- Fertilizing combination tools may apply through their own work area.
+    local isCombination = implement.spec_fertilizingSowingMachine or implement.spec_fertilizingCultivator
+    return (spec.allowsSpraying ~= false or isCombination ~= nil) and
+        ImplementUtil.isFertilizingEnabled(implement, settings) and
+        not implement:getIsSprayerExternallyFilled()
+end
+
+function ImplementUtil.isSprayerEmpty(implement, settings)
+    if not ImplementUtil.isSprayerRefillingEnabled(implement, settings) then
+        return false
+    end
+    local index = implement:getSprayerFillUnitIndex()
+    if index ~= nil and implement:getFillUnitFillLevel(index) > 0 then
+        return false
+    end
+    local spec = implement.spec_sprayer
+    -- A source with material may still be activated by GIANTS on the next work
+    -- update. Do not confuse an inactive tank with missing material.
+    return not ImplementUtil.hasMaterialInFillTypeSources(spec.fillTypeSources or {}, spec.supportedSprayTypes or {})
+end
+
+--- Checks fill level changes and caches the current levels.
 ---@param fillLevelData table<table, table<number, number>>
 ---@param reset boolean|nil
 function ImplementUtil.hasFillLevelChanged(fillLevelData, reset)

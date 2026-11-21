@@ -341,6 +341,9 @@ end
 -- Main loop
 ------------------------------------------------------------------------------------------------------------------------
 function AIDriveStrategyUnloadCombine:getDriveData(dt, vX, vY, vZ)
+    if not self:updateAIWorkStart() then
+        return self:getAIWorkStartDriveData()
+    end
     self:updateLowFrequencyImplementControllers()
 
     -- if applicable, calculate on which side of an auto aim pipe we should be driving, once every loop
@@ -396,16 +399,8 @@ function AIDriveStrategyUnloadCombine:getDriveData(dt, vX, vY, vZ)
             end
         end
     elseif self.state == self.states.INITIAL then
-        if not self.startTimer then
-            --- Only create one instance of the timer and wait until it finishes.
-            self.startTimer = Timer.createOneshot(50, function()
-                --- Pipe measurement seems to be buggy with a few over loaders, like bergman RRW 500,
-                --- so a small delay of 50 ms is inserted here before unfolding starts.
-                self.vehicle:raiseAIEvent("onAIFieldWorkerStart", "onAIImplementStart")
-                self.state = self.states.IDLE
-                self.startTimer = nil
-            end)
-        end
+        -- Startup and preparation are completed by the common startup gate above.
+        self.state = self.states.IDLE
         self:setMaxSpeed(0)
     elseif self.state == self.states.IDLE then
         -- nothing to do right now, wait for one of the following:

@@ -169,13 +169,19 @@ end
 
 --- Makes sure the automatic work width gets recalculated after the variable work width was changed by the user.
 function CpCourseGeneratorSettings.onVariableWorkWidthSectionChanged(object)
-    --- Object could be an implement, so make sure we use the root vehicle.
-    local self = object.rootVehicle
-    if self:getIsSynchronized() then
-        CpCourseGeneratorSettings.setAutomaticWorkWidthAndOffset(self)
-    end
+    CpVehicleSettings.requestWorkWidthUpdate(object, true)
 end
 VariableWorkWidth.updateSections = Utils.appendedFunction(VariableWorkWidth.updateSections,CpCourseGeneratorSettings.onVariableWorkWidthSectionChanged)
+
+--- For fertilizer/lime spreaders the spray mode also changes the AI base setup
+--- and may disable variable sections. Observe the completed GIANTS mode change.
+function CpCourseGeneratorSettings.onSprayTypeChanged(object, activeSprayType)
+    if activeSprayType ~= nil then
+        CpVehicleSettings.requestWorkWidthUpdate(object, false)
+    end
+end
+Sprayer.onSprayTypeChange = Utils.appendedFunction(Sprayer.onSprayTypeChange,
+    CpCourseGeneratorSettings.onSprayTypeChanged)
 
 function CpCourseGeneratorSettings:setAutomaticWorkWidthAndOffset()
     local spec = CpCourseGeneratorSettings.getSpec(self)  

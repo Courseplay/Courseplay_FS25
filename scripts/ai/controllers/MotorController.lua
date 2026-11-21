@@ -21,6 +21,13 @@ function MotorController:init(vehicle, implement)
     end
 end
 
+--- Start the engine before preparation actions test their turn-on permissions.
+function MotorController:onStart()
+    if not self:getIsStarted() then
+        self:startMotor()
+    end
+end
+
 function MotorController:update()
     if not self.isValid then
         return

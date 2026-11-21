@@ -1,421 +1,240 @@
---- This scanner is used to detect continues orchard fields.
---- Every line has to have the same direction.
---- This means all vine placements need to be placed with the a snapping angle.
---- The output is a field boundary of the vine nodes for the course generator.
----@class VineScanner 
+--- Detect physical orchard rows independently of plant node orientation.
 VineScanner = CpObject()
+local function finite(n) return type(n) == 'number' and n == n and math.abs(n) < math.huge end
+local function valid(l)
+    return type(l) == 'table' and finite(l.x1) and finite(l.z1) and finite(l.x2) and finite(l.z2)
+        and (l.x2-l.x1)^2 + (l.z2-l.z1)^2 > 0.0001
+end
+local function distance(l,x,z)
+    local dx,dz=l.x2-l.x1,l.z2-l.z1
+    local t=math.max(0,math.min(1,((x-l.x1)*dx+(z-l.z1)*dz)/(dx*dx+dz*dz)))
+    return ((l.x1+t*dx-x)^2+(l.z1+t*dz-z)^2)^0.5
+end
+local function cross(x,z,a,b) return x*b-z*a end
+-- Clip to the actual selection, including concave custom fields. Never modify its vertices.
+local function clip(l,polygon)
+    local dx,dz=l.x2-l.x1,l.z2-l.z1
+    local ts={0,1}
+    for i,a in ipairs(polygon) do
+        local b=polygon[i % #polygon+1]
+        local ex,ez=b.x-a.x,b.z-a.z
+        local den=cross(dx,dz,ex,ez)
+        if math.abs(den)>1e-8 then
+            local t=cross(a.x-l.x1,a.z-l.z1,ex,ez)/den
+            local u=cross(a.x-l.x1,a.z-l.z1,dx,dz)/den
+            if t>0 and t<1 and u>=0 and u<=1 then table.insert(ts,t) end
+        end
+    end
+    table.sort(ts)
+    local result={}
+    for i=1,#ts-1 do
+        local a,b=ts[i],ts[i+1]
+        local t=(a+b)/2
+        if b-a>1e-7 and CpMathUtil.isPointInPolygon(polygon,l.x1+t*dx,l.z1+t*dz) then
+            table.insert(result,{x1=l.x1+a*dx,z1=l.z1+a*dz,x2=l.x1+b*dx,z2=l.z1+b*dz})
+        end
+    end
+    return result
+end
 function VineScanner:init(maxStartDistance)
-	self.maxStartDistance = maxStartDistance or 10
-	self.debugChannel = CpDebug.DBG_COURSES
+    self.maxStartDistance=maxStartDistance or 10
+    self.debugChannel=CpDebug.DBG_COURSES
 end
-
-function VineScanner:setup()
-	self.vineSystem = g_currentMission.vineSystem
+function VineScanner:setup() self.vineSystem=g_currentMission.vineSystem end
+function VineScanner:foundVines() return self.lines ~= nil and #self.lines>0 end
+function VineScanner:getScanError() return self.scanError end
+-- Coffee fence adapter based on HLLMR's PR #1352. Feature detection also permits
+-- other orchards exposing the same physical-row interface, without guessing crop layouts.
+function VineScanner:getVineSegmentsAndWidth(placeable)
+    if placeable.spec_vine then
+        return placeable.spec_vine.vineSegments,placeable.spec_vine.width
+    end
+    if type(placeable.getOrchardRowSpacing)~='function' or type(placeable.getFence)~='function' then return end
+    local fence=placeable:getFence()
+    local width=placeable:getOrchardRowSpacing()
+    if type(fence)~='table' or type(fence.segments)~='table' then return end
+    local rows={}
+    for _,s in pairs(fence.segments) do
+        if type(s.vineNodes)=='table' and next(s.vineNodes) and type(s.getStartPos)=='function' and type(s.getEndPos)=='function' then
+            local x1,_,z1=s:getStartPos()
+            local x2,_,z2=s:getEndPos()
+            rows[{x1=x1,z1=z1,x2=x2,z2=z2}]=s.vineNodes
+        end
+    end
+    return rows,width
 end
-
-function VineScanner:foundVines()
-	return self.lines and next(self.lines) ~= nil
+function VineScanner:getPlaceables()
+    local result={}
+    for _,p in pairs(self.vineSystem and self.vineSystem.nodes or {}) do result[p]=true end
+    for _,p in pairs(g_currentMission.placeableSystem and g_currentMission.placeableSystem.placeables or {}) do
+        if p.spec_vine or p.getOrchardRowSpacing then result[p]=true end
+    end
+    return result
 end
-
---- Is there a vine node close to point?
-function VineScanner:hasVineNodesCloseBy(tx, tz)
-	local x, _, z
-	local closestDist, dist = math.huge, 0
-	--- Finds the closest vine node on a field to the start point.
-	for node, _ in pairs(self.vineSystem.nodes) do 
-		x, _, z = getWorldTranslation(node)
-		dist = MathUtil.vector2Length(x-tx, z-tz)
-		if dist < closestDist then 
-			closestDist = dist
-		end
-	end
-	return closestDist <= self.maxStartDistance
+function VineScanner:hasVineNodesCloseBy(x,z)
+    for p in pairs(self:getPlaceables()) do
+        local rows,width=self:getVineSegmentsAndWidth(p)
+        if rows and finite(width) and width>0 then
+            for l in pairs(rows) do
+                if valid(l) and distance(l,x,z)<=self.maxStartDistance then return true end
+            end
+        end
+    end
+    return false
 end
-
---- Checks if any vine nodes are close to the first waypoint.
----@param vertices table
----@param tx number
----@param tz number
----@param isCustomField boolean
----@return boolean found vine nodes
----@return table|nil all vine segments
----@return table|nil closest segment
----@return table|nil closest vine node
----@return Placeable|nil closest placeable
-function VineScanner:getVineNodesOnField(vertices, tx, tz, isCustomField)
-	if vertices == nil or next(vertices) == nil or tx == nil or tz == nil then 
-		self.lines = nil
-		self.width = nil
-		return false
-	end
-	--- Makes sure the custom field border is a closed polygon.
-	--- Not sure if that is needed.
-	if isCustomField then 
-		table.insert(vertices, vertices[1])
-	end
-	local vineSegments = {}
-	local x, _, z
-	local closestSegment, closestDist, dist = nil, math.huge, 0
-	local segment, closestNode, closestPlaceable
-	--- Finds the closest vine node on a field to the start point.
-	for node, placeable in pairs(self.vineSystem.nodes) do 
-		x, _, z = getWorldTranslation(node)
-		if CpMathUtil.isPointInPolygon(vertices, x, z) then 
-			segment = self:getVineSegmentIxForNode(node, placeable.spec_vine.vineSegments)
-			table.insert(vineSegments, segment)
-			dist = MathUtil.vector2Length(x-tx, z-tz)
-			if dist < closestDist then 
-				closestSegment = self:getVineSegmentIxForNode(node, placeable.spec_vine.vineSegments)
-				closestPlaceable = placeable
-				closestNode = node
-				closestDist = dist
-			end
-		end
-	end
-	if not closestSegment then 
-		self.lines = nil
-		self.width = nil
-		self:debug("No vine node found nearby!")
-		return false
-	end
-	self:debug("Found a vine node within %.2fm", closestDist)
-	return true, vineSegments, closestSegment, closestNode, closestPlaceable
+local function crop(p)
+    if type(p.getVineFruitType)=='function' then
+        local fruit=p:getVineFruitType()
+        if fruit~=nil then return fruit end
+    end
+    local s=p.spec_vine
+    return s and (s.fruitTypeIndex or s.fruitType or p.typeName or 'vine') or p.typeName or p
 end
-
---- Finds vine nodes on a field and creates lines of them.
----@param vertices table
----@param tx number start point
----@param tz number start point
----@param isCustomField boolean
----@return boolean vine nodes found
-function VineScanner:findVineNodesInField(vertices, tx, tz, isCustomField)
-
-	local isValid, vineSegments, closestSegment, closestNode, closestPlaceable = self:getVineNodesOnField(vertices, tx, tz, isCustomField)
-
-	if not isValid then 
-		return false
-	end
-	--- Only use vine segments with the same directions, as the closest segment found.
-	local dirX, dirZ = MathUtil.vector2Normalize(closestSegment.x2 - closestSegment.x1, closestSegment.z2 - closestSegment.z1)
-	local xa, za, xb, zb, dx, dz
-	local segments = {}
-	for _, segment in pairs(vineSegments) do 
-		xa, za = segment.x1, segment.z1
-		xb, zb = segment.x2, segment.z2
-		dx, dz = MathUtil.vector2Normalize(xb - xa, zb - za)
-		if self:equalDirection(dx, dirX, dz, dirZ) then 
-			table.insert(segments, segment)
-		end
-	end
-	--- Separate the segments into lines.
-	local left, right = self:separateIntoColumns(segments, closestNode)
-
-	local lines = {}
-	--- Combine the found lines to the left and right into one table.
-	for i = #left, 1, -1 do 
-		table.insert(lines, left[i])
-	end
-
-	for _, s in ipairs(right) do 
-		table.insert(lines, s)
-	end
-
-	if #lines <= 0 then 
-		self:debug("No lines could ne found!")
-		return false
-	end
- 
-	local newLines = {}
-	for i, l in ipairs(lines) do
-		table.insert(newLines, self:getStartEndPointForLine(l))
-	end
-
-	--- Makes sure the closest line is near the starting point, which should be lines[1].x1/z1
-	local dist1 = MathUtil.vector2Length(newLines[1].x1-tx, newLines[1].z1-tz)
-	local dist2 = MathUtil.vector2Length(newLines[1].x2-tx, newLines[1].z2-tz)
-	local dist3 = MathUtil.vector2Length(newLines[#newLines].x1-tx, newLines[#newLines].z1-tz)
-	local dist4 = MathUtil.vector2Length(newLines[#newLines].x2-tx, newLines[#newLines].z2-tz)
-
-	if dist2 < dist1 and dist2 < dist3 and dist2 < dist4 then 
-		newLines = self:invertLinesStartAndEnd(newLines)
-	elseif dist3 < dist1 and dist3 < dist2 and dist3 < dist4 then
-		newLines = self:invertLinesTable(newLines)
-	elseif dist4 < dist1 and dist4 < dist2 and dist4 < dist3 then
-		newLines = self:invertLinesTable(newLines)
-		newLines = self:invertLinesStartAndEnd(newLines)
-	end
-
-
-	self.lines = newLines
-	self.width = closestPlaceable.spec_vine.width
-
-	self:debug("Found %d number of lines for a width of %.2f", #self.lines, self.width)
-
-	return true
+function VineScanner:findVineNodesInField(vertices,tx,tz,isCustomField)
+    self.lines,self.width,self.fieldBorder,self.scanError=nil,nil,nil,nil
+    if not vertices or #vertices<3 or not finite(tx) or not finite(tz) then return false end
+    local candidates,nearest,nearestDistance={},nil,math.huge
+    local unsupportedDistance=math.huge
+    for p in pairs(self:getPlaceables()) do
+        local rows,width=self:getVineSegmentsAndWidth(p)
+        local usable=false
+        if type(rows)=='table' and finite(width) and width>0 then
+            for l in pairs(rows) do
+                if valid(l) then
+                    usable=true
+                    for _,part in ipairs(clip(l,vertices)) do
+                        local item={line=part,width=width,crop=crop(p)}
+                        table.insert(candidates,item)
+                        local d=distance(part,tx,tz)
+                        if d<nearestDistance then nearest,nearestDistance=item,d end
+                    end
+                end
+            end
+        end
+        if not usable then
+            for node,owner in pairs(self.vineSystem and self.vineSystem.nodes or {}) do
+                if owner==p then
+                    local x,_,z=getWorldTranslation(node)
+                    if CpMathUtil.isPointInPolygon(vertices,x,z) then
+                        unsupportedDistance=math.min(unsupportedDistance,((x-tx)^2+(z-tz)^2)^0.5)
+                    end
+                end
+            end
+        end
+    end
+    if unsupportedDistance<math.huge and unsupportedDistance<=nearestDistance then
+        self.scanError='CP_error_plantation_unsupported'; return false
+    end
+    if not nearest then return false end
+    local ref,width=nearest.line,nearest.width
+    local length=((ref.x2-ref.x1)^2+(ref.z2-ref.z1)^2)^0.5
+    local dx,dz=(ref.x2-ref.x1)/length,(ref.z2-ref.z1)/length
+    local nx,nz=dz,-dx
+    local groups={}
+    local tolerance=math.max(0.05,width*0.02)
+    for _,item in ipairs(candidates) do
+        local l=item.line
+        local len=((l.x2-l.x1)^2+(l.z2-l.z1)^2)^0.5
+        if item.crop==nearest.crop and math.abs(item.width-width)<=tolerance
+            and math.abs((l.x2-l.x1)*dx+(l.z2-l.z1)*dz)/len>0.99995 then
+            local lateral=((l.x1+l.x2)*nx+(l.z1+l.z2)*nz)/2
+            local a,b=l.x1*dx+l.z1*dz,l.x2*dx+l.z2*dz
+            if a>b then a,b=b,a end
+            local group
+            for _,g in ipairs(groups) do if math.abs(g.lateral-lateral)<=tolerance then group=g; break end end
+            if not group then group={lateral=lateral,intervals={}};table.insert(groups,group) end
+            table.insert(group.intervals,{a=a,b=b})
+        end
+    end
+    table.sort(groups,function(a,b) return a.lateral<b.lateral end)
+    local lines={}
+    for i,g in ipairs(groups) do
+        table.sort(g.intervals,function(a,b) return a.a<b.a end)
+        local a,b=g.intervals[1].a,g.intervals[1].b
+        for j=2,#g.intervals do
+            if g.intervals[j].a>b+0.1 then self.scanError='CP_error_plantation_layout';return false end
+            b=math.max(b,g.intervals[j].b)
+        end
+        if i>1 and math.abs(g.lateral-groups[i-1].lateral-width)>tolerance then
+            self.scanError='CP_error_plantation_layout';return false
+        end
+        table.insert(lines,{x1=dx*a+nx*g.lateral,z1=dz*a+nz*g.lateral,x2=dx*b+nx*g.lateral,z2=dz*b+nz*g.lateral})
+    end
+    local best,bestDistance=1,math.huge
+    for i=1,4 do
+        local l=lines[i<=2 and 1 or #lines]
+        local x,z=l.x1,l.z1
+        if i%2==0 then x,z=l.x2,l.z2 end
+        local d=(x-tx)^2+(z-tz)^2
+        if d<bestDistance then best,bestDistance=i,d end
+    end
+    if best>=3 then local reversed={};for i=#lines,1,-1 do table.insert(reversed,lines[i]) end;lines=reversed end
+    if best%2==0 then for _,l in ipairs(lines) do l.x1,l.x2,l.z1,l.z2=l.x2,l.x1,l.z2,l.z1 end end
+    lines.preserveEndpoints=true
+    lines.selection=vertices
+    self.lines,self.width,self.selection=lines,width,vertices
+    return true
 end
-
---- Invert's the lines from end(lines.x2/z2) -> start(lines.x1/z1)
----@param lines table
----@return table
-function VineScanner:invertLinesStartAndEnd(lines)
-	local newLines = {}
-	for i, l in ipairs(lines) do 
-		table.insert(newLines, {
-			x1 = l.x2,
-			z1 = l.z2,
-			x2 = l.x1,
-			z2 = l.z1,
-		})
-	end
-	return newLines
+-- Adjacent rows may have different lengths: only work between them over their overlap.
+function VineScanner.createDrivingLines(lines,width,between)
+    if not between then return lines end
+    local result={preserveEndpoints=lines.preserveEndpoints}
+    for i=1,#lines-1 do
+        local a,b=lines[i],lines[i+1]
+        local len=((a.x2-a.x1)^2+(a.z2-a.z1)^2)^0.5
+        local dx,dz=(a.x2-a.x1)/len,(a.z2-a.z1)/len
+        local start=math.max(0,(b.x1-a.x1)*dx+(b.z1-a.z1)*dz)
+        local finish=math.min(len,(b.x2-a.x1)*dx+(b.z2-a.z1)*dz)
+        if finish-start>0.01 then
+            local normal=((b.x1-a.x1)*dz-(b.z1-a.z1)*dx)/2
+            local lane={x1=a.x1+dx*start+dz*normal,z1=a.z1+dz*start-dx*normal,
+                x2=a.x1+dx*finish+dz*normal,z2=a.z1+dz*finish-dx*normal}
+            local parts=lines.selection and clip(lane,lines.selection) or {lane}
+            if #parts~=1 then return {} end
+            table.insert(result,parts[1])
+        else
+            return {}
+        end
+    end
+    return result
 end
-
---- Invert's the lines from right(#lines) -> left(lines[1])
----@param lines table
----@return table
-function VineScanner:invertLinesTable(lines)
-	local newLines = {}
-	for i = #lines, 1, -1 do 
-		table.insert(newLines, lines[i])
-	end
-	return newLines
+function VineScanner:getCourseGeneratorVertices(offset,tx,tz)
+    local lines=self.lines and VineScanner.createDrivingLines(self.lines,self.width,offset~=0)
+    if not lines or #lines==0 then self.scanError='CP_error_plantation_no_rows';return end
+    local first=lines[1]
+    local len=((first.x2-first.x1)^2+(first.z2-first.z1)^2)^0.5
+    local dx,dz=(first.x2-first.x1)/len,(first.z2-first.z1)/len
+    local points={}
+    for _,l in ipairs(lines) do
+        for _,v in ipairs({{x=l.x1,z=l.z1},{x=l.x2,z=l.z2}}) do
+            for _,side in ipairs({-1,1}) do
+                table.insert(points,{x=v.x+side*dz*self.width/2,z=v.z-side*dx*self.width/2})
+            end
+        end
+    end
+    table.sort(points,function(a,b) return a.x<b.x or a.x==b.x and a.z<b.z end)
+    local function turn(a,b,c) return cross(b.x-a.x,b.z-a.z,c.x-b.x,c.z-b.z) end
+    local hull={}
+    for _,v in ipairs(points) do
+        while #hull>=2 and turn(hull[#hull-1],hull[#hull],v)<=0 do table.remove(hull) end
+        table.insert(hull,v)
+    end
+    local lower=#hull
+    for i=#points-1,1,-1 do
+        local v=points[i]
+        while #hull>lower and turn(hull[#hull-1],hull[#hull],v)<=0 do table.remove(hull) end
+        table.insert(hull,v)
+    end
+    self.fieldBorder=hull
+    return hull,self.width,{x=first.x1,z=first.z1},-math.deg(MathUtil.getYRotationFromDirection(dx,dz))
 end
-
-
---- Separate segments relative to the closest segment into left columns(0->x) and right columns(1->-x).
----@param lines table
----@param closestNode node
----@return table left lines 
----@return table right lines
-function VineScanner:separateIntoColumns(lines, closestNode)
-	local placeable = self.vineSystem.nodes[closestNode]
-	local width = placeable.spec_vine.width
-	local columnsLeft = {}
-	local columnsRight = {}
-	--- Left columns 
-	local ix = 1
-	local maxIterations = 500
-	while ix < maxIterations do
-		local nx = (ix-1)*width
-		local x, _, z = localToWorld(closestNode, nx, 0, 0) 
-		local foundVine = false
-		for i, line in pairs(lines) do 
-			if MathUtil.getCircleLineIntersection(x, z, 0.1,  line.x1, line.z1, line.x2, line.z2) then
-				if columnsLeft[ix] == nil then 
-					columnsLeft[ix] = {}
-				end
-				table.insert(columnsLeft[ix], line)
-				foundVine = true
-			end
-		end
-		if not foundVine then 
-			break
-		end
-		ix = ix + 1
-	end
-	self:debug("Found %d columns to the left.", #columnsLeft)
-	--- Right columns 
-	ix = 1
-	local maxIterations = 500
-	while ix < maxIterations do
-		local nx = ix*(-width)
-		local x, _, z = localToWorld(closestNode, nx, 0, 0) 	
-		local foundVine = false
-		for i, line in pairs(lines) do 
-			if MathUtil.getCircleLineIntersection(x, z, 0.1,  line.x1, line.z1, line.x2, line.z2) then
-				if columnsRight[ix] == nil then 
-					columnsRight[ix] = {}
-				end
-				table.insert(columnsRight[ix], line)
-				foundVine = true
-			end
-		end
-		if not foundVine then 
-			break
-		end
-		ix = ix + 1
-	end
-	self:debug("Found %d columns to the right.", #columnsRight)
-	return columnsLeft, columnsRight
-end
-
-
-
---- Are the directions equal ?
-function VineScanner:equalDirection(dx, nx, dz, nz)
-	return MathUtil.equalEpsilon(nx, dx, 0.01) and MathUtil.equalEpsilon(nz, dz, 0.01) or
-		   MathUtil.equalEpsilon(nx, -dx, 0.01) and MathUtil.equalEpsilon(nz, -dz, 0.01)
-end
-
---- Combines the segments on the same line and return a combined segment.
---- TODO: Is not working for field like these: 
---[[
-	| | | |     | | | |
-	| |		=>  | | | |
-	| |			| | | |
-	| |	|		| | | |
-	| | | |		| | | |
-]]			
----@param segments table all the line segments sorted into columns form left -> right.
----@return table lines from left -> right, but only complete lines.
-function VineScanner:getStartEndPointForLine(segments)
-	local points = {}
-	local xa, za, xb, zb
-	for _, segment in pairs(segments) do 
-		xa, za = segment.x1, segment.z1
-		xb, zb = segment.x2, segment.z2	
-		table.insert(points, {x = xa, z = za})
-		table.insert(points, {x = xb, z = zb})
-	end
-	if #points > 0 then 
-		table.sort(points, function (a, b)
-			if a.x ~= b.x then 
-				return a.x < b.x
-			else 
-				return a.z < b.z
-			end
-		end)
-		return {x1 = points[1].x, 
-				x2 = points[#points].x, 
-				z1 = points[1].z, 
-				z2 = points[#points].z, 
-				}
-	end
-end
-
---- Debug function to draw the vine segments.
-function VineScanner:drawSegments(segments)
-	if segments then 
-		local blueScale = 1/#segments
-		for i, segment in ipairs(segments) do 
-			local x1, x2, z1, z2 = segment.x1, segment.x2, segment.z1, segment.z2
-			local y1, y2 = getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, x1, 0, z1), getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode, x2, 0, z2)
-			drawDebugLine(x1, y1 + 2, z1, 1, 0, i*blueScale, x2, y2 + 2, z2, 0, 1, i*blueScale)
-		end
-	end
-end
-
---- Creates a field boundary relative to the size of the vine field,
---- so the course generator can generate courses for these.
----@param vineOffset number should the driver driver beside or over the vines. (-1/0/1)
----@param tx number field position x
----@param tz number field position z
----@return table|nil field boundary
----@return number|nil width between the vine nodes.
----@return table|nil starting point for the generator
----@return number|nil angle of the vine rows(degree)
-function VineScanner:getCourseGeneratorVertices(vineOffset, tx, tz)
-	if not self.lines then 
-		return 
-	end
-	vineOffset = -vineOffset * self.width/2
-	self:debug("vineOffset: %f", vineOffset)
-	local dirX, dirZ, _ = CpMathUtil.getPointDirection({x = self.lines[1].x1, z = self.lines[1].z1}, {x = self.lines[1].x2, z = self.lines[1].z2})
-	local yRot = 0	
-	if dirX == dirX or dirZ == dirZ then
-		yRot = MathUtil.getYRotationFromDirection(dirX, dirZ)
-	end
-	local node = createTransformGroup("temp")
-
-	setRotation(node, 0, yRot, 0)
-
-	local x1, z1 = self.lines[1].x1, self.lines[1].z1
-	local dirX1, dirZ1 = self.lines[1].x1-self.lines[1].x2, self.lines[1].z1-self.lines[1].z2
-	local dirX2, dirZ2 = self.lines[1].x1-self.lines[#self.lines].x1, self.lines[1].z1-self.lines[#self.lines].z1
-	setTranslation(node, self.lines[1].x1, 0,  self.lines[1].z1)
-	local x, _, z = localToWorld(node, - self.width/2, 0, 0)
-	setTranslation(node, self.lines[1].x2, 0,  self.lines[1].z2)
-	local dx, _, dz = localToWorld(node, - self.width/2, 0, 0)
-	local inverted = 1
-	--- Makes sure the the outer offset is correct and not inverse. 
-	if MathUtil.hasRectangleLineIntersection2D(x1, z1, dirX1, dirZ1, dirX2, dirZ2, x, z, x-dx, z-dz) then 
-		inverted = -1
-	end
-
-	local lines = {}
-	local x, _, z = localToWorld(node, - self.width/2, 0, 0)
-	--- Applies offset for vehicles, that need to be driving next to the vine rows.
-	for i=#self.lines, 1, -1 do 
-		setTranslation(node, self.lines[i].x1, 0,  self.lines[i].z1)
-		if i == 1 then 
-			x, _, z = localToWorld(node, vineOffset + inverted * self.width/2, 0, 0)
-			table.insert(lines, {
-				x = x,
-				z = z,
-			})
-			--- Inserts a few point in between the long edge for the course generator.
-			local dx, dz, length = CpMathUtil.getPointDirection({x = self.lines[i].x1, z = self.lines[i].z1}, {x = self.lines[i].x2, z = self.lines[i].z2})
-			for j=2, length-2 do 
-				table.insert(lines, {
-					x = x + dx * j,
-					z = z + dz * j,
-				})
-			end
-
-		elseif i == #self.lines then 
-			x, _, z = localToWorld(node, vineOffset - inverted * self.width/2, 0, 0)
-			table.insert(lines, {
-				x = x,
-				z = z,
-			})
-		else	
-			x, _, z = localToWorld(node, vineOffset, 0, 0)
-			table.insert(lines, {
-				x = x,
-				z = z,
-			})
-		end
-	end
-	for i=1, #self.lines do 
-		setTranslation(node, self.lines[i].x2, 0,  self.lines[i].z2)
-		if i == 1 then 
-			x, _, z = localToWorld(node, vineOffset + inverted * self.width/2, 0, 0)
-			table.insert(lines, {
-				x = x,
-				z = z,
-			})
-		elseif i == #self.lines then 
-			x, _, z = localToWorld(node, vineOffset - inverted * self.width/2, 0, 0)
-			table.insert(lines, {
-				x = x,
-				z = z,
-			})
-			--- Inserts a few point in between the long edge for the course generator.
-			local dx, dz, length = CpMathUtil.getPointDirection({x = self.lines[i].x2, z = self.lines[i].z2}, {x = self.lines[i].x1, z = self.lines[i].z1})
-			for j=2, length-2 do 
-				table.insert(lines, {
-					x = x + dx * j,
-					z = z + dz * j,
-				})
-			end
-		else	
-			x, _, z = localToWorld(node, vineOffset, 0, 0)
-			table.insert(lines, {
-				x = x,
-				z = z,
-			})
-		end
-	end
-	table.insert(lines, lines[1])
-	CpUtil.destroyNode(node)
-	--- For debugging
-	self.fieldBorder = lines
-	return lines, self.width, lines[1], -math.deg(yRot)
-end
-
-function VineScanner:getLines()
-	return self.lines
-end
-
---- Gets a segment for a vine node.
-function VineScanner:getVineSegmentIxForNode(node, vineSegments)
-	for segment, nodes in pairs(vineSegments) do 
-		for i, data in pairs(nodes) do 
-			if data.node == node then 
-				return segment
-			end
-		end
-	end
+function VineScanner:getLines() return self.lines end
+function VineScanner:drawSegments(lines)
+    for _,l in ipairs(lines) do
+        local y1=getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode,l.x1,0,l.z1)
+        local y2=getTerrainHeightAtWorldPos(g_currentMission.terrainRootNode,l.x2,0,l.z2)
+        drawDebugLine(l.x1,y1+2,l.z1,1,0,0,l.x2,y2+2,l.z2,0,1,0)
+    end
 end
 
 function VineScanner:debug(...)

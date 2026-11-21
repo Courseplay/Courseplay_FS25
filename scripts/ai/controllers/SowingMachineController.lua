@@ -5,14 +5,14 @@ SowingMachineController = CpObject(ImplementController)
 function SowingMachineController:init(vehicle, implement)
     ImplementController.init(self, vehicle, implement)
     self.sowingMachineSpec = self.implement.spec_sowingMachine
-	self:addRefillImplementAndFillUnit(self.implement, self.sowingMachineSpec.fillUnitIndex)
+    self:updateRefillSources()
 end
 
 function SowingMachineController:update()
-	if not self.settings.optionalSowingMachineEnabled:getIsDisabled() then
+	if ImplementUtil.isOptionalSowingMachine(self.implement) then
 		if self.settings.optionalSowingMachineEnabled:getValue() then 
 			--- Makes sure the sowing machine get's turned on
-			if not self.implement:getIsTurnedOn() then
+			if not self.implement:getIsTurnedOn() and self.implement:getCanBeTurnedOn() then
 				self.implement:setIsTurnedOn(true)
 			end
 		else 
@@ -22,6 +22,9 @@ function SowingMachineController:update()
 			end
 		end
 	end
+    if not ImplementUtil.isSowingMachineEnabled(self.implement, self.settings) then
+        return
+    end
 	if self.sowingMachineSpec.showWrongFruitForMissionWarning then 
 		self:debug("Wrong fruit type for mission selected!")
 		self.vehicle:stopCurrentAIJob(AIMessageErrorWrongMissionFruitType.new())
@@ -45,11 +48,21 @@ end
 --- Refill handling
 -------------------------
 
+function SowingMachineController:updateRefillSources()
+    local spec = self.sowingMachineSpec
+    self:updateRefillFillTypeSources(spec.fillTypeSources or {}, { spec.seedFillType }, spec.fillUnitIndex)
+end
+
+function SowingMachineController:isRefillingEnabled()
+    return ImplementUtil.isSowingMachineEnabled(self.implement, self.settings) and
+        not g_currentMission.missionInfo.helperBuySeeds
+end
+
 function SowingMachineController:needsRefilling()
-	if not g_currentMission.missionInfo.helperBuySeeds then
-		if self.implement:getFillUnitFillLevel(self.sowingMachineSpec.fillUnitIndex) <= 0 then 
-			return ImplementController.needsRefilling(self)
-		end
-	end
-	return false
+    self:updateRefillSources()
+    return ImplementUtil.isSowingMachineEmpty(self.implement, self.settings)
+end
+
+function SowingMachineController:getIsRequiredMaterialMissing()
+    return self:needsRefilling()
 end

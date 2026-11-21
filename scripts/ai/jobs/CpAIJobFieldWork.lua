@@ -107,6 +107,12 @@ function CpAIJobFieldWork:onFieldBoundaryDetectionFinished(vehicle, fieldPolygon
     if fieldPolygon then
         local x, z = vehicle:cpGetFieldPosition()
         self.foundVines = g_vineScanner:findVineNodesInField(fieldPolygon, x, z, self.customField ~= nil)
+        self.vineScanError = g_vineScanner:getScanError()
+        if self.vineScanError then
+            self.selectedFieldPlot:setVisible(false)
+            self:callFieldBoundaryDetectionFinishedCallback(false, self.vineScanError)
+            return
+        end
         if self.foundVines then
             CpUtil.debugVehicle(CpDebug.DBG_FIELDWORK, vehicle, "Found vine nodes, generating a vine field border.")
             fieldPolygon = g_vineScanner:getCourseGeneratorVertices(0, x, z)
@@ -116,6 +122,7 @@ function CpAIJobFieldWork:onFieldBoundaryDetectionFinished(vehicle, fieldPolygon
     else
         self.selectedFieldPlot:setVisible(false)
         self:callFieldBoundaryDetectionFinishedCallback(false, 'CP_error_field_detection_failed')
+        return
     end
     self:callFieldBoundaryDetectionFinishedCallback(true)
 end
@@ -165,7 +172,7 @@ end
 
 function CpAIJobFieldWork:getCanGenerateFieldWorkCourse()
     local vehicle = self:getVehicle()
-    return vehicle and vehicle:cpGetFieldPolygon() ~= nil and not vehicle:cpIsFieldBoundaryDetectionRunning()
+    return vehicle and not self.vineScanError and vehicle:cpGetFieldPolygon() ~= nil and not vehicle:cpIsFieldBoundaryDetectionRunning()
 end
 
 -- To pass an alignment course from the drive to fieldwork start to the fieldwork, so the
@@ -198,6 +205,14 @@ function CpAIJobFieldWork:onClickGenerateFieldWorkCourse(callback)
     local settings = vehicle:getCourseGeneratorSettings()
 
     local tx, tz = self.cpJobParameters.fieldPosition:getPosition()
+    -- The scanner is shared between job previews. Refresh it for this vehicle before use.
+    self.foundVines = g_vineScanner:findVineNodesInField(vehicle:cpGetFieldPolygon(), tx, tz, self.customField ~= nil)
+    self.vineScanError = g_vineScanner:getScanError()
+    if self.vineScanError then
+        self:callFieldBoundaryDetectionFinishedCallback(false, self.vineScanError)
+        callback(nil)
+        return false
+    end
     local ok, course
     if self.foundVines then
         local vineSettings = vehicle:getCpVineSettings()
@@ -205,6 +220,12 @@ function CpAIJobFieldWork:onClickGenerateFieldWorkCourse(callback)
                 vineSettings.vineCenterOffset:getValue(),
                 tx, tz
         )
+        if not vertices then
+            self.vineScanError = g_vineScanner:getScanError()
+            self:callFieldBoundaryDetectionFinishedCallback(false, self.vineScanError)
+            callback(nil)
+            return false
+        end
         ok, course = self.courseGeneratorInterface:generateVineCourse(
                 vertices,
                 startingPoint,

@@ -42,6 +42,9 @@ function AIDriveStrategyPlowCourse:init(task, job)
 end
 
 function AIDriveStrategyPlowCourse:getDriveData(dt, vX, vY, vZ)
+    if not self:updateAIWorkStart() then
+        return self:getAIWorkStartDriveData()
+    end
     if self.state == self.states.INITIAL then
         self:setMaxSpeed(0)
         self:updatePlowOffset()

@@ -711,7 +711,7 @@ end
 
 ---@class VineTurnManeuver : TurnManeuver
 VineTurnManeuver = CpObject(TurnManeuver)
-function VineTurnManeuver:init(vehicle, turnContext, vehicleDirectionNode, turningRadius, workWidth)
+function VineTurnManeuver:init(vehicle, turnContext, vehicleDirectionNode, turningRadius, workWidth, lookaheadDistance)
     self.debugPrefix = '(VineTurn): '
     TurnManeuver.init(self, vehicle, turnContext, vehicleDirectionNode, turningRadius, workWidth, 0)
 
@@ -727,9 +727,10 @@ function VineTurnManeuver:init(vehicle, turnContext, vehicleDirectionNode, turni
     end
     self:debug('r=%.1f, w=%.1f, dz=%.1f, startOffset=%.1f, goalOffset=%.1f',
             turningRadius, workWidth, dz, startZOffset, goalZOffset)
+    -- Complete the curve before the intake reaches the plants, leaving a straight approach for the PPC.
+    local alignmentDistance = math.max(0, turnContext.frontMarkerDistance) + lookaheadDistance
     local path = PathfinderUtil.findAnalyticPath(PathfinderUtil.dubinsSolver,
-    -- always move the goal a bit backwards to let the vehicle align
-            vehicleDirectionNode, 0, startZOffset, turnEndNode, 0, goalZOffset - turnContext.frontMarkerDistance, self.turningRadius)
+            vehicleDirectionNode, 0, startZOffset, turnEndNode, 0, goalZOffset - alignmentDistance, self.turningRadius)
     self.course = Course.createFromAnalyticPath(self.vehicle, path, true)
     local endingTurnLength = self.turnContext:appendEndingTurnCourse(self.course, 0, false)
     TurnManeuver.setLowerImplements(self.course, endingTurnLength, true)

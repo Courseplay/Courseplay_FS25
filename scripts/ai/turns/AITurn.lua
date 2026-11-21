@@ -564,12 +564,16 @@ function CourseTurn:turn()
     return gx, gz, moveForwards, maxSpeed
 end
 
+function CourseTurn:isReadyToResumeFieldwork()
+    return true
+end
+
 ---@return boolean true if it is ok the continue driving, false when the vehicle should stop
 function CourseTurn:endTurn(dt)
     -- keep driving on the turn course until we need to lower our implements
     local dz = self.workStartHandler:lowerImplementsAsNeeded(self:getLowerImplementNode(), self.ppc:isReversing())
 
-    if self.workStartHandler:allLowered() then
+    if self.workStartHandler:allLowered() and self:isReadyToResumeFieldwork() then
         if self.ppc:isReversing() then
             self:debug('Turn ending in reverse')
             -- when ending a turn in reverse, don't drive the rest of the course, switch right back to fieldwork
@@ -1047,9 +1051,30 @@ end
 
 function VineTurn:startTurn()
     local turnManeuver = VineTurnManeuver(self.vehicle, self.turnContext, self.vehicle:getAIDirectionNode(),
-            self.turningRadius, self.workWidth)
+            self.turningRadius, self.workWidth, self.ppc:getLookaheadDistance())
     self.turnCourse = turnManeuver:getCourse()
     self.ppc:setCourse(self.turnCourse)
     self.ppc:initialize(1)
     self.state = self.states.TURNING
+end
+
+function VineTurn:isReadyToResumeFieldwork()
+    local directionNode = self.vehicle:getAIDirectionNode()
+    local rowStartNode = self.turnContext.turnEndWpNode.node
+    local lateralError, _, distanceIntoRow = localToLocal(directionNode, rowStartNode, 0, 0, 0)
+    local intakeOffset = math.max(0, self.turnContext.frontMarkerDistance)
+    local intakeError = localToLocal(directionNode, rowStartNode, 0, 0, intakeOffset)
+    -- Keep the straight approach active until the steering reference reaches the row.
+    -- Check both the reference and the intake against the row axis.
+    return distanceIntoRow >= 0 and math.abs(lateralError) <= 0.25 and math.abs(intakeError) <= 0.25
+            and self.turnContext:isDirectionCloseToEndDirection(directionNode, 5)
+end
+
+function VineTurn:onWaypointPassed(ix, course)
+    if course == self.turnCourse and ix == course:getNumberOfWaypoints() and not self:isReadyToResumeFieldwork() then
+        self:debug('End of turn reached before a centered row entry, stopping fieldwork')
+        self.vehicle:stopCurrentAIJob(AIMessageCpError.new())
+        return
+    end
+    AITurn.onWaypointPassed(self, ix, course)
 end

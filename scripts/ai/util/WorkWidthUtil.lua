@@ -55,13 +55,16 @@ function WorkWidthUtil.getAutomaticWorkWidthAndOffset(object, referenceNode, ign
 
     local left, right
 
-    if object.getVariableWorkWidth then
+    if object.getVariableWorkWidth and
+        (not object.spec_variableWorkWidth or object.spec_variableWorkWidth.isActive ~= false) then
         --- Gets the variable work width to the left + to the right.
         local w1, _, isValid1 = object:getVariableWorkWidth(true)
         local w2, _, isValid2 = object:getVariableWorkWidth()
         if isValid1 and isValid2 then
-            left, right = w1, w2
-            local width = math.abs(w1) + math.abs(w2)
+            -- GIANTS returns absolute half-widths for both sides. CP uses
+            -- signed coordinates: left is positive and right is negative.
+            left, right = math.abs(w1), -math.abs(w2)
+            local width = left - right
             WorkWidthUtil.debug(object, 'left = %.1f, right = %.1f, setting variable work width of %.1f.',
                     w1, w2, width)
         end

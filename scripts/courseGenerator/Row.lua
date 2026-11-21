@@ -33,6 +33,7 @@ function Row:clone()
         clone:append(v:clone())
     end
     clone:calculateProperties()
+    clone.preserveOrchardEndpoints = self.preserveOrchardEndpoints
     clone.blockNumber = self.blockNumber
     clone.sequenceNumber = self.sequenceNumber
     clone.startHeadlandAngle, clone.endHeadlandAngle = self.startHeadlandAngle, self.endHeadlandAngle
@@ -89,6 +90,14 @@ end
 --- down the generation)
 ---@return CourseGenerator.Row[]
 function Row:split(headland, bigIslands, onlyFirstAndLastIntersections, enableSmallOverlaps)
+    if self.preserveOrchardEndpoints then
+        local section = self:clone()
+        section.preserveOrchardEndpoints = true
+        section.startHeadlandAngle, section.endHeadlandAngle = math.pi / 2, math.pi / 2
+        section.startsAtHeadland, section.endsAtHeadland = headland, headland
+        section:setEndAttributes()
+        return { section }
+    end
     -- get all the intersections with the field boundary
     local intersections = self:getIntersections(headland:getPolygon(), 1,
             {
@@ -219,10 +228,13 @@ end
 --- or not. The attributes are set when the row is split at headlands but may need to be reapplied when
 --- we adjust the end of the row as we may remove the first/last vertex.
 function Row:setEndAttributes()
+    -- A reversed row can still carry the original endpoint flags.
+    self:setAttribute(1, CourseGenerator.WaypointAttributes.setRowEnd, false)
     self:setAttribute(1, CourseGenerator.WaypointAttributes.setRowStart, true)
     self:setAttribute(1, CourseGenerator.WaypointAttributes._setAtHeadland, self.startsAtHeadland)
     self:setAttribute(1, CourseGenerator.WaypointAttributes.setAtBoundaryId, self.startsAtHeadland:getBoundaryId())
     self:setAttribute(#self, CourseGenerator.WaypointAttributes.setRowEnd, true)
+    self:setAttribute(#self, CourseGenerator.WaypointAttributes.setRowStart, false)
     self:setAttribute(#self, CourseGenerator.WaypointAttributes._setAtHeadland, self.endsAtHeadland)
     self:setAttribute(#self, CourseGenerator.WaypointAttributes.setAtBoundaryId, self.endsAtHeadland:getBoundaryId())
 end
@@ -254,6 +266,7 @@ end
 ---@param context CourseGenerator.FieldworkContext The context to get the row width and the headland width to calculate
 --- the length of the row. These can be different when generating courses for multiple vehicles.
 function Row:adjustLength(context)
+    if self.preserveOrchardEndpoints then return end
     CourseGenerator.FieldworkCourseHelper.adjustLengthAtStart(self, context, self.startHeadlandAngle)
     CourseGenerator.FieldworkCourseHelper.adjustLengthAtEnd(self, context, self.endHeadlandAngle)
 end
