@@ -290,9 +290,16 @@ function ManualChopperFollower:updateSide(rearZ)
         self.pendingSide = requested
         self.pendingSince = g_time
     end
-    if requested ~= self.side and g_time - self.pendingSince >= 2000 and self.phase == 'FOLLOW' then
-        self.targetSide = requested
-        self.phase = 'FALL_BACK'
+    if g_time - self.pendingSince >= 2000 then
+        if self.phase == 'FOLLOW' and requested ~= self.side then
+            self.targetSide = requested
+            self.phase = 'FALL_BACK'
+        elseif self.phase ~= 'FOLLOW' and self.targetSide ~= nil and requested ~= self.targetSide then
+            -- A turn can invalidate a side while crossing. Do not retain a stale
+            -- target until a manoeuvre into newly standing crop has finished.
+            self.targetSide = requested
+            if self.phase == 'ALIGN' then self.phase = 'FALL_BACK' end
+        end
     end
 end
 
@@ -363,9 +370,9 @@ function ManualChopperFollower:getDriveData()
         return gx, gz
     end
     local combineSpeed = math.abs(proxy.vehicle.lastSpeedReal or 0) * 3600
-    -- Once the harvester moves forward and opens a gap, use ordinary following.
-    -- A different heading alone must not keep a nearby unloader stopped forever.
-    if not aligned and not (combineSpeed >= 0.5 and directionDot > 0 and z <= rearZ - 2 and
+    -- An open gap allows normal following even if the harvester has since stopped.
+    -- Speed/clearance control already stops the follower before it gets too close.
+    if not aligned and not (directionDot > 0 and z <= rearZ - 2 and
             MathUtil.vector2Length(x,z) <= 25 and self:hasHarvesterClearance()) then
         if self:hold(true, 'alignment') then return end
         return gx, gz

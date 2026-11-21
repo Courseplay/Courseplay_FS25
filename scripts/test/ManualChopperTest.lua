@@ -771,11 +771,11 @@ for _,sign in ipairs({1,-1}) do
     end)
 end
 
-test('misaligned follower waits for forward movement and the normal rear gap',function()
+test('misaligned follower uses an existing rear gap even after the harvester stops',function()
     local follower,strategy,proxy=alignmentFixture()
     proxy.vehicle.lastSpeedReal=0
     follower:getDriveData()
-    assert(strategy.speed==0 and strategy.waiting)
+    assert(strategy.speed>0 and not strategy.waiting)
     proxy.vehicle.lastSpeedReal=5/3600
     strategy.vehicle.front.z=-7
     follower:getDriveData()
@@ -844,6 +844,48 @@ test('automatic follower leaves rear position and reaches a free side during tra
     assert(follower.side==1 and follower.phase=='FOLLOW')
     local _,offset=follower:projectOnGuide(fill)
     assert(math.abs(offset-4)<1)
+end)
+
+test('stale crossing target returns behind when both sides become blocked',function()
+    local follower,_,proxy=fixture()
+    follower.side,follower.targetSide,follower.phase=0,1,'CROSS_BEHIND'
+    proxy.left,proxy.right=10,10
+    follower:updateSide(-6)
+    g_time=2000
+    follower:updateSide(-6)
+    assert(follower.targetSide==0 and follower.phase=='CROSS_BEHIND')
+end)
+
+test('invalidated aligning target retreats before selecting another side',function()
+    local follower,_,proxy=fixture()
+    follower.side,follower.targetSide,follower.phase=1,1,'ALIGN'
+    proxy.left,proxy.right=10,0
+    follower:updateSide(-6)
+    g_time=2000
+    follower:updateSide(-6)
+    assert(follower.targetSide==-1 and follower.phase=='FALL_BACK')
+end)
+
+test('brief side fluctuations do not retarget an ongoing crossing',function()
+    local follower,_,proxy=fixture()
+    follower.targetSide,follower.phase=1,'CROSS_BEHIND'
+    proxy.left,proxy.right=10,10
+    follower:updateSide(-6)
+    g_time=500
+    proxy.left=0
+    follower:updateSide(-6)
+    g_time=1500
+    follower:updateSide(-6)
+    assert(follower.targetSide==1)
+end)
+
+test('45 degree boundary does not latch a stopped rear follower in place',function()
+    local follower,strategy,proxy=alignmentFixture()
+    strategy.vehicle.node.angle=45.1
+    proxy.vehicle.lastSpeedReal=0
+    follower.phase,follower.targetSide='CROSS_BEHIND',0
+    follower:getDriveData()
+    assert(strategy.speed>0 and not strategy.waiting)
 end)
 
 print('Manual chopper regression tests: '..tests..' passed')
