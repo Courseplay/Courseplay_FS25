@@ -1076,7 +1076,6 @@ HUD также показывает оставшийся уровень запо
     <text name="input_CP_OPEN_GLOBAL_SETTINGS" text="CP: Открыть глобальные настройки"/>
     <text name="input_CP_OPEN_COURSEGENERATOR_SETTINGS" text="CP: Генератор курсов/меню работ"/>
     <text name="input_CP_OPEN_COURSEMANAGER" text="CP: Открыть управление курсами"/>
-    <text name="input_CP_CALL_GRAIN_CART" text="CP: Toggle unloader for manually driven harvester"/>
     <text name="input_CP_OPEN_INGAME_MENU" text="CP: Открыть меню"/>
     <!---->
     <!--manualChopper-->
@@ -1087,6 +1086,7 @@ HUD также показывает оставшийся уровень запо
     <text name="CP_vehicle_setting_manualChopperSide_left" text="Left"/>
     <text name="CP_vehicle_setting_manualChopperSide_right" text="Right"/>
     <text name="CP_vehicle_setting_manualChopperSide_behind" text="Behind"/>
-    <text name="CP_infoTexts_manualChopperWaiting" text="Manual forage harvester: waiting for clear ground or alignment"/>
+    <text name="CP_infoTexts_manualChopperWaiting" text="Manual unloader: waiting for clear ground or alignment"/>
+    <text name="input_CP_CALL_GRAIN_CART" text="CP: Toggle unloader for manually driven harvester"/>
   </texts>
 </l10n>

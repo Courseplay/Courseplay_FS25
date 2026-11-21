@@ -3303,6 +3303,6 @@ TPS extension
         <Translation name="CP_vehicle_setting_manualChopperSide_left"><Text language="de">Links</Text><Text language="en">Left</Text></Translation>
         <Translation name="CP_vehicle_setting_manualChopperSide_right"><Text language="de">Rechts</Text><Text language="en">Right</Text></Translation>
         <Translation name="CP_vehicle_setting_manualChopperSide_behind"><Text language="de">Dahinter</Text><Text language="en">Behind</Text></Translation>
-        <Translation name="CP_infoTexts_manualChopperWaiting"><Text language="de">Manueller Häcksler: Warte auf freie Fahrspur oder Ausrichtung</Text><Text language="en">Manual forage harvester: waiting for clear ground or alignment</Text></Translation>
+        <Translation name="CP_infoTexts_manualChopperWaiting"><Text language="de">Manueller Abfahrer: Warte auf freie Fahrspur oder Ausrichtung</Text><Text language="en">Manual unloader: waiting for clear ground or alignment</Text></Translation>
     </Category>
 </Translations>

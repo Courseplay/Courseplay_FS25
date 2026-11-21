@@ -243,9 +243,24 @@ function ManualChopperFollower:updateSide(rearZ)
     end
 end
 
-function ManualChopperFollower:hold()
-    self.strategy:setMaxSpeed(0)
-    self.strategy:setInfoText(InfoTextManager.MANUAL_CHOPPER_WAITING)
+function ManualChopperFollower:hold(recheck)
+    local strategy, proxy = self.strategy, self.proxy
+    strategy:setMaxSpeed(0)
+    strategy:setInfoText(InfoTextManager.MANUAL_CHOPPER_WAITING)
+    if not recheck or proxy:isReversing() or not proxy:isReadyToUnload() then
+        self.waitingSince = nil
+        return false
+    end
+    self.waitingSince = self.waitingSince or g_time
+    if g_time - self.waitingSince < 3000 or g_time < (strategy.manualChopperReapproachAfter or 0) then return false end
+    -- Reuse the normal assignment/pathfinding flow only once there is room for an approach.
+    local x, _, z = localToLocal(Markers.getFrontMarkerNode(strategy.vehicle), proxy.vehicle:getAIDirectionNode(), 0, 0, 0)
+    if MathUtil.vector2Length(x, z) <= 25 then return false end
+    strategy.manualChopperReapproachAfter = g_time + 15000
+    self.waitingSince = nil
+    strategy:debugSparse('Manual chopper: waiting, releasing assignment for a fresh approach')
+    strategy:startWaitingForSomethingToDo()
+    return true
 end
 
 --- The normal steering reference follows a live parallel line. Speed controls longitudinal spacing.
@@ -277,19 +292,8 @@ function ManualChopperFollower:getDriveData()
     local _, _, guideDX, guideDZ = self:getGuidePosition(progress + lookahead / 2, 0)
     local tractorDX, _, tractorDZ = localDirectionToWorld(strategy.vehicle:getAIDirectionNode(), 0, 0, 1)
     local aligned = tractorDX * guideDX + tractorDZ * guideDZ >= math.cos(math.rad(45))
-    if not aligned then
-        self.unalignedSince = self.unalignedSince or g_time
-        if g_time - self.unalignedSince >= 1500 and MathUtil.vector2Length(x, z) > 25 then
-            -- Once there is room, use the existing pathfinder to approach the new heading.
-            strategy:setMaxSpeed(0)
-            strategy:startWaitingForSomethingToDo()
-            return
-        end
-    else
-        self.unalignedSince = nil
-    end
     if not proxy:isReadyToUnload() or not aligned then
-        self:hold()
+        if self:hold(true) then return end
         return gx, gz
     end
 
@@ -360,7 +364,7 @@ function ManualChopperFollower:getDriveData()
     gx, gz = self:getGuidePosition(progress + lookahead, goalOffset)
     local goalLocalX, _, goalLocalZ = worldToLocal(reference, gx, 0, gz)
     if not self:isCorridorClear(x, z, goalLocalX, goalLocalZ) then
-        self:hold()
+        if self:hold(true) then return end
         return gx, gz
     end
     local combineSpeed = math.abs(proxy.vehicle.lastSpeedReal or 0) * 3600
@@ -378,7 +382,7 @@ function ManualChopperFollower:getDriveData()
     local beforeX, beforeZ = self:getGuidePosition(progress - 0.5, targetX)
     local afterX, afterZ = self:getGuidePosition(progress + 0.5, targetX)
     local curveFactor = CpMathUtil.clamp(MathUtil.vector2Length(afterX-beforeX,afterZ-beforeZ), 0.4, 1.5)
-    local correction = CpMathUtil.clamp(longitudinalError * 1.5, -combineSpeed, 12)
+    local correction = CpMathUtil.clamp(longitudinalError * 2.5, -combineSpeed, 12)
     local speed = math.max(0, combineSpeed * curveFactor + correction)
     if self.phase == 'FOLLOW' and self.side == 0 and longitudinalError < -1 then speed = 0 end
     if self.phase ~= 'FOLLOW' then speed = math.min(speed, strategy.settings.turnSpeed:getValue()) end
@@ -392,8 +396,13 @@ function ManualChopperFollower:getDriveData()
     speed = math.min(speed, math.max(0, (distance - 2) * 2))
     -- Approach a stopped machine at walking speed, retaining the same clearance target.
     if combineSpeed < 0.5 then
-        local approachLimit = math.abs(longitudinalError) > 4 and 8 or 3
-        speed = math.min(speed, approachLimit, math.max(0, longitudinalError * 1.5))
+        local approachLimit = math.abs(longitudinalError) > 4 and 8 or 4
+        speed = math.min(speed, approachLimit, math.max(0, longitudinalError * 2.5))
+    end
+    if speed <= 0 and combineSpeed >= 0.5 and longitudinalError > 1 then
+        if self:hold(true) then return end
+    else
+        self.waitingSince = nil
     end
     strategy:setMaxSpeed(math.min(speed, strategy.settings.fieldSpeed:getValue()))
     strategy:debugSparse('Manual chopper: %s side=%d error=%.1f speed=%.1f front=%.1f follow=%.1f',

@@ -1105,7 +1105,6 @@ Agora sua seleção deve ser semelhante à imagem.
     <text name="input_CP_OPEN_GLOBAL_SETTINGS" text="CP: Abrir configurações globais"/>
     <text name="input_CP_OPEN_COURSEGENERATOR_SETTINGS" text="CP: Abrir gerador de rotas/menu de trabalho"/>
     <text name="input_CP_OPEN_COURSEMANAGER" text="CP: Abrir gerenciador de rotas"/>
-    <text name="input_CP_CALL_GRAIN_CART" text="CP: Toggle unloader for manually driven harvester"/>
     <text name="input_CP_OPEN_INGAME_MENU" text="CP: Abrir menu"/>
     <!---->
     <!--manualChopper-->
@@ -1116,6 +1115,7 @@ Agora sua seleção deve ser semelhante à imagem.
     <text name="CP_vehicle_setting_manualChopperSide_left" text="Left"/>
     <text name="CP_vehicle_setting_manualChopperSide_right" text="Right"/>
     <text name="CP_vehicle_setting_manualChopperSide_behind" text="Behind"/>
-    <text name="CP_infoTexts_manualChopperWaiting" text="Manual forage harvester: waiting for clear ground or alignment"/>
+    <text name="CP_infoTexts_manualChopperWaiting" text="Manual unloader: waiting for clear ground or alignment"/>
+    <text name="input_CP_CALL_GRAIN_CART" text="CP: Toggle unloader for manually driven harvester"/>
   </texts>
 </l10n>

@@ -1089,7 +1089,6 @@ Das Kreuz sollte jetzt, wie im Bild dargestellt, gelb sein.
     <text name="input_CP_OPEN_GLOBAL_SETTINGS" text="CP: Globale Einstellungen öffnen"/>
     <text name="input_CP_OPEN_COURSEGENERATOR_SETTINGS" text="CP: Kursgenerator/Jobmenü öffnen"/>
     <text name="input_CP_OPEN_COURSEMANAGER" text="CP: Kursmanager öffnen"/>
-    <text name="input_CP_CALL_GRAIN_CART" text="CP: Abfahrer für manuell gefahrenen Ernter umschalten"/>
     <text name="input_CP_OPEN_INGAME_MENU" text="CP: Menu öffnen"/>
     <!---->
     <!--manualChopper-->
@@ -1100,6 +1099,7 @@ Das Kreuz sollte jetzt, wie im Bild dargestellt, gelb sein.
     <text name="CP_vehicle_setting_manualChopperSide_left" text="Links"/>
     <text name="CP_vehicle_setting_manualChopperSide_right" text="Rechts"/>
     <text name="CP_vehicle_setting_manualChopperSide_behind" text="Dahinter"/>
-    <text name="CP_infoTexts_manualChopperWaiting" text="Manueller Häcksler: Warte auf freie Fahrspur oder Ausrichtung"/>
+    <text name="CP_infoTexts_manualChopperWaiting" text="Manueller Abfahrer: Warte auf freie Fahrspur oder Ausrichtung"/>
+    <text name="input_CP_CALL_GRAIN_CART" text="CP: Abfahrer für manuell gefahrenen Ernter umschalten"/>
   </texts>
 </l10n>

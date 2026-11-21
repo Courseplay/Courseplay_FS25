@@ -212,7 +212,7 @@ test('a distant manual turn releases the assignment for a fresh approach',functi
     local released=false
     strategy.startWaitingForSomethingToDo=function() released=true end
     follower:getDriveData()
-    g_time=1500
+    g_time=3000
     follower:getDriveData()
     assert(released and strategy.speed==0)
 end)
@@ -438,4 +438,53 @@ for _,direction in ipairs({1,-1}) do
         assert(math.abs(x-4)<1 and math.abs(z+3)<1.5)
     end)
 end
+test('rear follower closes a small gap more promptly without changing clearance',function()
+    local follower,strategy=fixture(2)
+    strategy.vehicle.front.z=-8
+    follower:getDriveData()
+    assert(math.abs(strategy.speed-10)<0.001)
+end)
+
+test('blocked corridor requests a new approach after persistent waiting',function()
+    local follower,strategy=fixture()
+    strategy.vehicle.front.z=-30
+    crop=function() return true,1 end
+    local calls=0
+    strategy.startWaitingForSomethingToDo=function() calls=calls+1 end
+    follower:getDriveData()
+    g_time=2999
+    follower:getDriveData()
+    assert(calls==0)
+    g_time=3000
+    follower:getDriveData()
+    assert(calls==1 and strategy.speed==0)
+    g_time=7000
+    follower:getDriveData()
+    assert(calls==1)
+end)
+
+test('nearby or reversing choppers cannot trigger a fresh approach',function()
+    local follower,strategy,proxy=fixture()
+    local calls=0
+    strategy.startWaitingForSomethingToDo=function() calls=calls+1 end
+    follower:hold(true)
+    g_time=4000
+    follower:hold(true)
+    assert(calls==0)
+    strategy.vehicle.front.z=-30
+    proxy.vehicle.reversing=true
+    follower:hold(true)
+    g_time=8000
+    follower:hold(true)
+    assert(calls==0 and follower.waitingSince==nil)
+end)
+
+test('resuming normal travel clears the waiting timer',function()
+    local follower,strategy=fixture()
+    follower:hold(true)
+    g_time=2000
+    follower:getDriveData()
+    assert(strategy.speed>0 and follower.waitingSince==nil)
+end)
+
 print('Manual chopper regression tests: '..tests..' passed')
