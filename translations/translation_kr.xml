@@ -1162,6 +1162,7 @@ HUD의 '목표 아이콘'을 사용하여 AI 지도에서 적재 및 하역 위�
     <text name="input_CP_OPEN_GLOBAL_SETTINGS" text="CP: 전역 설정 열기"/>
     <text name="input_CP_OPEN_COURSEGENERATOR_SETTINGS" text="CP: 경로 생성기/작업 메뉴 열기"/>
     <text name="input_CP_OPEN_COURSEMANAGER" text="CP: 경로 관리자 열기"/>
+    <text name="input_CP_CALL_GRAIN_CART" text="CP: Toggle unloader for manually driven harvester"/>
     <text name="input_CP_OPEN_INGAME_MENU" text="CP: 메뉴 열기"/>
     <!---->
     <!--manualChopper-->
@@ -1173,6 +1174,5 @@ HUD의 '목표 아이콘'을 사용하여 AI 지도에서 적재 및 하역 위�
     <text name="CP_vehicle_setting_manualChopperSide_right" text="Right"/>
     <text name="CP_vehicle_setting_manualChopperSide_behind" text="Behind"/>
     <text name="CP_infoTexts_manualChopperWaiting" text="Manual unloader: waiting for clear ground or alignment"/>
-    <text name="input_CP_CALL_GRAIN_CART" text="CP: Toggle unloader for manually driven harvester"/>
   </texts>
 </l10n>
