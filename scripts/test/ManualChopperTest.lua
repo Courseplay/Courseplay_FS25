@@ -94,25 +94,25 @@ test('assignment beside the harvester retains the existing side',function()
 end)
 test('automatic side selection avoids crop and preserves the usable side',function()
     local follower,_,proxy=fixture()
-    proxy.left=10
+    crop=function(x) return x>0,100 end
     assert(follower:getRequestedSide(-6)==-1)
     follower.side=-1
-    proxy.left=0
+    crop=function() return false end
     assert(follower:getRequestedSide(-6)==-1)
 end)
 test('unknown crop samples fall back behind',function()
     local follower,_,proxy=fixture()
-    proxy.left,proxy.right=nil,nil
+    crop=function() return nil end
     assert(follower:getRequestedSide(-6)==0)
 end)
 test('manual side choice cannot force entry into standing crop',function()
     local follower,_,proxy=fixture(1)
-    proxy.left=20
+    crop=function(x) return x>0,100 end
     assert(follower:getRequestedSide(-6)==0)
 end)
 test('manual rear setting overrides a free side',function()
     local follower,_,proxy=fixture(2)
-    proxy.left=20
+    crop=function(x) return x>0,100 end
     assert(follower:getRequestedSide(-6)==0)
 end)
 test('corridor check rejects off-field ground and unknown fruit detection',function()
@@ -131,10 +131,10 @@ test('corridor checks include trailer width',function()
 end)
 test('short crop fluctuations do not trigger a side change',function()
     local follower,_,proxy=fixture()
-    proxy.left=10
+    crop=function(x) return x>0,100 end
     follower:updateSide(-6)
     g_time=500
-    proxy.left=0
+    crop=function() return false end
     follower:updateSide(-6)
     g_time=1000
     follower:updateSide(-6)
@@ -808,9 +808,11 @@ test('automatic side selection permits a crop-free verge but still rejects fruit
     local follower,_,proxy=fixture()
     onField=function() return false end
     assert(follower:getRequestedSide(-6)==1)
-    proxy.left=10
+    g_time=300
+    crop=function(x) return x>0,100 end
     assert(follower:getRequestedSide(-6)==-1)
-    proxy.right=10
+    g_time=600
+    crop=function() return true,100 end
     assert(follower:getRequestedSide(-6)==0)
 end)
 
@@ -849,7 +851,7 @@ end)
 test('stale crossing target returns behind when both sides become blocked',function()
     local follower,_,proxy=fixture()
     follower.side,follower.targetSide,follower.phase=0,1,'CROSS_BEHIND'
-    proxy.left,proxy.right=10,10
+    crop=function() return true,100 end
     follower:updateSide(-6)
     g_time=2000
     follower:updateSide(-6)
@@ -859,7 +861,7 @@ end)
 test('invalidated aligning target retreats before selecting another side',function()
     local follower,_,proxy=fixture()
     follower.side,follower.targetSide,follower.phase=1,1,'ALIGN'
-    proxy.left,proxy.right=10,0
+    crop=function(x) return x>0,100 end
     follower:updateSide(-6)
     g_time=2000
     follower:updateSide(-6)
@@ -869,10 +871,10 @@ end)
 test('brief side fluctuations do not retarget an ongoing crossing',function()
     local follower,_,proxy=fixture()
     follower.targetSide,follower.phase=1,'CROSS_BEHIND'
-    proxy.left,proxy.right=10,10
+    crop=function() return true,100 end
     follower:updateSide(-6)
     g_time=500
-    proxy.left=0
+    crop=function() return false end
     follower:updateSide(-6)
     g_time=1500
     follower:updateSide(-6)
@@ -886,6 +888,43 @@ test('45 degree boundary does not latch a stopped rear follower in place',functi
     follower.phase,follower.targetSide='CROSS_BEHIND',0
     follower:getDriveData()
     assert(strategy.speed>0 and not strategy.waiting)
+end)
+
+test('remote side samples no longer veto a clear actual lane',function()
+    local follower,_,proxy=fixture()
+    proxy.left,proxy.right=100,100
+    proxy.getFruitAtSides=function() error('remote samples must not decide the lane') end
+    crop=function(x,z) return math.abs(x)>7 or z>4,100 end
+    assert(follower:getRequestedSide(-6)==1)
+end)
+
+test('lane selection uses header limit and manual lateral offset',function()
+    local follower,strategy=fixture()
+    strategy.settings.combineOffsetX=setting(-2)
+    crop=function(x) return x>5,100 end
+    assert(follower:getRequestedSide(-6)==-1)
+end)
+
+test('side diagnostics identify left and right rejection independently',function()
+    local follower,strategy=fixture()
+    local message
+    strategy.debug=function(self,format,...) message=string.format(format,...) end
+    crop=function(x) return x>0,50 end
+    assert(follower:getRequestedSide(-6)==-1)
+    assert(message:find('chosen=-1',1,true))
+    assert(message:find('left=[fruit',1,true) and message:find('right=[clear',1,true))
+    assert(message:find('density=50',1,true))
+end)
+
+test('side following does not veto a clear lane for fruit beyond its front limit',function()
+    local follower,strategy,proxy=fixture(1)
+    follower.side=1
+    proxy.hasAutoAimPipe=function() return true end
+    strategy.vehicle.node.x,strategy.vehicle.front.x=4,4
+    strategy.vehicle.node.z,strategy.vehicle.front.z=1,3
+    crop=function(x,z) return z>3.5,100 end
+    follower:getDriveData()
+    assert(strategy.speed>0 and not strategy.waiting and follower.phase=='FOLLOW')
 end)
 
 print('Manual chopper regression tests: '..tests..' passed')

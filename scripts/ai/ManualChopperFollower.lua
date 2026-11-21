@@ -259,27 +259,55 @@ function ManualChopperFollower:hasHarvesterClearance()
     return true
 end
 
+--- Evaluate the lane the unloader will actually occupy, not remote fruit samples.
+function ManualChopperFollower:getSideAvailability(side, rearZ)
+    local offset = self:getSideOffset(side)
+    local frontZ = self:getSideFrontLimit()
+    if self:isInsideTightTurn(side, offset) then
+        return {clear=false, reason='turn-radius', offset=offset, frontZ=frontZ}
+    end
+    local clear = self:isCorridorClear(offset, rearZ, offset, frontZ, true)
+    local block = not clear and self.lastCorridorBlock or nil
+    return {clear=clear, reason=clear and 'clear' or (block and block.reason or 'unknown'),
+        offset=offset, frontZ=frontZ, block=block}
+end
+
 function ManualChopperFollower:getRequestedSide(rearZ)
     local settings = self.proxy.vehicle:getCpSettings()
     local requested = settings.manualChopperSide and settings.manualChopperSide:getValue() or 0
     if requested == 2 then return 0 end
-    local left, right = self.proxy:getFruitAtSides()
-    local leftClear = left ~= nil and left == 0 and not self:isInsideTightTurn(1) and
-        self:isCorridorClear(self:getSideOffset(1), rearZ, self:getSideOffset(1), 6, true)
-    local rightClear = right ~= nil and right == 0 and not self:isInsideTightTurn(-1) and
-        self:isCorridorClear(self:getSideOffset(-1), rearZ, self:getSideOffset(-1), 6, true)
-    if requested == 1 then return leftClear and 1 or 0 end
-    if requested == -1 then return rightClear and -1 or 0 end
-    -- Retain a usable side, including when both sides have become clear.
-    if self.side == 1 and leftClear then return 1 end
-    if self.side == -1 and rightClear then return -1 end
-    if leftClear and rightClear then
+    local left = self:getSideAvailability(1, rearZ)
+    local right = self:getSideAvailability(-1, rearZ)
+    local chosen = 0
+    if requested == 1 then
+        chosen = left.clear and 1 or 0
+    elseif requested == -1 then
+        chosen = right.clear and -1 or 0
+    elseif self.side == 1 and left.clear then
+        chosen = 1
+    elseif self.side == -1 and right.clear then
+        chosen = -1
+    elseif left.clear and right.clear then
         local x = localToLocal(Markers.getFrontMarkerNode(self.strategy.vehicle), self.proxy.vehicle:getAIDirectionNode(), 0, 0, 0)
-        return math.abs(x-self:getSideOffset(1)) <= math.abs(x-self:getSideOffset(-1)) and 1 or -1
+        chosen = math.abs(x-left.offset) <= math.abs(x-right.offset) and 1 or -1
+    elseif left.clear then
+        chosen = 1
+    elseif right.clear then
+        chosen = -1
     end
-    if leftClear then return 1 end
-    if rightClear then return -1 end
-    return 0
+    local signature = string.format('%d:%d:%s:%s', requested, chosen, left.reason, right.reason)
+    if signature ~= self.lastSideLog or g_time >= (self.nextSideLog or 0) then
+        self.lastSideLog, self.nextSideLog = signature, g_time + 5000
+        local function describe(lane)
+            local block = lane.block
+            return string.format('%s offset=%.2f z=%.2f..%.2f at=%.2f/%.2f density=%s',
+                lane.reason, lane.offset, rearZ, lane.frontZ, block and block.x or 0,
+                block and block.z or 0, tostring(block and block.density))
+        end
+        self.strategy:debug('Manual chopper SIDES: mode=%d current=%d chosen=%d phase=%s left=[%s] right=[%s]',
+            requested, self.side, chosen, self.phase, describe(left), describe(right))
+    end
+    return chosen
 end
 
 function ManualChopperFollower:updateSide(rearZ)
@@ -436,7 +464,7 @@ function ManualChopperFollower:getDriveData()
 
     -- If the current side becomes blocked, retreat first. Never sweep sideways through the harvester.
     if self.phase == 'FOLLOW' and self.side ~= 0 and
-            (self:isInsideTightTurn(self.side, targetX) or not self:isCorridorClear(targetX, z, targetX, z + lookahead, true)) then
+            (self:isInsideTightTurn(self.side, targetX) or not self:isCorridorClear(targetX, z, targetX, math.max(z, math.min(z + lookahead, self:getSideFrontLimit())), true)) then
         self.targetSide = 0
         self.phase = 'FALL_BACK'
         self:hold(false, 'side-corridor-or-turn-radius')
@@ -454,7 +482,15 @@ function ManualChopperFollower:getDriveData()
     end
     -- A nearby follower may straddle a headland/grass verge. Field membership is
     -- not an obstacle; retain crop checks and the normal collision sensors.
-    if not self:isCorridorClear(x, z, goalLocalX, goalLocalZ, true) then
+    local checkX, checkZ = goalLocalX, goalLocalZ
+    if self.phase == 'FOLLOW' and self.side ~= 0 then
+        local limit = self:getSideFrontLimit()
+        if checkZ > limit and checkZ > z then
+            local fraction = CpMathUtil.clamp((limit-z)/(checkZ-z), 0, 1)
+            checkX, checkZ = x + fraction*(checkX-x), z + fraction*(checkZ-z)
+        end
+    end
+    if not self:isCorridorClear(x, z, checkX, checkZ, true) then
         if self:hold(true, 'drive-corridor') then return end
         return gx, gz
     end
