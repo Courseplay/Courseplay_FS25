@@ -804,15 +804,9 @@ test('free side takes priority after the normal confirmation delay',function()
     assert(follower.phase=='FALL_BACK' and follower.targetSide==1)
 end)
 
-test('automatic side selection permits a crop-free verge but still rejects fruit',function()
-    local follower,_,proxy=fixture()
+test('automatic side selection rejects off-field lanes even without fruit',function()
+    local follower=fixture()
     onField=function() return false end
-    assert(follower:getRequestedSide(-6)==1)
-    g_time=300
-    crop=function(x) return x>0,100 end
-    assert(follower:getRequestedSide(-6)==-1)
-    g_time=600
-    crop=function() return true,100 end
     assert(follower:getRequestedSide(-6)==0)
 end)
 
@@ -925,6 +919,43 @@ test('side following does not veto a clear lane for fruit beyond its front limit
     crop=function(x,z) return z>3.5,100 end
     follower:getDriveData()
     assert(strategy.speed>0 and not strategy.waiting and follower.phase=='FOLLOW')
+end)
+
+test('side selection includes the field boundary across the full corridor width',function()
+    local follower=fixture()
+    -- Both lane centre lines (x=+/-4) are on the field, but their outer edges are not.
+    onField=function(x) return math.abs(x)<5 end
+    assert(follower:getRequestedSide(-6)==0)
+end)
+
+test('automatic side choice prefers the in-field side over the off-field side',function()
+    local follower=fixture()
+    onField=function(x) return x<2 end
+    assert(follower:getRequestedSide(-6)==-1)
+end)
+
+test('blocked outer lane is diagnosed as off-field and keeps rear following',function()
+    local follower,strategy=fixture()
+    local message
+    strategy.debug=function(self,format,...) message=string.format(format,...) end
+    onField=function(x) return x<2 end
+    crop=function(x) return x< -2,100 end
+    assert(follower:getRequestedSide(-6)==0)
+    assert(message:find('left=[off-field',1,true) and message:find('right=[fruit',1,true))
+    follower:updateSide(-6)
+    g_time=2000
+    follower:updateSide(-6)
+    assert(follower.phase=='FOLLOW' and follower.side==0)
+end)
+
+test('active side lane outside the field falls back behind the harvester',function()
+    local follower,strategy=fixture(1)
+    follower.side=1
+    strategy.vehicle.node.x,strategy.vehicle.front.x=4,4
+    strategy.vehicle.node.z,strategy.vehicle.front.z=-2,0
+    onField=function(x) return x<2 end
+    follower:getDriveData()
+    assert(follower.phase=='FALL_BACK' and follower.targetSide==0 and strategy.speed==0)
 end)
 
 print('Manual chopper regression tests: '..tests..' passed')

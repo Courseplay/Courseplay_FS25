@@ -266,7 +266,7 @@ function ManualChopperFollower:getSideAvailability(side, rearZ)
     if self:isInsideTightTurn(side, offset) then
         return {clear=false, reason='turn-radius', offset=offset, frontZ=frontZ}
     end
-    local clear = self:isCorridorClear(offset, rearZ, offset, frontZ, true)
+    local clear = self:isCorridorClear(offset, rearZ, offset, frontZ)
     local block = not clear and self.lastCorridorBlock or nil
     return {clear=clear, reason=clear and 'clear' or (block and block.reason or 'unknown'),
         offset=offset, frontZ=frontZ, block=block}
@@ -464,7 +464,7 @@ function ManualChopperFollower:getDriveData()
 
     -- If the current side becomes blocked, retreat first. Never sweep sideways through the harvester.
     if self.phase == 'FOLLOW' and self.side ~= 0 and
-            (self:isInsideTightTurn(self.side, targetX) or not self:isCorridorClear(targetX, z, targetX, math.max(z, math.min(z + lookahead, self:getSideFrontLimit())), true)) then
+            (self:isInsideTightTurn(self.side, targetX) or not self:isCorridorClear(targetX, z, targetX, math.max(z, math.min(z + lookahead, self:getSideFrontLimit())))) then
         self.targetSide = 0
         self.phase = 'FALL_BACK'
         self:hold(false, 'side-corridor-or-turn-radius')
