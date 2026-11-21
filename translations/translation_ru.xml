@@ -1077,6 +1077,9 @@ HUD также показывает оставшийся уровень запо
     <text name="input_CP_OPEN_COURSEGENERATOR_SETTINGS" text="CP: Генератор курсов/меню работ"/>
     <text name="input_CP_OPEN_COURSEMANAGER" text="CP: Открыть управление курсами"/>
     <text name="input_CP_OPEN_INGAME_MENU" text="CP: Открыть меню"/>
+    <!---->
+    <!--manualChopper-->
+    <!---->
     <text name="CP_vehicle_setting_manualChopperSide_title" text="Manual forage harvester: unloader position"/>
     <text name="CP_vehicle_setting_manualChopperSide_tooltip" text="Preferred CP unloader position alongside a manually driven forage harvester. If blocked, the unloader waits or follows behind."/>
     <text name="CP_vehicle_setting_manualChopperSide_auto" text="Automatic"/>

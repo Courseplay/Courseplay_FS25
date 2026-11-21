@@ -1045,6 +1045,9 @@ hud还显示助手工作时堆或思洛存储器的剩余填充水平。
     <text name="input_CP_OPEN_COURSEGENERATOR_SETTINGS" text="CP: 打开作业生成器"/>
     <text name="input_CP_OPEN_COURSEMANAGER" text="CP: 打开任务管理"/>
     <text name="input_CP_OPEN_INGAME_MENU" text="CP: 打开游戏内菜单"/>
+    <!---->
+    <!--manualChopper-->
+    <!---->
     <text name="CP_vehicle_setting_manualChopperSide_title" text="Manual forage harvester: unloader position"/>
     <text name="CP_vehicle_setting_manualChopperSide_tooltip" text="Preferred CP unloader position alongside a manually driven forage harvester. If blocked, the unloader waits or follows behind."/>
     <text name="CP_vehicle_setting_manualChopperSide_auto" text="Automatic"/>

@@ -1051,6 +1051,9 @@ Votre sélection devrait ressembler à l'illustration ci-contre.
     <text name="input_CP_OPEN_COURSEGENERATOR_SETTINGS" text="CP: Ouvre le générateur de course/menu de la course"/>
     <text name="input_CP_OPEN_COURSEMANAGER" text="CP: Ouvre le gestionnaire de courses"/>
     <text name="input_CP_OPEN_INGAME_MENU" text="CP: Ouvre le menu"/>
+    <!---->
+    <!--manualChopper-->
+    <!---->
     <text name="CP_vehicle_setting_manualChopperSide_title" text="Manual forage harvester: unloader position"/>
     <text name="CP_vehicle_setting_manualChopperSide_tooltip" text="Preferred CP unloader position alongside a manually driven forage harvester. If blocked, the unloader waits or follows behind."/>
     <text name="CP_vehicle_setting_manualChopperSide_auto" text="Automatic"/>
