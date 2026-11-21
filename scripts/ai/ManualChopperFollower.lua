@@ -178,7 +178,8 @@ function ManualChopperFollower:getDriveData()
     local speed = math.max(0, combineSpeed + correction)
     if self.phase ~= 'FOLLOW' then speed = math.min(speed, strategy.settings.turnSpeed:getValue()) end
     local distance = strategy.proximityController:checkBlockingVehicleFront()
-    distance = math.min(distance, strategy.followModeProximitySensor:getClosestObjectDistanceAndRootVehicle())
+    local followDistance = strategy.followModeProximitySensor:getClosestObjectDistanceAndRootVehicle()
+    distance = math.min(distance, followDistance)
     speed = math.min(speed, math.max(0, (distance - 2) * 2))
     -- Approach a stopped machine at walking speed, retaining the same clearance target.
     if combineSpeed < 0.5 then

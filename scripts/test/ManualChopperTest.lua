@@ -51,7 +51,9 @@ local function fixture(side)
     strategy.driveUnloadNowRequested={get=function() return false end}
     strategy.proximityController={checkBlockingVehicleFront=function() return strategy.frontDistance end,
         checkBlockingVehicleBack=function() return strategy.rearDistance end}
-    strategy.followModeProximitySensor={getClosestObjectDistanceAndRootVehicle=function() return strategy.frontDistance end}
+    strategy.followModeProximitySensor={getClosestObjectDistanceAndRootVehicle=function()
+        return strategy.frontDistance,nil,nil,false
+    end}
     strategy.setMaxSpeed=function(self,value) self.speed=value end
     strategy.setInfoText=function(self) self.waiting=true end
     strategy.clearInfoText=function(self) self.waiting=false end
@@ -140,6 +142,20 @@ test('rear following retains clearance and follows operator speed',function()
     follower:getDriveData()
     assert(math.abs(strategy.speed-5)<0.001)
     strategy.vehicle.front.z=-3
+    follower:getDriveData()
+    assert(strategy.speed==0)
+end)
+test('sensor metadata is excluded from numeric distance comparison',function()
+    local follower,strategy=fixture()
+    strategy.vehicle.front.z=-6
+    strategy.followModeProximitySensor.getClosestObjectDistanceAndRootVehicle=function()
+        return 20,nil,nil,false,0
+    end
+    follower:getDriveData()
+    assert(math.abs(strategy.speed-5)<0.001)
+    strategy.followModeProximitySensor.getClosestObjectDistanceAndRootVehicle=function()
+        return 2,{},123,true,1
+    end
     follower:getDriveData()
     assert(strategy.speed==0)
 end)
