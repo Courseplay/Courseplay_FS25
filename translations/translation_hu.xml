@@ -1074,6 +1074,7 @@ A kijelölésnek hasonlónak kell lennie, mint a képen.
     <text name="input_CP_OPEN_GLOBAL_SETTINGS" text="CP: Globális beállítások megnyitása"/>
     <text name="input_CP_OPEN_COURSEGENERATOR_SETTINGS" text="CP: Útvonalszerkesztő/munka menü megnyitása"/>
     <text name="input_CP_OPEN_COURSEMANAGER" text="CP: Útvonalszerkesztő megnyitása"/>
+    <text name="input_CP_CALL_GRAIN_CART" text="CP: Toggle unloader for manually driven harvester"/>
     <text name="input_CP_OPEN_INGAME_MENU" text="CP: Open menu"/>
     <!---->
     <!--manualChopper-->
@@ -1085,6 +1086,5 @@ A kijelölésnek hasonlónak kell lennie, mint a képen.
     <text name="CP_vehicle_setting_manualChopperSide_right" text="Right"/>
     <text name="CP_vehicle_setting_manualChopperSide_behind" text="Behind"/>
     <text name="CP_infoTexts_manualChopperWaiting" text="Manual unloader: waiting for clear ground or alignment"/>
-    <text name="input_CP_CALL_GRAIN_CART" text="CP: Toggle unloader for manually driven harvester"/>
   </texts>
 </l10n>
