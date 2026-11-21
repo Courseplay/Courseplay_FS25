@@ -81,9 +81,9 @@ local function fixture(side)
     strategy.debug=function() end
     return ManualChopperFollower(strategy,proxy),strategy,proxy
 end
-test('both sides clear initially selects rear position',function()
+test('both sides clear initially selects a side instead of rear',function()
     local follower=fixture()
-    assert(follower:getRequestedSide(-6)==0)
+    assert(follower:getRequestedSide(-6)==1)
 end)
 test('assignment beside the harvester retains the existing side',function()
     local _,strategy,proxy=fixture()
@@ -136,7 +136,7 @@ test('short crop fluctuations do not trigger a side change',function()
     g_time=500
     proxy.left=0
     follower:updateSide(-6)
-    g_time=2500
+    g_time=1000
     follower:updateSide(-6)
     assert(follower.phase=='FOLLOW' and follower.side==0)
 end)
@@ -783,6 +783,67 @@ test('misaligned follower waits for forward movement and the normal rear gap',fu
     strategy.vehicle.front.z=-10
     follower:getDriveData()
     assert(strategy.speed>3 and not strategy.waiting)
+end)
+
+test('automatic rear follower selects the nearer free side in either direction',function()
+    local follower,strategy=fixture()
+    strategy.vehicle.front.x=-1
+    assert(follower:getRequestedSide(-6)==-1)
+    strategy.vehicle.front.x=1
+    assert(follower:getRequestedSide(-6)==1)
+end)
+
+test('free side takes priority after the normal confirmation delay',function()
+    local follower=fixture()
+    follower:updateSide(-6)
+    g_time=1500
+    follower:updateSide(-6)
+    assert(follower.phase=='FOLLOW')
+    g_time=2000
+    follower:updateSide(-6)
+    assert(follower.phase=='FALL_BACK' and follower.targetSide==1)
+end)
+
+test('automatic side selection permits a crop-free verge but still rejects fruit',function()
+    local follower,_,proxy=fixture()
+    onField=function() return false end
+    assert(follower:getRequestedSide(-6)==1)
+    proxy.left=10
+    assert(follower:getRequestedSide(-6)==-1)
+    proxy.right=10
+    assert(follower:getRequestedSide(-6)==0)
+end)
+
+test('side selection checks the whole corridor even when side samples are clear',function()
+    local follower=fixture()
+    crop=function(x) return x>0,100 end
+    assert(follower:getRequestedSide(-6)==-1)
+end)
+
+test('automatic follower leaves rear position and reaches a free side during travel',function()
+    local follower,strategy,proxy=fixture()
+    proxy.hasAutoAimPipe=function() return true end
+    local fill={}
+    strategy.getBestTargetNode=function() return {node=fill} end
+    for i=0,999 do
+        g_time=i*100
+        proxy.vehicle.node.z=(5/3.6)*i*0.1
+        local x,_,z=localToWorld(strategy.vehicle.node,0,0,2)
+        strategy.vehicle.front.x,strategy.vehicle.front.z=x,z
+        fill.x,_,fill.z=localToWorld(strategy.vehicle.node,0,0,-8)
+        local gx,gz=follower:getDriveData()
+        assert(gx and gz)
+        local lx,_,lz=worldToLocal(strategy.vehicle.node,gx,0,gz)
+        local curvature=2*lx/math.max(1,lx*lx+lz*lz)
+        local speed=strategy.speed/3.6
+        local angle=math.rad(strategy.vehicle.node.angle or 0)+speed*curvature*0.1
+        strategy.vehicle.node.angle=math.deg(angle)
+        strategy.vehicle.node.x=strategy.vehicle.node.x+math.sin(angle)*speed*0.1
+        strategy.vehicle.node.z=strategy.vehicle.node.z+math.cos(angle)*speed*0.1
+    end
+    assert(follower.side==1 and follower.phase=='FOLLOW')
+    local _,offset=follower:projectOnGuide(fill)
+    assert(math.abs(offset-4)<1)
 end)
 
 print('Manual chopper regression tests: '..tests..' passed')

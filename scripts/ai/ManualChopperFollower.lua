@@ -265,16 +265,20 @@ function ManualChopperFollower:getRequestedSide(rearZ)
     if requested == 2 then return 0 end
     local left, right = self.proxy:getFruitAtSides()
     local leftClear = left ~= nil and left == 0 and not self:isInsideTightTurn(1) and
-        self:isCorridorClear(self:getSideOffset(1), rearZ, self:getSideOffset(1), 6)
+        self:isCorridorClear(self:getSideOffset(1), rearZ, self:getSideOffset(1), 6, true)
     local rightClear = right ~= nil and right == 0 and not self:isInsideTightTurn(-1) and
-        self:isCorridorClear(self:getSideOffset(-1), rearZ, self:getSideOffset(-1), 6)
+        self:isCorridorClear(self:getSideOffset(-1), rearZ, self:getSideOffset(-1), 6, true)
     if requested == 1 then return leftClear and 1 or 0 end
     if requested == -1 then return rightClear and -1 or 0 end
     -- Retain a usable side, including when both sides have become clear.
     if self.side == 1 and leftClear then return 1 end
     if self.side == -1 and rightClear then return -1 end
-    if leftClear and not rightClear then return 1 end
-    if rightClear and not leftClear then return -1 end
+    if leftClear and rightClear then
+        local x = localToLocal(Markers.getFrontMarkerNode(self.strategy.vehicle), self.proxy.vehicle:getAIDirectionNode(), 0, 0, 0)
+        return math.abs(x-self:getSideOffset(1)) <= math.abs(x-self:getSideOffset(-1)) and 1 or -1
+    end
+    if leftClear then return 1 end
+    if rightClear then return -1 end
     return 0
 end
 
@@ -425,7 +429,7 @@ function ManualChopperFollower:getDriveData()
 
     -- If the current side becomes blocked, retreat first. Never sweep sideways through the harvester.
     if self.phase == 'FOLLOW' and self.side ~= 0 and
-            (self:isInsideTightTurn(self.side, targetX) or not self:isCorridorClear(targetX, z, targetX, z + lookahead)) then
+            (self:isInsideTightTurn(self.side, targetX) or not self:isCorridorClear(targetX, z, targetX, z + lookahead, true)) then
         self.targetSide = 0
         self.phase = 'FALL_BACK'
         self:hold(false, 'side-corridor-or-turn-radius')
