@@ -141,27 +141,39 @@ function ManualChopperFollower:isCorridorClear(fromX, fromZ, toX, toZ)
     -- Density queries are expensive. Reuse nearby world-space corridors for at most 200 ms.
     if not self.corridors or g_time >= self.corridorCacheUntil then
         self.corridors = {}
+        self.corridorFailures = {}
         self.corridorCacheUntil = g_time + 200
     end
     local startX, _, startZ = localToWorld(reference, fromX, 0, fromZ)
     local endX, _, endZ = localToWorld(reference, toX, 0, toZ)
     local key = string.format('%d:%d:%d:%d:%.2f', math.floor(startX * 2), math.floor(startZ * 2),
         math.floor(endX * 2), math.floor(endZ * 2), halfWidth)
-    if self.corridors[key] ~= nil then return self.corridors[key] end
-    local function remember(clear)
+    if self.corridors[key] ~= nil then
+        self.lastCorridorBlock = self.corridorFailures[key]
+        return self.corridors[key]
+    end
+    local function remember(clear, reason, x, z, density)
+        local failure = not clear and {reason=reason,x=x,z=z,density=density} or nil
         self.corridors[key] = clear
+        self.corridorFailures[key] = failure
+        self.lastCorridorBlock = failure
         return clear
     end
     local distance = MathUtil.vector2Length(toX - fromX, toZ - fromZ)
+    local acrossX, acrossZ = 1, 0
+    if distance > 0.001 then
+        acrossX, acrossZ = (toZ-fromZ)/distance, -(toX-fromX)/distance
+    end
     local steps = math.max(1, math.ceil(distance / 2))
     for i = 0, steps do
         local fraction = i / steps
         for _, lateral in ipairs({-halfWidth, 0, halfWidth}) do
             local x, _, z = localToWorld(reference,
-                fromX + fraction * (toX - fromX) + lateral, 0, fromZ + fraction * (toZ - fromZ))
-            if not CpFieldUtil.isOnField(x, z) then return remember(false) end
-            local fruit = PathfinderUtil.hasFruit(x, z, 0.5, 0.5)
-            if fruit ~= false then return remember(false) end
+                fromX + fraction * (toX - fromX) + lateral * acrossX, 0,
+                fromZ + fraction * (toZ - fromZ) + lateral * acrossZ)
+            if not CpFieldUtil.isOnField(x, z) then return remember(false, 'off-field', x, z) end
+            local fruit, density = PathfinderUtil.hasFruit(x, z, 0.5, 0.5)
+            if fruit ~= false then return remember(false, fruit == true and 'fruit' or 'unknown-fruit', x, z, density) end
         end
     end
     return remember(true)
@@ -280,7 +292,18 @@ function ManualChopperFollower:updateSide(rearZ)
     end
 end
 
-function ManualChopperFollower:hold(recheck)
+function ManualChopperFollower:hold(recheck, reason)
+    reason = reason or 'safety'
+    if self.lastWaitReason ~= reason or g_time >= (self.nextWaitLog or 0) then
+        self.lastWaitReason = reason
+        self.nextWaitLog = g_time + 5000
+        local block = self.lastCorridorBlock
+        self.strategy:debug('Manual chopper WAIT: reason=%s phase=%s side=%d angle=%.1f ready=%s reverse=%s block=%s at=%.2f/%.2f density=%s',
+            reason, self.phase, self.side, self.alignmentAngle or -1,
+            tostring(self.proxy:isReadyToUnload()), tostring(self.proxy:isReversing()),
+            block and block.reason or 'none', block and block.x or 0, block and block.z or 0,
+            tostring(block and block.density))
+    end
     local strategy, proxy = self.strategy, self.proxy
     strategy:setMaxSpeed(0)
     strategy:setInfoText(InfoTextManager.MANUAL_CHOPPER_WAITING)
@@ -295,7 +318,7 @@ function ManualChopperFollower:hold(recheck)
     if MathUtil.vector2Length(x, z) <= 25 then return false end
     strategy.manualChopperReapproachAfter = g_time + 15000
     self.waitingSince = nil
-    strategy:debugSparse('Manual chopper: waiting, releasing assignment for a fresh approach')
+    strategy:debug('Manual chopper: waiting, releasing assignment for a fresh approach')
     strategy:startWaitingForSomethingToDo()
     return true
 end
@@ -312,7 +335,7 @@ function ManualChopperFollower:getDriveData()
     local gx, _, gz = localToWorld(reference, x, 0, z + lookahead)
     strategy:clearInfoText(InfoTextManager.MANUAL_CHOPPER_WAITING)
     if proxy:isReversing() or not proxy.chopperTrail then
-        self:hold()
+        self:hold(false, proxy:isReversing() and 'harvester-reversing' or 'missing-trail')
         return gx, gz
     end
     if self.guideTrail ~= proxy.chopperTrail then
@@ -328,9 +351,11 @@ function ManualChopperFollower:getDriveData()
     -- Compare with the recorded track at the tractor, not the harvester's newer heading.
     local _, _, guideDX, guideDZ = self:getGuidePosition(progress + lookahead / 2, 0)
     local tractorDX, _, tractorDZ = localDirectionToWorld(strategy.vehicle:getAIDirectionNode(), 0, 0, 1)
-    local aligned = tractorDX * guideDX + tractorDZ * guideDZ >= math.cos(math.rad(45))
+    local directionDot = CpMathUtil.clamp(tractorDX * guideDX + tractorDZ * guideDZ, -1, 1)
+    self.alignmentAngle = math.deg(math.acos(directionDot))
+    local aligned = directionDot >= math.cos(math.rad(45))
     if not proxy:isReadyToUnload() or not aligned then
-        if self:hold(true) then return end
+        if self:hold(true, not proxy:isReadyToUnload() and 'pipe-not-ready' or 'alignment') then return end
         return gx, gz
     end
 
@@ -346,7 +371,7 @@ function ManualChopperFollower:getDriveData()
     if self.phase == 'CROSS_BEHIND' then
         if z > rearZ then
             self.phase = 'FALL_BACK'
-            self:hold()
+            self:hold(false, 'crossing-needs-rear-clearance')
             return gx, gz
         end
         targetX, targetZ = self:getSideOffset(self.targetSide), rearZ - 2
@@ -377,7 +402,7 @@ function ManualChopperFollower:getDriveData()
                 local radiusSquared = (radius-offset)^2-fillZ^2
                 if radiusSquared <= 0 then
                     self.targetSide, self.phase = 0, 'FALL_BACK'
-                    self:hold()
+                    self:hold(false, 'trailer-turn-radius')
                     return gx,gz
                 end
                 rootOffset = radius-fillX-(curvature>0 and 1 or -1)*math.sqrt(radiusSquared)
@@ -395,14 +420,14 @@ function ManualChopperFollower:getDriveData()
             (self:isInsideTightTurn(self.side, targetX) or not self:isCorridorClear(targetX, z, targetX, z + lookahead)) then
         self.targetSide = 0
         self.phase = 'FALL_BACK'
-        self:hold()
+        self:hold(false, 'side-corridor-or-turn-radius')
         return gx, gz
     end
     local goalOffset = lateral + CpMathUtil.clamp(targetX - lateral, -lookahead / 2, lookahead / 2)
     gx, gz = self:getGuidePosition(progress + lookahead, goalOffset)
     local goalLocalX, _, goalLocalZ = worldToLocal(reference, gx, 0, gz)
     if not self:isCorridorClear(x, z, goalLocalX, goalLocalZ) then
-        if self:hold(true) then return end
+        if self:hold(true, 'drive-corridor') then return end
         return gx, gz
     end
     local combineSpeed = math.abs(proxy.vehicle.lastSpeedReal or 0) * 3600
@@ -445,8 +470,9 @@ function ManualChopperFollower:getDriveData()
         speed = math.min(speed, approachLimit, math.max(0, longitudinalError * 2.5))
     end
     if speed <= 0 and combineSpeed >= 0.5 and longitudinalError > 1 then
-        if self:hold(true) then return end
+        if self:hold(true, 'proximity-sensor') then return end
     else
+        self.lastWaitReason = nil
         self.waitingSince = nil
     end
     strategy:setMaxSpeed(math.min(speed, strategy.settings.fieldSpeed:getValue()))

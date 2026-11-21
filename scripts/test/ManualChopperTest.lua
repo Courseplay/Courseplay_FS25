@@ -78,6 +78,7 @@ local function fixture(side)
     strategy.getBestTargetNodeDistanceFromPipe=function() return 0 end
     strategy.getBestTargetNode=function() return nil end
     strategy.debugSparse=function() end
+    strategy.debug=function() end
     return ManualChopperFollower(strategy,proxy),strategy,proxy
 end
 test('both sides clear initially selects rear position',function()
@@ -616,6 +617,36 @@ test('fixed pipe uses configured longitudinal offset once through existing strat
     strategy.getPipeOffset=function(self) return 4,-5+self.settings.combineOffsetZ:getValue() end
     follower:getDriveData()
     assert(math.abs(strategy.speed-5)<0.001)
+end)
+
+test('diagonal corridor width is perpendicular to the checked path',function()
+    local follower=fixture()
+    local samples={}
+    crop=function(x,z) table.insert(samples,{x=x,z=z}); return false end
+    assert(follower:isCorridorClear(0,0,4,4))
+    local a,b=samples[1],samples[3]
+    assert(math.abs((b.x-a.x)*4+(b.z-a.z)*4)<0.001)
+    assert(math.abs(MathUtil.vector2Length(b.x-a.x,b.z-a.z)-3.5)<0.001)
+end)
+
+test('cached corridor failures preserve the exact rejection point and cause',function()
+    local follower=fixture()
+    onField=function() return false end
+    assert(not follower:isCorridorClear(0,-10,0,-5))
+    local failure=follower.lastCorridorBlock
+    assert(failure.reason=='off-field' and failure.x and failure.z)
+    follower.lastCorridorBlock=nil
+    assert(not follower:isCorridorClear(0,-10,0,-5))
+    assert(follower.lastCorridorBlock==failure)
+end)
+
+test('alignment holds report measured angle and actual readiness',function()
+    local follower,strategy=fixture()
+    local message
+    strategy.debug=function(self,format,...) message=string.format(format,...) end
+    strategy.vehicle.node.angle=60
+    follower:getDriveData()
+    assert(message:find('reason=alignment',1,true) and message:find('angle=60.0',1,true))
 end)
 
 print('Manual chopper regression tests: '..tests..' passed')
