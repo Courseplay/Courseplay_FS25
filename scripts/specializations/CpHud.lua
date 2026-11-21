@@ -141,6 +141,7 @@ function CpHud:actionEventMouse(_, inputValue)
             return
         end
     end
+    spec.pendingEnterRestore = nil
     local showMouseCursor = not g_inputBinding:getShowMouseCursor()
     if not spec.hud:getIsOpen() then
         showMouseCursor = true
@@ -156,6 +157,7 @@ function CpHud:actionEventMouse(_, inputValue)
 end
 
 function CpHud:resetCpHud()
+    self.spec_cpHud.pendingEnterRestore = nil
     --- Prevents turning the mouse button off, if auto drive editor is enabled.
     if g_Courseplay.autoDrive and g_Courseplay.autoDrive.isEditorModeEnabled() then 
         return
@@ -180,6 +182,7 @@ end
 
 function CpHud:openClose()
 	local spec = self.spec_cpHud
+    spec.pendingEnterRestore = nil
 	if spec.hud:getIsOpen() then 
 		self:resetCpHud()
 		spec.hud:openClose(false)
@@ -295,20 +298,29 @@ function CpHud:saveToXMLFile(xmlFile, baseKey, usedModNames)
         baseKey .. CpHud.SETTINGS_KEY, self, nil)
 end
 
+--- Apply the remembered local HUD state once the entry is visible to the local player.
+--- Never enforce visibility continuously: manual open/close must remain authoritative.
+function CpHud.tryRestoreOnEnter(vehicle)
+    local spec = vehicle.spec_cpHud
+    if not vehicle.isClient or not spec.pendingEnterRestore or not spec.hud or
+            not g_localPlayer or vehicle ~= CpUtil.getCurrentVehicle() then return end
+    spec.pendingEnterRestore = nil
+    CpGuiUtil.setCameraRotation(vehicle, not g_inputBinding:getShowMouseCursor(), spec.savedCameraRotatableInfo)
+    spec.hud:openClose(CpHud.isHudActive)
+end
+
 function CpHud:onEnterVehicle(isControlling)
-    -- if the mouse cursor is shown when we enter the vehicle, disable camera rotations
-    if isControlling and self == CpUtil.getCurrentVehicle() then
-        CpGuiUtil.setCameraRotation(self, not g_inputBinding:getShowMouseCursor(),
-                self.spec_cpHud.savedCameraRotatableInfo)
-        local spec = self.spec_cpHud
-        spec.hud:openClose(CpHud.isHudActive)
+    if self.isClient and isControlling then
+        self.spec_cpHud.pendingEnterRestore = true
+        CpHud.tryRestoreOnEnter(self)
     end
 end
 
 function CpHud:onLeaveVehicle(wasEntered)
-    -- turn off mouse when leaving the vehicle
+    self.spec_cpHud.pendingEnterRestore = nil
+    -- Preserve the remembered HUD visibility, but release the local mouse/camera.
     if wasEntered then
-   	    self:resetCpHud()
+        self:resetCpHud()
     end
 end
 
@@ -338,6 +350,7 @@ end
 --- Enriches the status data for the hud here.
 function CpHud:onUpdate(dt)
     local spec = self.spec_cpHud
+    if spec.pendingEnterRestore then CpHud.tryRestoreOnEnter(self) end
     local strategy = self:getCpDriveStrategy()
     spec.status:update(dt, self:getIsCpActive(), strategy)
     if self.isServer and self.finishedFirstUpdate then 
