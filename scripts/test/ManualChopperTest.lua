@@ -207,7 +207,7 @@ test('unexpected heading change and a folded pipe hold the follower',function()
     follower:getDriveData()
     assert(strategy.speed==0)
 end)
-test('a distant manual turn releases the assignment for a fresh approach',function()
+test('valid ongoing following is not released solely for a heading difference',function()
     local follower,strategy=fixture()
     strategy.vehicle.node.angle=60
     strategy.vehicle.front.z=-30
@@ -216,7 +216,7 @@ test('a distant manual turn releases the assignment for a fresh approach',functi
     follower:getDriveData()
     g_time=3000
     follower:getDriveData()
-    assert(released and strategy.speed==0)
+    assert(not released and strategy.speed>0)
 end)
 test('rear obstacle and excessive trailer angle prevent reversing',function()
     local follower,strategy=fixture()
@@ -646,7 +646,7 @@ test('alignment holds report measured angle and actual readiness',function()
     strategy.debug=function(self,format,...) message=string.format(format,...) end
     strategy.vehicle.node.angle=120
     follower:getDriveData()
-    assert(message:find('reason=alignment',1,true) and message:find('angle=120.0',1,true))
+    assert(message:find('reason=goal-not-forward',1,true) and message:find('angle=120.0',1,true))
 end)
 
 test('direct rear following can cross a crop-free field edge without replanning',function()
@@ -727,21 +727,21 @@ test('normal catch-up still waits when too close or facing the opposite way',fun
     follower:getDriveData()
     assert(strategy.speed==0)
     strategy.vehicle.front.z=-10
-    strategy.vehicle.node.angle=100
+    strategy.vehicle.node.angle=180
     follower:getDriveData()
     assert(strategy.speed==0)
 end)
 
-test('distant alignment waits for the existing reassignment flow',function()
+test('ongoing valid following keeps its course even beyond the initial approach distance',function()
     local follower,strategy=alignmentFixture()
     strategy.vehicle.node.z,strategy.vehicle.front.z=-35,-33
     local calls=0
     strategy.startWaitingForSomethingToDo=function() calls=calls+1 end
     follower:getDriveData()
-    assert(strategy.speed==0 and calls==0)
+    assert(strategy.speed>0 and calls==0)
     g_time=3000
     follower:getDriveData()
-    assert(calls==1)
+    assert(strategy.speed>0 and calls==0)
 end)
 
 for _,sign in ipairs({1,-1}) do
@@ -777,9 +777,9 @@ test('misaligned follower uses an existing rear gap even after the harvester sto
     follower:getDriveData()
     assert(strategy.speed>0 and not strategy.waiting)
     proxy.vehicle.lastSpeedReal=5/3600
-    strategy.vehicle.front.z=-7
+    strategy.vehicle.front.z=-3
     follower:getDriveData()
-    assert(strategy.speed==0 and strategy.waiting)
+    assert(strategy.speed==0)
     strategy.vehicle.front.z=-10
     follower:getDriveData()
     assert(strategy.speed>3 and not strategy.waiting)
@@ -1069,6 +1069,29 @@ test('fractional reverse endpoints and repeated direction changes retain ordered
     local trail=proxy.chopperTrail
     assert(trail[1].z==0 and math.abs(trail[#trail].z-7.8)<0.001)
     for i=2,#trail do assert(trail[i].progress>trail[i-1].progress) end
+end)
+
+test('disabled fruit avoidance permits crops while preserving field boundary checks',function()
+    local follower,strategy=fixture()
+    crop=function() return true,100 end
+    assert(not follower:isCorridorClear(0,-10,0,-5))
+    strategy.settings.avoidFruit=setting(false)
+    assert(follower:isCorridorClear(0,-10,0,-5))
+    onField=function() return false end
+    g_time=300
+    assert(not follower:isCorridorClear(0,-10,0,-5))
+    assert(follower.lastCorridorBlock.reason=='off-field')
+end)
+
+test('disabled fruit avoidance retains collision stopping during direct following',function()
+    local follower,strategy=fixture(2)
+    strategy.settings.avoidFruit=setting(false)
+    crop=function() return true,100 end
+    follower:getDriveData()
+    assert(strategy.speed>0)
+    strategy.frontDistance=1
+    follower:getDriveData()
+    assert(strategy.speed==0)
 end)
 
 print('Manual chopper regression tests: '..tests..' passed')

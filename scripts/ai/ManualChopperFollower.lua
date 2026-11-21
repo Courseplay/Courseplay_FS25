@@ -199,6 +199,7 @@ end
 function ManualChopperFollower:isCorridorClear(fromX, fromZ, toX, toZ, allowOffField)
     local reference = self.proxy.vehicle:getAIDirectionNode()
     local halfWidth = self:getVehicleWidth() / 2 + 0.25
+    local avoidFruit = not self.strategy.settings.avoidFruit or self.strategy.settings.avoidFruit:getValue()
     -- Density queries are expensive. Reuse nearby world-space corridors for at most 200 ms.
     if not self.corridors or g_time >= self.corridorCacheUntil then
         self.corridors = {}
@@ -207,8 +208,8 @@ function ManualChopperFollower:isCorridorClear(fromX, fromZ, toX, toZ, allowOffF
     end
     local startX, _, startZ = localToWorld(reference, fromX, 0, fromZ)
     local endX, _, endZ = localToWorld(reference, toX, 0, toZ)
-    local key = string.format('%d:%d:%d:%d:%.2f:%s', math.floor(startX * 2), math.floor(startZ * 2),
-        math.floor(endX * 2), math.floor(endZ * 2), halfWidth, tostring(allowOffField == true))
+    local key = string.format('%d:%d:%d:%d:%.2f:%s:%s', math.floor(startX * 2), math.floor(startZ * 2),
+        math.floor(endX * 2), math.floor(endZ * 2), halfWidth, tostring(allowOffField == true), tostring(avoidFruit))
     if self.corridors[key] ~= nil then
         self.lastCorridorBlock = self.corridorFailures[key]
         return self.corridors[key]
@@ -233,8 +234,10 @@ function ManualChopperFollower:isCorridorClear(fromX, fromZ, toX, toZ, allowOffF
                 fromX + fraction * (toX - fromX) + lateral * acrossX, 0,
                 fromZ + fraction * (toZ - fromZ) + lateral * acrossZ)
             if not allowOffField and not CpFieldUtil.isOnField(x, z) then return remember(false, 'off-field', x, z) end
-            local fruit, density = PathfinderUtil.hasFruit(x, z, 0.5, 0.5)
-            if fruit ~= false then return remember(false, fruit == true and 'fruit' or 'unknown-fruit', x, z, density) end
+            if avoidFruit then
+                local fruit, density = PathfinderUtil.hasFruit(x, z, 0.5, 0.5)
+                if fruit ~= false then return remember(false, fruit == true and 'fruit' or 'unknown-fruit', x, z, density) end
+            end
         end
     end
     return remember(true)
@@ -468,19 +471,11 @@ function ManualChopperFollower:getDriveData()
     local tractorDX, _, tractorDZ = localDirectionToWorld(strategy.vehicle:getAIDirectionNode(), 0, 0, 1)
     local directionDot = CpMathUtil.clamp(tractorDX * guideDX + tractorDZ * guideDZ, -1, 1)
     self.alignmentAngle = math.deg(math.acos(directionDot))
-    local aligned = directionDot >= math.cos(math.rad(45))
     if not proxy:isReadyToUnload() then
         if self:hold(true, 'pipe-not-ready') then return end
         return gx, gz
     end
     local combineSpeed = math.abs(proxy.vehicle.lastSpeedReal or 0) * 3600
-    -- An open gap allows normal following even if the harvester has since stopped.
-    -- Speed/clearance control already stops the follower before it gets too close.
-    if not aligned and not (directionDot > 0 and z <= rearZ - 2 and
-            MathUtil.vector2Length(x,z) <= 25 and self:hasHarvesterClearance()) then
-        if self:hold(true, 'alignment') then return end
-        return gx, gz
-    end
 
     local targetX = self:getSideOffset(self.side)
     local followRearZ = rearZ + math.min(0, self:getManualOffset('combineOffsetZ'))
@@ -549,12 +544,10 @@ function ManualChopperFollower:getDriveData()
     local goalOffset = lateral + CpMathUtil.clamp(targetX - lateral, -lookahead / 2, lookahead / 2)
     gx, gz = self:getGuidePosition(progress + lookahead, goalOffset)
     local goalLocalX, _, goalLocalZ = worldToLocal(reference, gx, 0, gz)
-    if not aligned then
-        local _, _, forward = worldToLocal(strategy.vehicle:getAIDirectionNode(), gx, 0, gz)
-        if forward <= 1 then
-            if self:hold(true, 'alignment-no-forward-room') then return end
-            return gx, gz
-        end
+    local _, _, forward = worldToLocal(strategy.vehicle:getAIDirectionNode(), gx, 0, gz)
+    if forward <= 1 then
+        if self:hold(true, 'goal-not-forward') then return end
+        return gx, gz
     end
     -- A nearby follower may straddle a headland/grass verge. Field membership is
     -- not an obstacle; retain crop checks and the normal collision sensors.
