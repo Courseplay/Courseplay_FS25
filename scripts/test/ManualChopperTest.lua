@@ -958,4 +958,117 @@ test('active side lane outside the field falls back behind the harvester',functi
     assert(follower.phase=='FALL_BACK' and follower.targetSide==0 and strategy.speed==0)
 end)
 
+local function recordAt(proxy,x,z,angle,reverse)
+    proxy.vehicle.node.x,proxy.vehicle.node.z,proxy.vehicle.node.angle=x,z,angle or 0
+    proxy.vehicle.reversing=reverse or false
+    ManualChopperFollower.recordPosition(proxy)
+end
+
+local function cornerTrail(proxy)
+    for z=0,10 do recordAt(proxy,0,z,0) end
+    for x=1,10 do recordAt(proxy,x,10,90) end
+end
+
+test('reversing trims the retraced tail and retains the older corner',function()
+    local _,_,proxy=fixture(2)
+    cornerTrail(proxy)
+    local trail=proxy.chopperTrail
+    recordAt(proxy,8,10,90,true)
+    recordAt(proxy,6,10,90,true)
+    assert(proxy.chopperTrail==trail and #trail==17)
+    assert(trail[1].x==0 and trail[1].z==0 and trail[11].z==10)
+    assert(trail[#trail].x==6 and trail[#trail].progress==16)
+    recordAt(proxy,6,10,90,true)
+    assert(#trail==17)
+    recordAt(proxy,6,10,90,false)
+    recordAt(proxy,7,10,90,false)
+    assert(trail[#trail].x==7 and trail[#trail].progress==17)
+    for i=2,#trail do assert(trail[i].progress>trail[i-1].progress) end
+end)
+
+test('following after reversing still uses the older approach to the corner',function()
+    local follower,strategy,proxy=fixture(2)
+    cornerTrail(proxy)
+    recordAt(proxy,8,10,90,true)
+    recordAt(proxy,6,10,90,true)
+    recordAt(proxy,6,10,90,false)
+    strategy.vehicle.node.x,strategy.vehicle.node.z,strategy.vehicle.node.angle=0,4,0
+    strategy.vehicle.front.x,strategy.vehicle.front.z=0,6
+    crop=function(x,z) return x>2 and z<8,100 end
+    local gx,gz=follower:getDriveData()
+    assert(gx and math.abs(gx)<0.01 and gz>6 and strategy.speed>0)
+    assert(follower.alignmentAngle<1)
+end)
+
+test('off-track reverse turn retains the route and marks the later connection',function()
+    local _,_,proxy=fixture(2)
+    for z=0,10 do recordAt(proxy,0,z,0) end
+    recordAt(proxy,4,9,45,true)
+    local trail=proxy.chopperTrail
+    assert(#trail==11 and trail[#trail].z==10)
+    recordAt(proxy,4,9,45,false)
+    local last=trail[#trail]
+    assert(last.connectionFrom and last.connectionFrom.x==0 and last.connectionFrom.z==10)
+    assert(last.curvature==0)
+    recordAt(proxy,4.5,9.5,45,false)
+    assert(not trail[#trail].connectionFrom)
+end)
+
+test('unsafe connection after an off-track reverse cannot cut through fruit',function()
+    local follower,strategy,proxy=fixture(2)
+    for z=0,10 do recordAt(proxy,0,z,0) end
+    recordAt(proxy,4,9,45,true)
+    recordAt(proxy,4,9,45,false)
+    strategy.vehicle.node.x,strategy.vehicle.node.z=0,6
+    strategy.vehicle.front.x,strategy.vehicle.front.z=0,8
+    crop=function(x,z) return x>1 and z>8,100 end
+    follower:getDriveData()
+    assert(strategy.speed==0 and follower.lastWaitReason=='trail-connection')
+end)
+
+test('reverse beyond retained history does not append a backward loop',function()
+    local _,_,proxy=fixture(2)
+    recordAt(proxy,0,0,0)
+    recordAt(proxy,0,1,0)
+    recordAt(proxy,0,0,0,true)
+    recordAt(proxy,0,-1,0,true)
+    assert(#proxy.chopperTrail==1 and proxy.chopperTrail[1].z==-1)
+    recordAt(proxy,0,-1,0,false)
+    recordAt(proxy,0,0,0,false)
+    assert(#proxy.chopperTrail==2 and proxy.chopperTrail[2].progress>proxy.chopperTrail[1].progress)
+end)
+
+test('reverse search cannot jump back to an old crossing of the same position',function()
+    local _,_,proxy=fixture(2)
+    for z=0,10 do recordAt(proxy,0,z,0) end
+    for x=1,10 do recordAt(proxy,x,10,90) end
+    for z=9,0,-1 do recordAt(proxy,10,z,180) end
+    for x=9,0,-1 do recordAt(proxy,x,0,270) end
+    local before=proxy.chopperTrail[#proxy.chopperTrail].progress
+    recordAt(proxy,1,0,270,true)
+    assert(proxy.chopperTrail[#proxy.chopperTrail].progress>=before-2)
+end)
+
+test('teleport still discards unrelated old history',function()
+    local _,_,proxy=fixture(2)
+    for z=0,10 do recordAt(proxy,0,z,0) end
+    recordAt(proxy,0,100,0)
+    assert(#proxy.chopperTrail==1 and proxy.chopperTrail[1].z==100)
+end)
+
+test('fractional reverse endpoints and repeated direction changes retain ordered history',function()
+    local _,_,proxy=fixture(2)
+    for z=0,10 do recordAt(proxy,0,z,0) end
+    recordAt(proxy,0,7.4,0,true)
+    assert(math.abs(proxy.chopperTrail[#proxy.chopperTrail].z-7.4)<0.001)
+    recordAt(proxy,0,7.4,0,false)
+    recordAt(proxy,0,8.4,0,false)
+    recordAt(proxy,0,6.8,0,true)
+    recordAt(proxy,0,6.8,0,false)
+    recordAt(proxy,0,7.8,0,false)
+    local trail=proxy.chopperTrail
+    assert(trail[1].z==0 and math.abs(trail[#trail].z-7.8)<0.001)
+    for i=2,#trail do assert(trail[i].progress>trail[i-1].progress) end
+end)
+
 print('Manual chopper regression tests: '..tests..' passed')

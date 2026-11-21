@@ -2,32 +2,93 @@
 ---@class ManualChopperFollower
 ManualChopperFollower = CpObject()
 
---- Keep a short, distance-sampled history of the actual forward movement.
-function ManualChopperFollower.recordPosition(proxy)
-    if proxy:isReversing() then
-        proxy.chopperTrail = nil
+--- Rewind only the recent part actually retraced by the reversing harvester.
+function ManualChopperFollower.rewindTrail(proxy, x, z)
+    local trail = proxy.chopperTrail
+    if not trail or #trail == 0 then return end
+    if #trail == 1 then
+        local first = trail[1]
+        local along = (x-first.x)*first.dx+(z-first.z)*first.dz
+        local across = (x-first.x)*first.dz-(z-first.z)*first.dx
+        if along < -0.01 and math.abs(across) <= 2 then
+            trail[1] = {x=x,z=z,dx=first.dx,dz=first.dz,progress=first.progress+along,curvature=0}
+            proxy.chopperTrailRevision = (proxy.chopperTrailRevision or 0)+1
+        end
         return
     end
+    local last = trail[#trail]
+    local reverse = proxy.chopperTrailReverse or {x=last.x,z=last.z,distance=0}
+    reverse.distance = reverse.distance + MathUtil.vector2Length(x-reverse.x,z-reverse.z)
+    reverse.x, reverse.z = x, z
+    proxy.chopperTrailReverse = reverse
+    local minProgress = last.progress - math.min(30, reverse.distance*1.5+1)
+    local bestDistance, bestIndex, bestFraction = math.huge
+    for i=#trail,2,-1 do
+        local a,b = trail[i-1],trail[i]
+        if b.progress < minProgress then break end
+        local vx,vz = b.x-a.x,b.z-a.z
+        local squared = vx*vx+vz*vz
+        if squared > 0.000001 then
+            local fraction = CpMathUtil.clamp(((x-a.x)*vx+(z-a.z)*vz)/squared,0,1)
+            local progress = a.progress+fraction*(b.progress-a.progress)
+            local distance = (x-a.x-fraction*vx)^2+(z-a.z-fraction*vz)^2
+            if progress >= minProgress and distance < bestDistance then
+                bestDistance,bestIndex,bestFraction = distance,i,fraction
+            end
+        end
+    end
+    -- Off-track reverse turns retain the old route; their later connector is checked separately.
+    if not bestIndex or bestDistance > 4 then return end
+    local a,b = trail[bestIndex-1],trail[bestIndex]
+    local progress = a.progress+bestFraction*(b.progress-a.progress)
+    if progress >= last.progress-0.01 then return end
+    local dx,dz = a.dx+bestFraction*(b.dx-a.dx),a.dz+bestFraction*(b.dz-a.dz)
+    local length = MathUtil.vector2Length(dx,dz)
+    if length < 0.001 then dx,dz=b.dx,b.dz else dx,dz=dx/length,dz/length end
+    local point = {x=a.x+bestFraction*(b.x-a.x),z=a.z+bestFraction*(b.z-a.z),
+        dx=dx,dz=dz,progress=progress,curvature=0,connectionFrom=b.connectionFrom}
+    while #trail >= bestIndex do table.remove(trail) end
+    if progress-a.progress > 0.01 then table.insert(trail,point) end
+    reverse.distance = 0
+    proxy.chopperTrailRevision = (proxy.chopperTrailRevision or 0)+1
+end
+
+--- Keep a short, distance-sampled history of forward movement; reverse travel never appends a loop.
+function ManualChopperFollower.recordPosition(proxy)
     local node = proxy.vehicle:getAIDirectionNode()
     local x, _, z = getWorldTranslation(node)
+    if proxy:isReversing() then
+        proxy.chopperTrailWasReversing = true
+        ManualChopperFollower.rewindTrail(proxy,x,z)
+        return
+    end
     local dx, _, dz = localDirectionToWorld(node, 0, 0, 1)
     local directionLength = MathUtil.vector2Length(dx,dz)
     if directionLength < 0.001 then return end
     dx, dz = dx/directionLength, dz/directionLength
     local trail = proxy.chopperTrail or {}
     local previous = trail[#trail]
-    local distance = previous and MathUtil.vector2Length(x - previous.x, z - previous.z) or 0
-    if previous and distance < 0.5 then return end
-    if distance > 30 then trail, previous = {}, nil end
-    local progress = previous and previous.progress + distance or 0
-    local curvature = 0
-    if previous and distance > 0 then
-        local anchor = trail[math.max(1,#trail-3)]
-        curvature = math.atan2(dx * anchor.dz - dz * anchor.dx, dx * anchor.dx + dz * anchor.dz) / (progress-anchor.progress)
+    local distance = previous and MathUtil.vector2Length(x-previous.x,z-previous.z) or 0
+    local resuming = proxy.chopperTrailWasReversing
+    if resuming and previous and distance < 0.05 then
+        proxy.chopperTrailWasReversing,proxy.chopperTrailReverse = nil,nil
+        return
     end
-    table.insert(trail, {x=x,z=z,dx=dx,dz=dz,progress=progress,curvature=curvature})
-    while #trail > 2 and progress - trail[2].progress > 150 do table.remove(trail, 1) end
+    if previous and distance < 0.5 and not resuming then return end
+    -- A teleport invalidates the route; do not connect unrelated locations.
+    if distance > 30 then trail,previous,distance = {},nil,0 end
+    local progress = previous and previous.progress+distance or 0
+    local curvature = 0
+    if previous and distance > 0 and not resuming then
+        local anchor = trail[math.max(1,#trail-3)]
+        curvature = math.atan2(dx*anchor.dz-dz*anchor.dx,dx*anchor.dx+dz*anchor.dz)/(progress-anchor.progress)
+    end
+    local connectionFrom = resuming and previous and {x=previous.x,z=previous.z,progress=previous.progress} or nil
+    table.insert(trail,{x=x,z=z,dx=dx,dz=dz,progress=progress,curvature=curvature,connectionFrom=connectionFrom})
+    while #trail > 2 and progress-trail[2].progress > 150 do table.remove(trail,1) end
     proxy.chopperTrail = trail
+    if resuming then proxy.chopperTrailRevision = (proxy.chopperTrailRevision or 0)+1 end
+    proxy.chopperTrailWasReversing,proxy.chopperTrailReverse = nil,nil
 end
 
 function ManualChopperFollower:getGuidePosition(progress, offset)
@@ -336,7 +397,7 @@ function ManualChopperFollower:hold(recheck, reason)
     if self.lastWaitReason ~= reason or g_time >= (self.nextWaitLog or 0) then
         self.lastWaitReason = reason
         self.nextWaitLog = g_time + 5000
-        local block = (reason == 'drive-corridor' or reason == 'side-corridor-or-turn-radius') and self.lastCorridorBlock or nil
+        local block = (reason == 'drive-corridor' or reason == 'trail-connection' or reason == 'side-corridor-or-turn-radius') and self.lastCorridorBlock or nil
         self.strategy:debug('Manual chopper WAIT: reason=%s phase=%s side=%d angle=%.1f ready=%s reverse=%s block=%s at=%.2f/%.2f density=%s',
             reason, self.phase, self.side, self.alignmentAngle or -1,
             tostring(self.proxy:isReadyToUnload()), tostring(self.proxy:isReversing()),
@@ -377,14 +438,29 @@ function ManualChopperFollower:getDriveData()
         self:hold(false, proxy:isReversing() and 'harvester-reversing' or 'missing-trail')
         return gx, gz
     end
-    if self.guideTrail ~= proxy.chopperTrail then
+    if self.guideTrail ~= proxy.chopperTrail or self.guideRevision ~= proxy.chopperTrailRevision then
         self.guideTrail = proxy.chopperTrail
+        self.guideRevision = proxy.chopperTrailRevision
         self.lastGuideProgress = nil
+        strategy:debug('Manual chopper TRAIL: revision=%d points=%d first=%.1f head=%.1f',
+            proxy.chopperTrailRevision or 0, #proxy.chopperTrail,
+            proxy.chopperTrail[1].progress, proxy.chopperTrail[#proxy.chopperTrail].progress)
     end
     local progress, lateral = self:projectOnGuide(strategy.vehicle:getAIDirectionNode(), self.lastGuideProgress)
     self.lastGuideProgress = progress
     local frontProgress = self:projectOnGuide(front)
     local headProgress = proxy.chopperTrail[#proxy.chopperTrail].progress
+    for _,point in ipairs(proxy.chopperTrail) do
+        if point.connectionFrom and frontProgress <= point.progress+2 and
+                progress+lookahead >= point.connectionFrom.progress then
+            local fromX,_,fromZ = worldToLocal(reference,point.connectionFrom.x,0,point.connectionFrom.z)
+            local toX,_,toZ = worldToLocal(reference,point.x,0,point.z)
+            if not self:isCorridorClear(fromX,fromZ,toX,toZ,true) then
+                if self:hold(true,'trail-connection') then return end
+                return gx,gz
+            end
+        end
+    end
     self:updateSide(rearZ)
 
     -- Compare with the recorded track at the tractor, not the harvester's newer heading.
