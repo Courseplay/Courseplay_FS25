@@ -407,7 +407,7 @@ for _,direction in ipairs({1,-1}) do
         local follower,strategy,proxy=fixture(1)
         follower.side=1
         strategy.turningRadius=6
-        strategy.vehicle.node.x,strategy.vehicle.node.z,strategy.vehicle.node.angle=4,5,0
+        strategy.vehicle.node.x,strategy.vehicle.node.z,strategy.vehicle.node.angle=4,1,0
         local fill={}
         strategy.getBestTargetNode=function() return {node=fill} end
         strategy.getPipeOffset=function() return 4,-3 end
@@ -435,7 +435,10 @@ for _,direction in ipairs({1,-1}) do
         end
         assert(stops<5 and follower.phase=='FOLLOW')
         local x,_,z=localToLocal(fill,proxy.vehicle.node,0,0,0)
-        assert(math.abs(x-4)<1 and math.abs(z+3)<1.5)
+        local _, fillOffset=follower:projectOnGuide(fill)
+        assert(math.abs(fillOffset-4)<1 and z < -3)
+        local _,_,frontZ=localToLocal(strategy.vehicle.front,proxy.vehicle.node,0,0,0)
+        assert(frontZ <= follower:getSideFrontLimit()+1)
     end)
 end
 test('rear follower closes a small gap more promptly without changing clearance',function()
@@ -485,6 +488,29 @@ test('resuming normal travel clears the waiting timer',function()
     g_time=2000
     follower:getDriveData()
     assert(strategy.speed>0 and follower.waitingSince==nil)
+end)
+
+test('cutter attachment limits tractor front independently of pipe target',function()
+    local follower,strategy,proxy=fixture(1)
+    local header={spec_cutter={},width=9}
+    header.getActiveInputAttacherJoint=function() return {node={x=0,z=4}} end
+    proxy.vehicle.getChildVehicles=function(self) return {self,header} end
+    assert(follower:getSideFrontLimit()==3 and follower:getSideOffset(1)==7)
+    follower.side=1
+    strategy.vehicle.node.x,strategy.vehicle.front.x=7,7
+    strategy.vehicle.node.z,strategy.vehicle.front.z=5,7
+    strategy.getBestTargetNode=function() return {node={x=7,z=-3}} end
+    strategy.getPipeOffset=function() return 7,-3 end
+    follower:getDriveData()
+    assert(strategy.speed==0)
+    strategy.vehicle.node.z,strategy.vehicle.front.z=1,3
+    follower:getDriveData()
+    assert(math.abs(strategy.speed-5)<0.001)
+end)
+
+test('missing cutter joint uses the body front with a one metre margin',function()
+    local follower=fixture()
+    assert(follower:getSideFrontLimit()==3)
 end)
 
 print('Manual chopper regression tests: '..tests..' passed')

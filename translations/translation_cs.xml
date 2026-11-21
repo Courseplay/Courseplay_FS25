@@ -1044,7 +1044,6 @@ hud还显示助手工作时堆或思洛存储器的剩余填充水平。
     <text name="input_CP_OPEN_GLOBAL_SETTINGS" text="CP:打开全局设置"/>
     <text name="input_CP_OPEN_COURSEGENERATOR_SETTINGS" text="CP: 打开作业生成器"/>
     <text name="input_CP_OPEN_COURSEMANAGER" text="CP: 打开任务管理"/>
-    <text name="input_CP_CALL_GRAIN_CART" text="CP: Toggle unloader for manually driven harvester"/>
     <text name="input_CP_OPEN_INGAME_MENU" text="CP: 打开游戏内菜单"/>
     <!---->
     <!--manualChopper-->
@@ -1056,5 +1055,6 @@ hud还显示助手工作时堆或思洛存储器的剩余填充水平。
     <text name="CP_vehicle_setting_manualChopperSide_right" text="Right"/>
     <text name="CP_vehicle_setting_manualChopperSide_behind" text="Behind"/>
     <text name="CP_infoTexts_manualChopperWaiting" text="Manual unloader: waiting for clear ground or alignment"/>
+    <text name="input_CP_CALL_GRAIN_CART" text="CP: Toggle unloader for manually driven harvester"/>
   </texts>
 </l10n>

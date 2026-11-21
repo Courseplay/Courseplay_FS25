@@ -175,6 +175,33 @@ function ManualChopperFollower:getSideOffset(side)
     return side * ((width + self:getVehicleWidth()) / 2 + 1)
 end
 
+--- Keep the tractor front behind the cutter attachment, even with a long trailer.
+function ManualChopperFollower:getSideFrontLimit()
+    local vehicle = self.proxy.vehicle
+    local reference = vehicle:getAIDirectionNode()
+    local limit
+    for _, implement in pairs(vehicle:getChildVehicles()) do
+        if implement ~= vehicle and implement.spec_cutter then
+            local joint = implement.getActiveInputAttacherJoint and implement:getActiveInputAttacherJoint()
+            if joint and joint.node then
+                local _, _, z = localToLocal(joint.node, reference, 0, 0, 0)
+                if z > 0 then limit = math.min(limit or z, z) end
+            end
+        end
+    end
+    if not limit then
+        -- Integrated or undocumented headers: use the harvester body's front as a fallback.
+        local size = vehicle.size
+        if size and size.length and vehicle.rootNode then
+            local _, _, z = localToLocal(vehicle.rootNode, reference, 0, 0, (size.lengthOffset or 0) + size.length / 2)
+            limit = z
+        else
+            limit = 0
+        end
+    end
+    return limit - 1
+end
+
 --- Assigned-harvester sensor hits may be beside the tractor in an inside curve.
 --- Ignore those hits only when all vehicle and implement footprints remain separate.
 function ManualChopperFollower:hasHarvesterClearance()
@@ -379,12 +406,16 @@ function ManualChopperFollower:getDriveData()
             longitudinalError = strategy:getBestTargetNodeDistanceFromPipe() or longitudinalError
         end
     end
+    if self.phase == 'FOLLOW' and self.side ~= 0 then
+        -- Pipe alignment must not pull the tractor past the header attachment.
+        longitudinalError = math.min(longitudinalError, self:getSideFrontLimit() - z)
+    end
     local beforeX, beforeZ = self:getGuidePosition(progress - 0.5, targetX)
     local afterX, afterZ = self:getGuidePosition(progress + 0.5, targetX)
     local curveFactor = CpMathUtil.clamp(MathUtil.vector2Length(afterX-beforeX,afterZ-beforeZ), 0.4, 1.5)
     local correction = CpMathUtil.clamp(longitudinalError * 2.5, -combineSpeed, 12)
     local speed = math.max(0, combineSpeed * curveFactor + correction)
-    if self.phase == 'FOLLOW' and self.side == 0 and longitudinalError < -1 then speed = 0 end
+    if self.phase == 'FOLLOW' and longitudinalError < -1 then speed = 0 end
     if self.phase ~= 'FOLLOW' then speed = math.min(speed, strategy.settings.turnSpeed:getValue()) end
     local distance, frontVehicle = strategy.proximityController:checkBlockingVehicleFront()
     local followDistance, followVehicle = strategy.followModeProximitySensor:getClosestObjectDistanceAndRootVehicle()
