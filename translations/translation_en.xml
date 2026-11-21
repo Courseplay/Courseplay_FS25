@@ -16,6 +16,7 @@
     <text name="CP_copy" text="Copy course:"/>
     <text name="CP_infoText" text="Courseplay(%s): For help, bug reports or patch notes, please visit: https://github.com/Courseplay/Courseplay_FS25."/>
     <text name="CP_error_no_course" text="Generate a course before starting the job."/>
+    <text name="CP_error_no_windrows" text="No windrows found on the field."/>
     <text name="CP_error_could_not_generate_course" text="Could not generate course. Please try other settings."/>
     <text name="CP_error_field_detection_still_running" text="Field detection still running."/>
     <text name="CP_error_field_detection_failed" text="Field detection failed."/>
@@ -104,6 +105,7 @@
     <!---->
     <text name="CP_job_fieldWork" text="CP: Fieldwork"/>
     <text name="CP_job_baleCollect" text="CP: Bale collect/wrap"/>
+    <text name="CP_job_baleWindrows" text="CP: Bale windrows"/>
     <text name="CP_job_combineUnload" text="CP: Unload Combine"/>
     <text name="CP_job_bunkerSilo" text="CP: Silo work"/>
     <text name="CP_job_siloLoader" text="CP: Silo loading"/>
