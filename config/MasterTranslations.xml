@@ -3281,6 +3281,10 @@ TPS extension
 			<Text language="de"><![CDATA[CP: Kursmanager öffnen]]></Text>
 			<Text language="en"><![CDATA[CP: Open course manager]]></Text>
 		</Translation>
+		<Translation name="input_CP_CALL_GRAIN_CART">
+			<Text language="de"><![CDATA[CP: Abfahrer für manuell gefahrenen Ernter umschalten]]></Text>
+			<Text language="en"><![CDATA[CP: Toggle unloader for manually driven harvester]]></Text>
+		</Translation>
 		<Translation name="input_CP_OPEN_INGAME_MENU">
 			<Text language="de"><![CDATA[CP: Menu öffnen]]></Text>
 			<Text language="en"><![CDATA[CP: Open menu]]></Text>

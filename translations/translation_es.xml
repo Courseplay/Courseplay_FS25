@@ -1110,5 +1110,6 @@ Ahora su selección debería verse similar a la imagen.
     <text name="CP_vehicle_setting_manualChopperSide_right" text="Right"/>
     <text name="CP_vehicle_setting_manualChopperSide_behind" text="Behind"/>
     <text name="CP_infoTexts_manualChopperWaiting" text="Manual forage harvester: waiting for clear ground or alignment"/>
+    <text name="input_CP_CALL_GRAIN_CART" text="CP: Toggle unloader for manually driven harvester"/>
   </texts>
 </l10n>
