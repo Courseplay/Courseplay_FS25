@@ -1050,6 +1050,7 @@ Votre sélection devrait ressembler à l'illustration ci-contre.
     <text name="input_CP_OPEN_GLOBAL_SETTINGS" text="CP: Ouvre les paramètres globaux"/>
     <text name="input_CP_OPEN_COURSEGENERATOR_SETTINGS" text="CP: Ouvre le générateur de course/menu de la course"/>
     <text name="input_CP_OPEN_COURSEMANAGER" text="CP: Ouvre le gestionnaire de courses"/>
+    <text name="input_CP_CALL_GRAIN_CART" text="CP: Toggle unloader for manually driven harvester"/>
     <text name="input_CP_OPEN_INGAME_MENU" text="CP: Ouvre le menu"/>
     <!---->
     <!--manualChopper-->
@@ -1061,6 +1062,5 @@ Votre sélection devrait ressembler à l'illustration ci-contre.
     <text name="CP_vehicle_setting_manualChopperSide_right" text="Right"/>
     <text name="CP_vehicle_setting_manualChopperSide_behind" text="Behind"/>
     <text name="CP_infoTexts_manualChopperWaiting" text="Manual unloader: waiting for clear ground or alignment"/>
-    <text name="input_CP_CALL_GRAIN_CART" text="CP: Toggle unloader for manually driven harvester"/>
   </texts>
 </l10n>
