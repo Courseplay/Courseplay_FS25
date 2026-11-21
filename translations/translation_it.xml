@@ -1106,5 +1106,12 @@ Ora la tua selezione dovrebbe essere simile all'immagine.
     <text name="input_CP_OPEN_COURSEGENERATOR_SETTINGS" text="CP: Apri il generatore di corsi/menu dei lavori"/>
     <text name="input_CP_OPEN_COURSEMANAGER" text="CP: Apre gestore percorsi"/>
     <text name="input_CP_OPEN_INGAME_MENU" text="CP: Apri menu"/>
+    <text name="CP_vehicle_setting_manualChopperSide_title" text="Manual forage harvester: unloader position"/>
+    <text name="CP_vehicle_setting_manualChopperSide_tooltip" text="Preferred CP unloader position alongside a manually driven forage harvester. If blocked, the unloader waits or follows behind."/>
+    <text name="CP_vehicle_setting_manualChopperSide_auto" text="Automatic"/>
+    <text name="CP_vehicle_setting_manualChopperSide_left" text="Left"/>
+    <text name="CP_vehicle_setting_manualChopperSide_right" text="Right"/>
+    <text name="CP_vehicle_setting_manualChopperSide_behind" text="Behind"/>
+    <text name="CP_infoTexts_manualChopperWaiting" text="Manual forage harvester: waiting for clear ground or alignment"/>
   </texts>
 </l10n>

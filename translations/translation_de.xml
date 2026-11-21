@@ -1090,5 +1090,12 @@ Das Kreuz sollte jetzt, wie im Bild dargestellt, gelb sein.
     <text name="input_CP_OPEN_COURSEGENERATOR_SETTINGS" text="CP: Kursgenerator/Jobmenü öffnen"/>
     <text name="input_CP_OPEN_COURSEMANAGER" text="CP: Kursmanager öffnen"/>
     <text name="input_CP_OPEN_INGAME_MENU" text="CP: Menu öffnen"/>
+    <text name="CP_vehicle_setting_manualChopperSide_title" text="Manueller Häcksler: Abfahrerseite"/>
+    <text name="CP_vehicle_setting_manualChopperSide_tooltip" text="Bevorzugte Position des CP-Abfahrers am manuell gefahrenen Häcksler. Bei blockierter Seite wartet er oder folgt dahinter."/>
+    <text name="CP_vehicle_setting_manualChopperSide_auto" text="Automatisch"/>
+    <text name="CP_vehicle_setting_manualChopperSide_left" text="Links"/>
+    <text name="CP_vehicle_setting_manualChopperSide_right" text="Rechts"/>
+    <text name="CP_vehicle_setting_manualChopperSide_behind" text="Dahinter"/>
+    <text name="CP_infoTexts_manualChopperWaiting" text="Manueller Häcksler: Warte auf freie Fahrspur oder Ausrichtung"/>
   </texts>
 </l10n>

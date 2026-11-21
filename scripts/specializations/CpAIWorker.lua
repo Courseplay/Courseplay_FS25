@@ -254,7 +254,6 @@ function CpAIWorker:updateActionEvents()
 
         actionEvent = spec.actionEvents[InputAction.CP_CALL_GRAIN_CART]
         if actionEvent then
-            -- Forage harvesters (auto-aim rotatable spout) are not supported — hide the keybind.
             local showCallManualUnloader = self.cpCanCallManualUnloader and self:cpCanCallManualUnloader()
             g_inputBinding:setActionEventActive(actionEvent.actionEventId, showCallManualUnloader)
             if showCallManualUnloader then

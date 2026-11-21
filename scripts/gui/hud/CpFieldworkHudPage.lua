@@ -141,7 +141,6 @@ function CpFieldWorkHudPageElement:updateContent(vehicle, status)
 
     if self.callManualUnloaderBtn then
         local isCallActive = vehicle.cpIsManualCombineCallingUnloader and vehicle:cpIsManualCombineCallingUnloader()
-        -- Forage harvesters have a rotatable auto-aim spout and are not supported — hide the button entirely.
         local showBtn = vehicle.cpCanCallManualUnloader and vehicle:cpCanCallManualUnloader() and not CpBaseHud.courseCache
         self.callManualUnloaderBtn:setVisible(showBtn)
         if showBtn then

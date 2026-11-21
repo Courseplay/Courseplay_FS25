@@ -49,7 +49,7 @@ test('CP takeover deletes the manual proxy once',function()
     object:onDelete()
     assert(deletions==1)
 end)
-test('unsupported equipment and choppers cannot activate',function()
+test('unsupported equipment is rejected and choppers can activate',function()
     local object=vehicle(true)
     object.spec_combine=nil
     assert(not object:cpCanCallManualUnloader())
@@ -58,6 +58,8 @@ test('unsupported equipment and choppers cannot activate',function()
     object.spec_combine={}
     object.chopper=true
     assert(not object:cpCanCallManualUnloader())
+    object.spec_pipe.numAutoAimingStates=1
+    assert(object:cpCanCallManualUnloader())
 end)
 test('late joining client receives active state without a proxy',function()
     local written

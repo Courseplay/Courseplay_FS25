@@ -347,6 +347,52 @@ function AIDriveStrategyUnloadCombine:isManualCombine()
     return strategy ~= nil and strategy.isManualProxy ~= nil and strategy:isManualProxy()
 end
 
+function AIDriveStrategyUnloadCombine:isManualChopper()
+    local proxy = self:getCombineStrategy()
+    return self:isManualCombine() and proxy:isManualChopper()
+end
+
+function AIDriveStrategyUnloadCombine:getManualChopperFollower()
+    local proxy = self:getCombineStrategy()
+    if not self.manualChopperFollower or self.manualChopperFollower.proxy ~= proxy then
+        self.manualChopperFollower = ManualChopperFollower(self, proxy)
+    end
+    return self.manualChopperFollower
+end
+
+function AIDriveStrategyUnloadCombine:updateManualChopperReverse()
+    if not self:isManualChopper() then return end
+    local proxy = self:getCombineStrategy()
+    if self.state == self.states.BACKING_UP_FOR_REVERSING_COMBINE then
+        if proxy:isReversing() then
+            self.vehicleRequestingBackUp:set(self.combineToUnload, 3000)
+        else
+            self.vehicleRequestingBackUp:reset()
+            self.manualChopperReverseStart = nil
+        end
+        return
+    end
+    if not proxy:isReversing() or
+            (self.state ~= self.states.UNLOADING_MOVING_COMBINE and
+             self.state ~= self.states.UNLOADING_STOPPED_COMBINE) then return end
+    self.manualChopperReverseStart = nil
+    local x, _, z = localToLocal(self.vehicle:getAIDirectionNode(), self:getPipeOffsetReferenceNode(), 0, 0, 0)
+    local collisionWidth = (AIUtil.getWidth(self.combineToUnload) + AIUtil.getWidth(self.vehicle)) / 2 + 1
+    if z < 0 and z > -25 and math.abs(x) < collisionWidth then
+        local follower = self:getManualChopperFollower()
+        if follower:canReverse() then
+            self:requestToBackupForReversingCombine(self.combineToUnload)
+            if self.state == self.states.BACKING_UP_FOR_REVERSING_COMBINE then
+                local startX, _, startZ = getWorldTranslation(self.vehicle:getAIDirectionNode())
+                self.manualChopperReverseStart = {x = startX, z = startZ}
+            end
+        else
+            follower:hold()
+        end
+    end
+end
+
+
 --- Checks if the assigned combine is active (either CP-driven or manually calling a grain cart).
 ---@return boolean
 function AIDriveStrategyUnloadCombine:isCombineActive()
@@ -372,8 +418,8 @@ function AIDriveStrategyUnloadCombine:ignoreProximityObject(object, vehicle, mov
             -- hits, causing the proximity sensor to bleed speed when crossing perpendicular.
             -- The pathfinder has already routed around real terrain obstacles, so terrain hits
             -- during approach and unloading are safe to ignore.
-            (self:isManualCombine() and self.state == self.states.DRIVING_TO_COMBINE and hitTerrain) or
-            (self:isManualCombine() and self.state == self.states.UNLOADING_MOVING_COMBINE and hitTerrain) or
+            (self:isManualCombine() and not self:isManualChopper() and self.state == self.states.DRIVING_TO_COMBINE and hitTerrain) or
+            (self:isManualCombine() and not self:isManualChopper() and self.state == self.states.UNLOADING_MOVING_COMBINE and hitTerrain) or
             -- these states handle the proximity by themselves
             (self.state == self.states.UNLOADING_MOVING_COMBINE and vehicle == self.combineToUnload) or
             (self.state == self.states.HANDLE_CHOPPER_HEADLAND_TURN and vehicle == self.combineToUnload)
@@ -399,6 +445,7 @@ function AIDriveStrategyUnloadCombine:getDriveData(dt, vX, vY, vZ)
     -- if applicable, calculate on which side of an auto aim pipe we should be driving, once every loop
     self:calculateAutoAimPipeOffsetX(self.combineToUnload)
 
+    self:updateManualChopperReverse()
     local moveForwards = not self.ppc:isReversing()
     local gx, gz
 
@@ -703,7 +750,7 @@ function AIDriveStrategyUnloadCombine:driveBesideCombine()
             CpUtil.getName(self.vehicle), dz, speed, factor)
 
     local gx, gy, gz
-    -- For manually-driven combines we cannot rely on a fieldwork course to steer by — there is
+    -- For manually-driven combines we cannot rely on a fieldwork course to steer by â€” there is
     -- none. Always compute the direct goal point (regardless of dz) so steering is derived from
     -- the live pipe reference node and stays locked to the combine's current heading, including
     -- through curves. For CP-driven combines keep the original behaviour: only override the PPC
@@ -715,7 +762,7 @@ function AIDriveStrategyUnloadCombine:driveBesideCombine()
         -- For manual combines: use the vehicle's natural (non-CTE-adjusted) lookahead distance.
         -- getLookaheadDistance() can be inflated up to 2x the base value when the cart is far from
         -- the placeholder course. A 12 m lookahead puts the goal point too far ahead for responsive
-        -- curve following. getNormalLookaheadDistance() is constant (≈5-6 m) and not inflated by
+        -- curve following. getNormalLookaheadDistance() is constant (â‰ˆ5-6 m) and not inflated by
         -- cross-track error, so turns are tracked much more tightly.
         -- For CP-driven combines the inflated lookahead is appropriate (they follow a real course).
         local lookahead = isManual
@@ -754,6 +801,15 @@ end
 -- Unload chopper (always moving)
 ------------------------------------------------------------------------------------------------------------------------
 function AIDriveStrategyUnloadCombine:unloadMovingChopper()
+    if self:isManualChopper() then
+        local follower = self:getManualChopperFollower()
+        if (self:getAllTrailersFull() or self.driveUnloadNowRequested:get()) and not follower:canReverse() then
+            follower:hold()
+            return
+        end
+        if self:changeToUnloadWhenTrailerFull() then return end
+        return follower:getDriveData()
+    end
 
     -- recalculate offset, just in case
     self.followingCourseOffset = self:getFollowingCourseOffset(self.combineToUnload)
@@ -1018,6 +1074,7 @@ end
 --- side of the chopper is already harvested, or behind it if both sides have fruit.
 ------------------------------------------------------------------------------------------------------------------------
 function AIDriveStrategyUnloadCombine:calculateAutoAimPipeOffsetX(harvester)
+    if harvester and self:isManualChopper() then return self:getAutoAimPipeOffsetX() end
     local strategy = harvester and self:getCombineStrategy()
     if strategy and strategy.hasAutoAimPipe and strategy:hasAutoAimPipe() then
         local fruitLeft, fruitRight = strategy:getFruitAtSides()
@@ -1175,6 +1232,10 @@ function AIDriveStrategyUnloadCombine:getFollowingCourseOffset(combine)
 end
 
 function AIDriveStrategyUnloadCombine:getAutoAimPipeOffsetX()
+    if self:isManualChopper() then
+        local follower = self:getManualChopperFollower()
+        return follower:getSideOffset(follower.side)
+    end
     return self.autoAimPipeOffsetX and self.autoAimPipeOffsetX:get() or 0
 end
 
@@ -1218,6 +1279,9 @@ function AIDriveStrategyUnloadCombine:releaseCombine()
         self.combineJustUnloaded = self.combineToUnload
     end
     self.combineToUnload = nil
+    self.manualChopperFollower = nil
+    self.manualChopperReverseStart = nil
+    self:clearInfoText(InfoTextManager.MANUAL_CHOPPER_WAITING)
     self.servingManualCombine = false
 end
 
@@ -1800,6 +1864,9 @@ end
 ---@param xOffset number|nil
 ---@param zOffset number|nil
 function AIDriveStrategyUnloadCombine:getMaxFruitPercent(targetNode, xOffset, zOffset)
+    if self:isManualChopper() then
+        return AIDriveStrategyUnloadCombine.maxFruitPercent
+    end
     if targetNode and self:isFruitAt(targetNode, xOffset or 0, zOffset or 0) then
         self:info('There is fruit at the target, disabling fruit avoidance')
         return math.huge
@@ -1961,9 +2028,9 @@ end
 
 --- For manually-driven combines: if the combine has moved significantly since the approach
 --- course was generated, trigger a fast A* re-path to its new position.
---- Only fires for manual combines — CP combines use their own rendezvous/waypoint system.
+--- Only fires for manual combines â€” CP combines use their own rendezvous/waypoint system.
 --- Guards: checks every 5 s; skips when <20 m of course remains or within 25 m of combine;
---- only re-paths when combine has moved ≥ 30 m (genuine relocation, not minor drift).
+--- only re-paths when combine has moved â‰¥ 30 m (genuine relocation, not minor drift).
 --- Uses HybridAStar.defaultMaxIterations to keep the search sub-second on any field size.
 ---@return boolean true when a re-path was triggered (caller should return immediately)
 function AIDriveStrategyUnloadCombine:checkCombineRelocatedAndRepath()
@@ -2094,6 +2161,10 @@ end
 -- Unload combine (stopped)
 ------------------------------------------------------------------------------------------------------------------------
 function AIDriveStrategyUnloadCombine:unloadStoppedCombine()
+    if self:isManualChopper() then
+        self:setNewState(self.states.UNLOADING_MOVING_COMBINE)
+        return self:unloadMovingChopper()
+    end
     if self:changeToUnloadWhenTrailerFull() then
         return
     end
@@ -2477,6 +2548,12 @@ end
 -- Moving out of the way of a reversing combine
 ------------------------------------------------------------------------------------------------------------------------
 function AIDriveStrategyUnloadCombine:backUpForReversingCombine()
+    if self:isManualChopper() and self:getCombineStrategy():isReversing() and
+            not self:getManualChopperFollower():canReverse() then
+        self:getManualChopperFollower():hold()
+        return
+    end
+    self:clearInfoText(InfoTextManager.MANUAL_CHOPPER_WAITING)
     -- check both distances and use the smaller one, proximity sensor may not see the combine or
     -- d may be big enough but parts of the combine still close
     local blockedVehicle = self.state.properties.vehicle
@@ -3176,7 +3253,7 @@ function AIDriveStrategyUnloadCombine:update(dt)
     -- Must run before AIDriveStrategyCourse.update() because that calls ppc:update() which
     -- contains the off-track cutout check. Use the sticky servingManualCombine flag rather
     -- than isManualCombine() so the disable stays active even after the proxy is deleted
-    -- when the player releases the unloader — preventing a late cutout during job wind-down.
+    -- when the player releases the unloader â€” preventing a late cutout during job wind-down.
     if self.servingManualCombine then
         self.ppc:disableStopWhenOffTrack(2000)
     end

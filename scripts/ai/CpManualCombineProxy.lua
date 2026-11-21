@@ -65,6 +65,10 @@ function CpManualCombineProxy:update(dt)
     if g_time - self.lastCourseRefreshTime > self.COURSE_REFRESH_INTERVAL then
         self:refreshDynamicCourse()
     end
+    if self:isManualChopper() and (not self.nextFruitCheck or g_time >= self.nextFruitCheck) then
+        self.nextFruitCheck = g_time + 500
+        self:checkChopperFruit()
+    end
     self:callUnloaderWhenNeeded()
 end
 
@@ -72,6 +76,7 @@ end
 -- Unloader calling: simplified version that always calls with the combine's current position
 ------------------------------------------------------------------------------------------------------------------------
 function CpManualCombineProxy:callUnloaderWhenNeeded()
+    if self:isManualChopper() and self:isReversing() then return end
     if not self:isReadyToUnload() then return end
     if not self.timeToCallUnloader:get() then
         return
@@ -205,8 +210,29 @@ function CpManualCombineProxy:getWorkWidth()
     return 6
 end
 
+function CpManualCombineProxy:isManualChopper()
+    return self.pipeImplement ~= nil and ImplementUtil.isChopper(self.pipeImplement) == true
+end
+
 function CpManualCombineProxy:getFruitAtSides()
-    return nil, nil
+    return self.fruitLeft, self.fruitRight
+end
+
+function CpManualCombineProxy:checkChopperFruit()
+    local width = self:getWorkWidth()
+    local reference = self.vehicle:getAIDirectionNode()
+    local function sample(side)
+        local amount = 0
+        for _, forward in ipairs({0, 5, 10}) do
+            local x, _, z = localToWorld(reference, side * width, 0, forward)
+            local found, density = PathfinderUtil.hasFruit(x, z, 1, 1)
+            if found == false then density = 0 end
+            if type(density) ~= 'number' then return nil end
+            amount = amount + density
+        end
+        return amount
+    end
+    self.fruitLeft, self.fruitRight = sample(1), sample(-1)
 end
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -229,6 +255,7 @@ function CpManualCombineProxy:isWaitingForUnloadAfterCourseEnded()
 end
 
 function CpManualCombineProxy:willWaitForUnloadToFinish()
+    if self:isManualChopper() then return false end
     local stopped = AIUtil.isStopped(self.vehicle)
     if stopped then
         -- Debounce: only report "waiting" after the combine has been stopped for 3+ continuous seconds.
@@ -259,7 +286,7 @@ function CpManualCombineProxy:willWaitForUnloadToFinish()
 end
 
 function CpManualCombineProxy:alwaysNeedsUnloader()
-    return false
+    return self:isManualChopper()
 end
 
 function CpManualCombineProxy:isReadyToUnload(noUnloadWithPipeInFruit)
@@ -267,6 +294,7 @@ function CpManualCombineProxy:isReadyToUnload(noUnloadWithPipeInFruit)
     if self.pipeSpec.numStates > 1 and self.pipeSpec.currentState ~= PipeController.PIPE_STATE_OPEN then
         return false
     end
+    if self:isManualChopper() then return true end
     local dischargeNode = self.pipeImplement:getDischargeNodeByIndex(self.pipeImplement:getPipeDischargeNodeIndex())
     return dischargeNode ~= nil and self.pipeImplement:getFillUnitFillLevel(dischargeNode.fillUnitIndex) > 0
 end
@@ -308,7 +336,7 @@ function CpManualCombineProxy:isOnHeadland(n)
 end
 
 function CpManualCombineProxy:isReversing()
-    return false
+    return AIUtil.isReversing(self.vehicle)
 end
 
 function CpManualCombineProxy:isIdle()
@@ -336,6 +364,7 @@ function CpManualCombineProxy:getTurnArea()
 end
 
 function CpManualCombineProxy:isUnloadFinished()
+    if self:isManualChopper() then return false end
     local pipeClosed = self.pipeSpec and self.pipeSpec.numStates > 1 and
         self.pipeSpec.currentState == PipeController.PIPE_STATE_CLOSED
     local node = self.pipeImplement and self.pipeImplement:getDischargeNodeByIndex(

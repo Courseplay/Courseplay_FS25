@@ -306,8 +306,10 @@ end
 function CpAIFieldWorker:cpCanCallManualUnloader()
     if self:getIsCpActive() then return false end
     for _, implement in pairs(self:getChildVehicles()) do
-        if implement.spec_combine and implement.spec_pipe and not ImplementUtil.isChopper(implement) then
-            return true
+        if implement.spec_combine and implement.spec_pipe then
+            if not ImplementUtil.isChopper(implement) or (implement.spec_pipe.numAutoAimingStates or 0) > 0 then
+                return true
+            end
         end
     end
     return false

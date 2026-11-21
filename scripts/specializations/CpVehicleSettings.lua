@@ -587,3 +587,8 @@ function CpVehicleSettings:consoleCommandPrintSetting(name)
     end
     CpUtil.infoVehicle(vehicle, tostring(spec[name]))
 end
+
+function CpVehicleSettings:isManualChopperSideVisible()
+    local implement = AIUtil.getImplementOrVehicleWithSpecialization(self, Combine)
+    return implement ~= nil and ImplementUtil.isChopper(implement)
+end

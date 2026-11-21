@@ -69,6 +69,20 @@
 		<Setting classType="AIParameterSettingList" name="baleCollectorOffset" min="-10" max="10" incremental="0.1" default="0" unit="2"
 				 onChangeCallback="cpShowBaleCollectorOffset" isVisible = "isBaleCollectorOffsetVisible" 
 				 setDefault="setAutomaticBaleCollectorOffset" vehicleConfiguration="baleCollectorOffset"/>
+        <Setting classType="AIParameterSettingList" name="manualChopperSide" default="0" isVisible="isManualChopperSideVisible">
+            <Values>
+                <Value name="MANUAL_CHOPPER_SIDE_AUTO">0</Value>
+                <Value name="MANUAL_CHOPPER_SIDE_LEFT">1</Value>
+                <Value name="MANUAL_CHOPPER_SIDE_RIGHT">-1</Value>
+                <Value name="MANUAL_CHOPPER_SIDE_BEHIND">2</Value>
+            </Values>
+            <Texts>
+                <Text>manualChopperSide_auto</Text>
+                <Text>manualChopperSide_left</Text>
+                <Text>manualChopperSide_right</Text>
+                <Text>manualChopperSide_behind</Text>
+            </Texts>
+        </Setting>
 		<!--Combine Offset X-->
 		<Setting classType="AIParameterSettingList" name="combineOffsetX" min="-10" max="10" incremental="0.1" default="0" unit="2"
 				 onChangeCallback="cpShowWorkWidth" isVisible="areCombineUnloaderSettingsVisible"/>

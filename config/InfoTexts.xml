@@ -43,4 +43,5 @@
 	<InfoText name="DRIVING_TO_COMBINE"						text="drivingToCombine"/>
 	<InfoText name="DRIVING_TO_SELF_UNLOAD"					text="drivingToSelfUnload"/>
 	<InfoText name="WAITING_FOR_FIELD_BOUNDARY_DETECTION"	text="waitingForFieldBoundaryDetection"/>
+    <InfoText name="MANUAL_CHOPPER_WAITING" text="manualChopperWaiting"/>
 </InfoTexts>
