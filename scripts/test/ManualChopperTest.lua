@@ -199,7 +199,7 @@ test('unloader can approach a stopped chopper before harvesting starts',function
 end)
 test('unexpected heading change and a folded pipe hold the follower',function()
     local follower,strategy,proxy=fixture()
-    strategy.vehicle.node.angle=60
+    strategy.vehicle.node.angle=120
     follower:getDriveData()
     assert(strategy.speed==0 and strategy.waiting)
     strategy.vehicle.node.angle=0
@@ -644,9 +644,9 @@ test('alignment holds report measured angle and actual readiness',function()
     local follower,strategy=fixture()
     local message
     strategy.debug=function(self,format,...) message=string.format(format,...) end
-    strategy.vehicle.node.angle=60
+    strategy.vehicle.node.angle=120
     follower:getDriveData()
-    assert(message:find('reason=alignment',1,true) and message:find('angle=60.0',1,true))
+    assert(message:find('reason=alignment',1,true) and message:find('angle=120.0',1,true))
 end)
 
 test('direct rear following can cross a crop-free field edge without replanning',function()
@@ -687,5 +687,88 @@ test('field-edge following still stops for a blocking vehicle',function()
     follower:getDriveData()
     assert(strategy.speed==0)
 end)
+
+local function alignmentFixture()
+    local follower,strategy,proxy=fixture(2)
+    strategy.vehicle.node.x,strategy.vehicle.node.z,strategy.vehicle.node.angle=-10,-12,56.6
+    local x,_,z=localToWorld(strategy.vehicle.node,0,0,2)
+    strategy.vehicle.front.x,strategy.vehicle.front.z=x,z
+    return follower,strategy,proxy
+end
+
+test('nearby tractor can slowly align behind a turned harvester after reversing',function()
+    local follower,strategy,proxy=alignmentFixture()
+    proxy.vehicle.reversing=true
+    follower:getDriveData()
+    assert(strategy.speed==0 and proxy.chopperTrail==nil)
+    proxy.vehicle.reversing=false
+    local gx,gz=follower:getDriveData()
+    assert(gx and gz and strategy.speed>0 and strategy.speed<=3 and not strategy.waiting)
+    local _,_,forward=worldToLocal(strategy.vehicle.node,gx,0,gz)
+    local _,_,goalZ=worldToLocal(proxy.vehicle.node,gx,0,gz)
+    assert(forward>1 and goalZ<=-6)
+end)
+
+test('alignment recovery does not bypass crops or blocking vehicles',function()
+    local follower,strategy=alignmentFixture()
+    crop=function() return true,100 end
+    follower:getDriveData()
+    assert(strategy.speed==0 and strategy.waiting)
+    g_time=300
+    crop=function() return false end
+    strategy.frontDistance=1
+    follower:getDriveData()
+    assert(strategy.speed==0 and strategy.waiting)
+end)
+
+test('alignment recovery rejects crossing beside the harvester and opposite headings',function()
+    local follower,strategy=alignmentFixture()
+    strategy.vehicle.front.z=-2
+    follower:getDriveData()
+    assert(strategy.speed==0)
+    strategy.vehicle.front.z=-10
+    strategy.vehicle.node.angle=100
+    follower:getDriveData()
+    assert(strategy.speed==0)
+end)
+
+test('distant alignment waits for the existing reassignment flow',function()
+    local follower,strategy=alignmentFixture()
+    strategy.vehicle.node.z,strategy.vehicle.front.z=-35,-33
+    local calls=0
+    strategy.startWaitingForSomethingToDo=function() calls=calls+1 end
+    follower:getDriveData()
+    assert(strategy.speed==0 and calls==0)
+    g_time=3000
+    follower:getDriveData()
+    assert(calls==1)
+end)
+
+for _,sign in ipairs({1,-1}) do
+    test('continuous recovery restores rear following from a diagonal position '..sign,function()
+        local follower,strategy,proxy=alignmentFixture()
+        strategy.vehicle.node.x=-10*sign
+        strategy.vehicle.node.angle=56.6*sign
+        proxy.vehicle.lastSpeedReal=5/3600
+        for i=0,799 do
+            proxy.vehicle.node.z=(5/3.6)*i*0.1
+            g_time=i*100
+            local x,_,z=localToWorld(strategy.vehicle.node,0,0,2)
+            strategy.vehicle.front.x,strategy.vehicle.front.z=x,z
+            local gx,gz=follower:getDriveData()
+            assert(gx and gz)
+            local lx,_,lz=worldToLocal(strategy.vehicle.node,gx,0,gz)
+            local curvature=2*lx/math.max(1,lx*lx+lz*lz)
+            local speed=strategy.speed/3.6
+            local angle=math.rad(strategy.vehicle.node.angle)+speed*curvature*0.1
+            strategy.vehicle.node.angle=math.deg(angle)
+            strategy.vehicle.node.x=strategy.vehicle.node.x+math.sin(angle)*speed*0.1
+            strategy.vehicle.node.z=strategy.vehicle.node.z+math.cos(angle)*speed*0.1
+        end
+        assert(follower.alignmentAngle<10 and math.abs(strategy.vehicle.node.x)<1, string.format('angle=%.2f x=%.2f z=%.2f front=%.2f reason=%s',follower.alignmentAngle,strategy.vehicle.node.x,strategy.vehicle.node.z,strategy.vehicle.front.z,tostring(follower.lastWaitReason)))
+        local _,_,frontZ=worldToLocal(proxy.vehicle.node,strategy.vehicle.front.x,0,strategy.vehicle.front.z)
+        assert(frontZ<=-5.5 and frontZ>-8)
+    end)
+end
 
 print('Manual chopper regression tests: '..tests..' passed')

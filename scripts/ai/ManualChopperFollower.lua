@@ -297,7 +297,7 @@ function ManualChopperFollower:hold(recheck, reason)
     if self.lastWaitReason ~= reason or g_time >= (self.nextWaitLog or 0) then
         self.lastWaitReason = reason
         self.nextWaitLog = g_time + 5000
-        local block = (reason == 'drive-corridor' or reason == 'side-corridor-or-turn-radius') and self.lastCorridorBlock or nil
+        local block = (reason == 'drive-corridor' or reason == 'alignment-corridor' or reason == 'side-corridor-or-turn-radius') and self.lastCorridorBlock or nil
         self.strategy:debug('Manual chopper WAIT: reason=%s phase=%s side=%d angle=%.1f ready=%s reverse=%s block=%s at=%.2f/%.2f density=%s',
             reason, self.phase, self.side, self.alignmentAngle or -1,
             tostring(self.proxy:isReadyToUnload()), tostring(self.proxy:isReversing()),
@@ -321,6 +321,39 @@ function ManualChopperFollower:hold(recheck, reason)
     strategy:debug('Manual chopper: waiting, releasing assignment for a fresh approach')
     strategy:startWaitingForSomethingToDo()
     return true
+end
+
+--- Recover a nearby forward-facing tractor after the harvester turns/reverses.
+--- Stay behind the harvester until normal track alignment is restored.
+function ManualChopperFollower:getAlignmentDriveData(progress, lateral)
+    local strategy, proxy = self.strategy, self.proxy
+    local reference = proxy.vehicle:getAIDirectionNode()
+    local front = Markers.getFrontMarkerNode(strategy.vehicle)
+    local x, _, z = localToLocal(front, reference, 0, 0, 0)
+    local rearLimit = -proxy:getMeasuredBackDistance() - 2
+    if self.alignmentAngle >= 85 or MathUtil.vector2Length(x,z) > 25 or z > rearLimit - 1 or
+            not self:hasHarvesterClearance() then return nil, nil, 'alignment' end
+    local headProgress = proxy.chopperTrail[#proxy.chopperTrail].progress
+    local lookahead = math.max(6, strategy.turningRadius or 6)
+    local goalProgress = math.min(progress + lookahead, headProgress + rearLimit)
+    local offset = lateral + CpMathUtil.clamp(self:getSideOffset(0)-lateral, -lookahead/2, lookahead/2)
+    local gx, gz = self:getGuidePosition(goalProgress, offset)
+    local _, _, forward = worldToLocal(strategy.vehicle:getAIDirectionNode(), gx, 0, gz)
+    local goalX, _, goalZ = worldToLocal(reference, gx, 0, gz)
+    if forward <= 1 or goalZ > rearLimit then return nil, nil, 'alignment-no-forward-room' end
+    if not self:isCorridorClear(x,z,goalX,goalZ,true) then return nil, nil, 'alignment-corridor' end
+    local distance = strategy.proximityController:checkBlockingVehicleFront()
+    local followDistance = strategy.followModeProximitySensor:getClosestObjectDistanceAndRootVehicle()
+    local speed = math.min(3, strategy.settings.turnSpeed:getValue(), strategy.settings.fieldSpeed:getValue(),
+        math.max(0,(math.min(distance,followDistance)-2)*2))
+    if speed <= 0 then return nil, nil, 'alignment-obstacle' end
+    -- Resume ordinary rear following after this positioning manoeuvre.
+    self.side, self.phase, self.targetSide = 0, 'FOLLOW', nil
+    self.retreatX, self.trailerTrim = nil, 0
+    self.waitingSince, self.lastWaitReason = nil, nil
+    strategy:setMaxSpeed(speed)
+    strategy:debugSparse('Manual chopper: aligning behind harvester angle=%.1f speed=%.1f', self.alignmentAngle, speed)
+    return gx, gz
 end
 
 --- The normal steering reference follows a live parallel line. Speed controls longitudinal spacing.
@@ -354,8 +387,14 @@ function ManualChopperFollower:getDriveData()
     local directionDot = CpMathUtil.clamp(tractorDX * guideDX + tractorDZ * guideDZ, -1, 1)
     self.alignmentAngle = math.deg(math.acos(directionDot))
     local aligned = directionDot >= math.cos(math.rad(45))
-    if not proxy:isReadyToUnload() or not aligned then
-        if self:hold(true, not proxy:isReadyToUnload() and 'pipe-not-ready' or 'alignment') then return end
+    if not proxy:isReadyToUnload() then
+        if self:hold(true, 'pipe-not-ready') then return end
+        return gx, gz
+    end
+    if not aligned then
+        local recoveryX, recoveryZ, reason = self:getAlignmentDriveData(progress, lateral)
+        if recoveryX then return recoveryX, recoveryZ end
+        if self:hold(true, reason) then return end
         return gx, gz
     end
 
