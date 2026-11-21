@@ -69,6 +69,7 @@ function CpManualCombineProxy:update(dt)
         self.nextFruitCheck = g_time + 500
         self:checkChopperFruit()
     end
+    if self:isManualChopper() then ManualChopperFollower.recordPosition(self) end
     self:callUnloaderWhenNeeded()
 end
 

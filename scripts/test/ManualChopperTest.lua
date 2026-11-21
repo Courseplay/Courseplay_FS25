@@ -13,8 +13,20 @@ InfoTextManager={MANUAL_CHOPPER_WAITING=1}
 PipeController={PIPE_STATE_OPEN=2,PIPE_STATE_CLOSED=1}
 Markers={getFrontMarkerNode=function(object) return object.front end}
 getWorldTranslation=function(node) return node.x or 0,0,node.z or 0 end
-localToWorld=function(node,x,y,z) return (node.x or 0)+x,y,(node.z or 0)+z end
-localToLocal=function(from,to,x,y,z) return (from.x or 0)+x-(to.x or 0),y,(from.z or 0)+z-(to.z or 0) end
+localDirectionToWorld=function(node,x,y,z)
+    local angle=math.rad(node.angle or 0)
+    return math.cos(angle)*x+math.sin(angle)*z,y,-math.sin(angle)*x+math.cos(angle)*z
+end
+localToWorld=function(node,x,y,z)
+    local dx,dy,dz=localDirectionToWorld(node,x,y,z)
+    return (node.x or 0)+dx,dy,(node.z or 0)+dz
+end
+worldToLocal=function(node,x,y,z)
+    local angle=math.rad(node.angle or 0)
+    local dx,dz=x-(node.x or 0),z-(node.z or 0)
+    return math.cos(angle)*dx-math.sin(angle)*dz,y,math.sin(angle)*dx+math.cos(angle)*dz
+end
+localToLocal=function(from,to,x,y,z) return worldToLocal(to,localToWorld(from,x,y,z)) end
 local crop=function() return false,0 end
 local onField=function() return true end
 PathfinderUtil={hasFruit=function(...) return crop(...) end}
@@ -35,6 +47,9 @@ local function fixture(side)
     local harvester={width=3,node={x=0,z=0},lastSpeedReal=5/3600}
     harvester.getAIDirectionNode=function(self) return self.node end
     harvester.getCpSettings=function() return {manualChopperSide=setting(side or 0)} end
+    harvester.getChildVehicles=function(self) return {self} end
+    harvester.rootNode=harvester.node
+    harvester.size={width=3,length=8}
     local proxy={vehicle=harvester,left=0,right=0,ready=true}
     proxy.getMeasuredBackDistance=function() return 4 end
     proxy.getFruitAtSides=function(self) return self.left,self.right end
@@ -43,6 +58,8 @@ local function fixture(side)
     local tractor={width=3,front={x=0,z=-10},node={x=0,z=-12}}
     tractor.getAIDirectionNode=function(self) return self.node end
     tractor.getChildVehicles=function(self) return {self} end
+    tractor.rootNode=tractor.node
+    tractor.size={width=3,length=4}
     local strategy={vehicle=tractor,maxDistanceWhenMovingOutOfWay=25,frontDistance=math.huge,
         rearDistance=math.huge,proxy=proxy,
         settings={turnSpeed=setting(5),fieldSpeed=setting(15),reverseSpeed=setting(5)},
@@ -58,6 +75,8 @@ local function fixture(side)
     strategy.setInfoText=function(self) self.waiting=true end
     strategy.clearInfoText=function(self) self.waiting=false end
     strategy.getBestTargetNodeDistanceFromPipe=function() return 0 end
+    strategy.getBestTargetNode=function() return nil end
+    strategy.debugSparse=function() end
     return ManualChopperFollower(strategy,proxy),strategy,proxy
 end
 test('both sides clear initially selects rear position',function()
@@ -174,7 +193,7 @@ test('unloader can approach a stopped chopper before harvesting starts',function
     strategy.vehicle.front.z=-25
     proxy.vehicle.lastSpeedReal=0
     follower:getDriveData()
-    assert(strategy.speed>0 and strategy.speed<=3)
+    assert(strategy.speed>3 and strategy.speed<=8)
 end)
 test('unexpected heading change and a folded pipe hold the follower',function()
     local follower,strategy,proxy=fixture()
@@ -289,4 +308,134 @@ test('full trailer waits before reversing out into a blocked area',function()
     strategy:unloadMovingChopper()
     assert(departures==1)
 end)
+local function curvedFixture(direction,side)
+    side=side or 1
+    local follower,strategy,proxy=fixture(side)
+    for i=0,20 do
+        local angle=i*0.05
+        proxy.vehicle.node.x=direction*20*(1-math.cos(angle))
+        proxy.vehicle.node.z=20*math.sin(angle)
+        proxy.vehicle.node.angle=direction*math.deg(angle)
+        ManualChopperFollower.recordPosition(proxy)
+    end
+    local x,z,dx,dz=follower:getGuidePosition(5,4*side)
+    strategy.vehicle.front.x,strategy.vehicle.front.z=x,z
+    strategy.vehicle.front.angle=math.deg(math.atan2(dx,dz))
+    strategy.vehicle.node.x,strategy.vehicle.node.z=x-2*dx,z-2*dz
+    strategy.vehicle.node.angle=strategy.vehicle.front.angle
+    follower.side=side
+    return follower,strategy,proxy
+end
+test('left-side unloader follows the recorded left-hand curve',function()
+    local follower,strategy=curvedFixture(1)
+    local x,z=follower:getDriveData()
+    local steering=worldToLocal(strategy.vehicle.node,x,0,z)
+    assert(strategy.speed>0 and steering>0 and not strategy.waiting)
+end)
+test('left-side unloader follows the recorded right-hand curve',function()
+    local follower,strategy=curvedFixture(-1)
+    local x,z=follower:getDriveData()
+    local steering=worldToLocal(strategy.vehicle.node,x,0,z)
+    assert(strategy.speed>0 and steering<0 and not strategy.waiting)
+end)
+test('right-side unloader follows the recorded left-hand curve',function()
+    local follower,strategy=curvedFixture(1,-1)
+    local x,z=follower:getDriveData()
+    local steering=worldToLocal(strategy.vehicle.node,x,0,z)
+    assert(strategy.speed>0 and steering>0 and not strategy.waiting)
+end)
+test('right-side unloader follows the recorded right-hand curve',function()
+    local follower,strategy=curvedFixture(-1,-1)
+    local x,z=follower:getDriveData()
+    local steering=worldToLocal(strategy.vehicle.node,x,0,z)
+    assert(strategy.speed>0 and steering<0 and not strategy.waiting)
+end)
+test('side following closes the trailer fill-node gap while lateral alignment is incomplete',function()
+    local follower,strategy,proxy=fixture(1)
+    follower.side=1
+    strategy.vehicle.front.x=6
+    strategy.getBestTargetNode=function() return {node={x=6,z=-20}} end
+    strategy.getPipeOffset=function() return 4,0 end
+    follower:getDriveData()
+    assert(strategy.speed>5)
+end)
+test('assigned harvester beside the tractor does not falsely stop an inside curve',function()
+    local follower,strategy,proxy=curvedFixture(1)
+    strategy.followModeProximitySensor.getClosestObjectDistanceAndRootVehicle=function()
+        return 1,proxy.vehicle,nil,false
+    end
+    assert(follower:hasHarvesterClearance())
+    follower:getDriveData()
+    assert(strategy.speed>0)
+end)
+test('overlapping vehicle footprints retain the harvester sensor stop',function()
+    local follower,strategy,proxy=fixture(1)
+    follower.side=1
+    strategy.vehicle.node.x,strategy.vehicle.node.z=0,0
+    strategy.followModeProximitySensor.getClosestObjectDistanceAndRootVehicle=function()
+        return 1,proxy.vehicle,nil,false
+    end
+    assert(not follower:hasHarvesterClearance())
+    follower:getDriveData()
+    assert(strategy.speed==0)
+end)
+test('other vehicles remain obstacles during side following',function()
+    local follower,strategy=curvedFixture(1)
+    strategy.followModeProximitySensor.getClosestObjectDistanceAndRootVehicle=function()
+        return 1,{},nil,false
+    end
+    follower:getDriveData()
+    assert(strategy.speed==0)
+end)
+test('inside offset below the tractor turning radius selects the rear fallback',function()
+    local follower,strategy,proxy=curvedFixture(1)
+    strategy.turningRadius=18
+    assert(follower:isInsideTightTurn(1))
+    assert(follower:getRequestedSide(-6)==0)
+end)
+test('header width and footprint are included in side clearance',function()
+    local follower,strategy,proxy=fixture(1)
+    local header={width=9,rootNode={x=0,z=6},size={width=9,length=2}}
+    proxy.vehicle.getChildVehicles=function(self) return {self,header} end
+    strategy.vehicle.node.x,strategy.vehicle.node.z=4,6
+    assert(follower:getSideOffset(1)==7)
+    assert(not follower:hasHarvesterClearance())
+end)
+-- Simple planar pursuit model. It verifies continuous steering, not GIANTS trailer physics.
+for _,direction in ipairs({1,-1}) do
+    test('continuous side-following through curve direction '..direction,function()
+        local follower,strategy,proxy=fixture(1)
+        follower.side=1
+        strategy.turningRadius=6
+        strategy.vehicle.node.x,strategy.vehicle.node.z,strategy.vehicle.node.angle=4,5,0
+        local fill={}
+        strategy.getBestTargetNode=function() return {node=fill} end
+        strategy.getPipeOffset=function() return 4,-3 end
+        local stops=0
+        for i=0,399 do
+            g_time=i*100
+            local angle=direction*(5/3.6)*i*0.1/20
+            proxy.vehicle.node.x=direction*20*(1-math.cos(angle))
+            proxy.vehicle.node.z=direction*20*math.sin(angle)
+            proxy.vehicle.node.angle=math.deg(angle)
+            local x,_,z=localToWorld(strategy.vehicle.node,0,0,2)
+            strategy.vehicle.front.x,strategy.vehicle.front.z=x,z
+            strategy.vehicle.front.angle=strategy.vehicle.node.angle
+            fill.x,_,fill.z=localToWorld(strategy.vehicle.node,0,0,-8)
+            local gx,gz=follower:getDriveData()
+            if strategy.speed==0 then stops=stops+1 end
+            assert(gx and gz)
+            local lx,_,lz=worldToLocal(strategy.vehicle.node,gx,0,gz)
+            local curvature=2*lx/math.max(1,lx*lx+lz*lz)
+            local speed=strategy.speed/3.6
+            local heading=math.rad(strategy.vehicle.node.angle)+speed*curvature*0.1
+            strategy.vehicle.node.angle=math.deg(heading)
+            strategy.vehicle.node.x=strategy.vehicle.node.x+math.sin(heading)*speed*0.1
+            strategy.vehicle.node.z=strategy.vehicle.node.z+math.cos(heading)*speed*0.1
+        end
+        assert(stops<5 and follower.phase=='FOLLOW')
+        local x,_,z=localToLocal(fill,proxy.vehicle.node,0,0,0)
+        assert(math.abs(x-4)<1 and math.abs(z+3)<1.5)
+    end)
+end
 print('Manual chopper regression tests: '..tests..' passed')
