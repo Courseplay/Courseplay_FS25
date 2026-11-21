@@ -122,6 +122,12 @@ function CpCourseGeneratorFrame.new(target, custom_mt)
 	self.cpHotspotSettingValue = 1
 	--- Draws the current progress, while creating a custom field.
 	self.customFieldPlot = FieldPlot(true)
+	--- Highlights the fields of active contracts the current vehicle has a matching implement for.
+	self.missionHighlightPlot = FieldPlot(false)
+	self.missionHighlightPlot:setVisible(true)
+	self.missionFieldPolygonCache = {}
+	self.missionHighlightVehicle = nil
+	self.missionHighlightWorkAreaTypes = {}
 	self.drawFieldBorderPolygon = Polygon()
 	self.drawDelay = 0
 	return self
@@ -336,6 +342,9 @@ end
 
 function CpCourseGeneratorFrame:onFrameOpen()
 	self.ingameMap:setTerrainSize(g_currentMission.terrainSize)
+	--- Contracts may have changed since the last time, so reset the mission highlight caches.
+	self.missionFieldPolygonCache = {}
+	self.missionHighlightVehicle = nil
 	g_messageCenter:subscribe(MessageType.GUI_CP_INGAME_CURRENT_VEHICLE_CHANGED, 
 		function(self, vehicle)
 			local _, pageTitle = CpCourseGeneratorSettings.getSettingSetup()
@@ -622,6 +631,7 @@ function CpCourseGeneratorFrame:delete()
 	self.fieldSiloAiTargetMapHotspot:delete()
 	self.unloadAiTargetMapHotspot:delete()
 	self.loadAiTargetMapHotspot:delete()
+	self.missionHighlightPlot:delete()
 	CpCourseGeneratorFrame:superClass().delete(self)
 end
 -------------------------------
@@ -695,6 +705,10 @@ function CpCourseGeneratorFrame:onDrawPostIngameMap(element, ingameMap)
 		-- show the custom fields on the AI map
 		g_customFieldManager:draw(ingameMap)
 	end
+	if vehicle then
+		-- highlight the fields of active contracts the current vehicle has a matching implement for
+		self:drawMissionHighlights(ingameMap, vehicle)
+	end
 	-- show the selected field on the AI screen map when creating a job
 	if self.currentJob and self.currentJob.draw then
 		self.currentJob:draw(ingameMap, self.mode == self.MODE_OVERVIEW)
@@ -727,6 +741,78 @@ function CpCourseGeneratorFrame:onDrawPostIngameMap(element, ingameMap)
 		self.customFieldPlot:setVisible(true)
 	end
 
+end
+
+--- Reduces the number of polygon vertices for drawing, the map plot doesn't need a high resolution.
+local function simplifyPolygonForPlot(polygon, minDistance)
+	local simplified = {}
+	local lastX, lastZ
+	for _, point in ipairs(polygon) do
+		if lastX == nil or MathUtil.vector2Length(point.x - lastX, point.z - lastZ) >= minDistance then
+			table.insert(simplified, point)
+			lastX, lastZ = point.x, point.z
+		end
+	end
+	return simplified
+end
+
+--- Highlights the fields of the player's active contracts that the given vehicle has a matching
+--- implement for, with a pulsing green field border. This makes it easy to spot, while creating
+--- a job, which of the contract fields (red circles) this vehicle can actually work on.
+--- Matching is generic: a contract field mission declares the work area types it accepts
+--- (mission.workAreaTypes, for example WorkAreaType.PLOW for plow missions) and we check those
+--- against the work area types of the vehicle and all its attached implements.
+function CpCourseGeneratorFrame:drawMissionHighlights(ingameMap, vehicle)
+	if g_localPlayer == nil or g_missionManager == nil then
+		return
+	end
+	if vehicle ~= self.missionHighlightVehicle or g_time > (self.missionHighlightNextUpdateTime or 0) then
+		-- collect the work area types of the vehicle and all its implements. Redo this every few
+		-- seconds, so attaching/detaching implements while the menu is open is picked up too.
+		self.missionHighlightVehicle = vehicle
+		self.missionHighlightNextUpdateTime = g_time + 2000
+		self.missionHighlightWorkAreaTypes = {}
+		local childVehicles, found = AIUtil.getAllChildVehiclesWithSpecialization(vehicle, WorkArea)
+		if found then
+			for _, childVehicle in ipairs(childVehicles) do
+				for _, workArea in WorkWidthUtil.workAreaIterator(childVehicle) do
+					if WorkWidthUtil.isValidWorkArea(workArea) then
+						self.missionHighlightWorkAreaTypes[workArea.type] = true
+					end
+				end
+			end
+		end
+	end
+	-- pulsing green, clearly distinguishable from the red contract circles and the blue course plots
+	local pulse = 0.6 + 0.4 * math.sin(g_time * 0.005)
+	self.missionHighlightPlot.lightColor = {0.1 * pulse, pulse, 0.1 * pulse}
+	self.missionHighlightPlot.darkColor = self.missionHighlightPlot.lightColor
+	for _, mission in ipairs(g_missionManager.missions) do
+		if mission.farmId == g_localPlayer.farmId and
+				(mission.status == MissionStatus.RUNNING or mission.status == MissionStatus.PREPARING) and
+				mission.workAreaTypes ~= nil and mission.getField ~= nil and mission:getField() ~= nil then
+			local hasMatchingImplement = false
+			for workAreaType in pairs(mission.workAreaTypes) do
+				if self.missionHighlightWorkAreaTypes[workAreaType] then
+					hasMatchingImplement = true
+					break
+				end
+			end
+			if hasMatchingImplement then
+				local fieldPolygon = self.missionFieldPolygonCache[mission]
+				if fieldPolygon == nil then
+					-- getting the polygon allocates a table for each vertex, so do it only once per mission
+					local ok, polygon = pcall(CpFieldUtil.getFieldPolygon, mission:getField())
+					fieldPolygon = ok and polygon and simplifyPolygonForPlot(polygon, 5) or false
+					self.missionFieldPolygonCache[mission] = fieldPolygon
+				end
+				if fieldPolygon and #fieldPolygon > 2 then
+					self.missionHighlightPlot.waypoints = fieldPolygon
+					self.missionHighlightPlot:draw(ingameMap)
+				end
+			end
+		end
+	end
 end
 
 function CpCourseGeneratorFrame:onClickMap(element ,worldX, worldZ)

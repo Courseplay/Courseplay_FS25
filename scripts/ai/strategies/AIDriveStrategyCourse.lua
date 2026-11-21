@@ -113,6 +113,10 @@ function AIDriveStrategyCourse:clearInfoText(text)
     end
 end
 
+function AIDriveStrategyCourse:getPPC()
+    return self.ppc
+end
+
 function AIDriveStrategyCourse:setAIVehicle(vehicle, jobParameters)
     self.vehicle = vehicle
     --self:fixTurnOnEvent()

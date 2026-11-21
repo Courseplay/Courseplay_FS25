@@ -14,6 +14,9 @@
     <text name="CP_unit_meter" text="m"/>
     <text name="CP_unit_foot" text="ft"/>
     <text name="CP_copy" text="Copy course: "/>
+    <text name="CP_callManualUnloader" text="Unloader"/>
+    <text name="CP_callManualUnloaderActive" text="ACTIVE"/>
+    <text name="CP_callManualUnloaderInactive" text="OFF"/>
     <text name="CP_infoText" text="Courseplay(%s): Ga voor hulp, bugrapporten of patch-opmerkingen naar: https://github.com/Courseplay/Courseplay_FS22."/>
     <text name="CP_error_no_course" text="Genereer een koers voordat u aan de taak begint."/>
     <text name="CP_error_could_not_generate_course" text="Kan koers niet genereren. De log bevat mogelijk meer informatie."/>

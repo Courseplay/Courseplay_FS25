@@ -14,6 +14,9 @@
     <text name="CP_unit_meter" text="м"/>
     <text name="CP_unit_foot" text="ft"/>
     <text name="CP_copy" text="Копіювати курс:"/>
+    <text name="CP_callManualUnloader" text="Unloader"/>
+    <text name="CP_callManualUnloaderActive" text="ACTIVE"/>
+    <text name="CP_callManualUnloaderInactive" text="OFF"/>
     <text name="CP_infoText" text="Courseplay(%s): Щоб отримати довідку, звітувати про помилки чи дізнатися інформацію про виправлення, відвідайте: https://github.com/Courseplay/Courseplay_FS25."/>
     <text name="CP_error_no_course" text="Для початку роботи створіть курс."/>
     <text name="CP_error_could_not_generate_course" text="Не вдалося згенерувати курс. Будь ласка, спробуйте інші налаштування."/>

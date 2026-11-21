@@ -236,6 +236,10 @@ function PurePursuitController:getLookaheadDistance()
     return self.lookAheadDistance
 end
 
+function PurePursuitController:getNormalLookaheadDistance()
+    return self.normalLookAheadDistance
+end
+
 function PurePursuitController:setCurrentLookaheadDistance(cte)
     local la = self.temporaryLookAheadDistance:get() or self.baseLookAheadDistance
     self.lookAheadDistance = math.min(la + math.abs(cte), la * 2)

@@ -41,6 +41,10 @@ end
 function CpAIFieldWorker.registerEventListeners(vehicleType)
 	SpecializationUtil.registerEventListener(vehicleType, "onLoad", CpAIFieldWorker)
     SpecializationUtil.registerEventListener(vehicleType, "onLoadFinished", CpAIFieldWorker)
+    SpecializationUtil.registerEventListener(vehicleType, "onReadStream", CpAIFieldWorker)
+    SpecializationUtil.registerEventListener(vehicleType, "onWriteStream", CpAIFieldWorker)
+    SpecializationUtil.registerEventListener(vehicleType, "onUpdate", CpAIFieldWorker)
+    SpecializationUtil.registerEventListener(vehicleType, "onDelete", CpAIFieldWorker)
 
     SpecializationUtil.registerEventListener(vehicleType, "onCpEmpty", CpAIFieldWorker)
     SpecializationUtil.registerEventListener(vehicleType, "onCpFull", CpAIFieldWorker)
@@ -70,6 +74,12 @@ function CpAIFieldWorker.registerFunctions(vehicleType)
     SpecializationUtil.registerFunction(vehicleType, "startCpAtLastWp", CpAIFieldWorker.startCpAtLastWp)
     SpecializationUtil.registerFunction(vehicleType, "getCpStartingPointSetting", CpAIFieldWorker.getCpStartingPointSetting)
     SpecializationUtil.registerFunction(vehicleType, "getCpLaneOffsetSetting", CpAIFieldWorker.getCpLaneOffsetSetting)
+
+    SpecializationUtil.registerFunction(vehicleType, "cpCanCallManualUnloader", CpAIFieldWorker.cpCanCallManualUnloader)
+    SpecializationUtil.registerFunction(vehicleType, "cpToggleManualUnloader", CpAIFieldWorker.cpToggleManualUnloader)
+    SpecializationUtil.registerFunction(vehicleType, "cpSetManualUnloaderActive", CpAIFieldWorker.cpSetManualUnloaderActive)
+    SpecializationUtil.registerFunction(vehicleType, "cpIsManualCombineCallingUnloader", CpAIFieldWorker.cpIsManualCombineCallingUnloader)
+    SpecializationUtil.registerFunction(vehicleType, "cpGetManualCombineProxy", CpAIFieldWorker.cpGetManualCombineProxy)
 end
 
 function CpAIFieldWorker.registerOverwrittenFunctions(vehicleType)
@@ -259,6 +269,97 @@ end
 function CpAIFieldWorker:onCpFinished()
  
 end
+
+------------------------------------------------------------------------------------------------------------------------
+--- Manual combine "Call Unloader" proxy management
+------------------------------------------------------------------------------------------------------------------------
+
+function CpAIFieldWorker:onUpdate(dt)
+    local spec = CpAIFieldWorker.getSpec(self)
+    if self.isServer and spec and spec.cpManualCombineProxy then
+        -- If the player handed the combine over to CP (e.g. activated autopilot mid-session),
+        -- deactivate the manual unloader proxy so it doesn't conflict with the CP-driven combine.
+        if not self:cpCanCallManualUnloader() then
+            self:cpSetManualUnloaderActive(false)
+        else
+            spec.cpManualCombineProxy:update(dt)
+        end
+    end
+end
+
+function CpAIFieldWorker:onDelete()
+    local spec = CpAIFieldWorker.getSpec(self)
+    if spec and spec.cpManualCombineProxy then
+        spec.cpManualCombineProxy:delete()
+        spec.cpManualCombineProxy = nil
+    end
+end
+
+function CpAIFieldWorker:cpToggleManualUnloader()
+    -- Determine the new desired state and delegate to the explicit setter so the
+    -- MP event always carries a concrete active/inactive value rather than a raw
+    -- toggle command.  This prevents double-toggle races when multiple machines
+    -- fire deactivation events simultaneously (e.g. CP becoming active mid-session).
+    self:cpSetManualUnloaderActive(not self:cpIsManualCombineCallingUnloader())
+end
+
+function CpAIFieldWorker:cpCanCallManualUnloader()
+    if self:getIsCpActive() then return false end
+    for _, implement in pairs(self:getChildVehicles()) do
+        if implement.spec_combine and implement.spec_pipe and not ImplementUtil.isChopper(implement) then
+            return true
+        end
+    end
+    return false
+end
+
+function CpAIFieldWorker:cpSetManualUnloaderActive(active, noEventSend)
+    local spec = CpAIFieldWorker.getSpec(self)
+    if not spec then return end
+    if not self.isServer and not noEventSend then
+        -- Clients request a state; only the server may assign unloaders or accept it.
+        CpManualUnloaderEvent.sendEvent(self, active)
+        return
+    end
+    if active and self.isServer and not self:cpCanCallManualUnloader() then
+        return
+    end
+    if (spec.cpManualUnloaderActive == true) == active then return end
+    if active and self.isServer then
+        spec.cpManualCombineProxy = CpManualCombineProxy(self)
+    elseif spec.cpManualCombineProxy then
+        spec.cpManualCombineProxy:delete()
+        spec.cpManualCombineProxy = nil
+    end
+    spec.cpManualUnloaderActive = active
+    if not noEventSend then
+        CpManualUnloaderEvent.sendEvent(self, active)
+    end
+end
+
+function CpAIFieldWorker:cpIsManualCombineCallingUnloader()
+    local spec = CpAIFieldWorker.getSpec(self)
+    return spec ~= nil and spec.cpManualUnloaderActive == true
+end
+
+function CpAIFieldWorker:onReadStream(streamId, connection)
+    if connection:getIsServer() then
+        self:cpSetManualUnloaderActive(streamReadBool(streamId), true)
+    end
+end
+
+function CpAIFieldWorker:onWriteStream(streamId, connection)
+    if not connection:getIsServer() then
+        streamWriteBool(streamId, self:cpIsManualCombineCallingUnloader())
+    end
+end
+
+function CpAIFieldWorker:cpGetManualCombineProxy()
+    local spec = CpAIFieldWorker.getSpec(self)
+    return spec and spec.cpManualCombineProxy
+end
+
+------------------------------------------------------------------------------------------------------------------------
 
 function CpAIFieldWorker:getCanStartCpFieldWork()
     self:updateAIFieldWorkerImplementData()

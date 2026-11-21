@@ -14,6 +14,9 @@
     <text name="CP_unit_meter" text="m"/>
     <text name="CP_unit_foot" text="ft"/>
     <text name="CP_copy" text="Kopírovat trasu: "/>
+    <text name="CP_callManualUnloader" text="Unloader"/>
+    <text name="CP_callManualUnloaderActive" text="ACTIVE"/>
+    <text name="CP_callManualUnloaderInactive" text="OFF"/>
     <text name="CP_infoText" text="Courseplay(%s): Pro pomoc, chyby nebo poznámky o opravách navštivte: https://github.com/Courseplay/Courseplay_FS25. Překlad: SniperKittenCZ aktualizoval LadikSmyth"/>
     <text name="CP_error_no_course" text="Před zahájením práce vygenerujte trasu."/>
     <text name="CP_error_could_not_generate_course" text="Trasu se nepodařilo vygenerovat. Log může obsahovat více informací."/>
