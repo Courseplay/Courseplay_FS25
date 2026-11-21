@@ -1068,6 +1068,7 @@ Now your selection should look similar to the image.
     <text name="input_CP_OPEN_GLOBAL_SETTINGS" text="CP: Åbner globale indstillinger"/>
     <text name="input_CP_OPEN_COURSEGENERATOR_SETTINGS" text="CP: Åbner rutegenerator/job menu"/>
     <text name="input_CP_OPEN_COURSEMANAGER" text="CP: Åbner rute manager"/>
+    <text name="input_CP_CALL_GRAIN_CART" text="CP: Toggle unloader for manually driven harvester"/>
     <text name="input_CP_OPEN_INGAME_MENU" text="CP: Open menu"/>
     <!---->
     <!--manualChopper-->
@@ -1079,6 +1080,5 @@ Now your selection should look similar to the image.
     <text name="CP_vehicle_setting_manualChopperSide_right" text="Right"/>
     <text name="CP_vehicle_setting_manualChopperSide_behind" text="Behind"/>
     <text name="CP_infoTexts_manualChopperWaiting" text="Manual unloader: waiting for clear ground or alignment"/>
-    <text name="input_CP_CALL_GRAIN_CART" text="CP: Toggle unloader for manually driven harvester"/>
   </texts>
 </l10n>
