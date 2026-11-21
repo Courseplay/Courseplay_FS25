@@ -397,18 +397,21 @@ function ManualChopperFollower:getDriveData()
     local combineSpeed = math.abs(proxy.vehicle.lastSpeedReal or 0) * 3600
     local longitudinalError = headProgress + targetZ - frontProgress
     if self.phase == 'FOLLOW' and self.side ~= 0 then
-        -- Beside the harvester, align the actual trailer fill node with the pipe.
-        -- Behind it, retain the rear clearance even when a long trailer is out of reach.
-        if fillProgress then
-            local _, pipeZ = strategy:getPipeOffset(proxy.vehicle)
-            longitudinalError = headProgress + pipeZ - fillProgress
+        local frontError = self:getSideFrontLimit() - z
+        if proxy:hasAutoAimPipe() then
+            -- The spout tracks the trailer. Keep a stable tractor position instead
+            -- of chasing the moving discharge node with the trailer fill point.
+            longitudinalError = frontError
         else
-            longitudinalError = strategy:getBestTargetNodeDistanceFromPipe() or longitudinalError
+            if fillProgress then
+                local _, pipeZ = strategy:getPipeOffset(proxy.vehicle)
+                longitudinalError = headProgress + pipeZ - fillProgress
+            else
+                longitudinalError = strategy:getBestTargetNodeDistanceFromPipe() or longitudinalError
+            end
+            -- Fixed pipes still require fill-point alignment, within the header limit.
+            longitudinalError = math.min(longitudinalError, frontError)
         end
-    end
-    if self.phase == 'FOLLOW' and self.side ~= 0 then
-        -- Pipe alignment must not pull the tractor past the header attachment.
-        longitudinalError = math.min(longitudinalError, self:getSideFrontLimit() - z)
     end
     local beforeX, beforeZ = self:getGuidePosition(progress - 0.5, targetX)
     local afterX, afterZ = self:getGuidePosition(progress + 0.5, targetX)

@@ -51,6 +51,7 @@ local function fixture(side)
     harvester.rootNode=harvester.node
     harvester.size={width=3,length=8}
     local proxy={vehicle=harvester,left=0,right=0,ready=true}
+    proxy.hasAutoAimPipe=function() return false end
     proxy.getMeasuredBackDistance=function() return 4 end
     proxy.getFruitAtSides=function(self) return self.left,self.right end
     proxy.isReversing=function() return harvester.reversing or false end
@@ -402,10 +403,12 @@ test('header width and footprint are included in side clearance',function()
     assert(not follower:hasHarvesterClearance())
 end)
 -- Simple planar pursuit model. It verifies continuous steering, not GIANTS trailer physics.
+for _,autoAim in ipairs({false,true}) do
 for _,direction in ipairs({1,-1}) do
-    test('continuous side-following through curve direction '..direction,function()
+    test('continuous side-following through curve direction '..direction..' autoAim='..tostring(autoAim),function()
         local follower,strategy,proxy=fixture(1)
         follower.side=1
+        proxy.hasAutoAimPipe=function() return autoAim end
         strategy.turningRadius=6
         strategy.vehicle.node.x,strategy.vehicle.node.z,strategy.vehicle.node.angle=4,1,0
         local fill={}
@@ -441,6 +444,8 @@ for _,direction in ipairs({1,-1}) do
         assert(frontZ <= follower:getSideFrontLimit()+1)
     end)
 end
+end
+
 test('rear follower closes a small gap more promptly without changing clearance',function()
     local follower,strategy=fixture(2)
     strategy.vehicle.front.z=-8
@@ -511,6 +516,51 @@ end)
 test('missing cutter joint uses the body front with a one metre margin',function()
     local follower=fixture()
     assert(follower:getSideFrontLimit()==3)
+end)
+
+test('auto aiming spout never controls longitudinal following via pipe position',function()
+    local follower,strategy,proxy=fixture(1)
+    follower.side=1
+    proxy.hasAutoAimPipe=function() return true end
+    strategy.vehicle.node.x,strategy.vehicle.front.x=4,4
+    strategy.vehicle.node.z,strategy.vehicle.front.z=1,3
+    strategy.getBestTargetNode=function() return {node={x=4,z=-20}} end
+    strategy.getPipeOffset=function() error('auto aim must not read pipe position') end
+    strategy.getBestTargetNodeDistanceFromPipe=function() error('auto aim must not chase pipe') end
+    follower:getDriveData()
+    assert(math.abs(strategy.speed-5)<0.001)
+    strategy.getBestTargetNode=function() return nil end
+    follower:getDriveData()
+    assert(math.abs(strategy.speed-5)<0.001)
+    strategy.vehicle.front.z=5
+    follower:getDriveData()
+    assert(strategy.speed==0)
+end)
+
+test('fixed pipe retains longitudinal trailer alignment behind the header limit',function()
+    local follower,strategy,proxy=fixture(1)
+    follower.side=1
+    strategy.vehicle.node.x,strategy.vehicle.front.x=4,4
+    strategy.vehicle.node.z,strategy.vehicle.front.z=-2,0
+    local fill={x=4,z=-5}
+    strategy.getBestTargetNode=function() return {node=fill} end
+    strategy.getPipeOffset=function() return 4,-7 end
+    follower:getDriveData()
+    assert(strategy.speed==0)
+    fill.z=-7
+    follower:getDriveData()
+    assert(math.abs(strategy.speed-5)<0.001)
+end)
+
+test('manual proxy identifies auto aim using the existing pipe state metadata',function()
+    local proxy=setmetatable({pipeSpec={numAutoAimingStates=2}},{__index=CpManualCombineProxy})
+    assert(proxy:hasAutoAimPipe())
+    proxy.pipeSpec.numAutoAimingStates=0
+    assert(not proxy:hasAutoAimPipe())
+    proxy.pipeSpec={}
+    assert(not proxy:hasAutoAimPipe())
+    proxy.pipeSpec=nil
+    assert(not proxy:hasAutoAimPipe())
 end)
 
 print('Manual chopper regression tests: '..tests..' passed')
