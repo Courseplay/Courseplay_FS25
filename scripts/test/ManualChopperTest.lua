@@ -696,20 +696,20 @@ local function alignmentFixture()
     return follower,strategy,proxy
 end
 
-test('nearby tractor can slowly align behind a turned harvester after reversing',function()
+test('nearby tractor resumes normal following after reversing when a forward gap opens',function()
     local follower,strategy,proxy=alignmentFixture()
     proxy.vehicle.reversing=true
     follower:getDriveData()
     assert(strategy.speed==0 and proxy.chopperTrail==nil)
     proxy.vehicle.reversing=false
     local gx,gz=follower:getDriveData()
-    assert(gx and gz and strategy.speed>0 and strategy.speed<=3 and not strategy.waiting)
+    assert(gx and gz and strategy.speed>3 and strategy.speed<=15 and not strategy.waiting)
     local _,_,forward=worldToLocal(strategy.vehicle.node,gx,0,gz)
     local _,_,goalZ=worldToLocal(proxy.vehicle.node,gx,0,gz)
-    assert(forward>1 and goalZ<=-6)
+    assert(forward>1)
 end)
 
-test('alignment recovery does not bypass crops or blocking vehicles',function()
+test('normal catch-up after reversing retains crop and vehicle checks',function()
     local follower,strategy=alignmentFixture()
     crop=function() return true,100 end
     follower:getDriveData()
@@ -721,7 +721,7 @@ test('alignment recovery does not bypass crops or blocking vehicles',function()
     assert(strategy.speed==0 and strategy.waiting)
 end)
 
-test('alignment recovery rejects crossing beside the harvester and opposite headings',function()
+test('normal catch-up still waits when too close or facing the opposite way',function()
     local follower,strategy=alignmentFixture()
     strategy.vehicle.front.z=-2
     follower:getDriveData()
@@ -770,5 +770,19 @@ for _,sign in ipairs({1,-1}) do
         assert(frontZ<=-5.5 and frontZ>-8)
     end)
 end
+
+test('misaligned follower waits for forward movement and the normal rear gap',function()
+    local follower,strategy,proxy=alignmentFixture()
+    proxy.vehicle.lastSpeedReal=0
+    follower:getDriveData()
+    assert(strategy.speed==0 and strategy.waiting)
+    proxy.vehicle.lastSpeedReal=5/3600
+    strategy.vehicle.front.z=-7
+    follower:getDriveData()
+    assert(strategy.speed==0 and strategy.waiting)
+    strategy.vehicle.front.z=-10
+    follower:getDriveData()
+    assert(strategy.speed>3 and not strategy.waiting)
+end)
 
 print('Manual chopper regression tests: '..tests..' passed')
