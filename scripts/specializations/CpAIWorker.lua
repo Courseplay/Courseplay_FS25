@@ -91,6 +91,8 @@ function CpAIWorker:onLoad(savegame)
     --- Flag to make sure the motor isn't being turned on again by giants code, when we want it turned off.
     spec.motorDisabled = false
     spec.driveStrategy = nil
+    -- Whether Courseplay currently owns the vehicle's original cab-entry animation.
+    spec.cpAIEnterAnimationActive = false
     g_messageCenter:subscribe(MessageType.SETTING_CHANGED[GameSettings.SETTING.USE_MILES], CpAIWorker.onUnitChanged, self)
     g_messageCenter:subscribe(MessageType.SETTING_CHANGED[GameSettings.SETTING.USE_ACRE], CpAIWorker.onUnitChanged, self)
     g_messageCenter:subscribe(MessageType.CP_DISTANCE_UNIT_CHANGED, CpAIWorker.onUnitChanged, self)
@@ -376,8 +378,37 @@ function CpAIWorker:cpBrakeToStop()
     spec.brakeToStop = true
 end
 
+--- Use the *vehicle's* cab-entry animation to move its steering wheel
+--- a fixed distance. The same animation is used when the player enters/exits,
+--- so any vehicle-specific steering-column translation/rotation is preserved.
+--- Only act during AI control without a player; Enterable owns the animation
+--- whenever a player controls the cab.
+function CpAIWorker:updateAIEnterAnimation()
+    local spec = self.spec_cpAIWorker
+    local enterable = self.spec_enterable
+    if enterable == nil or enterable.enterAnimation == nil or self.playAnimation == nil then
+        return
+    end
+
+    local playerControlled = enterable.isControlled == true
+    local aiControlling = self:getIsAIActive() and not playerControlled
+    if aiControlling == spec.cpAIEnterAnimationActive then
+        return
+    end
+
+    spec.cpAIEnterAnimationActive = aiControlling
+    if not playerControlled then
+        -- Mirror Enterable's onPlayerEnterVehicle / onPlayerLeaveVehicle calls.
+        -- noEventSend=true: every client updates locally from the synced AI state.
+        self:playAnimation(enterable.enterAnimation, aiControlling and 1 or -1, nil, true)
+    end
+end
+
 function CpAIWorker:onUpdate(dt)
     local spec = self.spec_cpAIWorker
+    if self.isClient then
+        CpAIWorker.updateAIEnterAnimation(self)
+    end
     --- TODO: Check if a tick delay should be used for performance similar to AIFieldWorker or not.
     if spec.driveStrategy and self.isServer then
         --- Should drive all CP modes, except fieldwork here.
