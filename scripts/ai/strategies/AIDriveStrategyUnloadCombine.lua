@@ -78,18 +78,18 @@ This is currently screwed up...
 AIDriveStrategyUnloadCombine = CpObject(AIDriveStrategyCourse)
 
 -- when moving out of way of another vehicle, move at least so many meters
-AIDriveStrategyUnloadCombine.minDistanceWhenMovingOutOfWay = 5
+AIDriveStrategyUnloadCombine.minDistanceWhenMovingOutOfWay = 10
 -- when moving out of way of another vehicle, move at most so many meters
 AIDriveStrategyUnloadCombine.maxDistanceWhenMovingOutOfWay = 25
-AIDriveStrategyUnloadCombine.safeManeuveringDistance = 30 -- distance to keep from a combine not ready to unload
+AIDriveStrategyUnloadCombine.safeManeuveringDistance = 35 -- distance to keep from a combine not ready to unload
 AIDriveStrategyUnloadCombine.pathfindingRange = 5 -- won't do pathfinding if target is closer than this
 -- The normal limit to apply a penalty for the pathfinder. This is relatively low to keep the unloader further
 -- away from the fruit.
 AIDriveStrategyUnloadCombine.maxFruitPercent = 10
 AIDriveStrategyUnloadCombine.proximitySensorRange = 15
-AIDriveStrategyUnloadCombine.maxDirectionDifferenceDeg = 35 -- under this angle the unloader considers itself aligned with the combine
+AIDriveStrategyUnloadCombine.maxDirectionDifferenceDeg = 15 -- under this angle the unloader considers itself aligned with the combine
 -- Add a short straight section to align with the combine's course in case it is late for the rendezvous
-AIDriveStrategyUnloadCombine.driveToCombineCourseExtensionLength = 10
+AIDriveStrategyUnloadCombine.driveToCombineCourseExtensionLength = 20
 AIDriveStrategyUnloadCombine.targetDistanceBehindChopper = 1
 
 -- Developer hack: to check the class of an object one should use the is_a() defined in CpObject.lua.
