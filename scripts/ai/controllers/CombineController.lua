@@ -10,7 +10,7 @@ function CombineController:init(vehicle, combine)
     self.hasPipe = SpecializationUtil.hasSpecialization(Pipe, combine.specializations)
     self.isWheeledImplement = ImplementUtil.isWheeledImplement(combine)
     local additives = self.combineSpec.additives
-    if additives.available then 
+    if additives.available then
         self:addRefillImplementAndFillUnit(self.implement, additives.fillUnitIndex)
     end
 end
@@ -20,7 +20,7 @@ function CombineController:update()
 end
 
 function CombineController:getDriveData()
-    local maxSpeed = nil 
+    local maxSpeed = nil
     maxSpeed = self:updateThreshingDuringRain()
     self:updateBeaconLightsAndFullMessage()
     return nil, nil, nil, maxSpeed
@@ -28,6 +28,22 @@ end
 
 function CombineController:getFillLevel()
     local fillLevel = self.implement:getFillUnitFillLevel(self.combineSpec.fillUnitIndex)
+
+    if(self:isSugarcaneHarvesterWithBunker()) then
+
+        local freeCapacity = self.implement:getFillUnitFreeCapacity(self.combineSpec.fillUnitIndex)
+        local capacity = self.implement:getFillUnitCapacity(self.combineSpec.fillUnitIndex)
+
+        local fillLevelSelfCalc = capacity - freeCapacity
+
+        self:debug("capacity: %s", capacity)
+        self:debug("freeCapacity: %s", freeCapacity)
+        self:debug("fillLevel: %s", fillLevel)
+        self:debug("fillLevelSelfCalc: %s", fillLevelSelfCalc)
+
+        return fillLevelSelfCalc
+    end
+
     if self.combineSpec.loadingDelay > 0 then
         for i=1, #self.combineSpec.loadingDelaySlots do
             local slot = self.combineSpec.loadingDelaySlots[i]
@@ -52,15 +68,15 @@ function CombineController:getFillUnitIndex()
 end
 
 -------------------------------------------------------------
---- Combine 
+--- Combine
 -------------------------------------------------------------
 
 function CombineController:updateThreshingDuringRain()
-    local maxSpeed = nil 
-    if self.implement:getIsThreshingDuringRain() and g_Courseplay.globalSettings.stopThreshingDuringRain:getValue() then 
+    local maxSpeed = nil
+    if self.implement:getIsThreshingDuringRain() and g_Courseplay.globalSettings.stopThreshingDuringRain:getValue() then
         maxSpeed = 0
         self:setInfoText(InfoTextManager.WAITING_FOR_RAIN_TO_FINISH)
-    else 
+    else
         self:clearInfoText(InfoTextManager.WAITING_FOR_RAIN_TO_FINISH)
     end
     return maxSpeed
@@ -150,7 +166,7 @@ end
 --- This harvester always needs an unloader to work, such as a chopper or some ground vegetable harvesters. They
 --- don't have a tank, so whatever they harvest, must unload immediately.
 function CombineController:alwaysNeedsUnloader()
-    return self:getCapacity() > 10000000
+    return self:getCapacity() > 10000000 or self:isSugarcaneHarvester()
 end
 
 --- The fruit harvested takes some time to be processed, like some root vegetable harvesters where the way from
@@ -189,7 +205,20 @@ end
 
 function CombineController:isChopper()
     -- TODO: not just choppers have infinite capacity, see alwaysNeedsUnloader()
-    return self:getCapacity() > 10000000
+    return self:getCapacity() > 10000000 or self:isSugarcaneHarvester()
+end
+
+function CombineController:isSugarcaneHarvester()
+    local isSugarcaneType = self.vehicle.typeName ~= nil and string.find(self.vehicle.typeName, "combineCutterFruitPreparer", 1, true) ~= nil
+
+    return isSugarcaneType;
+end
+
+function CombineController:isSugarcaneHarvesterWithBunker()
+
+    local hasCapacity = self:getCapacity() ~= math.huge
+
+    return self:isSugarcaneHarvester() and hasCapacity;
 end
 
 function CombineController:updateChopperFillType()
