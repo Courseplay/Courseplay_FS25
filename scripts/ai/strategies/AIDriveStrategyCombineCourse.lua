@@ -263,10 +263,14 @@ function AIDriveStrategyCombineCourse:getDriveData(dt, vX, vY, vZ)
         self:checkRendezvous()
         self:checkBlockingUnloader()
 
-        if self:isFull() then
+        local isFull = self:isFull()
+
+        if isFull then
             self:changeToUnloadOnField()
         elseif self:alwaysNeedsUnloader() then
-            if not self.pipeController:isFillableTrailerUnderPipe() then
+            local shouldWaitForFullTank = self.combineController:isSugarcaneHarvesterWithBunker() and not isFull
+
+            if not shouldWaitForFullTank and not self.pipeController:isFillableTrailerUnderPipe() then
                 self:debug('Need an unloader to work but have no fillable trailer under the pipe')
                 self:changeToUnloadOnField()
             end
